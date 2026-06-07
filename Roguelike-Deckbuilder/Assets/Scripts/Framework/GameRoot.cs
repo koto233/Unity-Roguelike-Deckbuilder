@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Framework.ObjectPool;
 using UnityEngine;
 namespace Framework
 {
@@ -26,7 +27,7 @@ namespace Framework
         private void Init()
         {
             _serviceLocator = new ServiceLocator();
-
+            _serviceLocator.Register(new ObjectPoolService());
         }
     }
 
