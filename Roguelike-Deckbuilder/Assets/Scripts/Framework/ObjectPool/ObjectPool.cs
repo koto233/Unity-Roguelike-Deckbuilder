@@ -15,6 +15,15 @@ namespace Framework.ObjectPool
         private int _maxPoolSize;
         public int MaxPoolSize => _maxPoolSize;
         private int CurrentPoolSize => _pool.Count;
+        /// <summary>
+        ///  创建一个对象池
+        /// </summary>
+        /// <param name="createFunc">创建实例的方法</param>
+        /// <param name="onGet">获取实例时的回调</param>
+        /// <param name="onReturn">归还实例时的回调</param>
+        /// <param name="onDestroy">销毁实例时的回调</param>
+        /// <param name="initialPoolSize">初始池大小</param>
+        /// <param name="maxPoolSize">池最大容量</param>
         public ObjectPool(Func<T> createFunc, Action<T> onGet = null, Action<T> onReturn = null, Action<T> onDestroy = null, int initialPoolSize = 0, int maxPoolSize = 100)
         {
             _createFunc = createFunc ?? throw new ArgumentNullException(nameof(createFunc));
