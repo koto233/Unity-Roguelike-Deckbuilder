@@ -13,7 +13,7 @@ namespace Framework.EventSystem
 
         public static void Subscribe(IEventBinding<T> handler) => _bindings.Add(handler);
         public static void Unsubscribe(IEventBinding<T> handler) => _bindings.Remove(handler);
-        public static void Raise(T eventData)
+        public static void Publish(T eventData)
         {
             for (int i = _bindings.Count - 1; i >= 0; i--)
                 _bindings[i].OnEvent?.Invoke(eventData);

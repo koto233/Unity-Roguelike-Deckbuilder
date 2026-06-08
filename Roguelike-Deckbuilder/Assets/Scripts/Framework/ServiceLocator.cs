@@ -22,6 +22,7 @@ namespace Framework
             if (!_services.ContainsKey(type))
             {
                 _services.Add(type, service);
+                Debug.Log($"注册 {type} 服务成功。");
             }
             else
             {
