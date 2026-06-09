@@ -1,8 +1,5 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using Framework;
-using Framework.AssetManager;
 using UnityEngine;
 using YooAsset;
 

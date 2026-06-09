@@ -1,7 +1,3 @@
-using System;
-
-
-
 namespace Framework.ObjectPool
 {
     public interface IPoolable
