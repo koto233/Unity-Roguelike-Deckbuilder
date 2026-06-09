@@ -7,16 +7,16 @@ namespace Framework
     /// <summary>
     /// 服务定位器
     /// </summary>
-    public class ServiceLocator
+    public static class ServiceLocator
     {
-        private Dictionary<Type, object> _services = new Dictionary<Type, object>();
+        private static Dictionary<Type, object> _services = new Dictionary<Type, object>();
 
         /// <summary>
         /// 注册服务
         /// </summary>
         /// <typeparam name="T">服务类型</typeparam>
         /// <param name="service">服务实例</param>
-        public void Register<T>(T service)
+        public static void Register<T>(T service)
         {
             var type = typeof(T);
             if (!_services.ContainsKey(type))
@@ -34,7 +34,7 @@ namespace Framework
         /// </summary>
         /// <typeparam name="T">服务类型</typeparam>
         /// <returns>服务实例</returns>
-        public T Get<T>()
+        public static T Get<T>()
         {
             var type = typeof(T);
             if (_services.TryGetValue(type, out var obj))

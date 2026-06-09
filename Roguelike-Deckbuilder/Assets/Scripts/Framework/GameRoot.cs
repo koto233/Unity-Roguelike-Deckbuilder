@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Framework.AssetManager;
 using Framework.ObjectPool;
+using Framework.State;
 using UnityEngine;
 using YooAsset;
 namespace Framework
@@ -13,9 +14,7 @@ namespace Framework
     public class GameRoot : MonoBehaviour
     {
         public static GameRoot Instance { get; private set; }
-
-        private ServiceLocator _serviceLocator;
-        private IResourceUpdater _resourceUpdater;
+        private StateMachine _flowMachine;
         void Awake()
         {
             if (Instance != null && Instance != this)
@@ -34,7 +33,7 @@ namespace Framework
         }
         public void Test()
         {
-            var assetManager = _serviceLocator.Get<IAssetManager>();
+            var assetManager = ServiceLocator.Get<IAssetManager>();
             assetManager.LoadAsync<GameObject>("Assets/Res/Test.prefab", (prefab) =>
             {
                 var uiRoot = Instantiate(prefab);
@@ -43,22 +42,18 @@ namespace Framework
         }
         private void Init()
         {
-            _serviceLocator = new ServiceLocator();
-            _serviceLocator.Register(new ObjectPoolService());
-            _resourceUpdater = new YooAssetUpdater();
-            _resourceUpdater.StartUpdate(OnResourceUpdateCompleted);
-
-        }
-
-        private void OnResourceUpdateCompleted(bool flag)
-        {
-            if (flag)
+            _flowMachine = new StateMachine();
+            _flowMachine.RegisterState(new BootState(_flowMachine));
+            _flowMachine.RegisterState(new HitFixState(_flowMachine));
+            // 监听状态变化（可选）
+            _flowMachine.OnStateChanged += (from, to) =>
             {
-                Debug.Log("资源更新完成，开始游戏逻辑");
-                _serviceLocator.Register<IAssetManager>(new YooAssetAssetManager(YooAssets.GetPackage("DefaultPackage")));
-            }
-
+                Debug.Log($"流程状态变化: {from?.Name} → {to?.Name}");
+            };
+            _flowMachine.ChangeStateCoroutine<BootState>();
         }
+
+
     }
 
 }

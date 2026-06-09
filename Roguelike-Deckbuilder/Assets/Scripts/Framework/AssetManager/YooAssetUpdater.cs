@@ -31,29 +31,55 @@ namespace Framework.AssetManager
 
             // 创建默认的资源包
             var package = YooAssets.CreatePackage(_packageName);
-            YooAssets.SetDefaultPackage(package);
-
-            var buildResult = EditorSimulateModeHelper.SimulateBuild(_packageName);
+            var buildResult = EditorSimulateBuildInvoker.Build(_packageName, (int)EBundleType.VirtualAssetBundle);
             var packageRoot = buildResult.PackageRootDirectory;
             var fileSystemParams = FileSystemParameters.CreateDefaultEditorFileSystemParameters(packageRoot);
-            var createParameters = new EditorSimulateModeParameters()
+
+            var createParameters = new EditorSimulateModeOptions
             {
                 EditorFileSystemParameters = fileSystemParams
             };
-            InitializationOperation initializationOperation = package.InitializeAsync(createParameters);
-            yield return initializationOperation;
-            if (initializationOperation.Status == EOperationStatus.Succeed)
 
+            var initOperation = package.InitializePackageAsync(createParameters);
+            yield return initOperation;
+
+            if (initOperation.Status == EOperationStatus.Succeeded)
             {
                 Debug.Log("资源包初始化成功！");
                 _completionCallback?.Invoke(true);
             }
             else
             {
-                Debug.LogError($"资源包初始化失败：{initializationOperation.Error}");
+                Debug.LogError($"资源包初始化失败：{initOperation.Error}");
                 _completionCallback?.Invoke(false);
             }
 
+            var reqPackageVersionOperation = package.RequestPackageVersionAsync();
+            yield return reqPackageVersionOperation;
+            string packageVersion = string.Empty;
+            if (reqPackageVersionOperation.Status == EOperationStatus.Succeeded)
+            {
+                //请求成功
+                packageVersion = reqPackageVersionOperation.PackageVersion;
+                Debug.Log($"Request package Version : {packageVersion}");
+            }
+            else
+            {
+                //请求失败
+                Debug.LogError(reqPackageVersionOperation.Error);
+            }
+            var loadPackageManifestOperation = package.LoadPackageManifestAsync(new LoadPackageManifestOptions(packageVersion, 60));
+            yield return loadPackageManifestOperation;
+
+            if (loadPackageManifestOperation.Status == EOperationStatus.Succeeded)
+            {
+                //更新成功
+            }
+            else
+            {
+                //更新失败
+                Debug.LogError(loadPackageManifestOperation.Error);
+            }
         }
 
     }

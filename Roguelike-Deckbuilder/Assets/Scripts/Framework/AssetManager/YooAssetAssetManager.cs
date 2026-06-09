@@ -56,7 +56,7 @@ namespace Framework.AssetManager
             };
             var handle = _defaultPackage.LoadAssetAsync<T>(path);
             _handles[path] = handle;   // 提前记录句柄，防止重复加载
-            await handle.Task;
+            await handle;
             var asset = handle.AssetObject as T;
             // 增加引用计数
             _refCounts[path] = 1;

@@ -10,7 +10,7 @@ namespace Framework
     public class CoroutineRunner : MonoBehaviour
     {
         private static CoroutineRunner _instance;
-        
+
         public static CoroutineRunner Instance
         {
             get
@@ -24,10 +24,17 @@ namespace Framework
                 return _instance;
             }
         }
-        
-        public void RunCoroutine(IEnumerator coroutine)
+
+        public Coroutine RunCoroutine(IEnumerator coroutine)
         {
-            StartCoroutine(coroutine);
+            return StartCoroutine(coroutine);
         }
+
+
+        // public void StopCoroutine(Coroutine coroutine)
+        // {
+        //     if (coroutine != null)
+        //         ((MonoBehaviour)this).StopCoroutine(coroutine);
+        // }
     }
 }
