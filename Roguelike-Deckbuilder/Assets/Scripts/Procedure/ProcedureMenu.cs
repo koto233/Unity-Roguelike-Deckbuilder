@@ -5,32 +5,32 @@ using System.Threading.Tasks;
 
 namespace Framework.State
 {
-    public class MenuState : IState
+    public class ProcedureMenu : ProcedureBase
     {
         public StateMachine _machine;
-        public MenuState(StateMachine machine)
+        public ProcedureMenu(StateMachine machine)
         {
             _machine = machine;
         }
-        public void OnInit()
+        public override void OnInit()
         {
 
         }
-        public void OnEnter()
+        public override  void OnEnter()
         {
 
         }
-        public void OnUpdate()
+        public override void OnUpdate()
         {
 
         }
-        public void OnDestroy()
+        public override void OnDestroy()
         {
 
         }
 
 
-        public void OnExit()
+        public override void OnExit()
         {
 
         }

@@ -4,21 +4,21 @@ using UnityEngine;
 
 namespace Framework.State
 {
-    public class InitState : IState
+    public class ProcedureInit : ProcedureBase
     {
         private StateMachine _machine;
         private bool _isInitDone = false;
-        public InitState(StateMachine machine)
+        public ProcedureInit(StateMachine machine)
         {
             _machine = machine;
         }
 
-        public void OnInit()
+        public override void OnInit()
         {
 
         }
 
-        public void OnEnter()
+        public override void OnEnter()
         {
             // Debug.Log("进入InitState，进行框架初始化");
             _isInitDone = false;
@@ -26,20 +26,20 @@ namespace Framework.State
             _isInitDone = true;
         }
 
-        public void OnUpdate()
+        public override void OnUpdate()
         {
             if (_isInitDone)
             {
-                _machine.ChangeState<HotFixState>();
+                _machine.ChangeState<ProcedureHotFix>();
             }
         }
 
-        public void OnExit()
+        public override void OnExit()
         {
 
         }
 
-        public void OnDestroy()
+        public override void OnDestroy()
         {
 
         }

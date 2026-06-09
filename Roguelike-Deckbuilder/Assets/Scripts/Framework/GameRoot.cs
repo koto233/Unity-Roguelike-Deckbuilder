@@ -9,7 +9,7 @@ namespace Framework
     public class GameRoot : MonoBehaviour
     {
         public static GameRoot Instance { get; private set; }
-        private StateMachine _flowMachine;
+        private ProcedureManager _procedureManager;
         void Awake()
         {
             if (Instance != null && Instance != this)
@@ -28,7 +28,7 @@ namespace Framework
         }
         void Update()
         {
-            _flowMachine.Update();
+            _procedureManager.Update();
         }
         public void Test()
         {
@@ -41,16 +41,17 @@ namespace Framework
         }
         private void Init()
         {
-            _flowMachine = new StateMachine();
-            _flowMachine.RegisterState(new InitState(_flowMachine));
-            _flowMachine.RegisterState(new HotFixState(_flowMachine));
-              _flowMachine.RegisterState(new MenuState(_flowMachine));
+            var fsm = new StateMachine();
+            _procedureManager = new ProcedureManager(fsm);
+            _procedureManager.RegisterProcedure(new ProcedureInit(fsm));
+            _procedureManager.RegisterProcedure(new ProcedureHotFix(fsm));
+            _procedureManager.RegisterProcedure(new ProcedureMenu(fsm));
             // 监听状态变化（可选）
-            _flowMachine.OnStateChanged += (from, to) =>
+            fsm.OnStateChanged += (from, to) =>
             {
                 Debug.Log($"流程状态变化: {from?.Name} → {to?.Name}");
             };
-            _flowMachine.ChangeState<InitState>();
+            _procedureManager.StartProcedure<ProcedureInit>();
         }
 
 

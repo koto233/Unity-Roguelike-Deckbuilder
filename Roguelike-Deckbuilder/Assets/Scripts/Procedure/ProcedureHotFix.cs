@@ -4,24 +4,24 @@ using UnityEngine;
 using YooAsset;
 namespace Framework.State
 {
-    public class HotFixState : IState
+    public class ProcedureHotFix : ProcedureBase
     {
         private StateMachine _machine;
 
         private IResourceUpdater _resourceUpdater;
         private bool _success = false;
-        public HotFixState(StateMachine machine)
+        public ProcedureHotFix(StateMachine machine)
         {
             _machine = machine;
         }
-        public void OnInit()
+        public override void OnInit()
         {
             _resourceUpdater = new YooAssetUpdater();
             Debug.Log($"初始化 HotFixState {_resourceUpdater == null}");
         }
 
 
-        public void OnEnter()
+        public override void OnEnter()
         {
             // Debug.Log($"进入 HitFixState，开始资源更新流程{_resourceUpdater == null}");
             _success = false;
@@ -37,19 +37,19 @@ namespace Framework.State
             }
 
         }
-        public void OnUpdate()
+        public override void OnUpdate()
         {
             if (_success)
             {
-                _machine.ChangeState<MenuState>();
+                _machine.ChangeState<ProcedureMenu>();
             }
         }
-        public void OnExit()
+        public override void OnExit()
         {
 
         }
 
-        public void OnDestroy()
+        public override void OnDestroy()
         {
 
         }
