@@ -16,6 +16,7 @@ namespace Framework.State
         {
             if (!_states.ContainsKey(typeof(T)))
             {
+                state.OnInit();
                 _states.Add(typeof(T), state);
             }
             else
@@ -79,7 +80,7 @@ namespace Framework.State
             var prevType = _currentState?.GetType();
             _currentState?.OnExit();
             _currentState = newState;
-
+            _currentState.OnEnter();
             // 启动协程进入
             _coroutine = CoroutineRunner.Instance.RunCoroutine(EnterCoroutine(newState, prevType, newStateType));
         }

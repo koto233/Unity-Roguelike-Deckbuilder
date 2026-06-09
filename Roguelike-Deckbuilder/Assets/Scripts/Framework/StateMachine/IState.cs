@@ -2,6 +2,7 @@ namespace Framework.State
 {
     public interface IState
     {
+        void OnInit();
         /// <summary>
         /// 进入状态
         /// </summary>
@@ -16,6 +17,7 @@ namespace Framework.State
         /// 退出状态
         /// </summary>
         void OnExit();
+        void OnDestroy();
     }
 
     /// <summary>

@@ -15,10 +15,17 @@ namespace Framework.State
         {
             _machine = machine;
         }
+        public void OnInit()
+        {
+            _resourceUpdater = new YooAssetUpdater();
+            Debug.Log($"初始化 HitFixState {_resourceUpdater == null}");
+        }
+
+
         public void OnEnter()
         {
-            Debug.Log("进入 HitFixState，开始资源更新流程");
-            _resourceUpdater = new YooAssetUpdater();
+            // Debug.Log($"进入 HitFixState，开始资源更新流程{_resourceUpdater == null}");
+
             _resourceUpdater.StartUpdate(OnResourceUpdateCompleted);
         }
 
@@ -33,6 +40,11 @@ namespace Framework.State
         }
 
         public void OnExit()
+        {
+
+        }
+
+        public void OnDestroy()
         {
 
         }

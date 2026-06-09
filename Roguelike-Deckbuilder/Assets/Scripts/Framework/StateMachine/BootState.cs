@@ -11,9 +11,15 @@ namespace Framework.State
         {
             _machine = machine;
         }
+
+        public void OnInit()
+        {
+
+        }
+
         public void OnEnter()
         {
-            Debug.Log("进入BootState，进行框架初始化");
+            // Debug.Log("进入BootState，进行框架初始化");
 
 
         }
@@ -22,10 +28,15 @@ namespace Framework.State
         {
             ServiceLocator.Register(new ObjectPoolService());
             yield return null;
-            _machine.ChangeState<HitFixState>();
+            _machine.ChangeStateCoroutine<HitFixState>();
         }
 
         public void OnExit()
+        {
+
+        }
+
+        public void OnDestroy()
         {
 
         }
