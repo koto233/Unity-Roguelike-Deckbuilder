@@ -26,6 +26,10 @@ namespace Framework
         {
 
         }
+        void Update()
+        {
+            _flowMachine.Update();
+        }
         public void Test()
         {
             var assetManager = ServiceLocator.Get<IAssetManager>();
@@ -38,14 +42,15 @@ namespace Framework
         private void Init()
         {
             _flowMachine = new StateMachine();
-            _flowMachine.RegisterState(new BootState(_flowMachine));
-            _flowMachine.RegisterState(new HitFixState(_flowMachine));
+            _flowMachine.RegisterState(new InitState(_flowMachine));
+            _flowMachine.RegisterState(new HotFixState(_flowMachine));
+              _flowMachine.RegisterState(new MenuState(_flowMachine));
             // 监听状态变化（可选）
             _flowMachine.OnStateChanged += (from, to) =>
             {
                 Debug.Log($"流程状态变化: {from?.Name} → {to?.Name}");
             };
-            _flowMachine.ChangeStateCoroutine<BootState>();
+            _flowMachine.ChangeState<InitState>();
         }
 
 

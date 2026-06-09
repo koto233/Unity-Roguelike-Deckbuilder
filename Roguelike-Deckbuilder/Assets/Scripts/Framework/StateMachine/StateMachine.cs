@@ -6,10 +6,8 @@ namespace Framework.State
 {
     public class StateMachine
     {
-        private Dictionary<Type, IState> _states = new Dictionary<Type, IState>();
+        private Dictionary<Type, IState> _states = new();
         private IState _currentState;
-        private Coroutine _coroutine;
-
         public event Action<Type, Type> OnStateChanged;
 
         public void RegisterState<T>(T state) where T : IState
@@ -30,12 +28,7 @@ namespace Framework.State
             _currentState?.OnUpdate();
         }
 
-        private IEnumerator EnterCoroutine(ICoroutineState newState, Type prevType, Type newStateType)
-        {
-            yield return newState.OnEnterCoroutine();
-            OnStateChanged?.Invoke(prevType, newStateType);
-            _coroutine = null;
-        }
+
         /// <summary>
         /// 切换状态（同步，适用于非协程状态）
         /// </summary>
@@ -48,10 +41,6 @@ namespace Framework.State
                 return;
             }
 
-            // 停止当前协程（如果有）
-            if (_coroutine != null)
-                CoroutineRunner.Instance.StopCoroutine(_coroutine);
-
             var prevType = _currentState?.GetType();
             _currentState?.OnExit();
             _currentState = newState;
@@ -60,30 +49,11 @@ namespace Framework.State
             OnStateChanged?.Invoke(prevType, newStateType);
         }
 
-        /// <summary>
-        /// 切换状态（异步，支持协程）
-        /// </summary>
-        public void ChangeStateCoroutine<T>() where T : ICoroutineState
+        public void Destroy()
         {
-            var newStateType = typeof(T);
-            if (!_states.TryGetValue(newStateType, out var state))
-            {
-                Debug.LogError($"未注册协程状态: {newStateType.Name}");
-                return;
-            }
-            var newState = state as ICoroutineState;
-
-            // 停止当前协程
-            if (_coroutine != null)
-                CoroutineRunner.Instance.StopCoroutine(_coroutine);
-
-            var prevType = _currentState?.GetType();
-            _currentState?.OnExit();
-            _currentState = newState;
-            _currentState.OnEnter();
-            // 启动协程进入
-            _coroutine = CoroutineRunner.Instance.RunCoroutine(EnterCoroutine(newState, prevType, newStateType));
+            foreach (var state in _states.Values) state.OnDestroy();
+            _states.Clear();
+            _currentState = null;
         }
-
     }
 }

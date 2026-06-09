@@ -19,12 +19,4 @@ namespace Framework.State
         void OnExit();
         void OnDestroy();
     }
-
-    /// <summary>
-    /// 支持协程的状态（用于需要异步等待的流程，如热更新）
-    /// </summary>
-    public interface ICoroutineState : IState
-    {
-        System.Collections.IEnumerator OnEnterCoroutine();
-    }
 }
