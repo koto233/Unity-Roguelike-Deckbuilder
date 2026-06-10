@@ -1,7 +1,8 @@
-using Framework.AssetManager;
-using Framework.State;
+using System.Threading.Tasks;
+using LitFramework.AssetManager;
+using LitFramework.FSM;
 using UnityEngine;
-namespace Framework
+namespace LitFramework
 {
     /// <summary>
     /// 游戏根对象，负责管理全局服务和游戏状态
@@ -30,15 +31,18 @@ namespace Framework
         {
             _procedureManager.Update();
         }
+
         public void Test()
         {
             var assetManager = ServiceLocator.Get<IAssetManager>();
-            assetManager.LoadAsync<GameObject>("Assets/Res/Test.prefab", (prefab) =>
-            {
-                var uiRoot = Instantiate(prefab);
-                uiRoot.transform.SetParent(transform);
-            });
+            assetManager.LoadAsync<GameObject>("Assets/Res/Test.prefab", (loadedPrefab) =>
+           {
+               var uiRoot = Instantiate(loadedPrefab);
+               uiRoot.transform.SetParent(transform);
+           });
         }
+
+
         private void Init()
         {
             var fsm = new StateMachine();
@@ -52,6 +56,7 @@ namespace Framework
                 Debug.Log($"流程状态变化: {from?.Name} → {to?.Name}");
             };
             _procedureManager.StartProcedure<ProcedureInit>();
+            // _procedureManager.SetSharedData();
         }
 
 

@@ -1,6 +1,6 @@
-using Framework.EventSystem;
+using LitFramework.EventBus;
 
-namespace Framework.AssetManager
+namespace LitFramework.AssetManager
 {
     public struct AssetLoadedEvent : IEvent
     {

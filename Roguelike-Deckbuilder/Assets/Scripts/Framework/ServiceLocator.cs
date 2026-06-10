@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
-namespace Framework
+namespace LitFramework
 {
     /// <summary>
     /// 服务定位器

@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
-using Framework.EventSystem;
+using LitFramework.EventBus;
 using UnityEngine;
 using YooAsset;
 
-namespace Framework.AssetManager
+namespace LitFramework.AssetManager
 {
     /// <summary>
     /// YooAsset 资源管理器

@@ -1,4 +1,4 @@
-namespace Framework.ObjectPool
+namespace LitFramework.ObjectPool
 {
     public interface IPoolable
     {

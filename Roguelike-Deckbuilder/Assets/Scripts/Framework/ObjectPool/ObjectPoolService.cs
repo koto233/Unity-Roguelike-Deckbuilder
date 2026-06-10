@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Framework.ObjectPool
+namespace LitFramework.ObjectPool
 {
     /// <summary>
     /// 管理多个不同对象的池子

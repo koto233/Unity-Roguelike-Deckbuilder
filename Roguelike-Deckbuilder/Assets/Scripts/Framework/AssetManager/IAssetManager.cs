@@ -1,6 +1,6 @@
 using System;
 
-namespace Framework.AssetManager
+namespace LitFramework.AssetManager
 {
     public interface IAssetManager
     {

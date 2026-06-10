@@ -1,8 +1,9 @@
 using System.Collections;
-using Framework.ObjectPool;
+using LitFramework.ObjectPool;
+using LitFramework.UI.Core.Service;
 using UnityEngine;
 
-namespace Framework.State
+namespace LitFramework.FSM
 {
     public class ProcedureInit : ProcedureBase
     {
@@ -23,6 +24,7 @@ namespace Framework.State
             // Debug.Log("进入InitState，进行框架初始化");
             _isInitDone = false;
             ServiceLocator.Register(new ObjectPoolService());
+            // ServiceLocator.Register(new UIService()); // 初始化对象池，预创建10个对象
             _isInitDone = true;
         }
 

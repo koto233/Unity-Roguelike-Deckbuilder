@@ -1,4 +1,4 @@
-namespace Framework.State
+namespace LitFramework.FSM
 {
     public interface IState
     {

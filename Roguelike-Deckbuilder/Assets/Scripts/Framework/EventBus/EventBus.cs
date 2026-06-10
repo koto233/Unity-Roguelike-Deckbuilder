@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-namespace Framework.EventSystem
+namespace LitFramework.EventBus
 {
     /// <summary>
     /// 事件总线，负责管理事件的注册、注销和触发

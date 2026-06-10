@@ -1,5 +1,5 @@
 using System;
-namespace Framework.AssetManager
+namespace LitFramework.AssetManager
 {
     /// <summary>
     /// 资源更新服务（负责初始化和热更新）

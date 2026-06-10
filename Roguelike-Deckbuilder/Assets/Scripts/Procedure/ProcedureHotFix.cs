@@ -1,8 +1,8 @@
 using System.Collections;
-using Framework.AssetManager;
+using LitFramework.AssetManager;
 using UnityEngine;
 using YooAsset;
-namespace Framework.State
+namespace LitFramework.FSM
 {
     public class ProcedureHotFix : ProcedureBase
     {

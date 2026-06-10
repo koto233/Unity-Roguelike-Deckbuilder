@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using Framework.State;
+using LitFramework.FSM;
 using UnityEngine;
 
 public abstract class ProcedureBase : IState

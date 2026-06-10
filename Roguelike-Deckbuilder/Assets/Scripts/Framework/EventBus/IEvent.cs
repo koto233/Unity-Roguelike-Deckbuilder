@@ -1,4 +1,4 @@
-namespace Framework.EventSystem
+namespace LitFramework.EventBus
 {
     public interface IEvent
     {

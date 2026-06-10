@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Framework.ObjectPool
+namespace LitFramework.ObjectPool
 {
     public class ObjectPool<T> where T : class
     {

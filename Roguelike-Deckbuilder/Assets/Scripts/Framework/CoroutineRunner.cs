@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine;
 
-namespace Framework
+namespace LitFramework
 {
     /// <summary>
     /// 全局协程宿主，用于非 MonoBehaviour 类启动协程

@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace Framework.ObjectPool
+namespace LitFramework.ObjectPool
 {
     /// <summary>
     /// GameObject对象池

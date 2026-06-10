@@ -1,5 +1,5 @@
 using System;
-namespace Framework.EventSystem
+namespace LitFramework.EventBus
 {
     public class EventBinding<T> : IEventBinding<T> where T : IEvent
     {

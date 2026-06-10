@@ -1,6 +1,6 @@
 using System;
 
-namespace Framework.EventSystem
+namespace LitFramework.EventBus
 {
     public interface IEventBinding<T> where T : IEvent
     {
