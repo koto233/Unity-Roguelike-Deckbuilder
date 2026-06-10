@@ -7,19 +7,21 @@ namespace LitFramework.UI.Core.Service
 {
     public sealed class UIService : IDisposable
     {
-        private readonly IAssetManager _loader;
         private readonly Dictionary<Type, UIConfig> _configs = new();
         private readonly Dictionary<Type, UIWindow> _opened = new();
         private readonly Dictionary<UILayer, RectTransform> _layers = new();
-
-        public UIService(Canvas rootCanvas, IAssetManager assetManager)
+        private IAssetManager _assetManager;
+       
+        private IAssetManager AssetManager =>
+        _assetManager ??= ServiceLocator.Get<IAssetManager>();
+        public UIService()
         {
-            _loader = assetManager;
             foreach (UILayer layer in Enum.GetValues(typeof(UILayer)))
             {
                 var go = new GameObject(layer.ToString());
                 var rect = go.AddComponent<RectTransform>();
-                rect.SetParent(rootCanvas.transform, false);
+                var uiRoot = GameRoot.Instance.UIRoot;
+                rect.SetParent(uiRoot.transform, false);
                 _layers[layer] = rect;
             }
         }
@@ -39,7 +41,7 @@ namespace LitFramework.UI.Core.Service
                 return existing as T;
 
             var cfg = _configs[type];
-            var prefab = _loader.Load<GameObject>(cfg.PrefabPath);
+            var prefab = _assetManager.Load<GameObject>(cfg.PrefabPath);
             var go = UnityEngine.Object.Instantiate(prefab, _layers[cfg.Layer]);
 
             var window = go.GetComponent<T>();
@@ -60,7 +62,7 @@ namespace LitFramework.UI.Core.Service
             }
 
             var cfg = _configs[type];
-            _loader.LoadAsync<GameObject>(cfg.PrefabPath, prefab =>
+            _assetManager.LoadAsync<GameObject>(cfg.PrefabPath, prefab =>
             {
                 var go = UnityEngine.Object.Instantiate(prefab, _layers[cfg.Layer]);
                 var window = go.GetComponent<T>();

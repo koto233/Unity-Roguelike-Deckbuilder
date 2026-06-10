@@ -11,6 +11,8 @@ namespace LitFramework
     {
         public static GameRoot Instance { get; private set; }
         private ProcedureManager _procedureManager;
+        public Canvas UIRoot { get; private set; }
+
         void Awake()
         {
             if (Instance != null && Instance != this)
@@ -45,6 +47,7 @@ namespace LitFramework
 
         private void Init()
         {
+            UIRoot = GameObject.Find("UIRoot").GetComponent<Canvas>();
             var fsm = new StateMachine();
             _procedureManager = new ProcedureManager(fsm);
             _procedureManager.RegisterProcedure(new ProcedureInit(fsm));
