@@ -4,19 +4,19 @@ using LitFramework.EventBus;
 using UnityEngine;
 using YooAsset;
 
-namespace LitFramework.AssetManager
+namespace LitFramework.Asset
 {
     /// <summary>
     /// YooAsset 资源管理器
     /// </summary>
-    public class YooAssetAssetManager : IAssetManager
+    public class YooAssetAssetService : IAssetService
     {
         private ResourcePackage _defaultPackage;
         private Dictionary<string, AssetHandle> _handles = new();
         private Dictionary<string, int> _refCounts = new();
         private Dictionary<string, List<Action<UnityEngine.Object>>> _pendingCallbacks = new();
 
-        public YooAssetAssetManager(ResourcePackage package)
+        public YooAssetAssetService(ResourcePackage package)
         {
             _defaultPackage = package;
         }

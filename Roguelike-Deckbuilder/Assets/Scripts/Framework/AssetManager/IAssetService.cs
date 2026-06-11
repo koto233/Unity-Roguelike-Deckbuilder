@@ -1,8 +1,8 @@
 using System;
 
-namespace LitFramework.AssetManager
+namespace LitFramework.Asset
 {
-    public interface IAssetManager
+    public interface IAssetService
     {
         /// <summary>
         /// 同步加载资源（如非必要，推荐使用异步）

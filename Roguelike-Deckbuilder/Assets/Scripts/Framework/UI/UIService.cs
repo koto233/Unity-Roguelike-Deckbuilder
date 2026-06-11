@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using LitFramework.AssetManager;
+using LitFramework.Asset;
 using LitFramework.UI.Core.Window;
 using UnityEngine;
 namespace LitFramework.UI.Core.Service
@@ -10,10 +10,10 @@ namespace LitFramework.UI.Core.Service
         private readonly Dictionary<Type, UIConfig> _configs = new();
         private readonly Dictionary<Type, UIWindow> _opened = new();
         private readonly Dictionary<UILayer, RectTransform> _layers = new();
-        private IAssetManager _assetManager;
+        private IAssetService _assetManager;
        
-        private IAssetManager AssetManager =>
-        _assetManager ??= ServiceLocator.Get<IAssetManager>();
+        private IAssetService AssetManager =>
+        _assetManager ??= ServiceLocator.Get<IAssetService>();
         public UIService()
         {
             foreach (UILayer layer in Enum.GetValues(typeof(UILayer)))

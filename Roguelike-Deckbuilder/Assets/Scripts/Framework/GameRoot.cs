@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-using LitFramework.AssetManager;
+using LitFramework.Asset;
 using LitFramework.FSM;
 using UnityEngine;
 namespace LitFramework
@@ -36,7 +36,7 @@ namespace LitFramework
 
         public void Test()
         {
-            var assetManager = ServiceLocator.Get<IAssetManager>();
+            var assetManager = ServiceLocator.Get<IAssetService>();
             assetManager.LoadAsync<GameObject>("Assets/Res/Test.prefab", (loadedPrefab) =>
            {
                var uiRoot = Instantiate(loadedPrefab);

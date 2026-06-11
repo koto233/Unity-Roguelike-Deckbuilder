@@ -1,5 +1,5 @@
 using System.Collections;
-using LitFramework.AssetManager;
+using LitFramework.Asset;
 using UnityEngine;
 using YooAsset;
 namespace LitFramework.FSM
@@ -33,7 +33,7 @@ namespace LitFramework.FSM
             if (flag)
             {
                 Debug.Log("资源更新完成，开始游戏逻辑");
-                ServiceLocator.Register<IAssetManager>(new YooAssetAssetManager(YooAssets.GetPackage("DefaultPackage")));
+                ServiceLocator.Register<IAssetService>(new YooAssetAssetService(YooAssets.GetPackage("DefaultPackage")));
             }
 
         }

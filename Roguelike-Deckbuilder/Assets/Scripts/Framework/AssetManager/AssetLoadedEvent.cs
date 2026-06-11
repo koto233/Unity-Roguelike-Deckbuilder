@@ -1,6 +1,6 @@
 using LitFramework.EventBus;
 
-namespace LitFramework.AssetManager
+namespace LitFramework.Asset
 {
     public struct AssetLoadedEvent : IEvent
     {

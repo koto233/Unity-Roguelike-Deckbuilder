@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine;
 using YooAsset;
 
-namespace LitFramework.AssetManager
+namespace LitFramework.Asset
 {
     public class YooAssetUpdater : IResourceUpdater
     {

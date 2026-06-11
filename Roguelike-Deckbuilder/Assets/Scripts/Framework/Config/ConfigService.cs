@@ -1,15 +1,15 @@
 using System;
 using System.Collections.Generic;
-using LitFramework.AssetManager;
+using LitFramework.Asset;
 using UnityEngine;
 namespace LitFramework.Config
 {
     public class ConfigService
     {
         private Dictionary<Type, object> _tables = new();
-        private IAssetManager _assetManager;
-        private IAssetManager AssetManager =>
-        _assetManager ??= ServiceLocator.Get<IAssetManager>();
+        private IAssetService _assetManager;
+        private IAssetService AssetManager =>
+        _assetManager ??= ServiceLocator.Get<IAssetService>();
         /// <summary>
         /// 加载一张配置表
         /// </summary>
