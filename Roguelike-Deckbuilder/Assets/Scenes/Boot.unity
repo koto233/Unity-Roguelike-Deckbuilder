@@ -473,7 +473,7 @@ GameObject:
   - component: {fileID: 1410825165}
   - component: {fileID: 1410825164}
   m_Layer: 5
-  m_Name: Canvas
+  m_Name: UIRoot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -646,7 +646,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 488201819}
-        m_TargetAssemblyTypeName: Framework.GameRoot, Assembly-CSharp
+        m_TargetAssemblyTypeName: LitFramework.GameRoot, Assembly-CSharp
         m_MethodName: Test
         m_Mode: 1
         m_Arguments:
