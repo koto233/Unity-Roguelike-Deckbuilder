@@ -27,9 +27,11 @@ namespace LitFramework.FSM
             _isInitDone = false;
             ServiceLocator.Register(new ObjectPoolService());
             ServiceLocator.Register(new ConfigService());
-            ServiceLocator.Register(new UIService()); 
             ServiceLocator.Register(new InputService());
             ServiceLocator.Register(new AudioService());
+            ServiceLocator.Register(new UIService());
+            ServiceLocator.Get<UIService>().Register<UITitleWindow>("Assets/Res/UI/UITitleWindow.prefab", UILayer.Normal);
+            ServiceLocator.Get<UIService>().Register<UIBattleWindow>("Assets/Res/UI/UIBattleWindow.prefab", UILayer.Normal);
             ModelContainer.Register(new PlayerModel());
             _isInitDone = true;
         }

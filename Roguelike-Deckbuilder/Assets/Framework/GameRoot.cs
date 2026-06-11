@@ -34,16 +34,6 @@ namespace LitFramework
             _procedureManager.Update();
         }
 
-        public void Test()
-        {
-            var assetManager = ServiceLocator.Get<IAssetService>();
-            assetManager.LoadAsync<GameObject>("Assets/Res/Test.prefab", (loadedPrefab) =>
-           {
-               var uiRoot = Instantiate(loadedPrefab);
-               uiRoot.transform.SetParent(transform);
-           });
-        }
-
 
         private void Init()
         {
@@ -52,7 +42,7 @@ namespace LitFramework
             _procedureManager = new ProcedureManager(fsm);
             _procedureManager.RegisterProcedure(new ProcedureInit(fsm));
             _procedureManager.RegisterProcedure(new ProcedureHotFix(fsm));
-            _procedureManager.RegisterProcedure(new ProcedureMenu(fsm));
+            _procedureManager.RegisterProcedure(new ProcedureTitle(fsm));
             // 监听状态变化（可选）
             fsm.OnStateChanged += (from, to) =>
             {

@@ -6,16 +6,16 @@ namespace LitFramework.Audio
 {
     public class AudioService : IAudioService
     {
-        private IAssetService _asset;
         private AudioSource _bgmSource;
         private AudioSource _sfxSource;
         private float _bgmVolume = 1f;
         private float _sfxVolume = 1f;
         private Dictionary<string, AudioClip> _clipCache = new();  // 简单缓存
-
+        private IAssetService _assetManager;
+        private IAssetService AssetManager =>
+        _assetManager ??= ServiceLocator.Get<IAssetService>();
         public AudioService()
         {
-            _asset = ServiceLocator.Get<IAssetService>();
             // 动态创建 AudioSource 组件，不依赖场景预设
             var bgmGo = new GameObject("BGMPlayer");
             var sfxGo = new GameObject("SFXPlayer");
@@ -50,7 +50,7 @@ namespace LitFramework.Audio
                 return;
             }
             // 通过资源服务异步加载
-            _asset.LoadAsync<AudioClip>(GetClipPath(clipName), (clip) =>
+            AssetManager.LoadAsync<AudioClip>(GetClipPath(clipName), (clip) =>
             {
                 if (clip != null)
                 {

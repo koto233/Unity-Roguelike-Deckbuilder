@@ -20,6 +20,8 @@ namespace LitFramework.UI.Core.Service
             {
                 var go = new GameObject(layer.ToString());
                 var rect = go.AddComponent<RectTransform>();
+                rect.anchorMin = new Vector2(0, 0);
+                rect.anchorMax = new Vector2(1, 1);
                 var uiRoot = GameRoot.Instance.UIRoot;
                 rect.SetParent(uiRoot.transform, false);
                 _layers[layer] = rect;
@@ -32,7 +34,7 @@ namespace LitFramework.UI.Core.Service
             _configs[typeof(T)] = new UIConfig(prefabPath, layer);
         }
 
-        public T Open<T>(IUIArgs args = null)
+        public T OpenUI<T>(IUIArgs args = null)
             where T : UIWindow
         {
             var type = typeof(T);
@@ -41,7 +43,8 @@ namespace LitFramework.UI.Core.Service
                 return existing as T;
 
             var cfg = _configs[type];
-            var prefab = _assetManager.Load<GameObject>(cfg.PrefabPath);
+            Debug.Log($"加载窗口: {cfg.PrefabPath}");
+            var prefab = AssetManager.Load<GameObject>(cfg.PrefabPath);
             var go = UnityEngine.Object.Instantiate(prefab, _layers[cfg.Layer]);
 
             var window = go.GetComponent<T>();
@@ -62,7 +65,7 @@ namespace LitFramework.UI.Core.Service
             }
 
             var cfg = _configs[type];
-            _assetManager.LoadAsync<GameObject>(cfg.PrefabPath, prefab =>
+            AssetManager.LoadAsync<GameObject>(cfg.PrefabPath, prefab =>
             {
                 var go = UnityEngine.Object.Instantiate(prefab, _layers[cfg.Layer]);
                 var window = go.GetComponent<T>();

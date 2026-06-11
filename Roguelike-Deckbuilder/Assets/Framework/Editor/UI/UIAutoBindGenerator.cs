@@ -139,11 +139,11 @@ namespace LitFramework.UI.Core.Utility
 
         static string MakeFieldName(Component comp, UIBind bind)
         {
-            var typeName = comp.GetType().Name;
+            // var typeName = comp.GetType().Name;
             var nodeName = MakeSafeFieldName(bind.name);
 
             // 使用 @ 提高区分度 & 安全性
-            return $"@_auto_{typeName}_{nodeName}";
+            return $"b_{nodeName}";
         }
 
         static string MakeSafeFieldName(string name)

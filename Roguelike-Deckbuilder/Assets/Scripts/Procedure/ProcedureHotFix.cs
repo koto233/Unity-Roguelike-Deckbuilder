@@ -1,5 +1,6 @@
 using System.Collections;
 using LitFramework.Asset;
+using LitFramework.UI.Core.Service;
 using UnityEngine;
 using YooAsset;
 namespace LitFramework.FSM
@@ -34,6 +35,7 @@ namespace LitFramework.FSM
             {
                 Debug.Log("资源更新完成，开始游戏逻辑");
                 ServiceLocator.Register<IAssetService>(new YooAssetAssetService(YooAssets.GetPackage("DefaultPackage")));
+               
             }
 
         }
@@ -41,7 +43,7 @@ namespace LitFramework.FSM
         {
             if (_success)
             {
-                _machine.ChangeState<ProcedureMenu>();
+                _machine.ChangeState<ProcedureTitle>();
             }
         }
         public override void OnExit()

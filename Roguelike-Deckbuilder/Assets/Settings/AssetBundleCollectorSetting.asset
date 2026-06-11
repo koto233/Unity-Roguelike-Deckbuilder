@@ -25,16 +25,29 @@ MonoBehaviour:
     AutoCollectShaders: 1
     IgnoreRuleName: NormalIgnoreRule
     Groups:
-    - GroupName: Default Group
+    - GroupName: UI
       GroupDesc: 
       AssetTags: 
       ActiveRuleName: EnableGroup
       Collectors:
-      - CollectPath: Assets/Res/Test.prefab
-        CollectorGUID: 132d0a4fd1aaa51419588656a0434876
+      - CollectPath: Assets/Res/UI/UITitleWindow.prefab
+        CollectorGUID: af510aa0c9ee47d4f99967799481e440
         CollectorType: 0
         AddressRuleName: AddressByFileName
         PackRuleName: PackDirectory
         FilterRuleName: CollectAll
         AssetTags: 
         UserData: 
+      - CollectPath: Assets/Res/UI/UIBattleWindow.prefab
+        CollectorGUID: 7badf02c663335a449fc330e3c74be75
+        CollectorType: 0
+        AddressRuleName: AddressByFileName
+        PackRuleName: PackDirectory
+        FilterRuleName: CollectAll
+        AssetTags: 
+        UserData: 
+    - GroupName: Default Group
+      GroupDesc: 
+      AssetTags: 
+      ActiveRuleName: EnableGroup
+      Collectors: []

@@ -43,7 +43,6 @@ namespace LitFramework.Asset
             if (initOperation.Status == EOperationStatus.Succeeded)
             {
                 Debug.Log("资源包初始化成功！");
-                _completionCallback?.Invoke(true);
             }
             else
             {
@@ -71,6 +70,8 @@ namespace LitFramework.Asset
             if (loadPackageManifestOperation.Status == EOperationStatus.Succeeded)
             {
                 //更新成功
+                Debug.Log($"更新成功！");
+                _completionCallback?.Invoke(true);
             }
             else
             {
