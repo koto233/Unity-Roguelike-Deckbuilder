@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using LitFramework.EventBus;
 using UnityEngine;
 
-public class PlayerModel
+public class PlayerModel : IModel
 {
     private int _currentHp;
     private int _maxHp;
@@ -73,14 +73,14 @@ public class PlayerModel
         return true;
     }
 
-    public void SetEnergy(int energy) 
+    public void SetEnergy(int energy)
     {
         int old = _energy;
         _energy = Mathf.Max(0, energy);
         if (old != _energy)
             EventBus<PlayerEnergyChangedEvent>.Publish(new PlayerEnergyChangedEvent { OldEnergy = old, NewEnergy = _energy });
     }
-    public void AddEnergy(int amount) 
+    public void AddEnergy(int amount)
     {
         int old = _energy;
         _energy = Mathf.Min(3, _energy + amount);
@@ -94,6 +94,11 @@ public class PlayerModel
         _energy -= cost;
         EventBus<PlayerEnergyChangedEvent>.Publish(new PlayerEnergyChangedEvent { OldEnergy = old, NewEnergy = _energy });
         return true;
+    }
+
+    public void OnRegister()
+    {
+      
     }
 
     // 用于存档加载（批量恢复，避免多次事件）

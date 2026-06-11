@@ -1,4 +1,5 @@
 using System.Collections;
+using LitFramework.Audio;
 using LitFramework.Config;
 using LitFramework.ObjectPool;
 using LitFramework.UI.Core.Service;
@@ -26,8 +27,10 @@ namespace LitFramework.FSM
             _isInitDone = false;
             ServiceLocator.Register(new ObjectPoolService());
             ServiceLocator.Register(new ConfigService());
-            ServiceLocator.Register(new UIService()); // 初始化对象池，预创建10个对象
+            ServiceLocator.Register(new UIService()); 
             ServiceLocator.Register(new InputService());
+            ServiceLocator.Register(new AudioService());
+            ModelContainer.Register(new PlayerModel());
             _isInitDone = true;
         }
 
