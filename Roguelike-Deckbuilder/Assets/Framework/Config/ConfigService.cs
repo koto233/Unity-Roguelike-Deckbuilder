@@ -4,7 +4,7 @@ using LitFramework.Asset;
 using UnityEngine;
 namespace LitFramework.Config
 {
-    public class ConfigService
+    public class ConfigService : IConfigService
     {
         private Dictionary<Type, object> _tables = new();
         private IAssetService _assetManager;
