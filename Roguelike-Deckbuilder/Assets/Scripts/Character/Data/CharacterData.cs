@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using LitFramework.EventBus;
 using UnityEngine;
 
 public abstract class CharacterData
@@ -46,7 +47,7 @@ public abstract class CharacterData
          _currentHp = Mathf.Max(0, _currentHp - remainingDamage);
          if (oldHp != _currentHp)
          {
-            // EventBus<HpChangedEvent>.Emit(new HpChangedEvent { Character = this, OldHp = oldHp, NewHp = _currentHp });
+            EventBus<HpChangedEvent>.Publish(new HpChangedEvent { characterData = this, OldHp = oldHp, NewHp = _currentHp });
             if (_currentHp <= 0)
                OnDeath();
          }
