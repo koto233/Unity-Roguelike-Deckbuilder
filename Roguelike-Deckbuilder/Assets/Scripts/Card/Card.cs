@@ -4,7 +4,7 @@ using System.Linq;
 using LitFramework.EventBus;
 using UnityEngine;
 
-public class Card : MonoBehaviour
+public class Card 
 {
     public CardConfig Config { get; private set; }
     public int CurrentCost { get; set; }  // 临时费用变化（如被减费）
