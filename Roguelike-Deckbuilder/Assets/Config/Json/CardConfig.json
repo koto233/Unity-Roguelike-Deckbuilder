@@ -1,0 +1,72 @@
+{
+  "strike": {
+    "ID": "strike",
+    "Name": "攻击",
+    "Cost": 1,
+    "Type": "Attack",
+    "Description": "造成{0}点伤害。"
+  },
+  "strike+": {
+    "ID": "strike+",
+    "Name": "攻击+",
+    "Cost": 1,
+    "Type": "Attack",
+    "Description": "造成{0}点伤害。"
+  },
+  "defend": {
+    "ID": "defend",
+    "Name": "防御",
+    "Cost": 1,
+    "Type": "Skill",
+    "Description": "获得{0}点格挡。"
+  },
+  "defend+": {
+    "ID": "defend+",
+    "Name": "防御+",
+    "Cost": 1,
+    "Type": "Skill",
+    "Description": "获得{0}点格挡。"
+  },
+  "heavy_blow": {
+    "ID": "heavy_blow",
+    "Name": "猛击",
+    "Cost": 2,
+    "Type": "Attack",
+    "Description": "造成{0}点伤害。"
+  },
+  "heavy_blow+": {
+    "ID": "heavy_blow+",
+    "Name": "猛击+",
+    "Cost": 2,
+    "Type": "Attack",
+    "Description": "造成{0} 点伤害。"
+  },
+  "tactics": {
+    "ID": "tactics",
+    "Name": "战术",
+    "Cost": 1,
+    "Type": "Skill",
+    "Description": "抽{0}张牌。"
+  },
+  "tactics+": {
+    "ID": "tactics+",
+    "Name": "战术+",
+    "Cost": 1,
+    "Type": "Skill",
+    "Description": "抽{0}张牌。"
+  },
+  "empower": {
+    "ID": "empower",
+    "Name": "赋能",
+    "Cost": 0,
+    "Type": "Skill",
+    "Description": "获得 {0}点能量。"
+  },
+  "empower+": {
+    "ID": "empower+",
+    "Name": "赋能+",
+    "Cost": 0,
+    "Type": "Skill",
+    "Description": "获得{0}点能量。"
+  }
+}

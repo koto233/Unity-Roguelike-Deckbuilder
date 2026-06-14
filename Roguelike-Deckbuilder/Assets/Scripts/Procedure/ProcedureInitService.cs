@@ -5,13 +5,13 @@ using LitFramework.ObjectPool;
 using LitFramework.UI.Core.Service;
 using UnityEngine;
 
-namespace LitFramework.FSM
+namespace LitFramework.FSM.Procedure
 {
-    public class ProcedureInit : ProcedureBase
+    public class ProcedureInitService : ProcedureBase
     {
         private StateMachine _machine;
         private bool _isInitDone = false;
-        public ProcedureInit(StateMachine machine)
+        public ProcedureInitService(StateMachine machine)
         {
             _machine = machine;
         }
@@ -32,32 +32,15 @@ namespace LitFramework.FSM
             ServiceLocator.Register(new UIService());
             ServiceLocator.Get<UIService>().Register<UITitleWindow>("Assets/Res/UI/UITitleWindow.prefab", UILayer.Normal);
             ServiceLocator.Get<UIService>().Register<UIBattleWindow>("Assets/Res/UI/UIBattleWindow.prefab", UILayer.Normal);
-            LoadAllConfigs();
+            ModelContainer.Register(new PlayerModel());
             _isInitDone = true;
         }
-        // 在 GameRoot 或启动时加载
-        public void LoadAllConfigs()
-        {
-            var configSvc = ServiceLocator.Get<IConfigService>();
-            configSvc.LoadTable<CardConfig>("Cards", (success) =>
-            {
-                if (success)
-                {
-                    ModelContainer.Register<ICardLibrary>(new CardLibrary());
-                }
-                else
-                {
-                    Debug.LogError("卡牌配置加载失败");
-                }
-            });
 
-            ModelContainer.Register(new PlayerModel());
-        }
         public override void OnUpdate()
         {
             if (_isInitDone)
             {
-                _machine.ChangeState<ProcedureHotFix>();
+                _machine.ChangeState<ProcedureInitResource>();
             }
         }
 

@@ -4,5 +4,5 @@ using UnityEngine;
 
 public interface IConfig
 {
-    int Id { get; }
+    string Id { get; }
 }

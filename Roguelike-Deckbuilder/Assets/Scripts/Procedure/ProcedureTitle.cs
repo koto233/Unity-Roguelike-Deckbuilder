@@ -2,7 +2,7 @@ using LitFramework.Asset;
 using LitFramework.UI.Core.Service;
 using UnityEngine;
 
-namespace LitFramework.FSM
+namespace LitFramework.FSM.Procedure
 {
     public class ProcedureTitle : ProcedureBase
     {

@@ -14,8 +14,11 @@ public class CardLibrary : ICardLibrary
     public void OnRegister()
     {
         var table = ServiceLocator.Get<IConfigService>().GetTable<CardConfig>();
-        _configMap = table.GetAll().ToDictionary(x => x.Id.ToString(), x => x);
-        
+        _configMap = table.DictClone;
+        foreach (var item in _configMap)
+        {
+            Debug.Log($"卡牌: {item.Key}");
+        }
     }
 
     public Card CreateCard(string cardId)

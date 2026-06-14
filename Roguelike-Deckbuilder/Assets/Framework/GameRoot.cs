@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using LitFramework.Asset;
 using LitFramework.FSM;
+using LitFramework.FSM.Procedure;
 using UnityEngine;
 namespace LitFramework
 {
@@ -40,15 +41,16 @@ namespace LitFramework
             UIRoot = GameObject.Find("UIRoot").GetComponent<Canvas>();
             var fsm = new StateMachine();
             _procedureManager = new ProcedureManager(fsm);
-            _procedureManager.RegisterProcedure(new ProcedureInit(fsm));
-            _procedureManager.RegisterProcedure(new ProcedureHotFix(fsm));
+            _procedureManager.RegisterProcedure(new ProcedureInitService(fsm));
+            _procedureManager.RegisterProcedure(new ProcedureInitResource(fsm));
+            _procedureManager.RegisterProcedure(new ProcedureInitConfig(fsm));
             _procedureManager.RegisterProcedure(new ProcedureTitle(fsm));
             // 监听状态变化（可选）
             fsm.OnStateChanged += (from, to) =>
             {
                 Debug.Log($"流程状态变化: {from?.Name} → {to?.Name}");
             };
-            _procedureManager.StartProcedure<ProcedureInit>();
+            _procedureManager.StartProcedure<ProcedureInitService>();
             // _procedureManager.SetSharedData();
         }
 

@@ -3,15 +3,15 @@ using LitFramework.Asset;
 using LitFramework.UI.Core.Service;
 using UnityEngine;
 using YooAsset;
-namespace LitFramework.FSM
+namespace LitFramework.FSM.Procedure
 {
-    public class ProcedureHotFix : ProcedureBase
+    public class ProcedureInitResource : ProcedureBase
     {
         private StateMachine _machine;
 
         private IResourceUpdater _resourceUpdater;
         private bool _success = false;
-        public ProcedureHotFix(StateMachine machine)
+        public ProcedureInitResource(StateMachine machine)
         {
             _machine = machine;
         }
@@ -35,15 +35,16 @@ namespace LitFramework.FSM
             {
                 Debug.Log("资源更新完成，开始游戏逻辑");
                 ServiceLocator.Register<IAssetService>(new YooAssetAssetService(YooAssets.GetPackage("DefaultPackage")));
-               
+
             }
 
         }
+
         public override void OnUpdate()
         {
             if (_success)
             {
-                _machine.ChangeState<ProcedureTitle>();
+                _machine.ChangeState<ProcedureInitConfig>();
             }
         }
         public override void OnExit()

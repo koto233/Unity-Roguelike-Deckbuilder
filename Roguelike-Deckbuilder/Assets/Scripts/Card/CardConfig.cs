@@ -6,19 +6,19 @@ using UnityEngine;
 [Serializable]
 public class CardConfig : IConfig
 {
-    public int Id;           // 卡牌唯一ID
+    public string Id;           // 卡牌唯一ID
     public string Name;         // 显示名称
     public int Cost;            // 基础能量消耗
     public CardType Type;
     public string Description;  // 描述文本
-    public List<EffectData> Effects;  // 支持多效果（如伤害+抽牌）
+    [NonSerialized]
+    public List<CardEffects> Effects;  // 支持多效果（如伤害+抽牌）
 
-    int IConfig.Id => Id;
+    string IConfig.Id => Id;
 }
 
 public enum CardType
 {
     Attack,
     Skill,
-    Power
 }

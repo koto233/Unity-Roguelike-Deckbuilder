@@ -4,17 +4,18 @@ using UnityEngine;
 
 public class DataTable<T> where T : IConfig
 {
-    private Dictionary<int, T> _dict;
-    public void Load(List<T> list)
+    private Dictionary<string, T> _dict;
+    public void Load(Dictionary<string, T> dict)
     {
-        _dict = new Dictionary<int, T>();
-        foreach (var item in list)
-            _dict[item.Id] = item;
+        _dict = dict;
+        // foreach (var item in list)
+        //     _dict[item.Id] = item;
     }
-    public T Get(int id)
+    public T Get(string id)
     {
         _dict.TryGetValue(id, out var item);
         return item;
     }
+    public Dictionary<string, T> DictClone => _dict;
     public IEnumerable<T> GetAll() => _dict.Values;
 }

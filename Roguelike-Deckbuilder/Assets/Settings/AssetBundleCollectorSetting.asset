@@ -46,8 +46,24 @@ MonoBehaviour:
         FilterRuleName: CollectAll
         AssetTags: 
         UserData: 
-    - GroupName: Default Group
-      GroupDesc: 
+    - GroupName: Config
+      GroupDesc: "\u914D\u7F6E\u8868"
       AssetTags: 
       ActiveRuleName: EnableGroup
-      Collectors: []
+      Collectors:
+      - CollectPath: Assets/Config/Json/CardConfig.json
+        CollectorGUID: 6f0b5146918f8034f8d52548f61bc483
+        CollectorType: 0
+        AddressRuleName: AddressByFileName
+        PackRuleName: PackDirectory
+        FilterRuleName: CollectAll
+        AssetTags: 
+        UserData: 
+      - CollectPath: Assets/Config/Json/CardEffects.json
+        CollectorGUID: 36aacfc0dbb02f84d9e5032cecf289de
+        CollectorType: 0
+        AddressRuleName: AddressByFileName
+        PackRuleName: PackDirectory
+        FilterRuleName: CollectAll
+        AssetTags: 
+        UserData: 
