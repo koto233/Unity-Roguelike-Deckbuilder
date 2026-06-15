@@ -1,36 +1,49 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel.Design;
-using System.Linq;
 using LitFramework;
 using LitFramework.Config;
 using UnityEngine;
-
+using System.Linq;
 public class CardLibrary : ICardLibrary
 {
-    private Dictionary<string, CardConfig> _configMap;
-
+    private Dictionary<string, CardConfig> _cardConfigs;
+    private List<CardEffects> _cardEffects;
     public void OnRegister()
     {
-        var table = ServiceLocator.Get<IConfigService>().GetTable<CardConfig>();
-        _configMap = table.DictClone;
-        foreach (var item in _configMap)
+        var configService = ServiceLocator.Get<IConfigService>();
+        var tableCard = configService.GetTable<CardConfig>() as DictConfigTable<CardConfig>;
+        _cardConfigs = tableCard.GetDict();
+        foreach (var item in _cardConfigs)
         {
             Debug.Log($"卡牌: {item.Key}");
+        }
+        var tableEffect = configService.GetTable<CardEffects>() as ListConfigTable<CardEffects>;
+        _cardEffects = tableEffect.GetList();
+
+
+        foreach (var effect in _cardEffects)
+        {
+            if (_cardConfigs.TryGetValue(effect.ID, out var cardConfig))
+            {
+                cardConfig.Effects.Add(effect);
+            }
+            else
+            {
+                Debug.LogWarning($"效果 {effect.ID} 对应的卡牌不存在");
+            }
         }
     }
 
     public Card CreateCard(string cardId)
     {
-        if (_configMap.TryGetValue(cardId, out var config))
+        if (_cardConfigs.TryGetValue(cardId, out var config))
             return new Card(config);
         throw new Exception($"未找到卡牌: {cardId}");
     }
 
     public Card CreateRandomCard()
     {
-        return CreateCard(new System.Random().Next(_configMap.Count).ToString());
+        return CreateCard(new System.Random().Next(_cardConfigs.Count).ToString());
     }
 
 

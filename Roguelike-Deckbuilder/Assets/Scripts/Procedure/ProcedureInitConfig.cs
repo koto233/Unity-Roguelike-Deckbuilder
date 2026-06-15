@@ -48,20 +48,19 @@ namespace LitFramework.FSM.Procedure
         public void LoadAllConfigs()
         {
             var configSvc = ServiceLocator.Get<IConfigService>();
-            configSvc.LoadTable<CardConfig>(CardConfigPath, (success) =>
+            configSvc.LoadDictTable<CardConfig>(CardConfigPath, (success) =>
             {
                 _isInitDone = success;
                 if (success)
                 {
                     Debug.Log("卡牌配置加载成功");
-                    ModelContainer.Register<ICardLibrary>(new CardLibrary());
                 }
                 else
                 {
                     Debug.LogError("卡牌配置加载失败");
                 }
             });
-            configSvc.LoadTable<CardConfig>(CardEffectsPath, (success) =>
+            configSvc.LoadListTable<CardEffects>(CardEffectsPath, (success) =>
             {
                 _isInitDone = success;
                 if (success)

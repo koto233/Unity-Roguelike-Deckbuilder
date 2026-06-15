@@ -8,12 +8,15 @@
 using System;
 
 [Serializable]
-public class CardEffects
+public class CardEffects : IConfig
 {
 	public string ID; // ID
 	public EffectType Type; // 类型
 	public int Value; // 效果值
 	public string Target; // 目标
+
+    string IConfig.ID => ID;
+
 }
 
 
