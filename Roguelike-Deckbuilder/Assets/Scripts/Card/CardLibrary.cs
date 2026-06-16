@@ -43,7 +43,14 @@ public class CardLibrary : ICardLibrary
 
     public Card CreateRandomCard()
     {
-        return CreateCard(new System.Random().Next(_cardConfigs.Count).ToString());
+        // 1.取出字典中所有的英文ID（Keys）
+        var keys = _cardConfigs.Keys.ToList();
+
+        // 2. 随机取一个英文ID
+        string randomCardId = keys[new System.Random().Next(keys.Count)];
+
+        // 3. 传入英文ID创建卡牌
+        return CreateCard(randomCardId);
     }
 
 

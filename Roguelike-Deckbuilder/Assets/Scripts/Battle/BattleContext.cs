@@ -10,7 +10,6 @@ public class BattleContext
     public CharacterData Target { get; set; }            // 当前选中的目标
     public int CurrentTurn { get; set; }
     public bool IsPlayerTurn { get; set; }
-    public CharacterData CurrentTarget { get; set; }   // 用于单目标选择
     public int GoldReward { get; set; }            // 战斗胜利金币
     // // 可选：战斗管理器引用（用于触发额外效果、状态变更等）
     // public IBattleController BattleController { get; set; } // 可以是一个接口，但不是必须

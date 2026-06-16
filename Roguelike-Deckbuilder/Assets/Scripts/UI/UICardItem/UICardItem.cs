@@ -11,13 +11,15 @@ public partial class UICardItem : UIWindow, IBeginDragHandler, IDragHandler, IEn
     private System.Action<Card> _onPlayCard;
 
 
-    public void RefreshCard(Card card, BattleContext context, System.Action<Card> onPlay)
+    public void SetCard(Card card, BattleContext context, System.Action<Card> onPlay)
     {
         _card = card;
         _context = context;
         _onPlayCard = onPlay;
         b_CostText.SetText(card.CurrentCost.ToString());
         b_NameText.SetText(card.Config.Name);
+        string desc = string.Format(card.Config.Description, card.Config.Effects[0].Value);
+        b_DescText.SetText(desc);
         // ... 刷新UI显示（费用、名称等）
     }
     public void OnBeginDrag(PointerEventData eventData)

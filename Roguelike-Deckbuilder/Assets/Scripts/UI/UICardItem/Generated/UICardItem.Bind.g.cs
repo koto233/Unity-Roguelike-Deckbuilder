@@ -4,7 +4,7 @@
 //     请勿手动修改此文件，重新生成将覆盖所有改动
 //
 //     来源 UI : UICardItem
-//     生成时间 : 2026-06-13
+//     生成时间 : 2026-06-16
 // </自动生成>
 //------------------------------------------------------------------------------
 
@@ -15,11 +15,13 @@ using TMPro;
     {
         private @TextMeshProUGUI b_CostText;
         private @TextMeshProUGUI b_NameText;
+        private @TextMeshProUGUI b_DescText;
 
         protected override void GetUI()
         {
             base.GetUI();
             b_CostText = GetBind<@TextMeshProUGUI>(0);
             b_NameText = GetBind<@TextMeshProUGUI>(1);
+            b_DescText = GetBind<@TextMeshProUGUI>(2);
         }
     }

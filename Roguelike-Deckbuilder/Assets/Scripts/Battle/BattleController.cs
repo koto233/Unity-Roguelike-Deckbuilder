@@ -13,13 +13,20 @@ public class BattleController : IBattleController
     {
         Context = context;
         _onBattleEnd = onBattleEnd;
-        StartBattle();
     }
 
-    private void StartBattle()
+    public void StartBattle()
     {
         Context.IsPlayerTurn = true;
         Context.CurrentTurn = 1;
+        var cardLibrary = ModelContainer.Get<ICardLibrary>();
+        for (int i = 0; i < 20; i++)
+        {
+            Context.Player.DrawPile.Add(cardLibrary.CreateRandomCard());
+        }
+        Context.Player.StartTurn();
+        Context.Player.DrawCards(5);
+
     }
 
     public void PlayCard(Card card, CharacterData target = null)

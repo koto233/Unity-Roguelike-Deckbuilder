@@ -33,6 +33,7 @@ namespace LitFramework.FSM.Procedure
             ServiceLocator.Get<UIService>().Register<UITitleWindow>("Assets/Res/UI/UITitleWindow.prefab", UILayer.Normal);
             ServiceLocator.Get<UIService>().Register<UIBattleWindow>("Assets/Res/UI/UIBattleWindow.prefab", UILayer.Normal);
             ModelContainer.Register(new PlayerModel());
+
             _isInitDone = true;
         }
 
