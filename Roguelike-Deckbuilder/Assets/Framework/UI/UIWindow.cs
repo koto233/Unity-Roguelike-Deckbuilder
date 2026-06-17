@@ -2,9 +2,10 @@ namespace LitFramework.UI.Core.Window
 {
     public abstract class UIWindow : UIBase
     {
+        public virtual void OnInit() { }
         public virtual void OnOpen(object args) { }
         public virtual void OnClose() { }
-
+    
     }
 
 }

@@ -11,7 +11,7 @@ namespace LitFramework.UI.Core.Service
         private readonly Dictionary<Type, UIWindow> _opened = new();
         private readonly Dictionary<UILayer, RectTransform> _layers = new();
         private IAssetService _assetManager;
-       
+
         private IAssetService AssetManager =>
         _assetManager ??= ServiceLocator.Get<IAssetService>();
         public UIService()
@@ -40,7 +40,9 @@ namespace LitFramework.UI.Core.Service
             var type = typeof(T);
 
             if (_opened.TryGetValue(type, out var existing))
+            {
                 return existing as T;
+            }
 
             var cfg = _configs[type];
             Debug.Log($"加载窗口: {cfg.PrefabPath}");

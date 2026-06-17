@@ -24,26 +24,38 @@ public partial class UITitleWindow : UIWindow
 
     private void OnClickStart()
     {
-        uiService.Close<UITitleWindow>();
-        uiService.OpenUI<UIBattleWindow>();
-        var battleContext = new BattleContext()
+        var assetService = ServiceLocator.Get<IAssetService>();
+        assetService.LoadAsync<GameObject>("Assets/Res/UI/UICardItem.prefab", prefab =>
         {
-            Player = new PlayerData(10, 3),
-            Enemies = new List<EnemyData>()
+            var battleContext = new BattleContext()
+            {
+                Player = new PlayerData(10, 3),
+                Enemies = new List<EnemyData>()
             {
                 new EnemyData(20, 3),
             },
-            CurrentTurn = 0,
-            IsPlayerTurn = true,
-            Target = null,
-            GoldReward = 0
-        };
-        var battleController = new BattleController(battleContext, () =>
-        {
-            uiService.Close<UIBattleWindow>();
-            uiService.OpenUI<UITitleWindow>();
+                CurrentTurn = 0,
+                IsPlayerTurn = true,
+                Target = null,
+                GoldReward = 0
+            };
+            var battleController = new BattleController(battleContext, () =>
+      {
+          uiService.Close<UIBattleWindow>();
+          uiService.OpenUI<UITitleWindow>();
+      });
+            uiService.OpenAsync<UIBattleWindow>(onCompleted: (uiBattleWindow) =>
+      {
+          var uiBattlePresenter = new UIBattlePresenter(uiBattleWindow, battleController);
+          uiBattleWindow.Init(prefab, battleContext);
+          battleController.StartBattle();
+      });
         });
+        uiService.Close<UITitleWindow>();
 
-        battleController.StartBattle();
+
+
+
+
     }
 }
