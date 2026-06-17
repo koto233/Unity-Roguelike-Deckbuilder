@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using LitFramework.Asset;
 using LitFramework.UI.Core.Window;
 using UnityEngine;
@@ -55,26 +57,28 @@ namespace LitFramework.UI.Core.Service
             _opened[type] = window;
             return window;
         }
-        public void OpenAsync<T>(IUIArgs args = null, Action<T> onCompleted = null)
-                    where T : UIWindow
+        /// <summary>
+        /// UniTask版本异步打开窗口
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="args"></param>
+        /// <returns></returns> 
+        public async UniTask<T> OpenAsync<T>(IUIArgs args = null) where T : UIWindow
         {
             var type = typeof(T);
 
             if (_opened.TryGetValue(type, out var existing))
             {
-                onCompleted?.Invoke(existing as T);
-                return;
+                return existing as T;
             }
 
             var cfg = _configs[type];
-            AssetManager.LoadAsync<GameObject>(cfg.PrefabPath, prefab =>
-            {
-                var go = UnityEngine.Object.Instantiate(prefab, _layers[cfg.Layer]);
-                var window = go.GetComponent<T>();
-                window.OnOpen(args);
-                _opened[type] = window;
-                onCompleted?.Invoke(window);
-            });
+            var prefab = await AssetManager.LoadAsync<GameObject>(cfg.PrefabPath);
+            var go = UnityEngine.Object.Instantiate(prefab, _layers[cfg.Layer]);
+            var window = go.GetComponent<T>();
+            window.OnOpen(args);
+            _opened[type] = window;
+            return window;
         }
         public void Close<T>() where T : UIWindow
         {

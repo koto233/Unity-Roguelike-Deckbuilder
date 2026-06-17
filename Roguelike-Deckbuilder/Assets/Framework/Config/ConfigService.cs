@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using LitFramework.Asset;
 using Newtonsoft.Json;
 using UnityEngine;
@@ -11,46 +12,42 @@ namespace LitFramework.Config
         private IAssetService _assetManager;
         private IAssetService AssetManager =>
         _assetManager ??= ServiceLocator.Get<IAssetService>();
+
+
+
         /// <summary>
         /// 加载一张配置表为字典
         /// </summary>
-        public void LoadDictTable<T>(string jsonPath, Action<bool> onCompleted = null) where T : IConfig
+        public async UniTask LoadDictTableAsync<T>(string jsonPath) where T : IConfig
         {
-            AssetManager.LoadAsync<TextAsset>(jsonPath, (asset) =>
+            TextAsset asset = await AssetManager.LoadAsync<TextAsset>(jsonPath);
+            if (asset == null)
             {
-                if (asset == null)
-                {
-                    Debug.LogError($"配置表加载失败：{jsonPath}");
-                    onCompleted?.Invoke(false);
-                    return;
-                }
-                Debug.Log($"配置表加载完成：{asset.text}");
-                var dict = JsonConvert.DeserializeObject<Dictionary<string, T>>(asset.text);
-                var table = new DictConfigTable<T>(dict);
-                _tables[typeof(T)] = table;
-                // foreach (var item in dict)
-                // {
-                //     Debug.Log($"{item.Key} 加载完成");
-                // }
-                onCompleted?.Invoke(true);
-            });
+                Debug.LogError($"配置表加载失败：{jsonPath}");
+            }
+            else
+            {
+                Debug.Log($"配置表加载成功：{jsonPath}");
+            }
+            var dict = JsonConvert.DeserializeObject<Dictionary<string, T>>(asset.text);
+            var table = new DictConfigTable<T>(dict);
+            _tables[typeof(T)] = table;
         }
-        public void LoadListTable<T>(string jsonPath, Action<bool> onCompleted) where T : IConfig
+        public async UniTask LoadListTableAsync<T>(string jsonPath) where T : IConfig
         {
-            AssetManager.LoadAsync<TextAsset>(jsonPath, (asset) =>
-           {
-               if (asset == null)
-               {
-                   Debug.LogError($"配置表加载失败：{jsonPath}");
-                   onCompleted?.Invoke(false);
-                   return;
-               }
-               Debug.Log($"配置表加载完成：{asset.text}");
-               var list = JsonConvert.DeserializeObject<List<T>>(asset.text);
-               var table = new ListConfigTable<T>(list);
-               _tables[typeof(T)] = table;
-               onCompleted?.Invoke(true);
-           });
+
+            TextAsset asset = await AssetManager.LoadAsync<TextAsset>(jsonPath);
+            if (asset == null)
+            {
+                Debug.LogError($"配置表加载失败：{jsonPath}");
+            }
+            else
+            {
+                Debug.Log($"配置表加载成功：{jsonPath}");
+            }
+            var list = JsonConvert.DeserializeObject<List<T>>(asset.text);
+            var table = new ListConfigTable<T>(list);
+            _tables[typeof(T)] = table;
 
         }
 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using LitFramework.EventBus;
 using UnityEngine;
 using YooAsset;
-
+using Cysharp.Threading.Tasks;
 namespace LitFramework.Asset
 {
     /// <summary>
@@ -14,7 +14,7 @@ namespace LitFramework.Asset
         private ResourcePackage _defaultPackage;
         private Dictionary<string, AssetHandle> _handles = new();
         private Dictionary<string, int> _refCounts = new();
-        private Dictionary<string, List<Action<UnityEngine.Object>>> _pendingCallbacks = new();
+        private Dictionary<string, UniTaskCompletionSource<UnityEngine.Object>> _pendingTasks = new();
 
         public YooAssetAssetService(ResourcePackage package)
         {
@@ -33,64 +33,90 @@ namespace LitFramework.Asset
         }
 
 
-        public async void LoadAsync<T>(string path, Action<T> onCompleted) where T : UnityEngine.Object
+        // public async void LoadAsync<T>(string path, Action<T> onCompleted) where T : UnityEngine.Object
+        // {
+        //     // 1. 如果已经加载并缓存
+        //     if (_handles.ContainsKey(path))
+        //     {
+        //         _refCounts[path]++;
+        //         onCompleted?.Invoke(_handles[path].AssetObject as T);
+        //         return;
+        //     }
+        //     // 2. 如果正在加载中，加入等待队列
+        //     if (_pendingCallbacks.ContainsKey(path))
+        //     {
+        //         _pendingCallbacks[path].Add(obj => onCompleted?.Invoke(obj as T));
+        //         return;
+        //     }
+        //     // 3. 开始异步加载
+        //     _pendingCallbacks[path] = new List<Action<UnityEngine.Object>>
+        //     {
+        //         obj => onCompleted?.Invoke(obj as T)
+        //     };
+        //     var handle = _defaultPackage.LoadAssetAsync<T>(path);
+        //     _handles[path] = handle;   // 提前记录句柄，防止重复加载
+        //     await handle;
+        //     var asset = handle.AssetObject as T;
+        //     // 增加引用计数
+        //     _refCounts[path] = 1;
+        //     // 触发所有等待回调
+        //     if (_pendingCallbacks.TryGetValue(path, out var callbacks))
+        //     {
+        //         foreach (var cb in callbacks)
+        //             cb(asset);
+        //         _pendingCallbacks.Remove(path);
+        //     }
+        //     // 发布事件
+        //     EventBus<AssetLoadedEvent>.Publish(new AssetLoadedEvent { Path = path, Asset = asset });
+        // }
+        public async UniTask<T> LoadAsync<T>(string path) where T : UnityEngine.Object
         {
             // 1. 如果已经加载并缓存
             if (_handles.ContainsKey(path))
             {
                 _refCounts[path]++;
-                onCompleted?.Invoke(_handles[path].AssetObject as T);
-                return;
+                return _handles[path].AssetObject as T;
             }
-            // 2. 如果正在加载中，加入等待队列
-            if (_pendingCallbacks.ContainsKey(path))
+            // 2. 如果正在加载中，等待该任务完成
+            if (_pendingTasks.TryGetValue(path, out var existingTcs))
             {
-                _pendingCallbacks[path].Add(obj => onCompleted?.Invoke(obj as T));
-                return;
+                var result = await existingTcs.Task;
+                return result as T;
             }
-            // 3. 开始异步加载
-            _pendingCallbacks[path] = new List<Action<UnityEngine.Object>>
-            {
-                obj => onCompleted?.Invoke(obj as T)
-            };
+            // 3. 首次加载 开始异步加载
+            var tcs = new UniTaskCompletionSource<UnityEngine.Object>();
+            _pendingTasks[path] = tcs;
             var handle = _defaultPackage.LoadAssetAsync<T>(path);
-            _handles[path] = handle;   // 提前记录句柄，防止重复加载
+            _handles[path] = handle;
             await handle;
-            var asset = handle.AssetObject as T;
-            // 增加引用计数
+            var asset = handle.AssetObject;
             _refCounts[path] = 1;
-            // 触发所有等待回调
-            if (_pendingCallbacks.TryGetValue(path, out var callbacks))
-            {
-                foreach (var cb in callbacks)
-                    cb(asset);
-                _pendingCallbacks.Remove(path);
-            }
-            // 发布事件
+            tcs.TrySetResult(asset);
             EventBus<AssetLoadedEvent>.Publish(new AssetLoadedEvent { Path = path, Asset = asset });
+            _pendingTasks.Remove(path);
+            return asset as T;
         }
+        // public void Preload(string[] paths, Action<float> onProgress = null, Action onCompleted = null)
+        // {
+        //     int loaded = 0;
+        //     int total = paths.Length;
+        //     if (total == 0)
+        //     {
+        //         onCompleted?.Invoke();
+        //         return;
+        //     }
 
-        public void Preload(string[] paths, Action<float> onProgress = null, Action onCompleted = null)
-        {
-            int loaded = 0;
-            int total = paths.Length;
-            if (total == 0)
-            {
-                onCompleted?.Invoke();
-                return;
-            }
-
-            foreach (var path in paths)
-            {
-                LoadAsync<UnityEngine.Object>(path, _ =>
-                {
-                    loaded++;
-                    onProgress?.Invoke(loaded / (float)total);
-                    if (loaded >= total)
-                        onCompleted?.Invoke();
-                });
-            }
-        }
+        //     foreach (var path in paths)
+        //     {
+        //         LoadAsync<UnityEngine.Object>(path, _ =>
+        //         {
+        //             loaded++;
+        //             onProgress?.Invoke(loaded / (float)total);
+        //             if (loaded >= total)
+        //                 onCompleted?.Invoke();
+        //         });
+        //     }
+        // }
 
         public void Release(string path)
         {
@@ -126,8 +152,8 @@ namespace LitFramework.Asset
             }
             _refCounts.Remove(path);
             // 可选：清理等待队列（如果有）
-            if (_pendingCallbacks.ContainsKey(path))
-                _pendingCallbacks.Remove(path);
+            if (_pendingTasks.ContainsKey(path))
+                _pendingTasks.Remove(path);
         }
         public void ClearUnused()
         {

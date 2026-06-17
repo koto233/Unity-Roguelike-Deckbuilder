@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using LitFramework.Config;
 using UnityEngine;
 namespace LitFramework.FSM.Procedure
@@ -11,8 +12,9 @@ namespace LitFramework.FSM.Procedure
     {
         private StateMachine _machine;
         private const string CardConfigPath = "Assets/Config/Json/CardConfig.json";
-        private const string CardEffectsPath = "Assets/Config/Json/CardEffects.json"; 
+        private const string CardEffectsPath = "Assets/Config/Json/CardEffects.json";
         private bool _isInitDone = false;
+        private bool _isInitFailed = false;
         public ProcedureInitConfig(StateMachine machine)
         {
             _machine = machine;
@@ -26,13 +28,18 @@ namespace LitFramework.FSM.Procedure
         public override void OnEnter()
         {
             _isInitDone = false;
-            LoadAllConfigs();
+            _isInitFailed = false;
+            LoadAllConfigs().Forget();
         }
         public override void OnUpdate()
         {
             if (_isInitDone)
             {
                 _machine.ChangeState<ProcedureTitle>();
+            }
+            else if (_isInitFailed)
+            {
+                Debug.LogError("ProcedureInitConfig失败");
             }
         }
         public override void OnExit()
@@ -45,34 +52,22 @@ namespace LitFramework.FSM.Procedure
 
         }
 
-        public void LoadAllConfigs()
+        public async UniTask LoadAllConfigs()
         {
-            var configSvc = ServiceLocator.Get<IConfigService>();
-            configSvc.LoadDictTable<CardConfig>(CardConfigPath, (success) =>
-            {
-                _isInitDone = success;
-                if (success)
-                {
-                    Debug.Log("卡牌配置加载成功");
-                }
-                else
-                {
-                    Debug.LogError("卡牌配置加载失败");
-                }
-            });
-            configSvc.LoadListTable<CardEffects>(CardEffectsPath, (success) =>
-            {
-                _isInitDone = success;
-                if (success)
-                {
-                    Debug.Log("效果配置加载成功");
-                    ModelContainer.Register<ICardLibrary>(new CardLibrary());
-                }
-                else
-                {
-                    Debug.LogError("效果配置加载失败");
-                }
-            });
+            // try
+            // {
+                var configSvc = ServiceLocator.Get<IConfigService>();
+                await configSvc.LoadDictTableAsync<CardConfig>(CardConfigPath);
+                await configSvc.LoadListTableAsync<CardEffects>(CardEffectsPath);
+                ModelContainer.Register<ICardLibrary>(new CardLibrary());
+                _isInitDone = true;
+            // }
+            // catch (Exception e)
+            // {
+            //     _isInitFailed = true;
+            //     Debug.LogError($"ProcedureInitConfig失败:{e.Message}");
+            // }
+
         }
     }
 }

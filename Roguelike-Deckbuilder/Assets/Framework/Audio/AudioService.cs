@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using LitFramework.Asset;
 using UnityEngine;
 namespace LitFramework.Audio
@@ -33,16 +35,16 @@ namespace LitFramework.Audio
         {
             _bgmSource.loop = loop;
             _bgmSource.volume = _bgmVolume * volume;
-            LoadAndPlay(clipName, _bgmSource);
+            LoadAndPlay(clipName, _bgmSource).Forget();
         }
 
         public void PlaySFX(string clipName, float volume = 1f)
         {
             _sfxSource.volume = _sfxVolume * volume;
-            LoadAndPlay(clipName, _sfxSource, oneShot: true);
+            LoadAndPlay(clipName, _sfxSource, oneShot: true).Forget();
         }
 
-        private void LoadAndPlay(string clipName, AudioSource source, bool oneShot = false)
+        private async UniTask LoadAndPlay(string clipName, AudioSource source, bool oneShot = false)
         {
             if (_clipCache.TryGetValue(clipName, out var clip))
             {
@@ -50,18 +52,16 @@ namespace LitFramework.Audio
                 return;
             }
             // 通过资源服务异步加载
-            AssetManager.LoadAsync<AudioClip>(GetClipPath(clipName), (clip) =>
+            clip = await AssetManager.LoadAsync<AudioClip>(GetClipPath(clipName));
+            if (clip != null)
             {
-                if (clip != null)
-                {
-                    _clipCache[clipName] = clip;
-                    PlayInternal(clip, source, oneShot);
-                }
-                else
-                {
-                    Debug.LogError($"音频加载失败: {clipName}");
-                }
-            });
+                _clipCache[clipName] = clip;
+                PlayInternal(clip, source, oneShot);
+            }
+            else
+            {
+                Debug.LogError($"音频加载失败: {clipName}");
+            }
         }
 
         private void PlayInternal(AudioClip clip, AudioSource source, bool oneShot)

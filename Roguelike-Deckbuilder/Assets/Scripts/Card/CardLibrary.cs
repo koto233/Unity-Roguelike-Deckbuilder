@@ -19,8 +19,6 @@ public class CardLibrary : ICardLibrary
         }
         var tableEffect = configService.GetTable<CardEffects>() as ListConfigTable<CardEffects>;
         _cardEffects = tableEffect.GetList();
-
-
         foreach (var effect in _cardEffects)
         {
             if (_cardConfigs.TryGetValue(effect.ID, out var cardConfig))

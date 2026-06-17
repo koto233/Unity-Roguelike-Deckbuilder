@@ -1,4 +1,5 @@
 using System;
+using Cysharp.Threading.Tasks;
 
 namespace LitFramework.Asset
 {
@@ -11,7 +12,7 @@ namespace LitFramework.Asset
         /// <summary>
         /// 异步加载资源
         /// </summary>
-        void LoadAsync<T>(string path, System.Action<T> onCompleted) where T : UnityEngine.Object;
+        UniTask<T> LoadAsync<T>(string path) where T : UnityEngine.Object;
 
         /// <summary>
         /// 增加引用计数（用于预加载或手动保持资源）
@@ -30,9 +31,9 @@ namespace LitFramework.Asset
         /// </summary>
         void ClearUnused();
 
-        /// <summary>
-        /// 预加载资源列表（批量增加引用计数）
-        /// </summary>
-        void Preload(string[] paths, System.Action<float> onProgress = null, Action onCompleted = null);
+        // /// <summary>
+        // /// 预加载资源列表（批量增加引用计数）
+        // /// </summary>
+        // void Preload(string[] paths, System.Action<float> onProgress = null, Action onCompleted = null);
     }
 }
