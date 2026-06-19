@@ -5,9 +5,9 @@ using UnityEngine;
 
 public partial class UIBattleWindow : UIWindow
 {
-    public void Init(GameObject cardPrefab, BattleContext battleContext)
+    public void Init(GameObject cardPrefab)
     {
-        b_HandZone.Init(cardPrefab, battleContext);
+        b_HandZone.Init(cardPrefab);
     }
     public override void OnOpen(object args)
     {

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using Cysharp.Threading.Tasks;
 using LitFramework.Asset;
 using LitFramework.FSM;
@@ -9,21 +10,9 @@ namespace LitFramework.FSM.Procedure
 {
     public class ProcedureBattle : ProcedureBase
     {
-        private UIService _uiService;
-        // private bool _isInitDone = false;
+        bool _initing = false;
         public ProcedureBattle(ProcedureManager procedureManager) : base(procedureManager) { }
 
-        public UIService UIService
-        {
-            get
-            {
-                if (_uiService == null)
-                {
-                    _uiService = ServiceLocator.Get<UIService>();
-                }
-                return _uiService;
-            }
-        }
         public override void OnInit()
         {
 
@@ -31,7 +20,8 @@ namespace LitFramework.FSM.Procedure
 
         public override void OnEnter()
         {
-            StartBattleAsync().Forget();
+            if (_initing) return;
+            InitBattleAsync().Forget();
         }
 
         public override void OnExit()
@@ -42,17 +32,17 @@ namespace LitFramework.FSM.Procedure
 
         public override void OnUpdate()
         {
-
         }
         public override void OnDestroy()
         {
 
         }
-        private async UniTaskVoid StartBattleAsync()
+        private async UniTaskVoid InitBattleAsync()
         {
+            _initing = true;
             var assetService = ServiceLocator.Get<IAssetService>();
+            var uiService = ServiceLocator.Get<UIService>();
             var cardPrefab = await assetService.LoadAsync<GameObject>("Assets/Res/UI/UICardItem.prefab");
-
             var battleContext = new BattleContext()
             {
                 Player = new PlayerData(10, 3),
@@ -67,15 +57,15 @@ namespace LitFramework.FSM.Procedure
             };
             var battleController = new BattleController(battleContext, () =>
             {
-                UIService.Close<UIBattleWindow>();
-                UIService.OpenUI<UITitleWindow>();
+                uiService.Close<UIBattleWindow>();
+                uiService.OpenUI<UITitleWindow>();
             });
-            var uiBattleWindow = await UIService.OpenAsync<UIBattleWindow>();
+            var uiBattleWindow = await uiService.OpenAsync<UIBattleWindow>();
             var uiBattlePresenter = new UIBattlePresenter(uiBattleWindow, battleController);
-            uiBattleWindow.Init(cardPrefab, battleContext);
+            uiBattleWindow.Init(cardPrefab);
             battleController.StartBattle();
-            UIService.Close<UITitleWindow>();
-            // _isInitDone = true;
+            uiService.Close<UITitleWindow>();
+            _initing = false;
         }
     }
 }

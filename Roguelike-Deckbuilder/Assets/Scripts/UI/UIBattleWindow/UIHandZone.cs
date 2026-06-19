@@ -11,9 +11,8 @@ public class UIHandZone : MonoBehaviour
     private GameObject _cardPrefab;
     private List<UICardItem> _cardItems = new();
     private BattleContext _battleContext;
-    public void Init(GameObject cardPrefab, BattleContext battleContext)
+    public void Init(GameObject cardPrefab)
     {
-        _battleContext = battleContext;
         _cardPrefab = cardPrefab;
     }
 
