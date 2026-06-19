@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using LitFramework;
@@ -16,7 +17,7 @@ public class UIHandZone : MonoBehaviour
         _cardPrefab = cardPrefab;
     }
 
-    public void RefreshHand(List<Card> handCards)
+    public void RefreshHand(List<Card> handCards, Action<Card> onCardPlay)
     {
         // 清除现有
         foreach (var item in _cardItems)
@@ -28,11 +29,7 @@ public class UIHandZone : MonoBehaviour
         {
             var go = Instantiate(_cardPrefab, handContainer);
             var uiCard = go.GetComponent<UICardItem>();
-            uiCard.SetCard(card, _battleContext, (playedCard) =>
-            {
-                var battle = ServiceLocator.Get<IBattleController>();
-                battle.PlayCard(playedCard);
-            });
+            uiCard.Refresh(card, onCardPlay);
             _cardItems.Add(uiCard);
         }
         // 自动布局（使用HorizontalLayoutGroup或GridLayoutGroup）

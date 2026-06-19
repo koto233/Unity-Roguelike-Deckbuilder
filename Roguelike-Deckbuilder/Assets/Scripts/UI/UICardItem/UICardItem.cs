@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using LitFramework.UI.Core.Window;
@@ -7,14 +8,14 @@ using UnityEngine.EventSystems;
 public partial class UICardItem : UIWindow, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     private Card _card;
-    private BattleContext _context;
-    private System.Action<Card> _onPlayCard;
-
-
-    public void SetCard(Card card, BattleContext context, System.Action<Card> onPlay)
+    private Action<Card> _onPlayCard;
+    private Action<string> _onCardDragStart;
+    private Action<string, Vector2> _onCardDrag;
+    private Action<string> _onCardDrop;
+    private Action<string> _onCardCancel;
+    public void Refresh(Card card, Action<Card> onPlay)
     {
         _card = card;
-        _context = context;
         _onPlayCard = onPlay;
         b_CostText.SetText(card.CurrentCost.ToString());
         b_NameText.SetText(card.Config.Name);
@@ -24,59 +25,36 @@ public partial class UICardItem : UIWindow, IBeginDragHandler, IDragHandler, IEn
     }
     public void OnBeginDrag(PointerEventData eventData)
     {
-        // // 只有费用足够时才允许拖拽（否则直接return）
-        // if (_context.Player.Energy < _card.CurrentCost) return;
-
-        // // 记录原始状态
-        // originalPos = rectTransform.anchoredPosition;
-        // originalParent = transform.parent;
-
-        // // 创建拖拽克隆体
-        // dragGhost = Instantiate(dragPrefab != null ? dragPrefab : gameObject, canvas.transform);
-        // var ghostRect = dragGhost.GetComponent<RectTransform>();
-        // ghostRect.anchoredPosition = eventData.position;
-        // var ghostCanvasGroup = dragGhost.GetComponent<CanvasGroup>();
-        // if (ghostCanvasGroup == null) ghostCanvasGroup = dragGhost.AddComponent<CanvasGroup>();
-        // ghostCanvasGroup.alpha = 0.7f;
-        // ghostCanvasGroup.blocksRaycasts = false;  // 让克隆体不阻挡射线
-
-        // // 原卡牌半透明且不再响应射线（避免二次拖拽）
-        // canvasGroup.alpha = 0.5f;
-        // canvasGroup.blocksRaycasts = false;
+        if (!_card.IsPlayable)
+        {
+            eventData.pointerDrag = null; // 禁止拖拽
+            return;
+        }
+        // _canvasGroup.blocksRaycasts = false;
+        _onCardDragStart?.Invoke(_card.Config.ID);
     }
 
     public void OnDrag(PointerEventData eventData)
     {
-        // if (dragGhost == null) return;
-        // dragGhost.GetComponent<RectTransform>().anchoredPosition = eventData.position;
+        _onCardDrag?.Invoke(_card.Config.ID, eventData.position);
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        //  // 清理克隆体
-        // if (dragGhost != null) Destroy(dragGhost);
-
-        // // 恢复原卡牌
-        // canvasGroup.alpha = 1f;
-        // canvasGroup.blocksRaycasts = true;
-
-        // // 如果拖拽开始时因为能量不足而返回，此时直接结束
-        // if (_context.Player.Energy < _card.CurrentCost) return;
-
-        // // 检测释放点下方的目标
-        // var results = new List<RaycastResult>();
-        // EventSystem.current.RaycastAll(eventData, results);
-
-        // Character target = null;
-        // foreach (var hit in results)
-        // {
-        //     // 假设敌人身上挂有 EnemyCharacter 组件并实现了 ICharacter 接口
-        //     var enemy = hit.gameObject.GetComponent<EnemyCharacter>();
-        //     if (enemy != null)
-        //     {
-        //         target = enemy.Character;
-        //         break;
-        //     }
+        // 检查是否拖拽到了目标区域
+        if (IsOverTarget(eventData))
+        {
+            _onCardDrop?.Invoke(_card.Config.ID);
+        }
+        else
+        {
+            _onCardCancel?.Invoke(_card.Config.ID);
+        }
+    }
+    private bool IsOverTarget(PointerEventData eventData)
+    {
+        // 判断鼠标位置是否在目标区域（由 View 层的碰撞检测负责）
+        return false;
     }
 
     // // 根据卡牌目标类型判断是否有效

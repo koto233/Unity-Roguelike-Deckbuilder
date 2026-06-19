@@ -37,8 +37,12 @@ public class UIBattlePresenter
     }
     private void RefreshHand(List<Card> handCards)
     {
-        _view.RefreshHand(handCards);
+        _view.RefreshHand(handCards, OnPlayCard);
     }
 
+    private void OnPlayCard(Card card)
+    {
+
+    }
 
 }

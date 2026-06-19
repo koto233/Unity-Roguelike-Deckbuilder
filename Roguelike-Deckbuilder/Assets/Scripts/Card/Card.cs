@@ -4,12 +4,12 @@ using System.Linq;
 using LitFramework.EventBus;
 using UnityEngine;
 
-public class Card 
+public class Card
 {
     public CardConfig Config { get; private set; }
     public int CurrentCost { get; set; }  // 临时费用变化（如被减费）
     private List<ICardEffect> _effects;
-
+    public bool IsPlayable { get; set; }
     public Card(CardConfig config)
     {
         Config = config;
