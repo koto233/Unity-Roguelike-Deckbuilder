@@ -4,6 +4,7 @@ using LitFramework.EventBus;
 using UnityEngine;
 using YooAsset;
 using Cysharp.Threading.Tasks;
+using System.Linq;
 namespace LitFramework.Asset
 {
     /// <summary>
@@ -96,27 +97,23 @@ namespace LitFramework.Asset
             _pendingTasks.Remove(path);
             return asset as T;
         }
-        // public void Preload(string[] paths, Action<float> onProgress = null, Action onCompleted = null)
-        // {
-        //     int loaded = 0;
-        //     int total = paths.Length;
-        //     if (total == 0)
-        //     {
-        //         onCompleted?.Invoke();
-        //         return;
-        //     }
+        public async UniTask PreloadAsync(string[] paths, IProgress<float> progress = null)
+        {
+            if (paths == null || paths.Length == 0)
+                return;
 
-        //     foreach (var path in paths)
-        //     {
-        //         LoadAsync<UnityEngine.Object>(path, _ =>
-        //         {
-        //             loaded++;
-        //             onProgress?.Invoke(loaded / (float)total);
-        //             if (loaded >= total)
-        //                 onCompleted?.Invoke();
-        //         });
-        //     }
-        // }
+            // 并行启动所有加载任务
+            var tasks = paths.Select(path => LoadAsync<UnityEngine.Object>(path)).ToList();
+            int loaded = 0;
+            int total = tasks.Count;
+
+            // 使用 UniTask.WhenEach 逐个获取完成的任务，实时更新进度
+            await foreach (var _ in UniTask.WhenEach(tasks))
+            {
+                loaded++;
+                progress?.Report(loaded / (float)total);
+            }
+        }
 
         public void Release(string path)
         {

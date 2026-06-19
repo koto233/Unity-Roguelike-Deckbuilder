@@ -7,14 +7,10 @@ namespace LitFramework.FSM.Procedure
 {
     public class ProcedureInitResource : ProcedureBase
     {
-        private StateMachine _machine;
-
         private IResourceUpdater _resourceUpdater;
         private bool _success = false;
-        public ProcedureInitResource(StateMachine machine)
-        {
-            _machine = machine;
-        }
+        public ProcedureInitResource(ProcedureManager procedureManager) : base(procedureManager) { }
+    
         public override void OnInit()
         {
             _resourceUpdater = new YooAssetUpdater();
@@ -44,7 +40,7 @@ namespace LitFramework.FSM.Procedure
         {
             if (_success)
             {
-                _machine.ChangeState<ProcedureInitConfig>();
+                _procedureManager.ChangeProcedure<ProcedureInitConfig>();
             }
         }
         public override void OnExit()

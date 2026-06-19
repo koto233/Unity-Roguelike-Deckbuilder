@@ -10,15 +10,12 @@ namespace LitFramework.FSM.Procedure
 {
     public class ProcedureInitConfig : ProcedureBase
     {
-        private StateMachine _machine;
         private const string CardConfigPath = "Assets/Config/Json/CardConfig.json";
         private const string CardEffectsPath = "Assets/Config/Json/CardEffects.json";
         private bool _isInitDone = false;
         private bool _isInitFailed = false;
-        public ProcedureInitConfig(StateMachine machine)
-        {
-            _machine = machine;
-        }
+        public ProcedureInitConfig(ProcedureManager procedureManager) : base(procedureManager) { }
+   
         public override void OnInit()
         {
 
@@ -35,7 +32,7 @@ namespace LitFramework.FSM.Procedure
         {
             if (_isInitDone)
             {
-                _machine.ChangeState<ProcedureTitle>();
+                _procedureManager.ChangeProcedure<ProcedureTitle>();
             }
             else if (_isInitFailed)
             {

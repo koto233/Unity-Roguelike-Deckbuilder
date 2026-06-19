@@ -6,11 +6,9 @@ namespace LitFramework.FSM.Procedure
 {
     public class ProcedureTitle : ProcedureBase
     {
-        public StateMachine _machine;
-
-        public ProcedureTitle(StateMachine machine)
+        public ProcedureTitle(ProcedureManager procedureManager) : base(procedureManager)
         {
-            _machine = machine;
+
         }
         public override void OnInit()
         {

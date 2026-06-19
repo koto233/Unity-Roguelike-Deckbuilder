@@ -9,11 +9,10 @@ namespace LitFramework.FSM.Procedure
 {
     public class ProcedureInitService : ProcedureBase
     {
-        private StateMachine _machine;
+
         private bool _isInitDone = false;
-        public ProcedureInitService(StateMachine machine)
+        public ProcedureInitService(ProcedureManager procedureManager) : base(procedureManager)
         {
-            _machine = machine;
         }
 
         public override void OnInit()
@@ -41,7 +40,7 @@ namespace LitFramework.FSM.Procedure
         {
             if (_isInitDone)
             {
-                _machine.ChangeState<ProcedureInitResource>();
+                _procedureManager.ChangeProcedure<ProcedureInitResource>();
             }
         }
 

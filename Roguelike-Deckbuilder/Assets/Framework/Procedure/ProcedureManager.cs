@@ -20,7 +20,7 @@ public class ProcedureManager
         _fsm.RegisterState(procedure);  // 内部调用 state.OnInit
     }
 
-    public void StartProcedure<T>() where T : ProcedureBase
+    public void ChangeProcedure<T>() where T : ProcedureBase
     {
         _fsm.ChangeState<T>();
     }

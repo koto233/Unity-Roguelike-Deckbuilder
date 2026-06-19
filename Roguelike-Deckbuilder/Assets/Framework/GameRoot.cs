@@ -12,6 +12,7 @@ namespace LitFramework
     {
         public static GameRoot Instance { get; private set; }
         private ProcedureManager _procedureManager;
+        public ProcedureManager ProcedureManager => _procedureManager;
         public Canvas UIRoot { get; private set; }
 
         void Awake()
@@ -41,16 +42,17 @@ namespace LitFramework
             UIRoot = GameObject.Find("UIRoot").GetComponent<Canvas>();
             var fsm = new StateMachine();
             _procedureManager = new ProcedureManager(fsm);
-            _procedureManager.RegisterProcedure(new ProcedureInitService(fsm));
-            _procedureManager.RegisterProcedure(new ProcedureInitResource(fsm));
-            _procedureManager.RegisterProcedure(new ProcedureInitConfig(fsm));
-            _procedureManager.RegisterProcedure(new ProcedureTitle(fsm));
+            _procedureManager.RegisterProcedure(new ProcedureInitService(_procedureManager));
+            _procedureManager.RegisterProcedure(new ProcedureInitResource(_procedureManager));
+            _procedureManager.RegisterProcedure(new ProcedureInitConfig(_procedureManager));
+            _procedureManager.RegisterProcedure(new ProcedureTitle(_procedureManager));
+            _procedureManager.RegisterProcedure(new ProcedureBattle(_procedureManager));
             // 监听状态变化（可选）
             fsm.OnStateChanged += (from, to) =>
             {
                 Debug.Log($"流程状态变化: {from?.Name} → {to?.Name}");
             };
-            _procedureManager.StartProcedure<ProcedureInitService>();
+            _procedureManager.ChangeProcedure<ProcedureInitService>();
             // _procedureManager.SetSharedData();
         }
 
