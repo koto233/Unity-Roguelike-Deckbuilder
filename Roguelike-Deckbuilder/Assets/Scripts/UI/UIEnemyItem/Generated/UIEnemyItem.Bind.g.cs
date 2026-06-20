@@ -3,7 +3,7 @@
 //     本文件由 UIAutoBindGenerator 自动生成
 //     请勿手动修改此文件，重新生成将覆盖所有改动
 //
-//     来源 UI : UIBattleWindow
+//     来源 UI : UIEnemyItem
 //     生成时间 : 2026-06-20
 // </自动生成>
 //------------------------------------------------------------------------------
@@ -12,21 +12,19 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-    public partial class UIBattleWindow
+    public partial class UIEnemyItem
     {
+        private @Image b_Body;
         private @Slider b_HPSlider;
         private @TextMeshProUGUI b_HPText;
-        private @UIHandZone b_HandZone;
-        private @RectTransform b_EnemysRoot;
-        private @RectTransform b_PlayerRoot;
+        private @Image b_IntentionIcon;
 
         protected override void GetUI()
         {
             base.GetUI();
-            b_HPSlider = GetBind<@Slider>(0);
-            b_HPText = GetBind<@TextMeshProUGUI>(1);
-            b_HandZone = GetBind<@UIHandZone>(2);
-            b_EnemysRoot = GetBind<@RectTransform>(3);
-            b_PlayerRoot = GetBind<@RectTransform>(4);
+            b_Body = GetBind<@Image>(0);
+            b_HPSlider = GetBind<@Slider>(1);
+            b_HPText = GetBind<@TextMeshProUGUI>(2);
+            b_IntentionIcon = GetBind<@Image>(3);
         }
-}
+    }

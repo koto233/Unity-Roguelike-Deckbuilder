@@ -5,7 +5,7 @@ using LitFramework.UI.Core.Window;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public partial class UICardItem : UIWindow, IBeginDragHandler, IDragHandler, IEndDragHandler
+public partial class UICardItem : UIBase, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     private Card _card;
     private Action<Card> _onPlayCard;
@@ -74,8 +74,5 @@ public partial class UICardItem : UIWindow, IBeginDragHandler, IDragHandler, IEn
     //     // 无效拖拽：可播放提示音效或UI动画（卡牌飞回）
     // }
     // }
-    protected override void OnShowInternal(object param)
-    {
-
-    }
+  
 }

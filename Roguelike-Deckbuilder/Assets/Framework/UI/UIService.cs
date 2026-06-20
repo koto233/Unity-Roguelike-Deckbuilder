@@ -36,27 +36,27 @@ namespace LitFramework.UI.Core.Service
             _configs[typeof(T)] = new UIConfig(prefabPath, layer);
         }
 
-        public T OpenUI<T>(IUIArgs args = null)
-            where T : UIWindow
-        {
-            var type = typeof(T);
+        // public T OpenUI<T>(IUIArgs args = null)
+        //     where T : UIWindow
+        // {
+        //     var type = typeof(T);
 
-            if (_opened.TryGetValue(type, out var existing))
-            {
-                return existing as T;
-            }
+        //     if (_opened.TryGetValue(type, out var existing))
+        //     {
+        //         return existing as T;
+        //     }
 
-            var cfg = _configs[type];
-            Debug.Log($"加载窗口: {cfg.PrefabPath}");
-            var prefab = AssetManager.Load<GameObject>(cfg.PrefabPath);
-            var go = UnityEngine.Object.Instantiate(prefab, _layers[cfg.Layer]);
+        //     var cfg = _configs[type];
+        //     Debug.Log($"加载窗口: {cfg.PrefabPath}");
+        //     var prefab = AssetManager.Load<GameObject>(cfg.PrefabPath);
+        //     var go = UnityEngine.Object.Instantiate(prefab, _layers[cfg.Layer]);
 
-            var window = go.GetComponent<T>();
-            window.OnOpen(args);
+        //     var window = go.GetComponent<T>();
+        //     window.OnOpen(args);
 
-            _opened[type] = window;
-            return window;
-        }
+        //     _opened[type] = window;
+        //     return window;
+        // }
         /// <summary>
         /// UniTask版本异步打开窗口
         /// </summary>
@@ -76,7 +76,8 @@ namespace LitFramework.UI.Core.Service
             var prefab = await AssetManager.LoadAsync<GameObject>(cfg.PrefabPath);
             var go = UnityEngine.Object.Instantiate(prefab, _layers[cfg.Layer]);
             var window = go.GetComponent<T>();
-            window.OnOpen(args);
+            // window.OnOpen(args);
+            await window.OpenInternalAsync(args);
             _opened[type] = window;
             return window;
         }
@@ -86,7 +87,7 @@ namespace LitFramework.UI.Core.Service
 
             if (_opened.TryGetValue(type, out var window))
             {
-                window.OnClose();
+                window.CloseInternal();
                 GameObject.Destroy(window.gameObject);
                 _opened.Remove(type);
             }

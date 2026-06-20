@@ -20,10 +20,7 @@ public partial class UITitleWindow : UIWindow
         var assetService = ServiceLocator.Get<IAssetService>();
         // assetService.LoadAsync<GameObject>("Assets/Res/UI/UICardItem.prefab", null);
     }
-    protected override void OnShowInternal(object param)
-    {
-
-    }
+    
     private void OnClickStart()
     {
         GameRoot.Instance.ProcedureManager.ChangeProcedure<ProcedureBattle>();

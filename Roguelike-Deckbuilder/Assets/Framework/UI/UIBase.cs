@@ -18,33 +18,13 @@ namespace LitFramework.UI.Core.Window
                 : _pathPrefix + _generatedScriptPath;
         #endregion
 
-        public bool IsShown { get; private set; }
-
+        public bool IsActive { get; private set; }
 
         protected virtual void Awake()
         {
             CacheBinds();
             GetUI(); // 子类 partial 中生成
         }
-        internal void OnCreateInternal()
-        {
-
-        }
-        internal void ShowInternal(object param)
-        {
-            IsShown = true;
-            OnShowInternal(param);
-        }
-
-        internal void HideInternal()
-        {
-            IsShown = false;
-            OnHide();
-        }
-
-        protected abstract void OnShowInternal(object param);
-        protected virtual void OnHide() { }
-
 
         #region 自动绑定方法
         void CacheBinds()

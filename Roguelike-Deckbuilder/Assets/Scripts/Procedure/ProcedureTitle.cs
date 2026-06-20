@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using LitFramework.Asset;
 using LitFramework.UI.Core.Service;
 using UnityEngine;
@@ -16,12 +17,7 @@ namespace LitFramework.FSM.Procedure
         }
         public override void OnEnter()
         {
-            // ServiceLocator.Get<IAssetService>().LoadAsync<GameObject>("Assets/Res/UI/UITitleWindow.prefab", (go) =>
-            // {
-            //     GameObject.Instantiate(go);
-            // });
-            ServiceLocator.Get<UIService>().OpenUI<UITitleWindow>();
-
+            ServiceLocator.Get<UIService>().OpenAsync<UITitleWindow>().Forget();
         }
         public override void OnUpdate()
         {

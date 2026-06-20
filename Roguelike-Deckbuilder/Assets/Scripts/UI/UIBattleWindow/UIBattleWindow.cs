@@ -1,24 +1,32 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
+using LitFramework;
+using LitFramework.Asset;
 using LitFramework.UI.Core.Window;
 using UnityEngine;
 
 public partial class UIBattleWindow : UIWindow
 {
-    public void Init(GameObject cardPrefab)
+    private AssetRef<GameObject> _cardPrefabRef;
+    private AssetRef<GameObject> _enemyPrefabRef;
+    private AssetRef<GameObject> _playerPrefabRef;
+    protected override async UniTask OnOpenAsync(object param)
     {
-        b_HandZone.Init(cardPrefab);
+        var assetService = ServiceLocator.Get<IAssetService>();
+        _enemyPrefabRef = await assetService.LoadRefAsync<GameObject>("Assets/Res/UI/UIEnemyItem.prefab");
+        _playerPrefabRef = await assetService.LoadRefAsync<GameObject>("Assets/Res/UI/UIPlayerItem.prefab");
+        _cardPrefabRef = await assetService.LoadRefAsync<GameObject>("Assets/Res/UI/UICardItem.prefab");
+        b_HandZone.Init(_cardPrefabRef.Asset);
     }
-    public override void OnOpen(object args)
-    {
-        base.OnOpen(args);
-    }
-    protected override void OnShowInternal(object param)
-    {
 
+    private void OnDestroy()
+    {
+        _cardPrefabRef?.Dispose();
+        _playerPrefabRef?.Dispose();
+        _enemyPrefabRef?.Dispose();
     }
-
     public void RefreshHp(int currentHp, int maxHp)
     {
         b_HPText.SetText(currentHp + "/" + maxHp);

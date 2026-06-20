@@ -10,7 +10,6 @@ namespace LitFramework.FSM.Procedure
 {
     public class ProcedureBattle : ProcedureBase
     {
-        private AssetRef<GameObject> cardPrefabRef;
         public ProcedureBattle(ProcedureManager procedureManager) : base(procedureManager) { }
 
         public override void OnInit()
@@ -25,7 +24,7 @@ namespace LitFramework.FSM.Procedure
 
         public override void OnExit()
         {
-            cardPrefabRef?.Dispose();
+        
         }
 
 
@@ -40,13 +39,13 @@ namespace LitFramework.FSM.Procedure
         {
             var assetService = ServiceLocator.Get<IAssetService>();
             var uiService = ServiceLocator.Get<UIService>();
-            cardPrefabRef = await assetService.LoadRefAsync<GameObject>("Assets/Res/UI/UICardItem.prefab");
+        
             var battleContext = new BattleContext()
             {
                 Player = new PlayerData(10, 3),
                 Enemies = new List<EnemyData>()
                  {
-                new EnemyData(20, 3),
+                new(20, 3),
                  },
                 CurrentTurn = 0,
                 IsPlayerTurn = true,
@@ -56,11 +55,10 @@ namespace LitFramework.FSM.Procedure
             var battleController = new BattleController(battleContext, () =>
             {
                 uiService.Close<UIBattleWindow>();
-                uiService.OpenUI<UITitleWindow>();
+                uiService.OpenAsync<UITitleWindow>().Forget();
             });
             var uiBattleWindow = await uiService.OpenAsync<UIBattleWindow>();
             var uiBattlePresenter = new UIBattlePresenter(uiBattleWindow, battleController);
-            uiBattleWindow.Init(cardPrefabRef.Asset);
             battleController.StartBattle();
             uiService.Close<UITitleWindow>();
         }

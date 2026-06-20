@@ -10,6 +10,8 @@ public class UIBattlePresenter
     private IEventBinding<HpChangedEvent> m_HpChangedEventBinding;
     private IEventBinding<HandChangedEvent> m_HandChangedEventBinding;
     private BattleController _battleController;
+
+    
     public UIBattlePresenter(UIBattleWindow view, BattleController battleController)
     {
         _view = view;
