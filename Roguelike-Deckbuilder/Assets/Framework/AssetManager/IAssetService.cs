@@ -10,10 +10,9 @@ namespace LitFramework.Asset
         /// </summary>
         T Load<T>(string path) where T : UnityEngine.Object;
         /// <summary>
-        /// 异步加载资源
+        /// 异步加载资源，需手动管理释放
         /// </summary>
         UniTask<T> LoadAsync<T>(string path) where T : UnityEngine.Object;
-
         /// <summary>
         /// 增加引用计数（用于预加载或手动保持资源）
         /// </summary>
