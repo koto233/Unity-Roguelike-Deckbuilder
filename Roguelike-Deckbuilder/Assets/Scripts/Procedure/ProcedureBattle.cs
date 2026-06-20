@@ -10,7 +10,7 @@ namespace LitFramework.FSM.Procedure
 {
     public class ProcedureBattle : ProcedureBase
     {
-        bool _initing = false;
+        private AssetRef<GameObject> cardPrefabRef;
         public ProcedureBattle(ProcedureManager procedureManager) : base(procedureManager) { }
 
         public override void OnInit()
@@ -20,13 +20,12 @@ namespace LitFramework.FSM.Procedure
 
         public override void OnEnter()
         {
-            if (_initing) return;
             InitBattleAsync().Forget();
         }
 
         public override void OnExit()
         {
-
+            cardPrefabRef?.Dispose();
         }
 
 
@@ -39,10 +38,9 @@ namespace LitFramework.FSM.Procedure
         }
         private async UniTaskVoid InitBattleAsync()
         {
-            _initing = true;
             var assetService = ServiceLocator.Get<IAssetService>();
             var uiService = ServiceLocator.Get<UIService>();
-            var cardPrefab = await assetService.LoadAsync<GameObject>("Assets/Res/UI/UICardItem.prefab");
+            cardPrefabRef = await assetService.LoadRefAsync<GameObject>("Assets/Res/UI/UICardItem.prefab");
             var battleContext = new BattleContext()
             {
                 Player = new PlayerData(10, 3),
@@ -62,10 +60,9 @@ namespace LitFramework.FSM.Procedure
             });
             var uiBattleWindow = await uiService.OpenAsync<UIBattleWindow>();
             var uiBattlePresenter = new UIBattlePresenter(uiBattleWindow, battleController);
-            uiBattleWindow.Init(cardPrefab);
+            uiBattleWindow.Init(cardPrefabRef.Asset);
             battleController.StartBattle();
             uiService.Close<UITitleWindow>();
-            _initing = false;
         }
     }
 }
