@@ -543,7 +543,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 6124219046250416709}
   m_FillRect: {fileID: 4991548054623081849}
   m_HandleRect: {fileID: 8318031770450472666}

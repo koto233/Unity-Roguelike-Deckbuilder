@@ -4,11 +4,15 @@ using System.Collections.Generic;
 using LitFramework;
 using LitFramework.Asset;
 using LitFramework.EventBus;
+using LitFramework.UI.Core.Window;
 using UnityEngine;
 
-public class UIHandZone : MonoBehaviour
+public partial class UIHandZone : MonoBehaviour
 {
-    public Transform handContainer;
+    [SerializeField]
+    private FanLayout _fanLayout;
+    [SerializeField]
+    private Transform handContainer;
     private GameObject _cardPrefab;
     private List<UICardItem> _cardItems = new();
     private BattleContext _battleContext;
@@ -16,8 +20,11 @@ public class UIHandZone : MonoBehaviour
     {
         _cardPrefab = cardPrefab;
     }
-
-    public void RefreshHand(List<Card> handCards, Action<Card> onCardPlay)
+    // void Update()
+    // {
+    //     _fanLayout.Refresh();
+    // }
+    public void RefreshHand(List<Card> handCards, System.Action<Card, CharacterData> onCardPlay)
     {
         // 清除现有
         foreach (var item in _cardItems)
@@ -32,6 +39,7 @@ public class UIHandZone : MonoBehaviour
             uiCard.Refresh(card, onCardPlay);
             _cardItems.Add(uiCard);
         }
-        // 自动布局（使用HorizontalLayoutGroup或GridLayoutGroup）
+        _fanLayout.Refresh();
+
     }
 }

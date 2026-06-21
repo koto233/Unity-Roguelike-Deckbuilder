@@ -535,6 +535,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5015547146576226994}
   - component: {fileID: 3146398637584392617}
+  - component: {fileID: 784152890002736185}
   m_Layer: 5
   m_Name: UICardItem
   m_TagString: Untagged
@@ -578,6 +579,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _generatedScriptPath: Scripts/UI/UICardItem/Generated
+--- !u!225 &784152890002736185
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5759624189158263875}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &8502597849972828906
 GameObject:
   m_ObjectHideFlags: 0

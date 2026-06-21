@@ -1,13 +1,10 @@
 using Cysharp.Threading.Tasks;
+using UnityEngine;
 
 namespace LitFramework.UI.Core.Window
 {
     public abstract class UIWindow : UIBase
     {
-        // public virtual void OnInit() { }
-        // public virtual UniTask OnOpenAsync() { return UniTask.CompletedTask; }
-        // public virtual void OnOpen(object args) { }
-        // public virtual void OnClose() { }
         public bool IsShown { get; private set; }
 
         // ===== 由 UIService 调用 =====

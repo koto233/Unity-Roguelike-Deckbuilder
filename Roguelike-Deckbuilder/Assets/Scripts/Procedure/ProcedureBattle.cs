@@ -24,7 +24,7 @@ namespace LitFramework.FSM.Procedure
 
         public override void OnExit()
         {
-        
+
         }
 
 
@@ -39,7 +39,7 @@ namespace LitFramework.FSM.Procedure
         {
             var assetService = ServiceLocator.Get<IAssetService>();
             var uiService = ServiceLocator.Get<UIService>();
-        
+
             var battleContext = new BattleContext()
             {
                 Player = new PlayerData(10, 3),
@@ -57,7 +57,7 @@ namespace LitFramework.FSM.Procedure
                 uiService.Close<UIBattleWindow>();
                 uiService.OpenAsync<UITitleWindow>().Forget();
             });
-            var uiBattleWindow = await uiService.OpenAsync<UIBattleWindow>();
+            var uiBattleWindow = await uiService.OpenAsync<UIBattleWindow>(battleContext);
             var uiBattlePresenter = new UIBattlePresenter(uiBattleWindow, battleController);
             battleController.StartBattle();
             uiService.Close<UITitleWindow>();

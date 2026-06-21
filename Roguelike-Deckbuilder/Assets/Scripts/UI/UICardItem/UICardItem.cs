@@ -8,12 +8,11 @@ using UnityEngine.EventSystems;
 public partial class UICardItem : UIBase, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     private Card _card;
-    private Action<Card> _onPlayCard;
+    private System.Action<Card, CharacterData> _onPlayCard;
+    private Action<Card> _onCardCancel;
     private Action<string> _onCardDragStart;
     private Action<string, Vector2> _onCardDrag;
-    private Action<string> _onCardDrop;
-    private Action<string> _onCardCancel;
-    public void Refresh(Card card, Action<Card> onPlay)
+    public void Refresh(Card card, System.Action<Card, CharacterData> onPlay)
     {
         _card = card;
         _onPlayCard = onPlay;
@@ -25,36 +24,50 @@ public partial class UICardItem : UIBase, IBeginDragHandler, IDragHandler, IEndD
     }
     public void OnBeginDrag(PointerEventData eventData)
     {
-        if (!_card.IsPlayable)
-        {
-            eventData.pointerDrag = null; // 禁止拖拽
-            return;
-        }
+        // if (!_card.IsPlayable)
+        // {
+        //     eventData.pointerDrag = null; // 禁止拖拽
+        //     return;
+        // }
         // _canvasGroup.blocksRaycasts = false;
         _onCardDragStart?.Invoke(_card.Config.ID);
     }
 
     public void OnDrag(PointerEventData eventData)
     {
+        transform.position = eventData.position;
         _onCardDrag?.Invoke(_card.Config.ID, eventData.position);
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
         // 检查是否拖拽到了目标区域
-        if (IsOverTarget(eventData))
+        CharacterData target = IsOverTarget(eventData);
+        if (target != null)
         {
-            _onCardDrop?.Invoke(_card.Config.ID);
+            _onPlayCard?.Invoke(_card, target);
         }
         else
         {
-            _onCardCancel?.Invoke(_card.Config.ID);
+            _onCardCancel?.Invoke(_card);
         }
     }
-    private bool IsOverTarget(PointerEventData eventData)
+    private CharacterData IsOverTarget(PointerEventData eventData)
     {
+        int layerMask = 1 << LayerMask.NameToLayer("Target");
+        var results = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(eventData, results);
+
+        foreach (var result in results)
+        {
+            // ✅ 用 Tag 判断具体类型
+            if (result.gameObject.CompareTag("Enemy"))
+            {
+                return result.gameObject.GetComponent<UIEnemyItem>().Enemy;
+            }
+        }
         // 判断鼠标位置是否在目标区域（由 View 层的碰撞检测负责）
-        return false;
+        return null;
     }
 
     // // 根据卡牌目标类型判断是否有效
@@ -74,5 +87,5 @@ public partial class UICardItem : UIBase, IBeginDragHandler, IDragHandler, IEndD
     //     // 无效拖拽：可播放提示音效或UI动画（卡牌飞回）
     // }
     // }
-  
+
 }

@@ -31,6 +31,18 @@ public class BattleController : IBattleController
 
     public void PlayCard(Card card, CharacterData target = null)
     {
+        if (Context.IsPlayerTurn)
+        {
+            Context.Target = target;
+            if (Context.Player.SpendEnergy(card.Config.Cost))
+            {
+                card.Play(Context);
+            }
+        }
+        else
+        {
+
+        }
     }
 
     public void EndTurn()

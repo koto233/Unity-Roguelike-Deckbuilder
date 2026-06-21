@@ -4,7 +4,7 @@
 //     请勿手动修改此文件，重新生成将覆盖所有改动
 //
 //     来源 UI : UIBattleWindow
-//     生成时间 : 2026-06-20
+//     生成时间 : 2026-06-21
 // </自动生成>
 //------------------------------------------------------------------------------
 
@@ -19,6 +19,7 @@ using TMPro;
         private @UIHandZone b_HandZone;
         private @RectTransform b_EnemysRoot;
         private @RectTransform b_PlayerRoot;
+        private @TextMeshProUGUI b_EnergyText;
 
         protected override void GetUI()
         {
@@ -28,5 +29,6 @@ using TMPro;
             b_HandZone = GetBind<@UIHandZone>(2);
             b_EnemysRoot = GetBind<@RectTransform>(3);
             b_PlayerRoot = GetBind<@RectTransform>(4);
+            b_EnergyText = GetBind<@TextMeshProUGUI>(5);
         }
-}
+    }

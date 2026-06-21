@@ -1,5 +1,3 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using LitFramework;
@@ -12,15 +10,43 @@ public partial class UIBattleWindow : UIWindow
     private AssetRef<GameObject> _cardPrefabRef;
     private AssetRef<GameObject> _enemyPrefabRef;
     private AssetRef<GameObject> _playerPrefabRef;
+    private UIPlayerItem _playerView;
+    private List<UIEnemyItem> _enemyViews = new();
     protected override async UniTask OnOpenAsync(object param)
     {
+        var battleContext = param as BattleContext;
+        if (battleContext == null)
+        {
+            Debug.LogError("参数类型错误，需要 BattleContext");
+            return;
+        }
         var assetService = ServiceLocator.Get<IAssetService>();
         _enemyPrefabRef = await assetService.LoadRefAsync<GameObject>("Assets/Res/UI/UIEnemyItem.prefab");
         _playerPrefabRef = await assetService.LoadRefAsync<GameObject>("Assets/Res/UI/UIPlayerItem.prefab");
         _cardPrefabRef = await assetService.LoadRefAsync<GameObject>("Assets/Res/UI/UICardItem.prefab");
         b_HandZone.Init(_cardPrefabRef.Asset);
+        _playerView = CreatePlayerView(battleContext.Player);
+        _enemyViews = CreateEnemyViews(battleContext.Enemies);
+    }
+    private UIPlayerItem CreatePlayerView(PlayerData data)
+    {
+        var go = Instantiate(_playerPrefabRef.Asset, b_PlayerRoot);
+        var view = go.GetComponent<UIPlayerItem>();
+        return view;
     }
 
+    private List<UIEnemyItem> CreateEnemyViews(List<EnemyData> enemies)
+    {
+        var views = new List<UIEnemyItem>();
+        foreach (var enemy in enemies)
+        {
+            var go = Instantiate(_enemyPrefabRef.Asset, b_EnemysRoot);
+            var view = go.GetComponent<UIEnemyItem>();
+            // view.SetEnemyId(enemy.Id);
+            views.Add(view);
+        }
+        return views;
+    }
     private void OnDestroy()
     {
         _cardPrefabRef?.Dispose();
@@ -31,10 +57,13 @@ public partial class UIBattleWindow : UIWindow
     {
         b_HPText.SetText(currentHp + "/" + maxHp);
         b_HPSlider.value = currentHp / maxHp;
-
+        _playerView.UpdateHP(currentHp, maxHp);
     }
-    public void RefreshEnergy(int energy) { /* 更新能量显示 */ }
-    public void RefreshHand(List<Card> hand, Action<Card> onCardPlay)
+    public void RefreshEnergy(int energy, int maxEnergy)
+    {
+        b_EnergyText.SetText($"{energy}/{maxEnergy}");
+    }
+    public void RefreshHand(List<Card> hand, System.Action<Card, CharacterData> onCardPlay)
     {
         b_HandZone.RefreshHand(hand, onCardPlay);
     }

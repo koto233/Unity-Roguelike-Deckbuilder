@@ -78,21 +78,21 @@ public class PlayerModel : IModel
         int old = _energy;
         _energy = Mathf.Max(0, energy);
         if (old != _energy)
-            EventBus<PlayerEnergyChangedEvent>.Publish(new PlayerEnergyChangedEvent { OldEnergy = old, NewEnergy = _energy });
+            EventBus<EnergyChangedEvent>.Publish(new EnergyChangedEvent { OldEnergy = old, NewEnergy = _energy });
     }
     public void AddEnergy(int amount)
     {
         int old = _energy;
         _energy = Mathf.Min(3, _energy + amount);
         if (old != _energy)
-            EventBus<PlayerEnergyChangedEvent>.Publish(new PlayerEnergyChangedEvent { OldEnergy = old, NewEnergy = _energy });
+            EventBus<EnergyChangedEvent>.Publish(new EnergyChangedEvent { OldEnergy = old, NewEnergy = _energy });
     }
     public bool SpendEnergy(int cost)
     {
         if (cost <= 0 || _energy < cost) return false;
         int old = _energy;
         _energy -= cost;
-        EventBus<PlayerEnergyChangedEvent>.Publish(new PlayerEnergyChangedEvent { OldEnergy = old, NewEnergy = _energy });
+        EventBus<EnergyChangedEvent>.Publish(new EnergyChangedEvent { OldEnergy = old, NewEnergy = _energy });
         return true;
     }
 

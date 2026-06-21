@@ -9,19 +9,23 @@ public class UIBattlePresenter
     private UIBattleWindow _view;
     private IEventBinding<HpChangedEvent> m_HpChangedEventBinding;
     private IEventBinding<HandChangedEvent> m_HandChangedEventBinding;
+    private IEventBinding<EnergyChangedEvent> m_EnergyChangedEventBinding;
     private BattleController _battleController;
 
-    
+
     public UIBattlePresenter(UIBattleWindow view, BattleController battleController)
     {
         _view = view;
         _battleController = battleController;
         m_HpChangedEventBinding = new EventBinding<HpChangedEvent>(OnHpChanged);
         m_HandChangedEventBinding = new EventBinding<HandChangedEvent>(OnHandChanged);
+        m_EnergyChangedEventBinding = new EventBinding<EnergyChangedEvent>(OnEnergyChanged);
         EventBus<HandChangedEvent>.Subscribe(m_HandChangedEventBinding);
         EventBus<HpChangedEvent>.Subscribe(m_HpChangedEventBinding);
-        RefreshHp(_battleController.Context.Player.CurrentHp, _battleController.Context.Player.MaxHp);
-        RefreshHand(_battleController.Context.Player.Hand);
+        var context = _battleController.Context;
+        RefreshHp(context.Player.CurrentHp, context.Player.MaxHp);
+        RefreshHand(context.Player.Hand);
+        RefreshEnergy(context.Player.Energy, context.Player.MaxEnergy);
     }
 
     private void OnHandChanged(HandChangedEvent evt)
@@ -33,6 +37,10 @@ public class UIBattlePresenter
     {
         RefreshHp(evt.NewHp, evt.characterData.MaxHp);
     }
+    private void OnEnergyChanged(EnergyChangedEvent evt)
+    {
+        RefreshEnergy(evt.NewEnergy, _battleController.Context.Player.MaxEnergy);
+    }
     private void RefreshHp(int currentHp, int maxHp)
     {
         _view.RefreshHp(currentHp, maxHp);
@@ -41,10 +49,13 @@ public class UIBattlePresenter
     {
         _view.RefreshHand(handCards, OnPlayCard);
     }
-
-    private void OnPlayCard(Card card)
+    private void RefreshEnergy(int energy, int maxEnergy)
     {
-
+        _view.RefreshEnergy(energy, maxEnergy);
+    }
+    private void OnPlayCard(Card card, CharacterData target = null)
+    {
+        _battleController.PlayCard(card, target);
     }
 
 }

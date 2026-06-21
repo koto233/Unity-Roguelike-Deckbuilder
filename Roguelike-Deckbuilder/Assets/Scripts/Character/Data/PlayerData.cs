@@ -8,10 +8,14 @@ public class PlayerData : CharacterData
     public List<Card> DrawPile { get; private set; }      // 抽牌堆
     public List<Card> Hand { get; private set; }          // 手牌
     public List<Card> DiscardPile { get; private set; }   // 弃牌堆
-
-    public int Energy { get; private set; }
-    public PlayerData(int maxHp, int strength = 0) : base(maxHp, strength)
+    private int _energy;
+    private int _maxEnergy;
+    public int Energy => _energy;
+    public int MaxEnergy => _maxEnergy;
+    public PlayerData(int maxHp, int maxEnergy, int strength = 0) : base(maxHp, strength)
     {
+        _maxEnergy = maxEnergy;
+        _energy = maxEnergy;
         Hand = new();
         DrawPile = new();
         DiscardPile = new();
@@ -50,6 +54,9 @@ public class PlayerData : CharacterData
     }
     public bool SpendEnergy(int cost)
     {
+        if (cost <= 0 || Energy < cost) return false;
+        _energy -= cost;
+        EventBus<EnergyChangedEvent>.Publish(new EnergyChangedEvent { OldEnergy = Energy, NewEnergy = Energy - cost });
         return true;
     }
     public void ShuffleDrawPile()

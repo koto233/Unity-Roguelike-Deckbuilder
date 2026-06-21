@@ -63,7 +63,7 @@ namespace LitFramework.UI.Core.Service
         /// <typeparam name="T"></typeparam>
         /// <param name="args"></param>
         /// <returns></returns> 
-        public async UniTask<T> OpenAsync<T>(IUIArgs args = null) where T : UIWindow
+        public async UniTask<T> OpenAsync<T>(object args = null) where T : UIWindow
         {
             var type = typeof(T);
 
