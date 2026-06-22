@@ -7,21 +7,27 @@ using UnityEngine.EventSystems;
 
 public partial class UICardItem : UIBase, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
-    private Card _card;
-    private System.Action<Card, CharacterData> _onPlayCard;
-    private Action<Card> _onCardCancel;
-    private Action<string> _onCardDragStart;
+    private CardDisplayData _displayData;
+    private Action<string> _onPlay;
+    private Action<string> _onCancel;
+    private Action<string> _onDragStart;
     private Action<string, Vector2> _onCardDrag;
-    public void Refresh(Card card, System.Action<Card, CharacterData> onPlay)
+    public void Init(CardDisplayData displayData, Action<string> onPlay = null, Action<string> onCancel = null, Action<string> onDragStart = null, Action<string, Vector2> onCardDrag = null)
     {
-        _card = card;
-        _onPlayCard = onPlay;
-        b_CostText.SetText(card.CurrentCost.ToString());
-        b_NameText.SetText(card.Config.Name);
-        string desc = string.Format(card.Config.Description, card.Config.Effects[0].Value);
-        b_DescText.SetText(desc);
-        // ... 刷新UI显示（费用、名称等）
+        _onPlay = onPlay;
+        _onCancel = onCancel;
+        _onDragStart = onDragStart;
+        _onCardDrag = onCardDrag;
+        RefreshUI(displayData);
     }
+    public void RefreshUI(CardDisplayData data)
+    {
+        _displayData = data;
+        b_CostText.SetText(data.Cost.ToString());
+        b_NameText.SetText(data.Name);
+        b_DescText.SetText(data.Description);
+    }
+
     public void OnBeginDrag(PointerEventData eventData)
     {
         // if (!_card.IsPlayable)
@@ -30,13 +36,13 @@ public partial class UICardItem : UIBase, IBeginDragHandler, IDragHandler, IEndD
         //     return;
         // }
         // _canvasGroup.blocksRaycasts = false;
-        _onCardDragStart?.Invoke(_card.Config.ID);
+        _onDragStart?.Invoke(_displayData.CardId);
     }
 
     public void OnDrag(PointerEventData eventData)
     {
         transform.position = eventData.position;
-        _onCardDrag?.Invoke(_card.Config.ID, eventData.position);
+        _onCardDrag?.Invoke(_displayData.CardId, eventData.position);
     }
 
     public void OnEndDrag(PointerEventData eventData)
@@ -45,11 +51,11 @@ public partial class UICardItem : UIBase, IBeginDragHandler, IDragHandler, IEndD
         CharacterData target = IsOverTarget(eventData);
         if (target != null)
         {
-            _onPlayCard?.Invoke(_card, target);
+            _onPlay?.Invoke(_displayData.CardId);
         }
         else
         {
-            _onCardCancel?.Invoke(_card);
+            _onCancel?.Invoke(_displayData.CardId);
         }
     }
     private CharacterData IsOverTarget(PointerEventData eventData)

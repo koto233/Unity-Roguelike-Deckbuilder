@@ -36,7 +36,11 @@ public class BattleController : IBattleController
             Context.Target = target;
             if (Context.Player.SpendEnergy(card.Config.Cost))
             {
-                card.Play(Context);
+                // 执行效果（传入目标）
+                foreach (var effect in card.Effects)
+                {
+                    // effect.Execute(_context, targetId);
+                }
             }
         }
         else

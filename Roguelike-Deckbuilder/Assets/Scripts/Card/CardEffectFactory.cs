@@ -5,7 +5,7 @@ using UnityEngine;
 
 public static class CardEffectFactory
 {
-    public static ICardEffect Create(CardEffects data)
+    public static ICardEffect Create(CardEffectsConfig data)
     {
         switch (data.Type)
         {

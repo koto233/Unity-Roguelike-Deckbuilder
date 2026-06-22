@@ -7,7 +7,7 @@ using System.Linq;
 public class CardLibrary : ICardLibrary
 {
     private Dictionary<string, CardConfig> _cardConfigs;
-    private List<CardEffects> _cardEffects;
+    private List<CardEffectsConfig> _cardEffects;
     public void OnRegister()
     {
         var configService = ServiceLocator.Get<IConfigService>();
@@ -17,7 +17,7 @@ public class CardLibrary : ICardLibrary
         {
             Debug.Log($"卡牌: {item.Key}");
         }
-        var tableEffect = configService.GetTable<CardEffects>() as ListConfigTable<CardEffects>;
+        var tableEffect = configService.GetTable<CardEffectsConfig>() as ListConfigTable<CardEffectsConfig>;
         _cardEffects = tableEffect.GetList();
         foreach (var effect in _cardEffects)
         {

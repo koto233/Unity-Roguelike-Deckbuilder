@@ -8,7 +8,7 @@
 using System;
 
 [Serializable]
-public class CardEffects : IConfig
+public class CardEffectsConfig : IConfig
 {
 	public string ID; // ID
 	public EffectType Type; // 类型

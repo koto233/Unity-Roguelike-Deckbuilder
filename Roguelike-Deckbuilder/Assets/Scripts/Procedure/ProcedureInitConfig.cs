@@ -42,7 +42,7 @@ namespace LitFramework.FSM.Procedure
         {
             var configSvc = ServiceLocator.Get<IConfigService>();
             await configSvc.LoadDictTableAsync<CardConfig>(CardConfigPath);
-            await configSvc.LoadListTableAsync<CardEffects>(CardEffectsPath);
+            await configSvc.LoadListTableAsync<CardEffectsConfig>(CardEffectsPath);
             ModelContainer.Register<ICardLibrary>(new CardLibrary());
             _procedureManager.ChangeProcedure<ProcedureTitle>();
         }

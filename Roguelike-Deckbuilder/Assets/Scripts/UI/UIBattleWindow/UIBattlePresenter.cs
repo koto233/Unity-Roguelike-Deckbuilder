@@ -47,7 +47,28 @@ public class UIBattlePresenter
     }
     private void RefreshHand(List<Card> handCards)
     {
-        _view.RefreshHand(handCards, OnPlayCard);
+        var displayList = new List<CardDisplayData>();
+        foreach (var card in handCards)
+        {
+            // bool canPlay = _battleController.CanPlayCard(card);          // 外部判断
+            bool canPlay = true;
+            Color costColor = canPlay ? Color.white : Color.red;
+            // Color rarityColor = GetRarityColor(card.Config.Rarity);
+            string desc = string.Format(card.Config.Description, card.Config.Effects[0].Value);
+            displayList.Add(new CardDisplayData
+            {
+                CardId = card.Config.Id,
+                Name = card.Config.Name,
+                Cost = card.CurrentCost,
+                CostColor = costColor,
+                Description = desc,
+                // Icon = card.Config.Icon,
+                // RarityColor = rarityColor,
+                IsPlayable = canPlay,
+                IsHighlighted = false
+            });
+        }
+        _view.RefreshHand(displayList, OnPlayCard);
     }
     private void RefreshEnergy(int energy, int maxEnergy)
     {
