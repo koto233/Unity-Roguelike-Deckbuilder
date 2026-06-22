@@ -24,7 +24,7 @@ public partial class UIHandZone : MonoBehaviour
     // {
     //     _fanLayout.Refresh();
     // }
-    public void RefreshHand(List<CardDisplayData> handCards, System.Action<Card, CharacterData> onCardPlay)
+    public void RefreshHand(List<CardDisplayData> handCards, Action<string> onCardPlay)
     {
         // 清除现有
         foreach (var item in _cardItems)
@@ -36,7 +36,7 @@ public partial class UIHandZone : MonoBehaviour
         {
             var go = Instantiate(_cardPrefab, handContainer);
             var uiCard = go.GetComponent<UICardItem>();
-            uiCard.Init(card);
+            uiCard.Init(card, onCardPlay);
             _cardItems.Add(uiCard);
         }
         _fanLayout.Refresh();

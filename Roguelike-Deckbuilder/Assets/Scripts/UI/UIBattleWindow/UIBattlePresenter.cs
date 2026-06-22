@@ -64,6 +64,7 @@ public class UIBattlePresenter
                 Description = desc,
                 // Icon = card.Config.Icon,
                 // RarityColor = rarityColor,
+                NeedTarget = card.Config.Effects[0].Target == "Enemy",
                 IsPlayable = canPlay,
                 IsHighlighted = false
             });
@@ -74,9 +75,9 @@ public class UIBattlePresenter
     {
         _view.RefreshEnergy(energy, maxEnergy);
     }
-    private void OnPlayCard(Card card, CharacterData target = null)
+    private void OnPlayCard(string cardId)
     {
-        _battleController.PlayCard(card, target);
+        _battleController.PlayCard(cardId);
     }
 
 }

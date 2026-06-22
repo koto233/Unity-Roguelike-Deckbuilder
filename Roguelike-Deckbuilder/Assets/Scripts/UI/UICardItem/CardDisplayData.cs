@@ -14,4 +14,5 @@ public class CardDisplayData
     public bool IsPlayable;       // 已算好
     public bool IsHighlighted;    // 目标选择时高亮
     public bool IsPending;        // 正在播放动画（禁止交互）
+    public bool NeedTarget;
 }

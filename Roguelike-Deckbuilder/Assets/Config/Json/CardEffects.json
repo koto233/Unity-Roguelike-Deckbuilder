@@ -1,70 +1,70 @@
 [
   {
     "ID": "strike",
-    "EffectType": "Damage",
+    "Type": "Damage",
     "Value": 6,
-    "Target": "enemy",
+    "Target": "Enemy",
     "#Description": "造成{0}点伤害。"
   },
   {
     "ID": "strike+",
-    "EffectType": "Damage",
+    "Type": "Damage",
     "Value": 9,
     "Target": "Enemy",
     "#Description": "造成{0}点伤害。"
   },
   {
     "ID": "defend",
-    "EffectType": "Block",
+    "Type": "Block",
     "Value": 5,
     "Target": "Self",
     "#Description": "获得{0}点格挡。"
   },
   {
     "ID": "defend+",
-    "EffectType": "Block",
+    "Type": "Block",
     "Value": 8,
     "Target": "Self",
     "#Description": "获得{0}点格挡。"
   },
   {
     "ID": "heavy_blow",
-    "EffectType": "Damage",
+    "Type": "Damage",
     "Value": 12,
     "Target": "Enemy",
     "#Description": "造成{0}点伤害。"
   },
   {
     "ID": "heavy_blow+",
-    "EffectType": "Damage",
+    "Type": "Damage",
     "Value": 16,
     "Target": "Enemy",
     "#Description": "造成{0} 点伤害。"
   },
   {
     "ID": "tactics",
-    "EffectType": "DrawCard",
+    "Type": "DrawCard",
     "Value": 2,
     "Target": "Self",
     "#Description": "抽{0}张牌。"
   },
   {
     "ID": "tactics+",
-    "EffectType": "DrawCard",
+    "Type": "DrawCard",
     "Value": 3,
     "Target": "Self",
     "#Description": "抽{0}张牌。"
   },
   {
     "ID": "empower",
-    "EffectType": "GainEnergy",
+    "Type": "GainEnergy",
     "Value": 1,
     "Target": "Self",
     "#Description": "获得 {0}点能量。"
   },
   {
     "ID": "empower+",
-    "EffectType": "GainEnergy",
+    "Type": "GainEnergy",
     "Value": 2,
     "Target": "Self",
     "#Description": "获得{0}点能量。"

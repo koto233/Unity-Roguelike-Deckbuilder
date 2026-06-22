@@ -5,7 +5,7 @@ using UnityEngine;
 public interface IBattleController
 {
     BattleContext Context { get; }
-    void PlayCard(Card card, CharacterData target = null);
+    void PlayCard(string cardId);
     void EndTurn();
     void OnPlayerDeath();
     void OnAllEnemiesDefeated();

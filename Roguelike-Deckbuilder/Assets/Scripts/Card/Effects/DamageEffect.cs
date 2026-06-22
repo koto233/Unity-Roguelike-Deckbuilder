@@ -7,9 +7,10 @@ public class DamageEffect : ICardEffect
 {
     private int _damage;
     public DamageEffect(int damage) { _damage = damage; }
-    
     public void Execute(Card card, BattleContext context)
     {
         context.Target.TakeDamage(_damage);
     }
+
+
 }

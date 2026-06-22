@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class BattleController : IBattleController
@@ -29,17 +30,20 @@ public class BattleController : IBattleController
 
     }
 
-    public void PlayCard(Card card, CharacterData target = null)
+    public void PlayCard(string cardId)
     {
+        var card = Context.Player.Hand.FirstOrDefault(c => c.Config.Id == cardId);
+        Debug.Log("使用卡牌 " + card.Config.Name);
         if (Context.IsPlayerTurn)
         {
-            Context.Target = target;
+            // Context.Target = target;
             if (Context.Player.SpendEnergy(card.Config.Cost))
             {
                 // 执行效果（传入目标）
                 foreach (var effect in card.Effects)
                 {
-                    // effect.Execute(_context, targetId);
+                    Debug.Log("执行效果 " + effect.GetType().Name);
+                    effect.Execute(card, Context);
                 }
             }
         }

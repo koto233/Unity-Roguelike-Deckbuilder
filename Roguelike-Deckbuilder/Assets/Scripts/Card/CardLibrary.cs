@@ -24,6 +24,7 @@ public class CardLibrary : ICardLibrary
             if (_cardConfigs.TryGetValue(effect.ID, out var cardConfig))
             {
                 cardConfig.Effects.Add(effect);
+                Debug.Log($"效果: {effect.ID} {effect.Type} {effect.Value} {effect.Target} ");
             }
             else
             {

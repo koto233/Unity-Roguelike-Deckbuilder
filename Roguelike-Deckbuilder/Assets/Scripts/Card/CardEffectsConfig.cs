@@ -11,7 +11,7 @@ using System;
 public class CardEffectsConfig : IConfig
 {
 	public string ID; // ID
-	public EffectType Type; // 类型
+	public string Type; // 类型
 	public int Value; // 效果值
 	public string Target; // 目标
 
