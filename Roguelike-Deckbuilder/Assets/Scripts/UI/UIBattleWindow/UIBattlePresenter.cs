@@ -11,8 +11,8 @@ public class UIBattlePresenter
     private IEventBinding<HandChangedEvent> m_HandChangedEventBinding;
     private IEventBinding<EnergyChangedEvent> m_EnergyChangedEventBinding;
     private BattleController _battleController;
-
-
+    private EnemyData _currentTargetEnemy;
+    private string _selectedCardId;
     public UIBattlePresenter(UIBattleWindow view, BattleController battleController)
     {
         _view = view;
@@ -69,15 +69,33 @@ public class UIBattlePresenter
                 IsHighlighted = false
             });
         }
-        _view.RefreshHand(displayList, OnPlayCard);
+        _view.RefreshHand(displayList, OnPlayCard, OnCancelCard, OnDragStart, OnDragCard);
     }
+
+
+    private void OnDragStart(string cardId)
+    {
+        Debug.Log("OnDragStart:" + cardId);
+        _selectedCardId = cardId;
+    }
+    private void OnDragCard(EnemyData enemy)
+    {
+        _currentTargetEnemy = enemy;
+        Debug.Log("OnDragCard:" + enemy == null);
+    }
+    private void OnPlayCard()
+    {
+        _battleController.PlayCard(_selectedCardId, _currentTargetEnemy);
+    }
+    private void OnCancelCard()
+    {
+
+    }
+
     private void RefreshEnergy(int energy, int maxEnergy)
     {
         _view.RefreshEnergy(energy, maxEnergy);
     }
-    private void OnPlayCard(string cardId)
-    {
-        _battleController.PlayCard(cardId);
-    }
+
 
 }

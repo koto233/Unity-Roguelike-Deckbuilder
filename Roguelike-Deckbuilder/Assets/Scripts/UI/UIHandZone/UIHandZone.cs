@@ -27,7 +27,7 @@ public partial class UIHandZone : MonoBehaviour
     // {
     //     _fanLayout.Refresh();
     // }
-    public void RefreshHand(List<CardDisplayData> handCards, Action<string> onCardPlay)
+    public void RefreshHand(List<CardDisplayData> handCards, Action onPlay = null, Action onCancel = null, Action<string> onDragStart = null, Action<EnemyData> onCardDrag = null)
     {
         Debug.Log("刷新手牌");
         // 清除现有
@@ -45,7 +45,7 @@ public partial class UIHandZone : MonoBehaviour
             go.SetActive(true);
             go.transform.SetParent(handContainer);
             var uiCard = go.GetComponent<UICardItem>();
-            uiCard.Init(card, onCardPlay);
+            uiCard.Init(card, onPlay, onCancel, onDragStart, onCardDrag);
             _cardItems.Add(uiCard);
         }
         _fanLayout.Refresh();

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using LitFramework;
@@ -50,6 +51,7 @@ public partial class UIBattleWindow : UIWindow
         {
             var go = Instantiate(_enemyPrefabRef.Asset, b_EnemysRoot);
             var view = go.GetComponent<UIEnemyItem>();
+            view.SetEnemy(enemy);
             // view.SetEnemyId(enemy.Id);
             views.Add(view);
         }
@@ -64,16 +66,16 @@ public partial class UIBattleWindow : UIWindow
     public void RefreshHp(int currentHp, int maxHp)
     {
         b_HPText.SetText(currentHp + "/" + maxHp);
-        b_HPSlider.value = currentHp / maxHp;
+        b_HPSlider.value = (float)currentHp / maxHp;
         _playerView.UpdateHP(currentHp, maxHp);
     }
     public void RefreshEnergy(int energy, int maxEnergy)
     {
         b_EnergyText.SetText($"{energy}/{maxEnergy}");
     }
-    public void RefreshHand(List<CardDisplayData> hand, System.Action<string> onCardPlay)
+    public void RefreshHand(List<CardDisplayData> hand, Action onPlay = null, Action onCancel = null, Action<string> onDragStart = null, Action<EnemyData> onCardDrag = null)
     {
-        b_HandZone.RefreshHand(hand, onCardPlay);
+        b_HandZone.RefreshHand(hand, onPlay, onCancel, onDragStart, onCardDrag);
     }
 
     // ===== View 层交互反馈 =====

@@ -31,16 +31,22 @@ public class BattleController : IBattleController
 
     }
 
-    public void PlayCard(string cardId)
+    public void PlayCard(string cardId, EnemyData target = null)
     {
+         Debug.Log("使用卡牌 " + cardId);
         var card = Context.Player.Hand.FirstOrDefault(c => c.Config.Id == cardId);
+
         Debug.Log("使用卡牌 " + card.Config.Name);
         if (Context.IsPlayerTurn)
-        {
-            // Context.Target = target;
+        { 
+            if (card.Config.Effects[0].Target == "Enemy" && target == null)
+            {
+                Debug.LogError("请选择目标");
+                return;
+            }
+            Context.Target = target;
             if (Context.Player.SpendEnergy(card.Config.Cost))
             {
-                // 执行效果（传入目标）
                 foreach (var effect in card.Effects)
                 {
                     Debug.Log("执行效果 " + effect.GetType().Name);

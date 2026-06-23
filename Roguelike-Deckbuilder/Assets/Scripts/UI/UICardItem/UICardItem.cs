@@ -11,14 +11,13 @@ public partial class UICardItem : UIBase, IBeginDragHandler, IDragHandler, IEndD
     private Vector2 _dragStartOffset;  // 开始拖拽时鼠标与卡牌的偏移
     private Vector2 _originalPos;
     private float _maxDragY = 200f;
-    private float _maxDragX = 200f;
-    private Action<string> _onPlay;
-    private Action<string> _onCancel;
+    private Action _onPlay;
+    private Action _onCancel;
     private Action<string> _onDragStart;
-    private Action<string, Vector2> _onCardDrag;
+    private Action<EnemyData> _onCardDrag;
     private float _followSpeed = 10f;
-
-    public void Init(CardDisplayData displayData, Action<string> onPlay = null, Action<string> onCancel = null, Action<string> onDragStart = null, Action<string, Vector2> onCardDrag = null)
+    private EnemyData _Target;
+    public void Init(CardDisplayData displayData, Action onPlay = null, Action onCancel = null, Action<string> onDragStart = null, Action<EnemyData> onCardDrag = null)
     {
         _onPlay = onPlay;
         _onCancel = onCancel;
@@ -46,6 +45,7 @@ public partial class UICardItem : UIBase, IBeginDragHandler, IDragHandler, IEndD
         );
         _dragStartOffset = b_UICardItemRect.anchoredPosition - localMousePos;
         _onDragStart?.Invoke(_displayData.CardId);
+
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -57,39 +57,44 @@ public partial class UICardItem : UIBase, IBeginDragHandler, IDragHandler, IEndD
                out Vector2 localMousePos
            );
         Vector2 targetPos = localMousePos + _dragStartOffset;
-
         if (_displayData.NeedTarget)
         {
             targetPos.y = Mathf.Min(targetPos.y, _maxDragY);
             // targetPos.x = Mathf.Clamp(targetPos.x, -_maxDragY, _maxDragY);
+            _Target = IsOverTarget(eventData);
+            Debug.Log("获取目标" + _Target == null);
         }
-        else
-        {
 
-        }
         b_UICardItemRect.anchoredPosition = Vector2.Lerp(
         b_UICardItemRect.anchoredPosition,
         targetPos,
-        _followSpeed * Time.deltaTime
-    );
-        _onCardDrag?.Invoke(_displayData.CardId, eventData.position);
+        _followSpeed * Time.deltaTime);
+        _onCardDrag?.Invoke(_Target);
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        // 检查是否拖拽到了目标区域
-        CharacterData target = IsOverTarget(eventData);
-        if (!_displayData.NeedTarget)
-        {
-            _onPlay?.Invoke(_displayData.CardId);
-        }
-        else
-        {
-            _onCancel?.Invoke(_displayData.CardId);
-            b_UICardItemRect.anchoredPosition = _originalPos;
-        }
+        _onPlay?.Invoke();
+        // // 检查是否拖拽到了目标区域
+        // if (eventData.position.y < _maxDragY - 50)
+        // {
+        //     _onCancel?.Invoke();
+        //     b_UICardItemRect.anchoredPosition = _originalPos;
+        // }
+        // else
+        // {
+        //     if (_displayData.NeedTarget && _Target == null)
+        //     {
+        //         _onCancel?.Invoke();
+        //         b_UICardItemRect.anchoredPosition = _originalPos;
+        //     }
+        //     else
+        //     {
+        //         _onPlay?.Invoke();
+        //     }
+        // }
     }
-    private CharacterData IsOverTarget(PointerEventData eventData)
+    private EnemyData IsOverTarget(PointerEventData eventData)
     {
         int layerMask = 1 << LayerMask.NameToLayer("Target");
         var results = new List<RaycastResult>();
@@ -100,12 +105,15 @@ public partial class UICardItem : UIBase, IBeginDragHandler, IDragHandler, IEndD
             // ✅ 用 Tag 判断具体类型
             if (result.gameObject.CompareTag("Enemy"))
             {
+
+                // ✅ 用 Tag 获取目标
                 return result.gameObject.GetComponent<UIEnemyItem>().Enemy;
             }
         }
         // 判断鼠标位置是否在目标区域（由 View 层的碰撞检测负责）
         return null;
     }
+
 
     // // 根据卡牌目标类型判断是否有效
     // bool isValid = false;
