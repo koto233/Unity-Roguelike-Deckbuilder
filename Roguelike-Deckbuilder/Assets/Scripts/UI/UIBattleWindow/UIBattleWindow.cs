@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using LitFramework;
 using LitFramework.Asset;
+using LitFramework.ObjectPool;
 using LitFramework.UI.Core.Window;
 using UnityEngine;
 
@@ -12,6 +13,8 @@ public partial class UIBattleWindow : UIWindow
     private AssetRef<GameObject> _playerPrefabRef;
     private UIPlayerItem _playerView;
     private List<UIEnemyItem> _enemyViews = new();
+    private string _poolKey = "CardItem";
+    private ObjectPoolService _poolService;
     protected override async UniTask OnOpenAsync(object param)
     {
         var battleContext = param as BattleContext;
@@ -24,7 +27,12 @@ public partial class UIBattleWindow : UIWindow
         _enemyPrefabRef = await assetService.LoadRefAsync<GameObject>("Assets/Res/UI/UIEnemyItem.prefab");
         _playerPrefabRef = await assetService.LoadRefAsync<GameObject>("Assets/Res/UI/UIPlayerItem.prefab");
         _cardPrefabRef = await assetService.LoadRefAsync<GameObject>("Assets/Res/UI/UICardItem.prefab");
-        b_HandZone.Init(_cardPrefabRef.Asset);
+        _poolService = ServiceLocator.Get<ObjectPoolService>();
+        _poolService.RegisterGameObjectPool(
+            _poolKey,
+            new GameObjectPool(_cardPrefabRef.Asset, initialPoolSize: 10)
+        );
+        b_HandZone.Init(_poolKey, _poolService);
         _playerView = CreatePlayerView(battleContext.Player);
         _enemyViews = CreateEnemyViews(battleContext.Enemies);
     }

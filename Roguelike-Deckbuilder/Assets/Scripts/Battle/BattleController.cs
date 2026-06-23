@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using LitFramework.EventBus;
 using UnityEngine;
 
 public class BattleController : IBattleController
@@ -46,6 +47,9 @@ public class BattleController : IBattleController
                     effect.Execute(card, Context);
                 }
             }
+            Context.Player.Hand.Remove(card);
+            Context.Player.DiscardPile.Add(card);
+            EventBus<HandChangedEvent>.Publish(new HandChangedEvent() { Cards = Context.Player.Hand });
         }
         else
         {

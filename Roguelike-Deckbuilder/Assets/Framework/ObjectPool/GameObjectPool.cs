@@ -20,7 +20,7 @@ namespace LitFramework.ObjectPool
         /// <param name="maxPoolSize">池最大容量</param>
         /// <param name="onGet">获取实例时的回调</param>
         /// <param name="onReturn">归还实例时的回调</param>
-        public GameObjectPool(GameObject prefab, Transform poolParent, int initialPoolSize = 0, int maxPoolSize = 100, Action<GameObject> onGet = null, Action<GameObject> onReturn = null)
+        public GameObjectPool(GameObject prefab, Transform poolParent = null, int initialPoolSize = 0, int maxPoolSize = 100, Action<GameObject> onGet = null, Action<GameObject> onReturn = null)
         {
             _prefab = prefab;
             _poolParent = poolParent;
@@ -31,7 +31,13 @@ namespace LitFramework.ObjectPool
                 _poolParent = parent.transform;
             }
             _pool = new ObjectPool<GameObject>(
-                createFunc: () => GameObject.Instantiate(prefab),
+                createFunc: () =>
+                {
+                    GameObject go = GameObject.Instantiate(prefab);  // 保存实例引用
+                    go.SetActive(false);                             // 设为非激活
+                    go.transform.SetParent(_poolParent);
+                    return go;                                       // 返回实例
+                },
                 onGet: go =>
                 {
                     go.transform.SetParent(null);
