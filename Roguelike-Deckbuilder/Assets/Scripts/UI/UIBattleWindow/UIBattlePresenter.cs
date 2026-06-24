@@ -7,9 +7,12 @@ using UnityEngine;
 public class UIBattlePresenter
 {
     private UIBattleWindow _view;
-    private IEventBinding<HpChangedEvent> m_HpChangedEventBinding;
-    private IEventBinding<HandChangedEvent> m_HandChangedEventBinding;
-    private IEventBinding<EnergyChangedEvent> m_EnergyChangedEventBinding;
+    private IEventBinding<HpChangedEvent> _HpChangedEventBinding;
+    private IEventBinding<HandChangedEvent> _HandChangedEventBinding;
+    private IEventBinding<EnergyChangedEvent> _EnergyChangedEventBinding;
+    private IEventBinding<BlockChangedEvent> _BlockChangedEventBinding;
+    private IEventBinding<PlayerMaxHpChangedEvent> _PlayerMaxHpChangedEventBinding;
+
     private BattleController _battleController;
     private EnemyData _currentTargetEnemy;
     private string _selectedCardId;
@@ -17,34 +20,58 @@ public class UIBattlePresenter
     {
         _view = view;
         _battleController = battleController;
-        m_HpChangedEventBinding = new EventBinding<HpChangedEvent>(OnHpChanged);
-        m_HandChangedEventBinding = new EventBinding<HandChangedEvent>(OnHandChanged);
-        m_EnergyChangedEventBinding = new EventBinding<EnergyChangedEvent>(OnEnergyChanged);
-        EventBus<HandChangedEvent>.Subscribe(m_HandChangedEventBinding);
-        EventBus<HpChangedEvent>.Subscribe(m_HpChangedEventBinding);
-        EventBus<EnergyChangedEvent>.Subscribe(m_EnergyChangedEventBinding);
         var context = _battleController.Context;
-        RefreshHp(context.Player.CurrentHp, context.Player.MaxHp);
+        SubscribeEvents();
+        RefreshHp(context.Player.CurrentHp, context.Player.MaxHp, EntityType.Player);
         RefreshHand(context.Player.Hand);
         RefreshEnergy(context.Player.Energy, context.Player.MaxEnergy);
+        RefreshBlock(context.Player.Block, EntityType.Player);
+    }
+
+
+    private void SubscribeEvents()
+    {
+        _HpChangedEventBinding = new EventBinding<HpChangedEvent>(OnHpChanged);
+        _HandChangedEventBinding = new EventBinding<HandChangedEvent>(OnHandChanged);
+        _EnergyChangedEventBinding = new EventBinding<EnergyChangedEvent>(OnEnergyChanged);
+        _BlockChangedEventBinding = new EventBinding<BlockChangedEvent>(OnBlockChanged);
+        _PlayerMaxHpChangedEventBinding = new EventBinding<PlayerMaxHpChangedEvent>(OnPlayerMaxHpChanged);
+        EventBus<HandChangedEvent>.Subscribe(_HandChangedEventBinding);
+        EventBus<HpChangedEvent>.Subscribe(_HpChangedEventBinding);
+        EventBus<EnergyChangedEvent>.Subscribe(_EnergyChangedEventBinding);
+        EventBus<BlockChangedEvent>.Subscribe(_BlockChangedEventBinding);
+        EventBus<PlayerMaxHpChangedEvent>.Subscribe(_PlayerMaxHpChangedEventBinding);
+    }
+    private void OnPlayerMaxHpChanged(PlayerMaxHpChangedEvent evt)
+    {
+
+    }
+
+    private void OnBlockChanged(BlockChangedEvent evt)
+    {
+        RefreshBlock(evt.NewBlock, evt.EntityType);
     }
 
     private void OnHandChanged(HandChangedEvent evt)
     {
         RefreshHand(evt.Cards);
     }
-
     private void OnHpChanged(HpChangedEvent evt)
     {
-        RefreshHp(evt.NewHp, evt.MaxHp);
+        RefreshHp(evt.NewHp, evt.MaxHp, evt.EntityType);
     }
     private void OnEnergyChanged(EnergyChangedEvent evt)
     {
         RefreshEnergy(evt.CurrentEnergy, evt.MaxEnergy);
     }
-    private void RefreshHp(int currentHp, int maxHp)
+    private void RefreshHp(int currentHp, int maxHp, EntityType entityType)
     {
-        _view.RefreshHp(currentHp, maxHp);
+        _view.RefreshHp(currentHp, maxHp, entityType);
+    }
+
+    private void RefreshBlock(int block, EntityType entityType)
+    {
+        _view.RefreshBlock(block, entityType);
     }
     private void RefreshHand(List<Card> handCards)
     {

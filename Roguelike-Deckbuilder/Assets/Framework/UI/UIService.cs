@@ -24,6 +24,9 @@ namespace LitFramework.UI.Core.Service
                 var rect = go.AddComponent<RectTransform>();
                 rect.anchorMin = new Vector2(0, 0);
                 rect.anchorMax = new Vector2(1, 1);
+                rect.offsetMin = Vector2.zero; // 对应 Left, Bottom
+                rect.offsetMax = Vector2.zero; // 对应 Right, Top
+                rect.pivot = new Vector2(0.5f, 0.5f);
                 var uiRoot = GameRoot.Instance.UIRoot;
                 rect.SetParent(uiRoot.transform, false);
                 _layers[layer] = rect;

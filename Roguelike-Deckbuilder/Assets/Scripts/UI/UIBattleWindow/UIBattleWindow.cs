@@ -63,19 +63,32 @@ public partial class UIBattleWindow : UIWindow
         _playerPrefabRef?.Dispose();
         _enemyPrefabRef?.Dispose();
     }
-    public void RefreshHp(int currentHp, int maxHp)
+    public void RefreshHp(int currentHp, int maxHp, EntityType entityType)
     {
+        if (entityType != EntityType.Player)
+        {
+            return;
+        }
         b_HPText.SetText(currentHp + "/" + maxHp);
         b_HPSlider.value = (float)currentHp / maxHp;
         _playerView.UpdateHP(currentHp, maxHp);
     }
     public void RefreshEnergy(int energy, int maxEnergy)
     {
+
         b_EnergyText.SetText($"{energy}/{maxEnergy}");
     }
     public void RefreshHand(List<CardDisplayData> hand, Action onPlay = null, Action onCancel = null, Action<string> onDragStart = null, Action<EnemyData> onCardDrag = null)
     {
         b_HandZone.RefreshHand(hand, onPlay, onCancel, onDragStart, onCardDrag);
+    }
+    public void RefreshBlock(int block, EntityType entityType)
+    {
+        if (entityType != EntityType.Player)
+        {
+            return;
+        }
+        b_BlockText.SetText(block.ToString());
     }
 
     // ===== View 层交互反馈 =====
