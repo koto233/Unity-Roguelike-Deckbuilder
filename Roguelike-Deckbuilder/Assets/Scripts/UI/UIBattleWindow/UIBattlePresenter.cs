@@ -22,6 +22,7 @@ public class UIBattlePresenter
         m_EnergyChangedEventBinding = new EventBinding<EnergyChangedEvent>(OnEnergyChanged);
         EventBus<HandChangedEvent>.Subscribe(m_HandChangedEventBinding);
         EventBus<HpChangedEvent>.Subscribe(m_HpChangedEventBinding);
+        EventBus<EnergyChangedEvent>.Subscribe(m_EnergyChangedEventBinding);
         var context = _battleController.Context;
         RefreshHp(context.Player.CurrentHp, context.Player.MaxHp);
         RefreshHand(context.Player.Hand);
@@ -39,7 +40,7 @@ public class UIBattlePresenter
     }
     private void OnEnergyChanged(EnergyChangedEvent evt)
     {
-        RefreshEnergy(evt.NewEnergy, _battleController.Context.Player.MaxEnergy);
+        RefreshEnergy(evt.CurrentEnergy, evt.MaxEnergy);
     }
     private void RefreshHp(int currentHp, int maxHp)
     {

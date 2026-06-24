@@ -78,27 +78,27 @@ public class PlayerModel : IModel
         int old = _energy;
         _energy = Mathf.Max(0, energy);
         if (old != _energy)
-            EventBus<EnergyChangedEvent>.Publish(new EnergyChangedEvent { OldEnergy = old, NewEnergy = _energy });
+            EventBus<EnergyChangedEvent>.Publish(new EnergyChangedEvent { CurrentEnergy = old, });
     }
     public void AddEnergy(int amount)
     {
         int old = _energy;
         _energy = Mathf.Min(3, _energy + amount);
         if (old != _energy)
-            EventBus<EnergyChangedEvent>.Publish(new EnergyChangedEvent { OldEnergy = old, NewEnergy = _energy });
+            EventBus<EnergyChangedEvent>.Publish(new EnergyChangedEvent { CurrentEnergy = old, });
     }
     public bool SpendEnergy(int cost)
     {
         if (cost <= 0 || _energy < cost) return false;
         int old = _energy;
         _energy -= cost;
-        EventBus<EnergyChangedEvent>.Publish(new EnergyChangedEvent { OldEnergy = old, NewEnergy = _energy });
+        EventBus<EnergyChangedEvent>.Publish(new EnergyChangedEvent { CurrentEnergy = old });
         return true;
     }
 
     public void OnRegister()
     {
-      
+
     }
 
     // 用于存档加载（批量恢复，避免多次事件）

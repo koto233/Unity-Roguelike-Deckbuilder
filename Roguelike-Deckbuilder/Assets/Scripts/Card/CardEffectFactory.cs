@@ -11,6 +11,7 @@ public static class CardEffectFactory
         {
             case "Damage": return new DamageEffect(data.Value);
             case "DrawCard": return new DrawCardEffect(data.Value); 
+            case "GainEnergy": return new GainEnergyEffect(data.Value);
             default: return null;
         }
     }

@@ -52,11 +52,17 @@ public class PlayerData : CharacterData
     {
 
     }
+    public void AddEnergy(int amount)
+    {
+        _energy += amount;
+        EventBus<EnergyChangedEvent>.Publish(new EnergyChangedEvent { CurrentEnergy = _energy, MaxEnergy = _maxEnergy, });
+    }
     public bool SpendEnergy(int cost)
     {
-        if (cost <= 0 || Energy < cost) return false;
+        if (cost < 0 || Energy < cost) return false;
         _energy -= cost;
-        EventBus<EnergyChangedEvent>.Publish(new EnergyChangedEvent { OldEnergy = Energy, NewEnergy = Energy - cost });
+        Debug.Log($"消耗能量：{cost} {Energy}");
+        EventBus<EnergyChangedEvent>.Publish(new EnergyChangedEvent { CurrentEnergy = _energy, MaxEnergy = _maxEnergy });
         return true;
     }
     public void ShuffleDrawPile()

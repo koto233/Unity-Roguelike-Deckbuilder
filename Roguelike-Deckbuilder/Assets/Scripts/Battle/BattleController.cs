@@ -33,25 +33,28 @@ public class BattleController : IBattleController
 
     public void PlayCard(string cardId, EnemyData target = null)
     {
-         Debug.Log("使用卡牌 " + cardId);
+        Debug.Log("使用卡牌 " + cardId);
         var card = Context.Player.Hand.FirstOrDefault(c => c.Config.Id == cardId);
 
         Debug.Log("使用卡牌 " + card.Config.Name);
         if (Context.IsPlayerTurn)
-        { 
+        {
             if (card.Config.Effects[0].Target == "Enemy" && target == null)
             {
                 Debug.LogError("请选择目标");
                 return;
             }
             Context.Target = target;
-            if (Context.Player.SpendEnergy(card.Config.Cost))
+            if (!Context.Player.SpendEnergy(card.Config.Cost))
             {
-                foreach (var effect in card.Effects)
-                {
-                    Debug.Log("执行效果 " + effect.GetType().Name);
-                    effect.Execute(card, Context);
-                }
+                Debug.LogError("能量不足");
+                return;
+
+            }
+            foreach (var effect in card.Effects)
+            {
+                Debug.Log("执行效果 " + effect.GetType().Name);
+                effect.Execute(card, Context);
             }
             Context.Player.Hand.Remove(card);
             Context.Player.DiscardPile.Add(card);
