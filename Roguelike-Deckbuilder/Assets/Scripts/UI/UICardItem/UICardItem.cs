@@ -113,7 +113,10 @@ public partial class UICardItem : UIBase, IBeginDragHandler, IDragHandler, IEndD
         // 判断鼠标位置是否在目标区域（由 View 层的碰撞检测负责）
         return null;
     }
-
+    public void ResetCard()
+    {
+        b_UICardItemRect.anchoredPosition = _originalPos;
+    }
 
     // // 根据卡牌目标类型判断是否有效
     // bool isValid = false;

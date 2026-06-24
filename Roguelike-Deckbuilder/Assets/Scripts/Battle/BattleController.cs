@@ -31,7 +31,7 @@ public class BattleController : IBattleController
 
     }
 
-    public void PlayCard(string cardId, EnemyData target = null)
+    public bool PlayCard(string cardId, EnemyData target = null)
     {
         Debug.Log("使用卡牌 " + cardId);
         var card = Context.Player.Hand.FirstOrDefault(c => c.Config.Id == cardId);
@@ -42,13 +42,13 @@ public class BattleController : IBattleController
             if (card.Config.Effects[0].Target == "Enemy" && target == null)
             {
                 Debug.LogError("请选择目标");
-                return;
+                return false;
             }
             Context.Target = target;
             if (!Context.Player.SpendEnergy(card.Config.Cost))
             {
                 Debug.LogError("能量不足");
-                return;
+                return false;
 
             }
             foreach (var effect in card.Effects)
@@ -59,10 +59,11 @@ public class BattleController : IBattleController
             Context.Player.Hand.Remove(card);
             Context.Player.DiscardPile.Add(card);
             EventBus<HandChangedEvent>.Publish(new HandChangedEvent() { Cards = Context.Player.Hand });
+            return true;
         }
         else
         {
-
+            return false;
         }
     }
 

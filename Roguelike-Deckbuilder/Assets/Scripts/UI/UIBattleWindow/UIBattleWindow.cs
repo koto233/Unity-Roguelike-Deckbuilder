@@ -75,7 +75,6 @@ public partial class UIBattleWindow : UIWindow
     }
     public void RefreshEnergy(int energy, int maxEnergy)
     {
-
         b_EnergyText.SetText($"{energy}/{maxEnergy}");
     }
     public void RefreshHand(List<CardDisplayData> hand, Action onPlay = null, Action onCancel = null, Action<string> onDragStart = null, Action<EnemyData> onCardDrag = null)
@@ -90,7 +89,10 @@ public partial class UIBattleWindow : UIWindow
         }
         b_BlockText.SetText(block.ToString());
     }
-
+    public void ResetCard()
+    {
+        b_HandZone.ResetCard();
+    }
     // ===== View 层交互反馈 =====
     public void HighlightTargets(List<string> validTargetIds)
     {

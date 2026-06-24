@@ -113,7 +113,10 @@ public class UIBattlePresenter
     }
     private void OnPlayCard()
     {
-        _battleController.PlayCard(_selectedCardId, _currentTargetEnemy);
+        if (!_battleController.PlayCard(_selectedCardId, _currentTargetEnemy))
+        {
+            _view.ResetCard();
+        }
     }
     private void OnCancelCard()
     {

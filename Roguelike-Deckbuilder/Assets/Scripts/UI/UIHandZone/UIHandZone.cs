@@ -49,6 +49,14 @@ public partial class UIHandZone : MonoBehaviour
             _cardItems.Add(uiCard);
         }
         _fanLayout.Refresh();
+    }
 
+    public void ResetCard()
+    {
+        foreach (var item in _cardItems)
+        {
+            item.ResetCard();
+        }
+        _fanLayout.Refresh();
     }
 }
