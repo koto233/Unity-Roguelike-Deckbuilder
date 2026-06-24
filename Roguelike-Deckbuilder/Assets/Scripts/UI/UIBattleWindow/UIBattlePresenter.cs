@@ -36,7 +36,7 @@ public class UIBattlePresenter
 
     private void OnHpChanged(HpChangedEvent evt)
     {
-        RefreshHp(evt.NewHp, evt.characterData.MaxHp);
+        RefreshHp(evt.NewHp, evt.MaxHp);
     }
     private void OnEnergyChanged(EnergyChangedEvent evt)
     {

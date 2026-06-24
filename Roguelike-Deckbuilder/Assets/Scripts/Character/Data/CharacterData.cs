@@ -14,7 +14,7 @@ public abstract class CharacterData
    public int MaxHp => _maxHp;
    public int Block => _block;
    public int Strength => _strength;
-
+   protected abstract EntityType GetEntityType();
    protected CharacterData(int maxHp, int strength = 0)
    {
       _maxHp = maxHp;
@@ -23,9 +23,9 @@ public abstract class CharacterData
       _block = 0;
       _vulnerable = 0;
    }
-
+   protected virtual void OnAfterTakeDamage(int damage) { }
    // 受到伤害（考虑格挡和易伤）
-   public virtual void TakeDamage(int damage)
+   public void TakeDamage(int damage)
    {
       if (damage <= 0) return;
       // 易伤增加伤害
@@ -38,7 +38,7 @@ public abstract class CharacterData
          int blockAbsorb = Mathf.Min(_block, remainingDamage);
          _block -= blockAbsorb;
          remainingDamage -= blockAbsorb;
-         // EventBus<BlockChangedEvent>.Emit(new BlockChangedEvent { Character = this, NewBlock = _block });
+         EventBus<BlockChangedEvent>.Publish(new BlockChangedEvent { NewBlock = _block, EntityType = GetEntityType() });
       }
 
       if (remainingDamage > 0)
@@ -47,7 +47,7 @@ public abstract class CharacterData
          _currentHp = Mathf.Max(0, _currentHp - remainingDamage);
          if (oldHp != _currentHp)
          {
-            EventBus<HpChangedEvent>.Publish(new HpChangedEvent { characterData = this, OldHp = oldHp, NewHp = _currentHp });
+            EventBus<HpChangedEvent>.Publish(new HpChangedEvent { OldHp = oldHp, NewHp = _currentHp, MaxHp = _maxHp, EntityType = GetEntityType() });
             if (_currentHp <= 0)
                OnDeath();
          }
@@ -62,7 +62,7 @@ public abstract class CharacterData
       _currentHp = Mathf.Min(_maxHp, _currentHp + amount);
       if (oldHp != _currentHp)
       {
-         // EventBus<HpChangedEvent>.Publish(new HpChangedEvent { Character = this, OldHp = oldHp, NewHp = _currentHp });
+         EventBus<HpChangedEvent>.Publish(new HpChangedEvent { OldHp = oldHp, NewHp = _currentHp, MaxHp = _maxHp, EntityType = GetEntityType() });
       }
 
    }
@@ -72,7 +72,7 @@ public abstract class CharacterData
    {
       if (amount <= 0) return;
       _block += amount;
-      // EventBus<BlockChangedEvent>.Publish(new BlockChangedEvent { Character = this, NewBlock = _block });
+      EventBus<BlockChangedEvent>.Publish(new BlockChangedEvent { EntityType = GetEntityType(), NewBlock = _block });
    }
 
    // 增加力量（临时/永久由调用者决定，战斗中通常临时）

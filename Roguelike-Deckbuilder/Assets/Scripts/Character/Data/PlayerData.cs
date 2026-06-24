@@ -12,6 +12,8 @@ public class PlayerData : CharacterData
     private int _maxEnergy;
     public int Energy => _energy;
     public int MaxEnergy => _maxEnergy;
+    protected override EntityType GetEntityType() => EntityType.Player;
+
     public PlayerData(int maxHp, int maxEnergy, int strength = 0) : base(maxHp, strength)
     {
         _maxEnergy = maxEnergy;
@@ -73,4 +75,6 @@ public class PlayerData : CharacterData
     {
 
     }
+
+
 }

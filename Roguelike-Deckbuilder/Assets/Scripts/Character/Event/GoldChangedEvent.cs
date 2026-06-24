@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using LitFramework.EventBus;
 using UnityEngine;
 
-public struct EnergyChangedEvent : IEvent
+public struct GoldChangedEvent: IEvent
 {
-    public int CurrentEnergy;
-    public int MaxEnergy;
+    public int OldGold;
+    public int NewGold;
 }
