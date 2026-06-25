@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using LitFramework;
 using LitFramework.EventBus;
 using UnityEngine;
 
@@ -12,7 +13,6 @@ public class UIBattlePresenter
     private IEventBinding<EnergyChangedEvent> _EnergyChangedEventBinding;
     private IEventBinding<BlockChangedEvent> _BlockChangedEventBinding;
     private IEventBinding<PlayerMaxHpChangedEvent> _PlayerMaxHpChangedEventBinding;
-
     private BattleController _battleController;
     private EnemyData _currentTargetEnemy;
     private string _selectedCardId;
@@ -41,6 +41,7 @@ public class UIBattlePresenter
         EventBus<EnergyChangedEvent>.Subscribe(_EnergyChangedEventBinding);
         EventBus<BlockChangedEvent>.Subscribe(_BlockChangedEventBinding);
         EventBus<PlayerMaxHpChangedEvent>.Subscribe(_PlayerMaxHpChangedEventBinding);
+        _view.OnOpenDrawPile += OpenDrawPile;
     }
     private void OnPlayerMaxHpChanged(PlayerMaxHpChangedEvent evt)
     {
@@ -90,6 +91,7 @@ public class UIBattlePresenter
                 Cost = card.CurrentCost,
                 CostColor = costColor,
                 Description = desc,
+                CanInteract = true,
                 // Icon = card.Config.Icon,
                 // RarityColor = rarityColor,
                 NeedTarget = card.Config.Effects[0].Target == "Enemy",
@@ -127,6 +129,28 @@ public class UIBattlePresenter
     {
         _view.RefreshEnergy(energy, maxEnergy);
     }
-
+    public void OpenDrawPile()
+    {
+        _view.ClearCardsInList();
+        var drawPile = _battleController.Context.Player.DrawPile;
+        for (int i = 0; i < drawPile.Count; i++)
+        {
+            var card = drawPile[i];
+            string desc = string.Format(card.Config.Description, card.Config.Effects[0].Value);
+            CardDisplayData display = new CardDisplayData
+            {
+                CardId = card.Config.Id,
+                Name = card.Config.Name,
+                Cost = card.CurrentCost,
+                Description = desc,
+                CanInteract = false,
+                // Icon = card.Config.Icon,
+                // RarityColor = GetRarityColor(card.Config.Rarity),
+                NeedTarget = card.Config.Effects[0].Target == "Enemy",
+            };
+            _view.SpawnCardInList(display);
+        }
+        _view.OpenDrawPileUI();
+    }
 
 }
