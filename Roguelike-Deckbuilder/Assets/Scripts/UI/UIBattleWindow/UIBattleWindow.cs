@@ -16,9 +16,10 @@ public partial class UIBattleWindow : UIWindow
     private List<UIEnemyItem> _enemyViews = new();
     private string _poolKey = "CardItem";
     private ObjectPoolService _poolService;
-    private UIBattlePresenter _presenter;
-    public event Action OnOpenDrawPile;
-    // public event Action OnDiscardPileBtnClick;
+    /// <summary>
+    /// 打开卡组，0是抽牌堆，1是弃牌堆
+    /// </summary>
+    public event Action<int> OnOpenPile;
     private List<UICardItem> _cardItems = new();
     protected override async UniTask OnOpenAsync(object param)
     {
@@ -45,16 +46,20 @@ public partial class UIBattleWindow : UIWindow
     private void InitUI()
     {
         b_HandZone.Init(_poolKey, _poolService);
-        b_ClosePileButton.onClick.AddListener(ClosePile);
-        ClosePile();
-        b_DrawPileBtn.onClick.AddListener(() => OnOpenDrawPile());
-        // b_DiscardPileBtn.onClick.AddListener(OnDiscardPileBtnClick);
+        b_ClosePileButton.onClick.AddListener(ClosePilePanel);
+        ClosePilePanel();
+        b_DrawPileBtn.onClick.AddListener(() => OnOpenPile(0));
+        b_DiscardPileBtn.onClick.AddListener(() => OnOpenPile(1));
     }
 
-    public void OpenDrawPileUI()
+    public void OpenPilePanel()
     {
-        b_PileList.gameObject.SetActive(true);
+        b_PilePanel.gameObject.SetActive(true);
         // 显示抽牌堆
+    }
+    private void ClosePilePanel()
+    {
+        b_PilePanel.gameObject.SetActive(false);
     }
     public void ClearCardsInList()
     {
@@ -69,21 +74,12 @@ public partial class UIBattleWindow : UIWindow
     {
 
         var cardPrefab = _poolService.GetGameObject(_poolKey);
-        cardPrefab.transform.SetParent(b_PileList.transform);
+        cardPrefab.transform.SetParent(b_PilePanel.transform);
         var uiCard = cardPrefab.GetComponent<UICardItem>();
         uiCard.Init(data, null, null, null, null);
         _cardItems.Add(uiCard);
     }
-    private void OnDiscardPileBtnClick()
-    {
-        b_PileList.gameObject.SetActive(true);
-        // 显示弃牌堆
-    }
-    private void ClosePile()
-    {
-        b_PileList.gameObject.SetActive(false);
 
-    }
     private UIPlayerItem CreatePlayerView(PlayerData data)
     {
         var go = Instantiate(_playerPrefabRef.Asset, b_PlayerRoot);

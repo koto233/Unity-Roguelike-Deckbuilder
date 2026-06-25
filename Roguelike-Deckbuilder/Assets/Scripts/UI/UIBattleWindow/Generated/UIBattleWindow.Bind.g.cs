@@ -23,7 +23,7 @@ using TMPro;
         private @TextMeshProUGUI b_EnergyText;
         private @Button b_DrawPileBtn;
         private @Button b_DiscardPileBtn;
-        private @RectTransform b_PileList;
+        private @RectTransform b_PilePanel;
         private @Button b_ClosePileButton;
 
         protected override void GetUI()
@@ -38,7 +38,7 @@ using TMPro;
             b_EnergyText = GetBind<@TextMeshProUGUI>(6);
             b_DrawPileBtn = GetBind<@Button>(7);
             b_DiscardPileBtn = GetBind<@Button>(8);
-            b_PileList = GetBind<@RectTransform>(9);
+            b_PilePanel = GetBind<@RectTransform>(9);
             b_ClosePileButton = GetBind<@Button>(10);
         }
     }

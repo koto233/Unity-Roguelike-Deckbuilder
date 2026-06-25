@@ -11,7 +11,7 @@ namespace LitFramework.FSM.Procedure
     public class ProcedureBattle : ProcedureBase
     {
         public ProcedureBattle(ProcedureManager procedureManager) : base(procedureManager) { }
-
+        private UIBattlePresenter _uiBattlePresenter;
         public override void OnInit()
         {
 
@@ -24,7 +24,7 @@ namespace LitFramework.FSM.Procedure
 
         public override void OnExit()
         {
-
+            _uiBattlePresenter?.Dispose();
         }
 
 

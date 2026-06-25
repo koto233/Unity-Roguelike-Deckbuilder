@@ -5,7 +5,7 @@ using LitFramework;
 using LitFramework.EventBus;
 using UnityEngine;
 
-public class UIBattlePresenter
+public class UIBattlePresenter : IDisposable
 {
     private UIBattleWindow _view;
     private IEventBinding<HpChangedEvent> _HpChangedEventBinding;
@@ -41,8 +41,20 @@ public class UIBattlePresenter
         EventBus<EnergyChangedEvent>.Subscribe(_EnergyChangedEventBinding);
         EventBus<BlockChangedEvent>.Subscribe(_BlockChangedEventBinding);
         EventBus<PlayerMaxHpChangedEvent>.Subscribe(_PlayerMaxHpChangedEventBinding);
-        _view.OnOpenDrawPile += OpenDrawPile;
+        _view.OnOpenPile += OpenPile;
     }
+
+    private void UnSubscribeEvents()
+    {
+        EventBus<HandChangedEvent>.Unsubscribe(_HandChangedEventBinding);
+        EventBus<HpChangedEvent>.Unsubscribe(_HpChangedEventBinding);
+        EventBus<EnergyChangedEvent>.Unsubscribe(_EnergyChangedEventBinding);
+        EventBus<BlockChangedEvent>.Unsubscribe(_BlockChangedEventBinding);
+        EventBus<PlayerMaxHpChangedEvent>.Unsubscribe(_PlayerMaxHpChangedEventBinding);
+        _view.OnOpenPile -= OpenPile;
+    }
+
+
     private void OnPlayerMaxHpChanged(PlayerMaxHpChangedEvent evt)
     {
 
@@ -129,10 +141,27 @@ public class UIBattlePresenter
     {
         _view.RefreshEnergy(energy, maxEnergy);
     }
-    public void OpenDrawPile()
+
+    /// <summary>
+    /// 打开牌组 0 : 抽牌组 1 : 弃牌组 
+    /// </summary>
+    /// <param name="index"></param>
+    private void OpenPile(int index)
     {
+        List<Card> drawPile = null;
+        switch (index)
+        {
+            case 0:
+                drawPile = _battleController.Context.Player.DrawPile;
+                break;
+            case 1:
+                drawPile = _battleController.Context.Player.DiscardPile;
+                break;
+            default:
+                break;
+        }
+        if (drawPile == null) return;
         _view.ClearCardsInList();
-        var drawPile = _battleController.Context.Player.DrawPile;
         for (int i = 0; i < drawPile.Count; i++)
         {
             var card = drawPile[i];
@@ -150,7 +179,11 @@ public class UIBattlePresenter
             };
             _view.SpawnCardInList(display);
         }
-        _view.OpenDrawPileUI();
+        _view.OpenPilePanel();
     }
 
+    public void Dispose()
+    {
+        UnSubscribeEvents();
+    }
 }
