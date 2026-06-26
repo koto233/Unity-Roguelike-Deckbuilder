@@ -19,8 +19,6 @@ public partial class UICardItem : UIBase, IBeginDragHandler, IDragHandler, IEndD
     private Action<EnemyData> _onCardDrag;
     private float _followSpeed = 10f;
     private EnemyData _Target;
-    private Tween _enterTween;
-    private Tween _exitTween;
     private bool _isDrag = false;
     private bool _isHover = false;
     public void Init(CardDisplayData displayData, Action onPlay = null, Action onCancel = null, Action<string> onDragStart = null, Action<EnemyData> onCardDrag = null)
@@ -137,7 +135,6 @@ public partial class UICardItem : UIBase, IBeginDragHandler, IDragHandler, IEndD
         _isHover = true;
         _originalPos = b_UICardItemRect.anchoredPosition;
         _originalRotation = b_UICardItemRect.localRotation;
-        transform.DOScale(1.2f, 0.2f);
         var parentRect = b_UICardItemRect.parent as RectTransform;
         var localBottom = parentRect.rect.yMin;
         float cardHeight = b_UICardItemRect.rect.height * 1.2f;
@@ -145,19 +142,20 @@ public partial class UICardItem : UIBase, IBeginDragHandler, IDragHandler, IEndD
         float targetY = localBottom + cardHeight / 2f;
         // Debug.Log($"targetY{targetY} {localBottom} {cardHeight / 2f}");
         // 杀死旧的退出动画
-        _exitTween?.Kill();
-        _enterTween = transform.DOLocalMoveY(targetY, 0.1f);
-        transform.DORotate(Vector3.zero, 0.1f);
+        // _exitTween?.Kill();
+        transform.localScale = Vector3.one * 1.2f;
+        transform.localPosition = new Vector3(transform.localPosition.x, targetY, transform.localPosition.z);
+        transform.rotation = Quaternion.Euler(0, 0, 0);
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
         if (_isDrag || !_displayData.CanInteract) return;
         _isHover = false;
-        _enterTween?.Kill();
-        _exitTween = transform.DOScale(1f, 0.1f);
-        transform.rotation = _originalRotation;
-        ResetCard();
+        transform.DOScale(1f, 0.2f);
+        transform.DORotateQuaternion(_originalRotation, 0.2f);
+        transform.DOLocalMove(new Vector3(transform.localPosition.x, _originalPos.y, transform.localPosition.z), 0.2f);
+        // ResetCard();
     }
 
     // // 根据卡牌目标类型判断是否有效

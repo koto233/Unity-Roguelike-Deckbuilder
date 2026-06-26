@@ -34,6 +34,8 @@ public partial class UIHandZone : MonoBehaviour
         foreach (var item in _cardItems)
         {
             item.gameObject.SetActive(false);
+            item.transform.localScale = Vector3.one;
+            item.transform.localRotation = Quaternion.identity;
             _poolService.ReturnGameObject(_poolKey, item.gameObject);
         }
         _cardItems.Clear();

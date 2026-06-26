@@ -19,7 +19,7 @@ namespace LitFramework.Asset
         {
             Debug.Log($"资源系统运行模式：{_playMode}");
             _completionCallback = onCompleted;
-            CoroutineRunner.Instance.RunCoroutine(UpdateRoutine());
+            MonoService.Instance.RunCoroutine(UpdateRoutine());
         }
         private IEnumerator UpdateRoutine()
         {

@@ -2,19 +2,24 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using LitFramework;
 using LitFramework.EventBus;
+using LitFramework.FSM;
 using UnityEngine;
 
-public class BattleController : IBattleController
+public class BattleController : ITickable
 {
     public BattleContext Context { get; private set; }
-
+    private StateMachine _battleFSM;
     private Action _onBattleEnd;   // 战斗结束回调（胜利/失败）
 
     public BattleController(BattleContext context, Action onBattleEnd)
     {
         Context = context;
         _onBattleEnd = onBattleEnd;
+        var mono = ServiceLocator.Get<MonoService>();
+        mono.AddUpdate(this);
+        // mono.AddDestroyNotify(this);
     }
 
     public void StartBattle()
@@ -26,11 +31,20 @@ public class BattleController : IBattleController
         {
             Context.Player.DrawPile.Add(cardLibrary.CreateRandomCard());
         }
-        Context.Player.StartTurn();
-        Context.Player.DrawCards(5);
 
+        InitFsm();
     }
 
+    /// <summary>
+    /// 初始化战斗状态机
+    /// </summary> 
+    private void InitFsm()
+    {
+        _battleFSM = new StateMachine();
+        _battleFSM.RegisterState(new PlayerTurnState(_battleFSM));
+        _battleFSM.RegisterState(new EnemyTurnState(_battleFSM));
+        _battleFSM.RegisterState(new BattleEndState(_battleFSM));
+    }
     public bool PlayCard(string cardId, EnemyData target = null)
     {
         Debug.Log("使用卡牌 " + cardId);
@@ -67,7 +81,14 @@ public class BattleController : IBattleController
         }
     }
 
-    public void EndTurn()
+
+
+    public void StartPlayerTurn()
+    {
+        Context.Player.StartTurn();
+        Context.Player.DrawCards(5);
+    }
+    public void EndPlayerTurn()
     {
 
     }
@@ -76,16 +97,16 @@ public class BattleController : IBattleController
     {
 
     }
+    private void EndEnemyTurn()
+    {
 
+    }
     private void ExecuteNextEnemyAction(int index)
     {
 
     }
 
-    private void EndEnemyTurn()
-    {
 
-    }
 
     private void StartNewPlayerTurn()
     {
@@ -107,5 +128,10 @@ public class BattleController : IBattleController
     public void OnAllEnemiesDefeated()
     {
 
+    }
+
+    public void Tick(float deltaTime)
+    {
+        _battleFSM.Update();
     }
 }
