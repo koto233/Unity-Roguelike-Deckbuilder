@@ -10,7 +10,7 @@ using UnityEngine;
 public class BattleController : ITickable
 {
     public BattleContext Context { get; private set; }
-    private StateMachine _battleFSM;
+    public StateMachine BattleFSM { get; private set; }
     private Action _onBattleEnd;   // 战斗结束回调（胜利/失败）
 
     public BattleController(BattleContext context, Action onBattleEnd)
@@ -40,10 +40,10 @@ public class BattleController : ITickable
     /// </summary> 
     private void InitFsm()
     {
-        _battleFSM = new StateMachine();
-        _battleFSM.RegisterState(new PlayerTurnState(_battleFSM));
-        _battleFSM.RegisterState(new EnemyTurnState(_battleFSM));
-        _battleFSM.RegisterState(new BattleEndState(_battleFSM));
+        BattleFSM = new StateMachine();
+        BattleFSM.RegisterState(new PlayerTurnState(this));
+        BattleFSM.RegisterState(new EnemyTurnState(this));
+        BattleFSM.RegisterState(new BattleEndState(this));
     }
     public bool PlayCard(string cardId, EnemyData target = null)
     {
@@ -85,19 +85,18 @@ public class BattleController : ITickable
 
     public void StartPlayerTurn()
     {
-        Context.Player.StartTurn();
-        Context.Player.DrawCards(5);
+        Context.Player.DrawCardInTurnStart(5);
     }
     public void EndPlayerTurn()
     {
-
+        Context.Player.DiscardAllHand();
     }
 
-    private void StartEnemyTurn()
+    public void StartEnemyTurn()
     {
-
+        
     }
-    private void EndEnemyTurn()
+    public void EndEnemyTurn()
     {
 
     }
@@ -106,12 +105,6 @@ public class BattleController : ITickable
 
     }
 
-
-
-    private void StartNewPlayerTurn()
-    {
-
-    }
 
     private void RemoveDeadEnemies()
     {
@@ -132,6 +125,6 @@ public class BattleController : ITickable
 
     public void Tick(float deltaTime)
     {
-        _battleFSM.Update();
+        // _battleFSM.Update();
     }
 }

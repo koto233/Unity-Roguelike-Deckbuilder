@@ -5,27 +5,29 @@ using UnityEngine;
 
 public class PlayerTurnState : IState
 {
-    private StateMachine _machine;
-    public PlayerTurnState(StateMachine machine)
+    private BattleController _battleController;
+    public PlayerTurnState(BattleController battleController)
     {
-        _machine = machine;
+        _battleController = battleController;
+    }
+    public void OnInit()
+    {
+
     }
 
 
     public void OnEnter()
     {
         // TODO: 玩家回合开始 抽卡，恢复能量 解锁 UI 交互
+        _battleController.StartPlayerTurn();
     }
 
     public void OnExit()
     {
-
+        // TODO: 玩家回合结束 锁定 UI 交互
+        _battleController.EndPlayerTurn();
     }
 
-    public void OnInit()
-    {
-
-    }
 
     public void OnUpdate()
     {

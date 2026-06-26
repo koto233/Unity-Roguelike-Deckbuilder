@@ -23,7 +23,7 @@ public class PlayerData : CharacterData
         DiscardPile = new();
     }
     /// <summary>
-    /// 抽牌
+    /// 抽牌，不会重置牌堆，没有则不抽
     /// </summary>
     /// <param name="count"></param>
     public void DrawCards(int count)
@@ -40,6 +40,39 @@ public class PlayerData : CharacterData
         EventBus<HandChangedEvent>.Publish(new HandChangedEvent() { Cards = Hand });
     }
     /// <summary>
+    /// 回合开始时抽牌 若牌堆为空 则从重置牌堆
+    /// </summary>
+    /// <param name="count"></param>
+    public void DrawCardInTurnStart(int count)
+    {
+        for (int i = 0; i < count; i++)
+        {
+            CheckResetPile();
+            DrawCards(1);
+        }
+    }
+    /// <summary>
+    /// 检查并重置牌堆   
+    /// </summary>
+    public void CheckResetPile()
+    {
+        if (DrawPile.Count == 0)
+        {
+            DrawPile.AddRange(DiscardPile);
+            ShuffleDrawPile();
+            DiscardPile.Clear();
+        }
+    }
+    /// <summary>
+    /// 丢弃指定牌
+    /// </summary>
+    public void DiscardCard(Card card)
+    {
+        Hand.Remove(card);
+        DiscardPile.Add(card);
+        EventBus<HandChangedEvent>.Publish(new HandChangedEvent() { Cards = Hand });
+    }
+    /// <summary>
     /// 使用牌
     /// </summary>
     /// <returns></returns>
@@ -48,11 +81,16 @@ public class PlayerData : CharacterData
         return true;
     }
     /// <summary>
-    /// 弃牌
+    /// 弃掉所有手牌
     /// </summary>
     public void DiscardAllHand()
     {
-
+        foreach (var card in Hand)
+        {
+            Hand.Remove(card);
+            DiscardPile.Add(card);
+        }
+        EventBus<HandChangedEvent>.Publish(new HandChangedEvent() { Cards = Hand });
     }
     public void AddEnergy(int amount)
     {
@@ -69,12 +107,19 @@ public class PlayerData : CharacterData
     }
     public void ShuffleDrawPile()
     {
-
+        ShuffleWithUnityRandom(DrawPile);
     }
-    public void StartTurn(int baseEnergy = 3)
+
+    public void ShuffleWithUnityRandom<T>(List<T> list)
     {
+        int n = list.Count;
+        for (int i = n - 1; i > 0; i--)
+        {
+            int j = Random.Range(0, i + 1);
 
+            T temp = list[i];
+            list[i] = list[j];
+            list[j] = temp;
+        }
     }
-
-
 }

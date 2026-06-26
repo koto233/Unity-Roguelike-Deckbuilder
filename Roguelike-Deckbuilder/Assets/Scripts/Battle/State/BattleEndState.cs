@@ -5,10 +5,10 @@ using UnityEngine;
 
 public class BattleEndState : IState
 {
-    private StateMachine _machine;
-    public BattleEndState(StateMachine machine)
+    private BattleController _battleController;
+    public BattleEndState(BattleController battleController)
     {
-        _machine = machine;
+        _battleController = battleController;
     }
 
     public void OnEnter()

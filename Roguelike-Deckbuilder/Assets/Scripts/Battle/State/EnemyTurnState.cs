@@ -5,20 +5,20 @@ using UnityEngine;
 
 public class EnemyTurnState : IState
 {
-    private StateMachine _machine;
-    public EnemyTurnState(StateMachine machine)
+    private BattleController _battleController;
+    public EnemyTurnState(BattleController battleController)
     {
-        _machine = machine;
+        _battleController = battleController;
     }
-  
+
     public void OnEnter()
     {
-
+        _battleController.StartEnemyTurn();
     }
 
     public void OnExit()
     {
-
+        _battleController.EndEnemyTurn();
     }
 
     public void OnInit()
@@ -30,7 +30,7 @@ public class EnemyTurnState : IState
     {
 
     }
-      public void OnDestroy()
+    public void OnDestroy()
     {
 
     }
