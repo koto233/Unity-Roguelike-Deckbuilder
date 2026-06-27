@@ -12,6 +12,7 @@ namespace LitFramework.FSM.Procedure
     {
         private const string CardConfigPath = "Assets/Config/Json/CardConfig.json";
         private const string CardEffectsPath = "Assets/Config/Json/CardEffects.json";
+        private const string EnemyConfigPath = "Assets/Config/Json/EnemyConfig.json";
         public ProcedureInitConfig(ProcedureManager procedureManager) : base(procedureManager) { }
 
         public override void OnInit()
@@ -43,6 +44,7 @@ namespace LitFramework.FSM.Procedure
             var configSvc = ServiceLocator.Get<IConfigService>();
             await configSvc.LoadDictTableAsync<CardConfig>(CardConfigPath);
             await configSvc.LoadListTableAsync<CardEffectsConfig>(CardEffectsPath);
+            await configSvc.LoadDictTableAsync<EnemyConfig>(EnemyConfigPath);
             ModelContainer.Register<ICardLibrary>(new CardLibrary());
             _procedureManager.ChangeProcedure<ProcedureTitle>();
         }
