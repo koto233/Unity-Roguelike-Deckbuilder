@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using YooAsset;
 
@@ -15,14 +16,9 @@ namespace LitFramework.Asset
             _packageName = packageName;
             _playMode = playMode;
         }
-        public void StartUpdate(Action<bool> onCompleted)
+        public async UniTask StartUpdate()
         {
             Debug.Log($"资源系统运行模式：{_playMode}");
-            _completionCallback = onCompleted;
-            MonoService.Instance.RunCoroutine(UpdateRoutine());
-        }
-        private IEnumerator UpdateRoutine()
-        {
             // 初始化 YooAsset
             YooAssets.Initialize();
 
@@ -38,7 +34,7 @@ namespace LitFramework.Asset
             };
 
             var initOperation = package.InitializePackageAsync(createParameters);
-            yield return initOperation;
+            await initOperation; // 等待初始化完成
 
             if (initOperation.Status == EOperationStatus.Succeeded)
             {
@@ -48,34 +44,32 @@ namespace LitFramework.Asset
             {
                 Debug.LogError($"资源包初始化失败：{initOperation.Error}");
                 _completionCallback?.Invoke(false);
+                // 注意：原逻辑在初始化失败后仍继续执行后续步骤，此处保持相同行为
             }
 
             var reqPackageVersionOperation = package.RequestPackageVersionAsync();
-            yield return reqPackageVersionOperation;
+            await reqPackageVersionOperation;
             string packageVersion = string.Empty;
             if (reqPackageVersionOperation.Status == EOperationStatus.Succeeded)
             {
-                //请求成功
                 packageVersion = reqPackageVersionOperation.PackageVersion;
                 Debug.Log($"Request package Version : {packageVersion}");
             }
             else
             {
-                //请求失败
                 Debug.LogError(reqPackageVersionOperation.Error);
             }
+
             var loadPackageManifestOperation = package.LoadPackageManifestAsync(new LoadPackageManifestOptions(packageVersion, 60));
-            yield return loadPackageManifestOperation;
+            await loadPackageManifestOperation;
 
             if (loadPackageManifestOperation.Status == EOperationStatus.Succeeded)
             {
-                //更新成功
                 Debug.Log($"更新成功！");
                 _completionCallback?.Invoke(true);
             }
             else
             {
-                //更新失败
                 Debug.LogError(loadPackageManifestOperation.Error);
             }
         }

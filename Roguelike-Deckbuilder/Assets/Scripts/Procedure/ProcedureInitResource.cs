@@ -1,4 +1,5 @@
 using System.Collections;
+using Cysharp.Threading.Tasks;
 using LitFramework.Asset;
 using LitFramework.UI.Core.Service;
 using UnityEngine;
@@ -8,9 +9,8 @@ namespace LitFramework.FSM.Procedure
     public class ProcedureInitResource : ProcedureBase
     {
         private IResourceUpdater _resourceUpdater;
-        private bool _success = false;
         public ProcedureInitResource(ProcedureManager procedureManager) : base(procedureManager) { }
-    
+
         public override void OnInit()
         {
             _resourceUpdater = new YooAssetUpdater();
@@ -20,28 +20,14 @@ namespace LitFramework.FSM.Procedure
 
         public override void OnEnter()
         {
-            // Debug.Log($"进入 HitFixState，开始资源更新流程{_resourceUpdater == null}");
-            _success = false;
-            _resourceUpdater.StartUpdate(OnResourceUpdateCompleted);
-        }
-        private void OnResourceUpdateCompleted(bool flag)
-        {
-            _success = flag;
-            if (flag)
-            {
-                Debug.Log("资源更新完成，开始游戏逻辑");
-                ServiceLocator.Register<IAssetService>(new YooAssetAssetService(YooAssets.GetPackage("DefaultPackage")));
-
-            }
-
+            InitResAsync().Forget();
         }
 
-        public override void OnUpdate()
+        private async UniTask InitResAsync()
         {
-            if (_success)
-            {
-                _procedureManager.ChangeProcedure<ProcedureInitConfig>();
-            }
+            await _resourceUpdater.StartUpdate();
+            ServiceLocator.Register<IAssetService>(new YooAssetAssetService(YooAssets.GetPackage("DefaultPackage")));
+            _procedureManager.ChangeProcedure<ProcedureInitConfig>();
         }
         public override void OnExit()
         {
@@ -53,8 +39,9 @@ namespace LitFramework.FSM.Procedure
 
         }
 
-
-
-
+        public override void OnUpdate()
+        {
+           
+        }
     }
 }

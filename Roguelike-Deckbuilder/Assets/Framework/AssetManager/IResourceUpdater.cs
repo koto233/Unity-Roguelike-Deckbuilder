@@ -1,4 +1,5 @@
 using System;
+using Cysharp.Threading.Tasks;
 namespace LitFramework.Asset
 {
     /// <summary>
@@ -9,6 +10,6 @@ namespace LitFramework.Asset
         /// <summary>
         /// 开始更新流程，完成后回调
         /// </summary>
-        void StartUpdate(Action<bool> onCompleted);
+        UniTask StartUpdate();
     }
 }
