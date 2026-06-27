@@ -13,7 +13,7 @@ public class BattleEndState : IState
 
     public void OnEnter()
     {
-
+        Debug.Log("战斗结束");
     }
 
     public void OnExit()

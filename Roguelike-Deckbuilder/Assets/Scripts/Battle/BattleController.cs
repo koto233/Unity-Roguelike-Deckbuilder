@@ -7,7 +7,7 @@ using LitFramework.EventBus;
 using LitFramework.FSM;
 using UnityEngine;
 
-public class BattleController : ITickable
+public class BattleController
 {
     public BattleContext Context { get; private set; }
     public StateMachine BattleFSM { get; private set; }
@@ -17,8 +17,8 @@ public class BattleController : ITickable
     {
         Context = context;
         _onBattleEnd = onBattleEnd;
-        var mono = ServiceLocator.Get<MonoService>();
-        mono.AddUpdate(this);
+        // var mono = ServiceLocator.Get<MonoService>();
+        // mono.AddUpdate(this);
         // mono.AddDestroyNotify(this);
     }
 
@@ -31,8 +31,8 @@ public class BattleController : ITickable
         {
             Context.Player.DrawPile.Add(cardLibrary.CreateRandomCard());
         }
-
         InitFsm();
+        BattleFSM.ChangeState<PlayerTurnState>();
     }
 
     /// <summary>
@@ -86,6 +86,7 @@ public class BattleController : ITickable
     public void StartPlayerTurn()
     {
         Context.Player.DrawCardInTurnStart(5);
+        Context.Player.ResetEnergy();
     }
     public void EndPlayerTurn()
     {
@@ -94,15 +95,16 @@ public class BattleController : ITickable
 
     public void StartEnemyTurn()
     {
-        
+        ExecuteNextEnemyAction();
+        BattleFSM.ChangeState<PlayerTurnState>();
     }
     public void EndEnemyTurn()
     {
 
     }
-    private void ExecuteNextEnemyAction(int index)
+    public void ExecuteNextEnemyAction()
     {
-
+        Context.Player.TakeDamage(5);
     }
 
 
@@ -123,8 +125,8 @@ public class BattleController : ITickable
 
     }
 
-    public void Tick(float deltaTime)
-    {
-        // _battleFSM.Update();
-    }
+    // public void Tick(float deltaTime)
+    // {
+    //     // _battleFSM.Update();
+    // }
 }

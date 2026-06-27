@@ -85,9 +85,10 @@ public class PlayerData : CharacterData
     /// </summary>
     public void DiscardAllHand()
     {
-        foreach (var card in Hand)
+        for (int i = Hand.Count - 1; i >= 0; i--)
         {
-            Hand.Remove(card);
+            var card = Hand[i];
+            Hand.RemoveAt(i);
             DiscardPile.Add(card);
         }
         EventBus<HandChangedEvent>.Publish(new HandChangedEvent() { Cards = Hand });
@@ -104,6 +105,11 @@ public class PlayerData : CharacterData
         Debug.Log($"消耗能量：{cost} {Energy}");
         EventBus<EnergyChangedEvent>.Publish(new EnergyChangedEvent { CurrentEnergy = _energy, MaxEnergy = _maxEnergy });
         return true;
+    }
+    public void ResetEnergy()
+    {
+        _energy = _maxEnergy;
+        EventBus<EnergyChangedEvent>.Publish(new EnergyChangedEvent { CurrentEnergy = _energy, MaxEnergy = _maxEnergy });
     }
     public void ShuffleDrawPile()
     {

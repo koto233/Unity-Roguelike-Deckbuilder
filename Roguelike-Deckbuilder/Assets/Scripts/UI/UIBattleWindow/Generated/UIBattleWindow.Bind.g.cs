@@ -4,7 +4,7 @@
 //     请勿手动修改此文件，重新生成将覆盖所有改动
 //
 //     来源 UI : UIBattleWindow
-//     生成时间 : 2026-06-25
+//     生成时间 : 2026-06-27
 // </自动生成>
 //------------------------------------------------------------------------------
 
@@ -25,6 +25,7 @@ using TMPro;
         private @Button b_DiscardPileBtn;
         private @RectTransform b_PilePanel;
         private @Button b_ClosePileButton;
+        private @Button b_EndTurnBtn;
 
         protected override void GetUI()
         {
@@ -40,5 +41,6 @@ using TMPro;
             b_DiscardPileBtn = GetBind<@Button>(8);
             b_PilePanel = GetBind<@RectTransform>(9);
             b_ClosePileButton = GetBind<@Button>(10);
+            b_EndTurnBtn = GetBind<@Button>(11);
         }
     }

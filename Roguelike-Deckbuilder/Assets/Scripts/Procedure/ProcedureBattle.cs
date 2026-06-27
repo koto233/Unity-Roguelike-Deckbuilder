@@ -42,7 +42,7 @@ namespace LitFramework.FSM.Procedure
 
             var battleContext = new BattleContext()
             {
-                Player = new PlayerData(10, 3),
+                Player = new PlayerData(100, 3),
                 Enemies = new List<EnemyData>()
                  {
                 new(20, 3),
@@ -50,7 +50,7 @@ namespace LitFramework.FSM.Procedure
                 CurrentTurn = 0,
                 IsPlayerTurn = true,
                 Target = null,
-                GoldReward = 0
+                GoldReward = 0 
             };
             var battleController = new BattleController(battleContext, () =>
             {

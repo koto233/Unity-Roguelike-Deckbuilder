@@ -20,6 +20,7 @@ public partial class UIBattleWindow : UIWindow
     /// 打开卡组，0是抽牌堆，1是弃牌堆
     /// </summary>
     public event Action<int> OnOpenPile;
+    public event Action OnEndTurn;
     private List<UICardItem> _cardItems = new();
     protected override async UniTask OnOpenAsync(object param)
     {
@@ -50,6 +51,7 @@ public partial class UIBattleWindow : UIWindow
         ClosePilePanel();
         b_DrawPileBtn.onClick.AddListener(() => OnOpenPile(0));
         b_DiscardPileBtn.onClick.AddListener(() => OnOpenPile(1));
+        b_EndTurnBtn.onClick.AddListener(() => OnEndTurn?.Invoke());
     }
 
     public void OpenPilePanel()

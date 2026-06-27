@@ -13,6 +13,7 @@ public class EnemyTurnState : IState
 
     public void OnEnter()
     {
+        Debug.Log("敌人回合开始");
         _battleController.StartEnemyTurn();
     }
 

@@ -42,7 +42,9 @@ public class UIBattlePresenter : IDisposable
         EventBus<BlockChangedEvent>.Subscribe(_BlockChangedEventBinding);
         EventBus<PlayerMaxHpChangedEvent>.Subscribe(_PlayerMaxHpChangedEventBinding);
         _view.OnOpenPile += OpenPile;
+        _view.OnEndTurn += EndTurn;
     }
+
 
     private void UnSubscribeEvents()
     {
@@ -52,6 +54,11 @@ public class UIBattlePresenter : IDisposable
         EventBus<BlockChangedEvent>.Unsubscribe(_BlockChangedEventBinding);
         EventBus<PlayerMaxHpChangedEvent>.Unsubscribe(_PlayerMaxHpChangedEventBinding);
         _view.OnOpenPile -= OpenPile;
+        _view.OnEndTurn -= EndTurn;
+    }
+    private void EndTurn()
+    {
+        _battleController.BattleFSM.ChangeState<EnemyTurnState>();
     }
 
 
