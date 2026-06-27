@@ -4,7 +4,7 @@ using UnityEngine;
 
 public interface ICardLibrary : IModel
 {
-    Card CreateCard(string cardId);
+    Card CreateCard(int Id);
     Card CreateRandomCard();
 
 }

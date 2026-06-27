@@ -6,7 +6,7 @@ using UnityEngine;
 using System.Linq;
 public class CardLibrary : ICardLibrary
 {
-    private Dictionary<string, CardConfig> _cardConfigs;
+    private Dictionary<int, CardConfig> _cardConfigs;
     private List<CardEffectsConfig> _cardEffects;
     public void OnRegister()
     {
@@ -21,19 +21,19 @@ public class CardLibrary : ICardLibrary
         _cardEffects = tableEffect.GetList();
         foreach (var effect in _cardEffects)
         {
-            if (_cardConfigs.TryGetValue(effect.ID, out var cardConfig))
+            if (_cardConfigs.TryGetValue(effect.Id, out var cardConfig))
             {
                 cardConfig.Effects.Add(effect);
-                Debug.Log($"效果: {effect.ID} {effect.Type} {effect.Value} {effect.Target} ");
+                Debug.Log($"效果: {effect.Id} {effect.Type} {effect.Value} {effect.Target} ");
             }
             else
             {
-                Debug.LogWarning($"效果 {effect.ID} 对应的卡牌不存在");
+                Debug.LogWarning($"效果 {effect.Id} 对应的卡牌不存在");
             }
         }
     }
 
-    public Card CreateCard(string cardId)
+    public Card CreateCard(int cardId)
     {
         if (_cardConfigs.TryGetValue(cardId, out var config))
             return new Card(config);
@@ -46,7 +46,7 @@ public class CardLibrary : ICardLibrary
         var keys = _cardConfigs.Keys.ToList();
 
         // 2. 随机取一个英文ID
-        string randomCardId = keys[new System.Random().Next(keys.Count)];
+        int randomCardId = new System.Random().Next(keys.Count);
 
         // 3. 传入英文ID创建卡牌
         return CreateCard(randomCardId);

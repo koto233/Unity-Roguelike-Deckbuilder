@@ -45,7 +45,7 @@ public class BattleController
         BattleFSM.RegisterState(new EnemyTurnState(this));
         BattleFSM.RegisterState(new BattleEndState(this));
     }
-    public bool PlayCard(string cardId, EnemyData target = null)
+    public bool PlayCard(int cardId, EnemyData target = null)
     {
         Debug.Log("使用卡牌 " + cardId);
         var card = Context.Player.Hand.FirstOrDefault(c => c.Config.Id == cardId);

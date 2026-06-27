@@ -122,7 +122,7 @@ public partial class UIBattleWindow : UIWindow
     {
         b_EnergyText.SetText($"{energy}/{maxEnergy}");
     }
-    public void RefreshHand(List<CardDisplayData> hand, Action onPlay = null, Action onCancel = null, Action<string> onDragStart = null, Action<EnemyData> onCardDrag = null)
+    public void RefreshHand(List<CardDisplayData> hand, Action onPlay = null, Action onCancel = null, Action<int> onDragStart = null, Action<EnemyData> onCardDrag = null)
     {
         b_HandZone.RefreshHand(hand, onPlay, onCancel, onDragStart, onCardDrag);
     }

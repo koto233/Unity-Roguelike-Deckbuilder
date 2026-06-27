@@ -15,13 +15,13 @@ public partial class UICardItem : UIBase, IBeginDragHandler, IDragHandler, IEndD
     private Quaternion _originalRotation;
     private Action _onPlay;
     private Action _onCancel;
-    private Action<string> _onDragStart;
+    private Action<int> _onDragStart;
     private Action<EnemyData> _onCardDrag;
     private float _followSpeed = 10f;
     private EnemyData _Target;
     private bool _isDrag = false;
     private bool _isHover = false;
-    public void Init(CardDisplayData displayData, Action onPlay = null, Action onCancel = null, Action<string> onDragStart = null, Action<EnemyData> onCardDrag = null)
+    public void Init(CardDisplayData displayData, Action onPlay = null, Action onCancel = null, Action<int> onDragStart = null, Action<EnemyData> onCardDrag = null)
     {
         _onPlay = onPlay;
         _onCancel = onCancel;

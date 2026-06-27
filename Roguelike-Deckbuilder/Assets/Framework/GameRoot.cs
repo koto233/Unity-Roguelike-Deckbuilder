@@ -26,7 +26,6 @@ namespace LitFramework
             DontDestroyOnLoad(gameObject);
             Init();
         }
-
         void Start()
         {
 

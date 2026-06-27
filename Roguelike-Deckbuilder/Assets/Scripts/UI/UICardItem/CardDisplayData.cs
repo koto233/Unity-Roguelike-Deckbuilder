@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CardDisplayData
 {
-    public string CardId;
+    public int CardId;
     public string Name;
     public int Cost;
     public string Description;

@@ -1,0 +1,56 @@
+{
+  "1": {
+    "ID": 1,
+    "Key": "slime",
+    "Name": "史莱姆",
+    "MaxHp": 20,
+    "BaseStrength": 0,
+    "BaseBlock": 0,
+    "Description": "造成{0}点伤害。"
+  },
+  "2": {
+    "ID": 2,
+    "Key": "brute",
+    "Name": "大块头",
+    "MaxHp": 45,
+    "BaseStrength": 0,
+    "BaseBlock": 0,
+    "Description": "造成{0}点伤害。"
+  },
+  "3": {
+    "ID": 3,
+    "Key": "assassin",
+    "Name": "暗影刺客",
+    "MaxHp": 30,
+    "BaseStrength": 2,
+    "BaseBlock": 0,
+    "Description": "获得{0}点格挡。"
+  },
+  "4": {
+    "ID": 4,
+    "Key": "archer",
+    "Name": "哥布林弓手",
+    "MaxHp": 20,
+    "BaseStrength": 1,
+    "BaseBlock": 0,
+    "Description": "获得{0}点格挡。"
+  },
+  "5": {
+    "ID": 5,
+    "Key": "knight",
+    "Name": "精英骑士",
+    "MaxHp": 50,
+    "BaseStrength": 3,
+    "BaseBlock": 5,
+    "Description": "造成{0}点伤害。"
+  },
+  "6": {
+    "ID": 6,
+    "Key": "lich",
+    "Name": "巫妖",
+    "MaxHp": 60,
+    "BaseStrength": 5,
+    "BaseBlock": 10,
+    "Description": "造成{0} 点伤害。"
+  }
+}

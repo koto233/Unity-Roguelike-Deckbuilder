@@ -45,12 +45,12 @@ namespace LitFramework.FSM.Procedure
                 Player = new PlayerData(100, 3),
                 Enemies = new List<EnemyData>()
                  {
-                new(20, 3),
+                new (new EnemyConfig()),
                  },
                 CurrentTurn = 0,
                 IsPlayerTurn = true,
                 Target = null,
-                GoldReward = 0 
+                GoldReward = 0
             };
             var battleController = new BattleController(battleContext, () =>
             {

@@ -29,7 +29,7 @@ namespace LitFramework.Config
             {
                 Debug.Log($"配置表加载成功：{jsonPath}");
             }
-            var dict = JsonConvert.DeserializeObject<Dictionary<string, T>>(asset.text);
+            var dict = JsonConvert.DeserializeObject<Dictionary<int, T>>(asset.text);
             var table = new DictConfigTable<T>(dict);
             _tables[typeof(T)] = table;
         }
