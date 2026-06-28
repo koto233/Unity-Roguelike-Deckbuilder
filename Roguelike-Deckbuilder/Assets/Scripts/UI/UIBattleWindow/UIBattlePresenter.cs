@@ -22,7 +22,7 @@ public class UIBattlePresenter : IDisposable
         _battleController = battleController;
         var context = _battleController.Context;
         SubscribeEvents();
-        RefreshHp(context.Player.CurrentHp, context.Player.MaxHp, EntityType.Player);
+        RefreshAllHp();
         RefreshHand(context.Player.Hand);
         RefreshEnergy(context.Player.Energy, context.Player.MaxEnergy);
         RefreshBlock(context.Player.Block, EntityType.Player);
@@ -78,15 +78,26 @@ public class UIBattlePresenter : IDisposable
     }
     private void OnHpChanged(HpChangedEvent evt)
     {
-        RefreshHp(evt.NewHp, evt.MaxHp, evt.EntityType);
+        RefreshHp(evt.NewHp, evt.MaxHp, evt.EntityType, evt.EntityId);
     }
     private void OnEnergyChanged(EnergyChangedEvent evt)
     {
         RefreshEnergy(evt.CurrentEnergy, evt.MaxEnergy);
     }
-    private void RefreshHp(int currentHp, int maxHp, EntityType entityType)
+
+    private void RefreshAllHp()
     {
-        _view.RefreshHp(currentHp, maxHp, entityType);
+        var context = _battleController.Context;
+        RefreshHp(context.Player.CurrentHp, context.Player.MaxHp, EntityType.Player, -1);
+        foreach (var enemy in context.Enemies)
+        {
+            RefreshHp(enemy.CurrentHp, enemy.MaxHp, EntityType.Enemy, enemy.Id);
+        }
+
+    }
+    private void RefreshHp(int currentHp, int maxHp, EntityType entityType, int entityId)
+    {
+        _view.RefreshHp(currentHp, maxHp, entityType, entityId);
     }
 
     private void RefreshBlock(int block, EntityType entityType)

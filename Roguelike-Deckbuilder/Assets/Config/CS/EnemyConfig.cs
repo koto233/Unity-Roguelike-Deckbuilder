@@ -8,7 +8,7 @@
 
 public class EnemyConfig : IConfig
 {
-	public int ID; // ID
+	public int Id; // ID
 	public string Key; // 资源key
 	public string Name; // 名称
 	public int MaxHp; // 血量

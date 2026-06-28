@@ -5,6 +5,6 @@ using UnityEngine;
 public interface ICardLibrary : IModel
 {
     Card CreateCard(int Id);
-    Card CreateRandomCard();
+    // Card CreateRandomCard();
 
 }

@@ -7,6 +7,7 @@ public static class CardEffectFactory
 {
     public static ICardEffect Create(CardEffectsConfig data)
     {
+        Debug.Log("Create Card Effect: " + data.Type);
         switch (data.Type)
         {
             case "Damage": return new DamageEffect(data.Value);

@@ -6,6 +6,7 @@ using UnityEngine;
 public struct HpChangedEvent : IEvent
 {
     public EntityType EntityType;
+    public int EntityId;
     public int OldHp;
     public int NewHp;
     public int MaxHp;

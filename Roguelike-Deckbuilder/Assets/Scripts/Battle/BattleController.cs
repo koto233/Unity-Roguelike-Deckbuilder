@@ -29,7 +29,8 @@ public class BattleController
         var cardLibrary = ModelContainer.Get<ICardLibrary>();
         for (int i = 0; i < 20; i++)
         {
-            Context.Player.DrawPile.Add(cardLibrary.CreateRandomCard());
+            int randomId = UnityEngine.Random.Range(1, 11);
+            Context.Player.DrawPile.Add(cardLibrary.CreateCard(randomId));
         }
         InitFsm();
         BattleFSM.ChangeState<PlayerTurnState>();
@@ -65,9 +66,10 @@ public class BattleController
                 return false;
 
             }
+         
             foreach (var effect in card.Effects)
             {
-                Debug.Log("执行效果 " + effect.GetType().Name);
+                // Debug.Log("执行效果 " + effect.GetType().Name);
                 effect.Execute(card, Context);
             }
             Context.Player.Hand.Remove(card);

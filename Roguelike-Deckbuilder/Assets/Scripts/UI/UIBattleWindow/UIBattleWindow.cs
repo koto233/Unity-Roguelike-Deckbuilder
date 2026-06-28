@@ -108,15 +108,26 @@ public partial class UIBattleWindow : UIWindow
         _playerPrefabRef?.Dispose();
         _enemyPrefabRef?.Dispose();
     }
-    public void RefreshHp(int currentHp, int maxHp, EntityType entityType)
+    public void RefreshHp(int currentHp, int maxHp, EntityType entityType, int entityId)
     {
-        if (entityType != EntityType.Player)
+        if (entityType == EntityType.Player)
         {
-            return;
+            b_HPText.SetText(currentHp + "/" + maxHp);
+            b_HPSlider.value = (float)currentHp / maxHp;
+            _playerView.UpdateHP(currentHp, maxHp);
         }
-        b_HPText.SetText(currentHp + "/" + maxHp);
-        b_HPSlider.value = (float)currentHp / maxHp;
-        _playerView.UpdateHP(currentHp, maxHp);
+        else
+        {
+            foreach (var enemyView in _enemyViews)
+            {
+                if (enemyView.Enemy.Id == entityId)
+                {
+                    enemyView.UpdateHP(currentHp, maxHp);
+                    break;
+                }
+            }
+        }
+
     }
     public void RefreshEnergy(int energy, int maxEnergy)
     {

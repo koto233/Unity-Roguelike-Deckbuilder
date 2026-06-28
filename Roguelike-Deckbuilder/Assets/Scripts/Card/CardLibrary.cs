@@ -24,7 +24,7 @@ public class CardLibrary : ICardLibrary
             if (_cardConfigs.TryGetValue(effect.Id, out var cardConfig))
             {
                 cardConfig.Effects.Add(effect);
-                Debug.Log($"效果: {effect.Id} {effect.Type} {effect.Value} {effect.Target} ");
+                Debug.Log($"卡牌{cardConfig.Id} 绑定效果: {effect.Id} {effect.Type} {effect.Value} {effect.Target} ");
             }
             else
             {
@@ -38,18 +38,6 @@ public class CardLibrary : ICardLibrary
         if (_cardConfigs.TryGetValue(cardId, out var config))
             return new Card(config);
         throw new Exception($"未找到卡牌: {cardId}");
-    }
-
-    public Card CreateRandomCard()
-    {
-        // 1.取出字典中所有的英文ID（Keys）
-        var keys = _cardConfigs.Keys.ToList();
-
-        // 2. 随机取一个英文ID
-        int randomCardId = new System.Random().Next(keys.Count);
-
-        // 3. 传入英文ID创建卡牌
-        return CreateCard(randomCardId);
     }
 
 

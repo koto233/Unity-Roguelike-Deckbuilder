@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using LitFramework.Asset;
+using LitFramework.Config;
 using LitFramework.FSM;
 using LitFramework.UI.Core.Service;
 using UnityEngine;
@@ -39,14 +40,15 @@ namespace LitFramework.FSM.Procedure
         {
             var assetService = ServiceLocator.Get<IAssetService>();
             var uiService = ServiceLocator.Get<UIService>();
-
+            var configService = ServiceLocator.Get<IConfigService>();
+            var enemyConfig = configService.GetTable<EnemyConfig>().GetById(1) as EnemyConfig;
             var battleContext = new BattleContext()
             {
                 Player = new PlayerData(100, 3),
                 Enemies = new List<EnemyData>()
-                 {
-                new (new EnemyConfig()),
-                 },
+                {
+                    new (enemyConfig)
+                },
                 CurrentTurn = 0,
                 IsPlayerTurn = true,
                 Target = null,
