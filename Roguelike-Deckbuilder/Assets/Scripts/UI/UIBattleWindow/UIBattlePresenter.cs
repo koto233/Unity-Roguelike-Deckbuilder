@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 using LitFramework;
+using LitFramework.Config;
 using LitFramework.EventBus;
 using UnityEngine;
 
@@ -107,24 +109,37 @@ public class UIBattlePresenter : IDisposable
     private void RefreshHand(List<Card> handCards)
     {
         var displayList = new List<CardDisplayData>();
+        bool needTarget = false;
+        StringBuilder desc = new();
         foreach (var card in handCards)
         {
+            var effectConfigTable = ServiceLocator.Get<IConfigService>().GetTable<CardEffectsConfig>();
+            foreach (var effect in card.Config.Effects)
+            {
+                CardEffectsConfig effectConfig = effectConfigTable.GetById(effect.Id) as CardEffectsConfig;
+                desc.Append(string.Format(effectConfig.Description, effect.Value) + "\n");
+                if (effectConfig.Target == "Enemy")
+                {
+                    needTarget = true;
+                }
+            }
+
             // bool canPlay = _battleController.CanPlayCard(card);          // 外部判断
             bool canPlay = true;
             Color costColor = canPlay ? Color.white : Color.red;
             // Color rarityColor = GetRarityColor(card.Config.Rarity);
-            string desc = string.Format(card.Config.Description, card.Config.Effects[0].Value);
+
             displayList.Add(new CardDisplayData
             {
                 CardId = card.Config.Id,
                 Name = card.Config.Name,
                 Cost = card.CurrentCost,
                 CostColor = costColor,
-                Description = desc,
+                Description = desc.ToString(),
                 CanInteract = true,
                 // Icon = card.Config.Icon,
                 // RarityColor = rarityColor,
-                NeedTarget = card.Config.Effects[0].Target == "Enemy",
+                NeedTarget = needTarget,
                 IsPlayable = canPlay,
                 IsHighlighted = false
             });
@@ -182,18 +197,31 @@ public class UIBattlePresenter : IDisposable
         _view.ClearCardsInList();
         for (int i = 0; i < drawPile.Count; i++)
         {
+            StringBuilder desc = new();
             var card = drawPile[i];
-            string desc = string.Format(card.Config.Description, card.Config.Effects[0].Value);
+            bool needTarget = false;
+            var effectConfigTable = ServiceLocator.Get<IConfigService>().GetTable<CardEffectsConfig>();
+            foreach (var effect in card.Config.Effects)
+            {
+                CardEffectsConfig effectConfig = effectConfigTable.GetById(effect.Id) as CardEffectsConfig;
+                desc.Append(string.Format(effectConfig.Description, effect.Value) + "\n");
+                if (effectConfig.Target == "Enemy")
+                {
+                    needTarget = true;
+                }
+            }
+
+            // string desc = string.Format(card.Config.Description, card.Config.Effects[0].Value);
             CardDisplayData display = new CardDisplayData
             {
                 CardId = card.Config.Id,
                 Name = card.Config.Name,
                 Cost = card.CurrentCost,
-                Description = desc,
+                Description = desc.ToString(),
                 CanInteract = false,
                 // Icon = card.Config.Icon,
                 // RarityColor = GetRarityColor(card.Config.Rarity),
-                NeedTarget = card.Config.Effects[0].Target == "Enemy",
+                NeedTarget = needTarget,
             };
             _view.SpawnCardInList(display);
         }

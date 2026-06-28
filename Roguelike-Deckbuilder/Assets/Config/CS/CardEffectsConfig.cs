@@ -5,15 +5,13 @@
 // 2. 表格约定：第一行是变量名称，第二行是变量类型
 
 // Generate From D:\GIT\Unity-Roguelike-Deckbuilder\Roguelike-Deckbuilder\Assets\Config\Excel\CardEffects.xlsx.xlsx
-using System;
 
-[Serializable]
 public class CardEffectsConfig : IConfig
 {
-	public int Id; // ID
+	public int Id; // Id
 	public string Type; // 类型
-	public int Value; // 效果值
 	public string Target; // 目标
+	public string Description; // 描述
 }
 
 

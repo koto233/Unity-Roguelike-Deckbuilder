@@ -14,6 +14,6 @@ public class Card
         Config = config;
         CurrentCost = config.Cost;
         // 预创建效果对象（工厂）
-        Effects = config.Effects.Select(CardEffectFactory.Create).ToList();
+        // Effects = config.Effects.Select(CardEffectFactory.Create,Config.Effects).ToList();
     }
 }

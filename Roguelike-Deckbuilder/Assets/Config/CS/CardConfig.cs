@@ -3,20 +3,29 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//
+// Auto Generated Code By excel2json
+// https://neil3d.gitee.io/coding/excel2json.html
+// 1. 每个 Sheet 形成一个 Struct 定义, Sheet 的名称作为 Struct 的名称
+// 2. 表格约定：第一行是变量名称，第二行是变量类型
+
+// Generate From D:\GIT\Unity-Roguelike-Deckbuilder\Roguelike-Deckbuilder\Assets\Config\Excel\CardConfig.xlsx.xlsx
 [Serializable]
 public class CardConfig : IConfig
 {
-    public int Id;           // 卡牌唯一ID
-    public string Name;         // 显示名称
-    public int Cost;            // 基础能量消耗
-    public CardType Type;
-    public string Description;  // 描述文本
-    [NonSerialized]
-    public List<CardEffectsConfig> Effects = new();  // 支持多效果（如伤害+抽牌）
+    public int Id; // Id
+    public string Key; // 资源标识
+    public string Name; // 名称
+    public int Cost; // 费用
+    public string Type; // 类型
+    public List<CardEffectEntry> Effects;
+    public string Image; // 图片
 }
 
-public enum CardType
+
+// End of Auto Generated Code
+public class CardEffectEntry
 {
-    Attack,
-    Skill,
+    public int Id;
+    public string Value;
 }

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using LitFramework;
+using LitFramework.Config;
 using LitFramework.EventBus;
 using LitFramework.FSM;
 using UnityEngine;
@@ -54,7 +55,17 @@ public class BattleController
         Debug.Log("使用卡牌 " + card.Config.Name);
         if (Context.IsPlayerTurn)
         {
-            if (card.Config.Effects[0].Target == "Enemy" && target == null)
+            bool needTarget = false;
+            var effectConfigTable = ServiceLocator.Get<IConfigService>().GetTable<CardEffectsConfig>();
+            foreach (var effect in card.Config.Effects)
+            {
+                CardEffectsConfig effectConfig = effectConfigTable.GetById(effect.Id) as CardEffectsConfig;
+                if (effectConfig.Target == "Enemy")
+                {
+                    needTarget = true;
+                }
+            }
+            if (needTarget && target == null)
             {
                 Debug.LogError("请选择目标");
                 return false;
@@ -66,7 +77,7 @@ public class BattleController
                 return false;
 
             }
-         
+
             foreach (var effect in card.Effects)
             {
                 // Debug.Log("执行效果 " + effect.GetType().Name);

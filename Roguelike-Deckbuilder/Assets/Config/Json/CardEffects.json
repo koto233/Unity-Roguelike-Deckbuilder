@@ -1,72 +1,22 @@
-[
-  {
-    "ID": 1,
-    "EffectType": "Damage",
-    "Value": 6,
-    "Target": "Enemy",
-    "#Description": "造成{0}点伤害。"
+{
+  "1": {
+    "Id": 1,
+    "Type": "Damage",
+    "Target": "Enemy"
   },
-  {
-    "ID": 2,
-    "EffectType": "Damage",
-    "Value": 9,
-    "Target": "Enemy",
-    "#Description": "造成{0}点伤害。"
+  "2": {
+    "Id": 2,
+    "Type": "Block",
+    "Target": "Self"
   },
-  {
-    "ID": 3,
-    "EffectType": "Block",
-    "Value": 5,
-    "Target": "Self",
-    "#Description": "获得{0}点格挡。"
+  "3": {
+    "Id": 3,
+    "Type": "DrawCard",
+    "Target": "Self"
   },
-  {
-    "ID": 4,
-    "EffectType": "Block",
-    "Value": 8,
-    "Target": "Self",
-    "#Description": "获得{0}点格挡。"
-  },
-  {
-    "ID": 5,
-    "EffectType": "Damage",
-    "Value": 12,
-    "Target": "Enemy",
-    "#Description": "造成{0}点伤害。"
-  },
-  {
-    "ID": 6,
-    "EffectType": "Damage",
-    "Value": 16,
-    "Target": "Enemy",
-    "#Description": "造成{0} 点伤害。"
-  },
-  {
-    "ID": 7,
-    "EffectType": "DrawCard",
-    "Value": 2,
-    "Target": "Self",
-    "#Description": "抽{0}张牌。"
-  },
-  {
-    "ID": 8,
-    "EffectType": "DrawCard",
-    "Value": 3,
-    "Target": "Self",
-    "#Description": "抽{0}张牌。"
-  },
-  {
-    "ID": 9,
-    "EffectType": "GainEnergy",
-    "Value": 1,
-    "Target": "Self",
-    "#Description": "获得 {0}点能量。"
-  },
-  {
-    "ID": 10,
-    "EffectType": "GainEnergy",
-    "Value": 2,
-    "Target": "Self",
-    "#Description": "获得{0}点能量。"
+  "4": {
+    "Id": 4,
+    "Type": "GainEnergy",
+    "Target": "Self"
   }
-]
+}

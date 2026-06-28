@@ -17,20 +17,20 @@ public class CardLibrary : ICardLibrary
         {
             Debug.Log($"卡牌: {item.Key}");
         }
-        var tableEffect = configService.GetTable<CardEffectsConfig>() as ListConfigTable<CardEffectsConfig>;
-        _cardEffects = tableEffect.GetList();
-        foreach (var effect in _cardEffects)
-        {
-            if (_cardConfigs.TryGetValue(effect.Id, out var cardConfig))
-            {
-                cardConfig.Effects.Add(effect);
-                Debug.Log($"卡牌{cardConfig.Id} 绑定效果: {effect.Id} {effect.Type} {effect.Value} {effect.Target} ");
-            }
-            else
-            {
-                Debug.LogWarning($"效果 {effect.Id} 对应的卡牌不存在");
-            }
-        }
+        // var tableEffect = configService.GetTable<CardEffectsConfig>() as ListConfigTable<CardEffectsConfig>;
+        // _cardEffects = tableEffect.GetList();
+        // foreach (var effect in _cardEffects)
+        // {
+        //     if (_cardConfigs.TryGetValue(effect.Id, out var cardConfig))
+        //     {
+        //         cardConfig.Effects.Add(effect);
+        //         Debug.Log($"卡牌{cardConfig.Id} 绑定效果: {effect.Id} {effect.Type} {effect.Value} {effect.Target} ");
+        //     }
+        //     else
+        //     {
+        //         Debug.LogWarning($"效果 {effect.Id} 对应的卡牌不存在");
+        //     }
+        // }
     }
 
     public Card CreateCard(int cardId)
