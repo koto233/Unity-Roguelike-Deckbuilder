@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 using UnityEngine;
 
 //
@@ -29,6 +30,6 @@ public class CardConfig : IConfig
 // End of Auto Generated Code
 public class CardEffectEntry
 {
-    public int Id;
+    public int EffectId;
     public int Value;
 }

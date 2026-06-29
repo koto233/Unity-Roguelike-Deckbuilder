@@ -27,11 +27,15 @@ public class BattleController
     {
         Context.IsPlayerTurn = true;
         Context.CurrentTurn = 1;
-        var cardLibrary = ModelContainer.Get<ICardLibrary>();
+        var configService = ServiceLocator.Get<IConfigService>();
+        var cardConfigTable = configService.GetTable<CardConfig>();
+
         for (int i = 0; i < 20; i++)
         {
             int randomId = UnityEngine.Random.Range(1, 11);
-            Context.Player.DrawPile.Add(cardLibrary.CreateCard(randomId));
+            var cardConfig = cardConfigTable.GetById(randomId) as CardConfig;
+            var card = new Card(cardConfig);
+            Context.Player.DrawPile.Add(card);
         }
         InitFsm();
         BattleFSM.ChangeState<PlayerTurnState>();
@@ -55,17 +59,7 @@ public class BattleController
         Debug.Log("使用卡牌 " + card.Config.Name);
         if (Context.IsPlayerTurn)
         {
-            bool needTarget = false;
-            var effectConfigTable = ServiceLocator.Get<IConfigService>().GetTable<CardEffectsConfig>();
-            foreach (var effect in card.Config.Effects)
-            {
-                CardEffectsConfig effectConfig = effectConfigTable.GetById(effect.Id) as CardEffectsConfig;
-                if (effectConfig.Target == "Enemy")
-                {
-                    needTarget = true;
-                }
-            }
-            if (needTarget && target == null)
+            if (card.NeedTarget && target == null)
             {
                 Debug.LogError("请选择目标");
                 return false;

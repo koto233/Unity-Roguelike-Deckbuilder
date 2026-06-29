@@ -13,7 +13,7 @@ namespace LitFramework.Config
         public IEnumerable<object> GetAll() => _dict.Values.Cast<object>();
         public bool IsDictionary => true;
         // 提供泛型方法方便调用方
-        public T Get(int id) => _dict.GetValueOrDefault(id); 
+        public T Get(int id) => _dict.GetValueOrDefault(id);
         public Dictionary<int, T> GetDict() => _dict;
     }
 }

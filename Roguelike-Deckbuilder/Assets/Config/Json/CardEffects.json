@@ -2,21 +2,25 @@
   "1": {
     "Id": 1,
     "Type": "Damage",
-    "Target": "Enemy"
+    "Target": "Enemy",
+    "Description": "造成{0}点伤害。"
   },
   "2": {
     "Id": 2,
     "Type": "Block",
-    "Target": "Self"
+    "Target": "Self",
+    "Description": "获得{0}点格挡。"
   },
   "3": {
     "Id": 3,
     "Type": "DrawCard",
-    "Target": "Self"
+    "Target": "Self",
+    "Description": "抽{0}张牌。"
   },
   "4": {
     "Id": 4,
     "Type": "GainEnergy",
-    "Target": "Self"
+    "Target": "Self",
+    "Description": "获得{0}点能量。"
   }
 }
