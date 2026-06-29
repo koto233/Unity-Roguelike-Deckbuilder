@@ -5,7 +5,13 @@
     "Name": "攻击",
     "Cost": 1,
     "Type": "Attack",
-    "Effects": "[{\"EffectId\":1,\"Value\":6}]",
+    "Effects": [
+      {
+        "EffectId": 1,
+        "Value": 6
+      }
+    ],
+    "NeedTarget": "",
     "Image": "test"
   },
   "2": {
@@ -14,7 +20,13 @@
     "Name": "攻击+",
     "Cost": 1,
     "Type": "Attack",
-    "Effects": "[{\"EffectId\":1,\"Value\":10}]",
+    "Effects": [
+      {
+        "EffectId": 1,
+        "Value": 10
+      }
+    ],
+    "NeedTarget": "",
     "Image": "test"
   },
   "3": {
@@ -23,7 +35,13 @@
     "Name": "防御",
     "Cost": 1,
     "Type": "Skill",
-    "Effects": "[{\"EffectId\":2,\"Value\":5}]",
+    "Effects": [
+      {
+        "EffectId": 2,
+        "Value": 5
+      }
+    ],
+    "NeedTarget": "",
     "Image": "test"
   },
   "4": {
@@ -32,7 +50,13 @@
     "Name": "防御+",
     "Cost": 1,
     "Type": "Skill",
-    "Effects": "[{\"EffectId\":1,\"Value\":8}]",
+    "Effects": [
+      {
+        "EffectId": 1,
+        "Value": 8
+      }
+    ],
+    "NeedTarget": "",
     "Image": "test"
   },
   "5": {
@@ -41,7 +65,13 @@
     "Name": "猛击",
     "Cost": 2,
     "Type": "Attack",
-    "Effects": "[{\"EffectId\":1,\"Value\":12}]",
+    "Effects": [
+      {
+        "EffectId": 1,
+        "Value": 12
+      }
+    ],
+    "NeedTarget": "",
     "Image": "test"
   },
   "6": {
@@ -50,7 +80,13 @@
     "Name": "猛击+",
     "Cost": 2,
     "Type": "Attack",
-    "Effects": "[{\"EffectId\":1,\"Value\":16}]",
+    "Effects": [
+      {
+        "EffectId": 1,
+        "Value": 16
+      }
+    ],
+    "NeedTarget": "",
     "Image": "test"
   },
   "7": {
@@ -59,7 +95,13 @@
     "Name": "战术",
     "Cost": 1,
     "Type": "Skill",
-    "Effects": "[{\"EffectId\":3,\"Value\":2}]",
+    "Effects": [
+      {
+        "EffectId": 3,
+        "Value": 2
+      }
+    ],
+    "NeedTarget": "",
     "Image": "test"
   },
   "8": {
@@ -68,7 +110,13 @@
     "Name": "战术+",
     "Cost": 1,
     "Type": "Skill",
-    "Effects": "[{\"EffectId\":3,\"Value\":3}]",
+    "Effects": [
+      {
+        "EffectId": 3,
+        "Value": 3
+      }
+    ],
+    "NeedTarget": "",
     "Image": "test"
   },
   "9": {
@@ -77,7 +125,13 @@
     "Name": "赋能",
     "Cost": 0,
     "Type": "Skill",
-    "Effects": "[{\"EffectId\":4,\"Value\":1}]",
+    "Effects": [
+      {
+        "EffectId": 4,
+        "Value": 1
+      }
+    ],
+    "NeedTarget": "",
     "Image": "test"
   },
   "10": {
@@ -86,7 +140,13 @@
     "Name": "赋能+",
     "Cost": 0,
     "Type": "Skill",
-    "Effects": "[{\"EffectId\":4,\"Value\":2}]",
+    "Effects": [
+      {
+        "EffectId": 4,
+        "Value": 2
+      }
+    ],
+    "NeedTarget": "",
     "Image": "test"
   }
 }

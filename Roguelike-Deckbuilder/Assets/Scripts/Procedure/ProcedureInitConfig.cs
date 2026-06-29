@@ -43,7 +43,7 @@ namespace LitFramework.FSM.Procedure
         {
             var configSvc = ServiceLocator.Get<IConfigService>();
             await configSvc.LoadDictTableAsync<CardConfig>(CardConfigPath);
-            await configSvc.LoadListTableAsync<CardEffectsConfig>(CardEffectsPath);
+            await configSvc.LoadDictTableAsync<CardEffectsConfig>(CardEffectsPath);
             await configSvc.LoadDictTableAsync<EnemyConfig>(EnemyConfigPath);
             _procedureManager.ChangeProcedure<ProcedureTitle>();
         }

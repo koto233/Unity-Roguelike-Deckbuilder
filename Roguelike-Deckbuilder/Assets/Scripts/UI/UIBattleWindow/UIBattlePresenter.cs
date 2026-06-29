@@ -109,37 +109,22 @@ public class UIBattlePresenter : IDisposable
     private void RefreshHand(List<Card> handCards)
     {
         var displayList = new List<CardDisplayData>();
-        bool needTarget = false;
-        StringBuilder desc = new();
         foreach (var card in handCards)
         {
-            var effectConfigTable = ServiceLocator.Get<IConfigService>().GetTable<CardEffectsConfig>();
-            foreach (var effect in card.Config.Effects)
-            {
-                CardEffectsConfig effectConfig = effectConfigTable.GetById(effect.Id) as CardEffectsConfig;
-                desc.Append(string.Format(effectConfig.Description, effect.Value) + "\n");
-                if (effectConfig.Target == "Enemy")
-                {
-                    needTarget = true;
-                }
-            }
-
             // bool canPlay = _battleController.CanPlayCard(card);          // 外部判断
             bool canPlay = true;
             Color costColor = canPlay ? Color.white : Color.red;
-            // Color rarityColor = GetRarityColor(card.Config.Rarity);
-
             displayList.Add(new CardDisplayData
             {
                 CardId = card.Config.Id,
                 Name = card.Config.Name,
                 Cost = card.CurrentCost,
                 CostColor = costColor,
-                Description = desc.ToString(),
+                Description = card.Description,
                 CanInteract = true,
                 // Icon = card.Config.Icon,
                 // RarityColor = rarityColor,
-                NeedTarget = needTarget,
+                NeedTarget = card.NeedTarget,
                 IsPlayable = canPlay,
                 IsHighlighted = false
             });
@@ -150,13 +135,13 @@ public class UIBattlePresenter : IDisposable
 
     private void OnDragStart(int cardId)
     {
-        Debug.Log("OnDragStart:" + cardId);
+        // Debug.Log("OnDragStart:" + cardId);
         _selectedCardId = cardId;
     }
     private void OnDragCard(EnemyData enemy)
     {
         _currentTargetEnemy = enemy;
-        Debug.Log("OnDragCard:" + enemy == null);
+        // Debug.Log("OnDragCard:" + enemy == null);
     }
     private void OnPlayCard()
     {
@@ -197,31 +182,17 @@ public class UIBattlePresenter : IDisposable
         _view.ClearCardsInList();
         for (int i = 0; i < drawPile.Count; i++)
         {
-            StringBuilder desc = new();
             var card = drawPile[i];
-            bool needTarget = false;
-            var effectConfigTable = ServiceLocator.Get<IConfigService>().GetTable<CardEffectsConfig>();
-            foreach (var effect in card.Config.Effects)
-            {
-                CardEffectsConfig effectConfig = effectConfigTable.GetById(effect.Id) as CardEffectsConfig;
-                desc.Append(string.Format(effectConfig.Description, effect.Value) + "\n");
-                if (effectConfig.Target == "Enemy")
-                {
-                    needTarget = true;
-                }
-            }
-
-            // string desc = string.Format(card.Config.Description, card.Config.Effects[0].Value);
             CardDisplayData display = new CardDisplayData
             {
                 CardId = card.Config.Id,
                 Name = card.Config.Name,
                 Cost = card.CurrentCost,
-                Description = desc.ToString(),
+                Description = card.Description,
                 CanInteract = false,
                 // Icon = card.Config.Icon,
                 // RarityColor = GetRarityColor(card.Config.Rarity),
-                NeedTarget = needTarget,
+                NeedTarget = card.NeedTarget,
             };
             _view.SpawnCardInList(display);
         }
