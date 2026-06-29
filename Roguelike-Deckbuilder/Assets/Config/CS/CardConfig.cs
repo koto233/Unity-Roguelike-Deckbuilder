@@ -18,6 +18,9 @@ public class CardConfig : IConfig
     public string Name; // 名称
     public int Cost; // 费用
     public string Type; // 类型
+    /// <summary>
+    /// 关联的效果
+    /// </summary>
     public List<CardEffectEntry> Effects;
     public string Image; // 图片
 }
@@ -27,5 +30,5 @@ public class CardConfig : IConfig
 public class CardEffectEntry
 {
     public int Id;
-    public string Value;
+    public int Value;
 }

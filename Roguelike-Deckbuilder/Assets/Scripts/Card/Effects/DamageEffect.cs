@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // 伤害效果
-public class DamageEffect : ICardEffect
+public class DamageEffect : CardEffectBase
 {
-    private int _damage;
-    public DamageEffect(int damage) { _damage = damage; }
-    public void Execute(Card card, BattleContext context)
+    public DamageEffect(CardEffectsConfig config, int value) : base(config, value)
     {
-        context.Target.TakeDamage(_damage);
     }
 
-
+    public override void Execute(Card card, BattleContext context)
+    {
+        context.Target.TakeDamage(Value);
+    }
 }

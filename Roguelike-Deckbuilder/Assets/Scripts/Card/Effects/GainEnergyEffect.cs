@@ -2,15 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GainEnergyEffect : ICardEffect
+public class GainEnergyEffect : CardEffectBase
 {
-    private int _value;
-    public GainEnergyEffect(int value)
+    public GainEnergyEffect(CardEffectsConfig config, int value) : base(config, value)
     {
-        _value = value;
     }
-    public void Execute(Card card, BattleContext context)
+
+    public override void Execute(Card card, BattleContext context)
     {
-        context.Player.AddEnergy(_value);
+        context.Player.AddEnergy(Value);
     }
 }

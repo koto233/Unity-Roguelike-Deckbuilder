@@ -78,7 +78,7 @@ public class BattleController
 
             }
 
-            foreach (var effect in card.Effects)
+            foreach (var effect in card.EffectsInstance)
             {
                 // Debug.Log("执行效果 " + effect.GetType().Name);
                 effect.Execute(card, Context);

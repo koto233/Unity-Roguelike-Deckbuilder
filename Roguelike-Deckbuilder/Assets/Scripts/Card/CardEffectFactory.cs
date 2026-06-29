@@ -5,15 +5,15 @@ using UnityEngine;
 
 public static class CardEffectFactory
 {
-    public static ICardEffect Create(CardEffectsConfig data, int value)
+    public static CardEffectBase Create(CardEffectsConfig config, int value)
     {
-        Debug.Log("Create Card Effect: " + data.Type);
-        switch (data.Type)
+        Debug.Log("Create Card Effect: " + config.Type);
+        switch (config.Type)
         {
-            case "Damage": return new DamageEffect(value);
-            case "DrawCard": return new DrawCardEffect(value);
-            case "GainEnergy": return new GainEnergyEffect(value);
-            case "Block": return new GainBlockEffect(value);
+            case "Damage": return new DamageEffect(config, value);
+            case "DrawCard": return new DrawCardEffect(config, value);
+            case "GainEnergy": return new GainEnergyEffect(config, value);
+            case "Block": return new GainBlockEffect(config, value);
             default: return null;
         }
     }

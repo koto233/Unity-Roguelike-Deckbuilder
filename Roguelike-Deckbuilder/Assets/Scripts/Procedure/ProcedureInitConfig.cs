@@ -45,7 +45,6 @@ namespace LitFramework.FSM.Procedure
             await configSvc.LoadDictTableAsync<CardConfig>(CardConfigPath);
             await configSvc.LoadListTableAsync<CardEffectsConfig>(CardEffectsPath);
             await configSvc.LoadDictTableAsync<EnemyConfig>(EnemyConfigPath);
-            ModelContainer.Register<ICardLibrary>(new CardLibrary());
             _procedureManager.ChangeProcedure<ProcedureTitle>();
         }
     }

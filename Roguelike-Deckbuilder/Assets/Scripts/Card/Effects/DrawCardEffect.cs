@@ -2,18 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DrawCardEffect : ICardEffect
+public class DrawCardEffect : CardEffectBase
 {
-    private int _count;
-    public DrawCardEffect(int value)
+    public DrawCardEffect(CardEffectsConfig config, int value) : base(config, value)
     {
-        _count = value;
-    }
-    public void Execute(Card card, BattleContext context)
-    {
-        Debug.Log("抽牌效果：" + _count);
-        context.Player.DrawCards(_count);
     }
 
-
+    public override void Execute(Card card, BattleContext context)
+    {
+        context.Player.DrawCards(Value);
+    }
 }

@@ -4,16 +4,14 @@ using System.Linq;
 using System.Threading.Tasks;
 
 
-public class GainBlockEffect : ICardEffect
+public class GainBlockEffect : CardEffectBase
 {
-    private int _value;
-    public GainBlockEffect(int value)
+    public GainBlockEffect(CardEffectsConfig config, int value) : base(config, value)
     {
-        _value = value;
     }
 
-    public void Execute(Card card, BattleContext context)
+    public override void Execute(Card card, BattleContext context)
     {
-        context.Player.AddBlock(_value);
+        context.Player.AddBlock(Value);
     }
 }
