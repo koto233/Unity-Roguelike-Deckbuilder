@@ -16,7 +16,7 @@ public class UIBattlePresenter : IDisposable
     private IEventBinding<BlockChangedEvent> _BlockChangedEventBinding;
     private IEventBinding<PlayerMaxHpChangedEvent> _PlayerMaxHpChangedEventBinding;
     private BattleController _battleController;
-    private EnemyData _currentTargetEnemy;
+    private Enemy _currentTargetEnemy;
     private int _selectedCardId;
     public UIBattlePresenter(UIBattleWindow view, BattleController battleController)
     {
@@ -138,7 +138,7 @@ public class UIBattlePresenter : IDisposable
         // Debug.Log("OnDragStart:" + cardId);
         _selectedCardId = cardId;
     }
-    private void OnDragCard(EnemyData enemy)
+    private void OnDragCard(Enemy enemy)
     {
         _currentTargetEnemy = enemy;
         // Debug.Log("OnDragCard:" + enemy == null);

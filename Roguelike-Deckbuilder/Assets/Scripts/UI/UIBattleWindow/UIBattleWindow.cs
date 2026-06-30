@@ -82,14 +82,14 @@ public partial class UIBattleWindow : UIWindow
         _cardItems.Add(uiCard);
     }
 
-    private UIPlayerItem CreatePlayerView(PlayerData data)
+    private UIPlayerItem CreatePlayerView(Player data)
     {
         var go = Instantiate(_playerPrefabRef.Asset, b_PlayerRoot);
         var view = go.GetComponent<UIPlayerItem>();
         return view;
     }
 
-    private List<UIEnemyItem> CreateEnemyViews(List<EnemyData> enemies)
+    private List<UIEnemyItem> CreateEnemyViews(List<Enemy> enemies)
     {
         var views = new List<UIEnemyItem>();
         foreach (var enemy in enemies)
@@ -133,7 +133,7 @@ public partial class UIBattleWindow : UIWindow
     {
         b_EnergyText.SetText($"{energy}/{maxEnergy}");
     }
-    public void RefreshHand(List<CardDisplayData> hand, Action onPlay = null, Action onCancel = null, Action<int> onDragStart = null, Action<EnemyData> onCardDrag = null)
+    public void RefreshHand(List<CardDisplayData> hand, Action onPlay = null, Action onCancel = null, Action<int> onDragStart = null, Action<Enemy> onCardDrag = null)
     {
         b_HandZone.RefreshHand(hand, onPlay, onCancel, onDragStart, onCardDrag);
     }

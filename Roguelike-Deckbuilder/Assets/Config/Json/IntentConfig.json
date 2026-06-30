@@ -1,0 +1,44 @@
+{
+  "0": {
+    "Id": 0,
+    "Key": "attack",
+    "Name": "攻击",
+    "Type": "Attack",
+    "Description": ""
+  },
+  "1": {
+    "Id": 1,
+    "Key": "defend",
+    "Name": "防御",
+    "Type": "Defend",
+    "Description": ""
+  },
+  "2": {
+    "Id": 2,
+    "Key": "strong_attack",
+    "Name": "蓄力攻击",
+    "Type": "StrongAttack",
+    "Description": ""
+  },
+  "3": {
+    "Id": 3,
+    "Key": "multi_attack",
+    "Name": "多段攻击",
+    "Type": "MultiAttack",
+    "Description": ""
+  },
+  "4": {
+    "Id": 4,
+    "Key": "apply_debuff",
+    "Name": "施加减益",
+    "Type": "Debuff",
+    "Description": ""
+  },
+  "5": {
+    "Id": 5,
+    "Key": "self_buff",
+    "Name": "自我强化",
+    "Type": "Buff",
+    "Description": ""
+  }
+}

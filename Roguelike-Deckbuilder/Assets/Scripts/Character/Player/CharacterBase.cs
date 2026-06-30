@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using LitFramework.EventBus;
 using UnityEngine;
 
-public abstract class CharacterData
+public abstract class CharacterBase
 {
    protected int _currentHp;
    protected int _maxHp;
@@ -17,7 +17,7 @@ public abstract class CharacterData
    protected abstract EntityType EntityType { get; }
    public abstract int Id { get; }
 
-   protected CharacterData(int maxHp, int strength = 0)
+   protected CharacterBase(int maxHp, int strength = 0)
    {
       _maxHp = maxHp;
       _currentHp = maxHp;

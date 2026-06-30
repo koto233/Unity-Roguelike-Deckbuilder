@@ -16,12 +16,12 @@ public partial class UICardItem : UIBase, IBeginDragHandler, IDragHandler, IEndD
     private Action _onPlay;
     private Action _onCancel;
     private Action<int> _onDragStart;
-    private Action<EnemyData> _onCardDrag;
+    private Action<Enemy> _onCardDrag;
     private float _followSpeed = 10f;
-    private EnemyData _Target;
+    private Enemy _Target;
     private bool _isDrag = false;
     private bool _isHover = false;
-    public void Init(CardDisplayData displayData, Action onPlay = null, Action onCancel = null, Action<int> onDragStart = null, Action<EnemyData> onCardDrag = null)
+    public void Init(CardDisplayData displayData, Action onPlay = null, Action onCancel = null, Action<int> onDragStart = null, Action<Enemy> onCardDrag = null)
     {
         _onPlay = onPlay;
         _onCancel = onCancel;
@@ -103,7 +103,7 @@ public partial class UICardItem : UIBase, IBeginDragHandler, IDragHandler, IEndD
         //     }
         // }
     }
-    private EnemyData IsOverTarget(PointerEventData eventData)
+    private Enemy IsOverTarget(PointerEventData eventData)
     {
         int layerMask = 1 << LayerMask.NameToLayer("Target");
         var results = new List<RaycastResult>();

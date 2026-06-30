@@ -51,7 +51,7 @@ public class BattleController
         BattleFSM.RegisterState(new EnemyTurnState(this));
         BattleFSM.RegisterState(new BattleEndState(this));
     }
-    public bool PlayCard(int cardId, EnemyData target = null)
+    public bool PlayCard(int cardId, Enemy target = null)
     {
         Debug.Log("使用卡牌 " + cardId);
         var card = Context.Player.Hand.FirstOrDefault(c => c.Config.Id == cardId);
@@ -90,29 +90,24 @@ public class BattleController
 
 
 
-    public void StartPlayerTurn()
-    {
-        Context.Player.DrawCardInTurnStart(5);
-        Context.Player.ResetEnergy();
-    }
-    public void EndPlayerTurn()
-    {
-        Context.Player.DiscardAllHand();
-    }
+    // public void StartPlayerTurn()
+    // {
+      
 
-    public void StartEnemyTurn()
-    {
-        ExecuteNextEnemyAction();
-        BattleFSM.ChangeState<PlayerTurnState>();
-    }
-    public void EndEnemyTurn()
-    {
+    // }
+    // public void EndPlayerTurn()
+    // {
+    //     Context.Player.DiscardAllHand();
+    // }
 
-    }
-    public void ExecuteNextEnemyAction()
-    {
-        Context.Player.TakeDamage(5);
-    }
+    // public void StartEnemyTurn()
+    // {
+
+    // }
+    // public void EndEnemyTurn()
+    // {
+    //     BattleFSM.ChangeState<PlayerTurnState>();
+    // }
 
 
     private void RemoveDeadEnemies()

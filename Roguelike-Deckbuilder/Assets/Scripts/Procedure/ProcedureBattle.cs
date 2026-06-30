@@ -44,8 +44,8 @@ namespace LitFramework.FSM.Procedure
             var enemyConfig = configService.GetTable<EnemyConfig>().GetById(1) as EnemyConfig;
             var battleContext = new BattleContext()
             {
-                Player = new PlayerData(100, 3),
-                Enemies = new List<EnemyData>()
+                Player = new Player(100, 3),
+                Enemies = new List<Enemy>()
                 {
                     new (enemyConfig)
                 },

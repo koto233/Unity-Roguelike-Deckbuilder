@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using LitFramework.EventBus;
 using UnityEngine;
 
-public class PlayerData : CharacterData
+public class Player : CharacterBase
 {
     public List<Card> DrawPile { get; private set; }      // 抽牌堆
     public List<Card> Hand { get; private set; }          // 手牌
@@ -16,7 +16,7 @@ public class PlayerData : CharacterData
 
     public override int Id => -1;
 
-    public PlayerData(int maxHp, int maxEnergy, int strength = 0) : base(maxHp, strength)
+    public Player(int maxHp, int maxEnergy, int strength = 0) : base(maxHp, strength)
     {
         _maxEnergy = maxEnergy;
         _energy = maxEnergy;

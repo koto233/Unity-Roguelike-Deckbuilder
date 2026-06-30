@@ -5,7 +5,7 @@ using UnityEngine;
 
 public partial class UIEnemyItem : UIBase
 {
-    public EnemyData Enemy { get; private set; }
+    public Enemy Enemy { get; private set; }
 
  
     public void UpdateHP(int currentHp, int maxHp)
@@ -13,7 +13,7 @@ public partial class UIEnemyItem : UIBase
         b_HPText.SetText($"{currentHp}/{maxHp}");
         b_HPSlider.value = (float)currentHp / maxHp;
     }
-    public void SetEnemy(EnemyData enemy)
+    public void SetEnemy(Enemy enemy)
     {
         Enemy = enemy;
     }

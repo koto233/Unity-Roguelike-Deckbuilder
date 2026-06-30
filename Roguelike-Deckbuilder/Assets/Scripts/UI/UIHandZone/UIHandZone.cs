@@ -27,7 +27,7 @@ public partial class UIHandZone : MonoBehaviour
     // {
     //     _fanLayout.Refresh();
     // }
-    public void RefreshHand(List<CardDisplayData> handCards, Action onPlay = null, Action onCancel = null, Action<int> onDragStart = null, Action<EnemyData> onCardDrag = null)
+    public void RefreshHand(List<CardDisplayData> handCards, Action onPlay = null, Action onCancel = null, Action<int> onDragStart = null, Action<Enemy> onCardDrag = null)
     {
         Debug.Log("刷新手牌");
         // 清除现有
