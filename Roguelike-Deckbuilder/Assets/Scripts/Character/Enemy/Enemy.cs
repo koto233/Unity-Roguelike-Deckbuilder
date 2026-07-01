@@ -4,9 +4,10 @@ using UnityEngine;
 
 public class Enemy : CharacterBase
 {
-    public Enemy(EnemyConfig config) : base(config.MaxHp, config.BaseStrength)
+    public Enemy(EnemyConfig config, IEnemyAI ai) : base(config.MaxHp)
     {
         Config = config;
+        AI = ai;
     }
     public IntentType LastIntent { get; set; }
     public EnemyConfig Config { get; private set; }
@@ -32,13 +33,13 @@ public class Enemy : CharacterBase
         switch (CurrentIntent)
         {
             case IntentType.Attack:
-               
+                context.Player.TakeDamage(Config.Damage + Strength);
                 break;
             case IntentType.Defend:
-               
+                AddBlock(Config.Defend);
                 break;
             case IntentType.StrongAttack:
-                
+
                 break;
         }
         LastIntent = CurrentIntent;

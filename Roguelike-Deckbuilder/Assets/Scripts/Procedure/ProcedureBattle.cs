@@ -47,7 +47,7 @@ namespace LitFramework.FSM.Procedure
                 Player = new Player(100, 3),
                 Enemies = new List<Enemy>()
                 {
-                    new (enemyConfig)
+                    new (enemyConfig,new SlimeAI()),
                 },
                 CurrentTurn = 0,
                 IsPlayerTurn = true,

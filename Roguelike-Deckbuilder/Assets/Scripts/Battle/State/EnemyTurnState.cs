@@ -16,42 +16,27 @@ public class EnemyTurnState : IState
     {
         Debug.Log("敌人回合开始");
         // _controller.StartEnemyTurn();
-        EnemyAction().Forget();
+        ExecuteEnemyTurn().Forget();
     }
-    private async UniTask EnemyAction()
+    private async UniTask ExecuteEnemyTurn()
     {
-        foreach (var enemy in _controller.Context.Enemies)
+        // State 不知道 Controller 内部怎么判断胜负
+        // State 只拿到一个结果
+        TurnResult result = await _controller.ExecuteEnemyTurnAsync();
+
+        // 根据结果决定跳转
+        switch (result)
         {
-            if (enemy.CurrentHp <= 0) continue;
-
-            // 1. 决策
-            enemy.DetermineIntent(_controller.Context);
-
-            // 2. 发布意图事件（UI更新）
-            // EventBus.Publish(new EnemyIntentDeterminedEvent(enemy));
-
-            // 3. 视觉延迟
-            await UniTask.Delay(300);
-
-            // 4. 执行
-            enemy.ExecuteIntent(_controller.Context);
-
-            // 5. 间隔
-            await UniTask.Delay(500);
+            case TurnResult.PlayerWin:
+                _controller.BattleFSM.ChangeState<BattleEndState>();
+                break;
+            case TurnResult.PlayerLose:
+                _controller.BattleFSM.ChangeState<BattleEndState>();
+                break;
+            case TurnResult.Continue:
+                _controller.BattleFSM.ChangeState<PlayerTurnState>();
+                break;
         }
-
-        if (_controller.Context.Player.CurrentHp <= 0)
-        {
-            _controller.BattleFSM.ChangeState<BattleEndState>();
-            return;
-        }
-
-        _controller.Context.Enemies.RemoveAll(e => e.CurrentHp <= 0);
-
-        foreach (var enemy in _controller.Context.Enemies)
-            enemy.OnTurnEnd();
-
-        _controller.BattleFSM.ChangeState<PlayerTurnState>();
     }
     public void OnExit()
     {

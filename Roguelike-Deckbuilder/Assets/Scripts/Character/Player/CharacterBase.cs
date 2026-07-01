@@ -17,11 +17,11 @@ public abstract class CharacterBase
    protected abstract EntityType EntityType { get; }
    public abstract int Id { get; }
 
-   protected CharacterBase(int maxHp, int strength = 0)
+   protected CharacterBase(int maxHp)
    {
       _maxHp = maxHp;
       _currentHp = maxHp;
-      _strength = strength;
+      _strength = 0;
       _block = 0;
       _vulnerable = 0;
    }

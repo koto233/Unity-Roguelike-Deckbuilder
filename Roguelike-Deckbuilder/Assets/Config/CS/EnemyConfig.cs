@@ -8,16 +8,22 @@
 using System;
 
 [Serializable]
+
 public class EnemyConfig : IConfig
 {
-	public int Id; // ID
+	public int Id; // Id
 	public string Key; // 资源key
 	public string Name; // 名称
 	public int MaxHp; // 血量
-	public int BaseStrength; // 力量
+	public int Damage; // 伤害
+	public int Defend; // 防御
+	public int StrongRate; // 蓄力倍率
 	public int BaseBlock; // 护甲
 	public string Description; // 描述
 }
+
+
+// End of Auto Generated Code
 
 
 // End of Auto Generated Code

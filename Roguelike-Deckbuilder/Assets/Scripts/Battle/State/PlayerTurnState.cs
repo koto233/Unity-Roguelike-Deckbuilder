@@ -20,16 +20,14 @@ public class PlayerTurnState : IState
     {
         Debug.Log("玩家回合开始");
         // TODO: 玩家回合开始 抽卡，恢复能量 解锁 UI 交互
-        // _battleController.StartPlayerTurn();
-        _battleController.Context.Player.DrawCardInTurnStart(5);
-        _battleController.Context.Player.ResetEnergy();
+        _battleController.StartPlayerTurn();
     }
 
     public void OnExit()
     {
         // TODO: 玩家回合结束 锁定 UI 交互
-        // _battleController.EndPlayerTurn();
-        _battleController.BattleFSM.ChangeState<EnemyTurnState>();
+        _battleController.EndPlayerTurn();
+       
     }
 
 
@@ -41,4 +39,12 @@ public class PlayerTurnState : IState
     {
 
     }
+}
+
+public enum TurnResult
+{
+    Continue,
+    PlayerWin,
+    PlayerLose,
+    GameOver
 }

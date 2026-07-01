@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Cysharp.Threading.Tasks;
 using LitFramework;
 using LitFramework.Config;
 using LitFramework.EventBus;
@@ -89,25 +90,63 @@ public class BattleController
     }
 
 
+    public async UniTask<TurnResult> ExecuteEnemyTurnAsync()
+    {
+        foreach (var enemy in Context.Enemies)
+        {
+            if (enemy.CurrentHp <= 0) continue;
 
-    // public void StartPlayerTurn()
-    // {
-      
+            // 1. 决策
+            enemy.DetermineIntent(Context);
 
-    // }
-    // public void EndPlayerTurn()
-    // {
-    //     Context.Player.DiscardAllHand();
-    // }
+            // 2. 发布意图事件（UI更新）
+            // EventBus.Publish(new EnemyIntentDeterminedEvent(enemy));
 
-    // public void StartEnemyTurn()
-    // {
+            // 3. 视觉延迟
+            await UniTask.Delay(300);
 
-    // }
-    // public void EndEnemyTurn()
-    // {
-    //     BattleFSM.ChangeState<PlayerTurnState>();
-    // }
+            // 4. 执行
+            enemy.ExecuteIntent(Context);
+
+            // 5. 间隔
+            await UniTask.Delay(500);
+        }
+
+        if (Context.Player.CurrentHp <= 0)
+        {
+            BattleFSM.ChangeState<BattleEndState>();
+            return TurnResult.PlayerLose;
+        }
+
+        Context.Enemies.RemoveAll(e => e.CurrentHp <= 0);
+
+        foreach (var enemy in Context.Enemies)
+            enemy.OnTurnEnd();
+        if (Context.Enemies.Count == 0)
+        {
+            return TurnResult.PlayerWin;
+        }
+        return TurnResult.Continue;
+    }
+    public void StartPlayerTurn()
+    {
+        Context.Player.DrawCardInTurnStart(5);
+        Context.Player.ResetEnergy();
+
+    }
+    public void EndPlayerTurn()
+    {
+        Context.Player.DiscardAllHand();
+    }
+
+    public void StartEnemyTurn()
+    {
+
+    }
+    public void EndEnemyTurn()
+    {
+        BattleFSM.ChangeState<PlayerTurnState>();
+    }
 
 
     private void RemoveDeadEnemies()
