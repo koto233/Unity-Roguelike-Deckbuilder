@@ -1,0 +1,62 @@
+{
+  "1": {
+    "Id": 1,
+    "Key": "vulnerable",
+    "Name": "易伤",
+    "Type": "Attack",
+    "IsDebuff": 1,
+    "MaxStacks": 99,
+    "Duration": 2,
+    "DefaultDuration": "受到伤害增加 {0}%"
+  },
+  "2": {
+    "Id": 2,
+    "Key": "weak",
+    "Name": "虚弱",
+    "Type": "Attack",
+    "IsDebuff": 1,
+    "MaxStacks": 99,
+    "Duration": 2,
+    "DefaultDuration": "造成伤害减少 {0}%"
+  },
+  "3": {
+    "Id": 3,
+    "Key": "Strength",
+    "Name": "力量",
+    "Type": "Skill",
+    "IsDebuff": 0,
+    "MaxStacks": 99,
+    "Duration": 2,
+    "DefaultDuration": "造成伤害 +{0}"
+  },
+  "4": {
+    "Id": 4,
+    "Key": "Poison",
+    "Name": "中毒",
+    "Type": "Skill",
+    "IsDebuff": 1,
+    "MaxStacks": 99,
+    "Duration": -1,
+    "DefaultDuration": "每回合受到 {0} 点伤害"
+  },
+  "5": {
+    "Id": 5,
+    "Key": "Regeneration",
+    "Name": "再生",
+    "Type": "Attack",
+    "IsDebuff": 0,
+    "MaxStacks": 99,
+    "Duration": -1,
+    "DefaultDuration": "每回合恢复 {0} 点生命"
+  },
+  "6": {
+    "Id": 6,
+    "Key": "Artifact",
+    "Name": "免疫",
+    "Type": "Attack",
+    "IsDebuff": 0,
+    "MaxStacks": 99,
+    "Duration": -1,
+    "DefaultDuration": "免疫下一次 Debuff"
+  }
+}

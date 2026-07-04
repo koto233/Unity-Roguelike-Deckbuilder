@@ -16,7 +16,8 @@ public abstract class CharacterBase
    public int Strength => _strength;
    protected abstract EntityType EntityType { get; }
    public abstract int Id { get; }
-
+   private BuffManager _buffManager;
+   public BuffManager BuffManager => _buffManager;
    protected CharacterBase(int maxHp)
    {
       _maxHp = maxHp;
@@ -24,6 +25,7 @@ public abstract class CharacterBase
       _strength = 0;
       _block = 0;
       _vulnerable = 0;
+      _buffManager = new BuffManager(this);
    }
    protected virtual void OnAfterTakeDamage(int damage) { }
    // 受到伤害（考虑格挡和易伤）
@@ -33,7 +35,7 @@ public abstract class CharacterBase
       // 易伤增加伤害
       if (_vulnerable > 0)
          damage = Mathf.RoundToInt(damage * 1.5f);
-
+      _buffManager.OnBeforeTakeDamage(ref damage);
       int remainingDamage = damage;
       if (_block > 0)
       {
@@ -60,6 +62,7 @@ public abstract class CharacterBase
    public virtual void Heal(int amount)
    {
       if (amount <= 0) return;
+      _buffManager.OnBeforeHeal(ref amount);
       int oldHp = _currentHp;
       _currentHp = Mathf.Min(_maxHp, _currentHp + amount);
       if (oldHp != _currentHp)
@@ -69,6 +72,47 @@ public abstract class CharacterBase
 
    }
 
+
+   // 回合开始时调用
+   public virtual void OnTurnStart()
+   {
+      _buffManager.OnTurnStart();
+   }
+
+   // 使用卡牌时调用
+   public virtual void OnCardPlayed(Card card)
+   {
+      _buffManager.OnCardPlayed(card);
+   }
+
+   // 添加 Buff 的便捷方法
+   public void ApplyBuff(IBuff buff)
+   {
+      _buffManager.ApplyBuff(buff);
+   }
+
+   // 移除 Buff 的便捷方法
+   public void RemoveBuff(IBuff buff)
+   {
+      _buffManager.RemoveBuff(buff);
+   }
+
+   public void RemoveBuff(string id)
+   {
+      _buffManager.RemoveBuffById(id);
+   }
+
+   // 检查是否有指定 Buff
+   public bool HasBuff(string id)
+   {
+      return _buffManager.HasBuff(id);
+   }
+
+   // 获取 Buff 层数
+   public int GetBuffStacks(string id)
+   {
+      return _buffManager.GetBuffStacks(id);
+   }
    // 获得格挡
    public void AddBlock(int amount)
    {
