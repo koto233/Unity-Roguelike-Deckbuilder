@@ -4,8 +4,8 @@
     "Key": "vulnerable",
     "Name": "易伤",
     "IsDebuff": 1,
+    "Value": 20,
     "MaxStacks": 99,
-    "Duration": 2,
     "DefaultDuration": "受到伤害增加 {0}%"
   },
   "2": {
@@ -13,8 +13,8 @@
     "Key": "weak",
     "Name": "虚弱",
     "IsDebuff": 1,
+    "Value": 20,
     "MaxStacks": 99,
-    "Duration": 2,
     "DefaultDuration": "造成伤害减少 {0}%"
   },
   "3": {
@@ -22,17 +22,17 @@
     "Key": "Strength",
     "Name": "力量",
     "IsDebuff": 0,
+    "Value": 20,
     "MaxStacks": 99,
-    "Duration": 2,
-    "DefaultDuration": "造成伤害 +{0}"
+    "DefaultDuration": "造成伤害 +{0}%"
   },
   "4": {
     "Id": 4,
     "Key": "Poison",
     "Name": "中毒",
     "IsDebuff": 1,
+    "Value": 5,
     "MaxStacks": 99,
-    "Duration": -1,
     "DefaultDuration": "每回合受到 {0} 点伤害"
   },
   "5": {
@@ -40,8 +40,8 @@
     "Key": "Regeneration",
     "Name": "再生",
     "IsDebuff": 0,
+    "Value": 5,
     "MaxStacks": 99,
-    "Duration": -1,
     "DefaultDuration": "每回合恢复 {0} 点生命"
   },
   "6": {
@@ -49,8 +49,8 @@
     "Key": "Immune ",
     "Name": "免疫",
     "IsDebuff": 0,
+    "Value": 1,
     "MaxStacks": 99,
-    "Duration": -1,
     "DefaultDuration": "免疫下一次 Debuff"
   }
 }

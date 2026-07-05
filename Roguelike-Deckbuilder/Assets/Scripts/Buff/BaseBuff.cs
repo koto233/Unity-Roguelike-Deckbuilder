@@ -8,6 +8,7 @@ public abstract class BaseBuff : IBuff
         Stacks = stacks;
     }
 
+
     public virtual void OnApply(CharacterBase owner) { }
     public virtual void OnRemove(CharacterBase owner) { }
     public virtual void OnTurnStart(CharacterBase owner) { }

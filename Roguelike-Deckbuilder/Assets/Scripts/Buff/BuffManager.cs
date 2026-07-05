@@ -36,7 +36,7 @@ public class BuffManager
             else
             {
                 // 刷新持续时间
-                existing.Config.Duration = buff.Config.Duration;
+                existing.Stacks = buff.Stacks;
             }
             return;
         }

@@ -12,8 +12,8 @@ public class BuffConfig : IConfig
 	public string Key; // 资源标识
 	public string Name; // 名称
 	public int IsDebuff; // 是否是减益
+	public int Value;
 	public int MaxStacks; // 叠层
-	public int Duration; // 持续时间
 	public string DefaultDuration; // 描述
 }
 

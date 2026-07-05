@@ -22,5 +22,11 @@
     "Type": "GainEnergy",
     "Target": "Self",
     "Description": "获得{0}点能量。"
+  },
+  "5": {
+    "Id": 5,
+    "Type": "vulnerable",
+    "Target": "Enemy",
+    "Description": "给敌人添加{0}层易伤"
   }
 }
