@@ -99,3 +99,11 @@ MonoBehaviour:
         FilterRuleName: CollectAll
         AssetTags: 
         UserData: 
+      - CollectPath: Assets/Config/Json/BuffConfig.json
+        CollectorGUID: 96c6c9f2e729e0f42aa3fc910e7f4ea2
+        CollectorType: 0
+        AddressRuleName: AddressByFileName
+        PackRuleName: PackDirectory
+        FilterRuleName: CollectAll
+        AssetTags: 
+        UserData: 

@@ -97,19 +97,19 @@ public abstract class CharacterBase
       _buffManager.RemoveBuff(buff);
    }
 
-   public void RemoveBuff(string id)
+   public void RemoveBuff(int id)
    {
       _buffManager.RemoveBuffById(id);
    }
 
    // 检查是否有指定 Buff
-   public bool HasBuff(string id)
+   public bool HasBuff(int id)
    {
       return _buffManager.HasBuff(id);
    }
 
    // 获取 Buff 层数
-   public int GetBuffStacks(string id)
+   public int GetBuffStacks(int id)
    {
       return _buffManager.GetBuffStacks(id);
    }

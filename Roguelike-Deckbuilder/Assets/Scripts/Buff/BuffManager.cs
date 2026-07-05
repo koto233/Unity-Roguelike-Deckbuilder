@@ -9,8 +9,8 @@ public class BuffManager
     private readonly List<IBuff> _buffs = new List<IBuff>();
 
     public IReadOnlyList<IBuff> AllBuffs => _buffs;
-    public IReadOnlyList<IBuff> Debuffs => _buffs.Where(b => b.IsDebuff).ToList();
-    public IReadOnlyList<IBuff> Buffs => _buffs.Where(b => !b.IsDebuff).ToList();
+    public IReadOnlyList<IBuff> Debuffs => _buffs.Where(b => b.Config.IsDebuff == 1).ToList();
+    public IReadOnlyList<IBuff> Buffs => _buffs.Where(b => b.Config.IsDebuff != 1).ToList();
 
     public BuffManager(CharacterBase owner)
     {
@@ -23,25 +23,25 @@ public class BuffManager
     public void ApplyBuff(IBuff buff)
     {
         // 检查是否已有同类型 Buff
-        var existing = _buffs.FirstOrDefault(b => b.Id == buff.Id);
+        var existing = _buffs.FirstOrDefault(b => b.Config.Id == buff.Config.Id);
 
         if (existing != null)
         {
-            if (existing.CanStack && existing.Stacks < existing.MaxStacks)
+            if (existing.Config.MaxStacks != -1 && existing.Stacks < existing.Config.MaxStacks)
             {
                 int oldStacks = existing.Stacks;
-                existing.Stacks = Mathf.Min(existing.Stacks + buff.Stacks, existing.MaxStacks);
+                existing.Stacks = Mathf.Min(existing.Stacks + buff.Stacks, existing.Config.MaxStacks);
                 existing.OnStacksChanged(_owner, oldStacks, existing.Stacks);
             }
             else
             {
                 // 刷新持续时间
-                existing.Duration = buff.Duration;
+                existing.Config.Duration = buff.Config.Duration;
             }
             return;
         }
 
-       
+
         // 新 Buff
         _buffs.Add(buff);
         buff.OnApply(_owner);
@@ -72,9 +72,9 @@ public class BuffManager
     /// <summary>
     /// 根据 ID 移除 Buff
     /// </summary>
-    public void RemoveBuffById(string id)
+    public void RemoveBuffById(int id)
     {
-        var buff = _buffs.FirstOrDefault(b => b.Id == id);
+        var buff = _buffs.FirstOrDefault(b => b.Config.Id == id);
         if (buff != null) RemoveBuff(buff);
     }
 
@@ -89,18 +89,18 @@ public class BuffManager
     /// <summary>
     /// 获取 Buff 层数
     /// </summary>
-    public int GetBuffStacks(string id)
+    public int GetBuffStacks(int id)
     {
-        var buff = _buffs.FirstOrDefault(b => b.Id == id);
+        var buff = _buffs.FirstOrDefault(b => b.Config.Id == id);
         return buff?.Stacks ?? 0;
     }
 
     /// <summary>
     /// 检查是否有指定 Buff
     /// </summary>
-    public bool HasBuff(string id)
+    public bool HasBuff(int id)
     {
-        return _buffs.Any(b => b.Id == id);
+        return _buffs.Any(b => b.Config.Id == id);
     }
 
     // /// <summary>

@@ -6,12 +6,11 @@
 
 // Generate From D:\GIT\Unity-Roguelike-Deckbuilder\Roguelike-Deckbuilder\Assets\Config\Excel\BuffConfig.xlsx.xlsx
 
-public class BuffConfig
+public class BuffConfig : IConfig
 {
 	public int Id; // Id
 	public string Key; // 资源标识
 	public string Name; // 名称
-	public string Type; // 类型
 	public int IsDebuff; // 是否是减益
 	public int MaxStacks; // 叠层
 	public int Duration; // 持续时间
