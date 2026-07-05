@@ -4,8 +4,9 @@
 public interface IBuff
 {
     BuffConfig Config { get; }
-    // ==================== 生命周期回调 ====================
     int Stacks { get; set; }
+    // ==================== 生命周期回调 ====================
+
     /// <summary>被施加时调用</summary>
     void OnApply(CharacterBase owner);
 

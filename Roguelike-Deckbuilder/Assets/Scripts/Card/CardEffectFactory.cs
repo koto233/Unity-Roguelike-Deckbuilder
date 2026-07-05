@@ -5,15 +5,16 @@ using UnityEngine;
 
 public static class CardEffectFactory
 {
-    public static CardEffectBase Create(CardEffectsConfig config, int value)
+    public static CardEffectBase Create(CardEffectsConfig config, int stacks)
     {
         Debug.Log("Create Card Effect: " + config.Type);
         switch (config.Type)
         {
-            case "Damage": return new DamageEffect(config, value);
-            case "DrawCard": return new DrawCardEffect(config, value);
-            case "GainEnergy": return new GainEnergyEffect(config, value);
-            case "Block": return new GainBlockEffect(config, value);
+            case "Damage": return new DamageEffect(config, stacks);
+            case "DrawCard": return new DrawCardEffect(config, stacks);
+            case "GainEnergy": return new GainEnergyEffect(config, stacks);
+            case "Block": return new GainBlockEffect(config, stacks);
+            case "Vulnerable": return new ApplyBuffEffect(config, BuffIds.Vulnerable, stacks);
             default: return null;
         }
     }

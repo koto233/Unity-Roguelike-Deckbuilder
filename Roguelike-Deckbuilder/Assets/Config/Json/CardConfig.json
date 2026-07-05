@@ -148,5 +148,20 @@
     ],
     "NeedTarget": "",
     "Image": "test"
+  },
+  "11": {
+    "Id": 11,
+    "Key": 11,
+    "Name": "虚弱",
+    "Cost": 1,
+    "Type": "Skill",
+    "Effects": [
+      {
+        "EffectId": 5,
+        "Value": 1
+      }
+    ],
+    "NeedTarget": "",
+    "Image": "test"
   }
 }
