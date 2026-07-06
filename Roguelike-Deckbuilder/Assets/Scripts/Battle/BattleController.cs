@@ -33,7 +33,7 @@ public class BattleController
 
         for (int i = 0; i < 20; i++)
         {
-            int randomId = UnityEngine.Random.Range(1, 11);
+            int randomId = UnityEngine.Random.Range(1, 12);
             var cardConfig = cardConfigTable.GetById(randomId) as CardConfig;
             var card = new Card(cardConfig);
             Context.Player.DrawPile.Add(card);
@@ -72,10 +72,15 @@ public class BattleController
                 return false;
 
             }
-
+            Debug.Log($"卡牌效果{card.EffectsInstance.Count} ");
             foreach (var effect in card.EffectsInstance)
             {
-                // Debug.Log("执行效果 " + effect.GetType().Name);
+                if (effect == null)
+                {
+                    Debug.LogError("效果实例为空");
+                    continue;
+                }
+                Debug.Log("执行效果 " + effect.GetType().Name);
                 effect.Execute(card, Context);
             }
             Context.Player.Hand.Remove(card);

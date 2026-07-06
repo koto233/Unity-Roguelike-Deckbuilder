@@ -15,6 +15,9 @@ public class UIBattlePresenter : IDisposable
     private IEventBinding<EnergyChangedEvent> _EnergyChangedEventBinding;
     private IEventBinding<BlockChangedEvent> _BlockChangedEventBinding;
     private IEventBinding<PlayerMaxHpChangedEvent> _PlayerMaxHpChangedEventBinding;
+    private IEventBinding<BuffAppliedEvent> _BuffAppliedEventBinding;
+    private IEventBinding<BuffRemovedEvent> _BuffRemovedEventBinding;
+    private IEventBinding<BuffStacksChangedEvent> _BuffStacksChangedEventBinding;
     private BattleController _battleController;
     private Enemy _currentTargetEnemy;
     private int _selectedCardId;
@@ -38,11 +41,17 @@ public class UIBattlePresenter : IDisposable
         _EnergyChangedEventBinding = new EventBinding<EnergyChangedEvent>(OnEnergyChanged);
         _BlockChangedEventBinding = new EventBinding<BlockChangedEvent>(OnBlockChanged);
         _PlayerMaxHpChangedEventBinding = new EventBinding<PlayerMaxHpChangedEvent>(OnPlayerMaxHpChanged);
+        _BuffAppliedEventBinding = new EventBinding<BuffAppliedEvent>(OnBuffApplied);
+        _BuffRemovedEventBinding = new EventBinding<BuffRemovedEvent>(OnBuffRemoved);
+        _BuffStacksChangedEventBinding = new EventBinding<BuffStacksChangedEvent>(OnBuffStacksChanged);
         EventBus<HandChangedEvent>.Subscribe(_HandChangedEventBinding);
         EventBus<HpChangedEvent>.Subscribe(_HpChangedEventBinding);
         EventBus<EnergyChangedEvent>.Subscribe(_EnergyChangedEventBinding);
         EventBus<BlockChangedEvent>.Subscribe(_BlockChangedEventBinding);
         EventBus<PlayerMaxHpChangedEvent>.Subscribe(_PlayerMaxHpChangedEventBinding);
+        EventBus<BuffAppliedEvent>.Subscribe(_BuffAppliedEventBinding);
+        EventBus<BuffRemovedEvent>.Subscribe(_BuffRemovedEventBinding);
+        EventBus<BuffStacksChangedEvent>.Subscribe(_BuffStacksChangedEventBinding);
         _view.OnOpenPile += OpenPile;
         _view.OnEndTurn += EndTurn;
     }
@@ -55,6 +64,9 @@ public class UIBattlePresenter : IDisposable
         EventBus<EnergyChangedEvent>.Unsubscribe(_EnergyChangedEventBinding);
         EventBus<BlockChangedEvent>.Unsubscribe(_BlockChangedEventBinding);
         EventBus<PlayerMaxHpChangedEvent>.Unsubscribe(_PlayerMaxHpChangedEventBinding);
+        EventBus<BuffAppliedEvent>.Unsubscribe(_BuffAppliedEventBinding);
+        EventBus<BuffRemovedEvent>.Unsubscribe(_BuffRemovedEventBinding);
+        EventBus<BuffStacksChangedEvent>.Unsubscribe(_BuffStacksChangedEventBinding);
         _view.OnOpenPile -= OpenPile;
         _view.OnEndTurn -= EndTurn;
     }
@@ -198,7 +210,35 @@ public class UIBattlePresenter : IDisposable
         }
         _view.OpenPilePanel();
     }
+    private void OnBuffApplied(BuffAppliedEvent evt)
+    {
+        RefreshOwnerBuffs(evt.Owner);
+    }
 
+    private void OnBuffRemoved(BuffRemovedEvent evt)
+    {
+        RefreshOwnerBuffs(evt.Owner);
+    }
+
+    private void OnBuffStacksChanged(BuffStacksChangedEvent evt)
+    {
+        // 可以只更新单个 Slot，但简单起见全量刷新
+        RefreshOwnerBuffs(evt.Owner);
+    }
+
+    private void RefreshOwnerBuffs(CharacterBase owner)
+    {
+        if (owner is Player)
+        {
+            // var playerView = _view.GetPlayerView();
+            // playerView.RefreshBuffs(owner.BuffManager.AllBuffs.ToList());
+        }
+        else if (owner is Enemy enemy)
+        {
+            // var enemyView = _view.GetEnemyView(enemy.RuntimeId);
+            // enemyView?.RefreshBuffs(owner.BuffManager.AllBuffs.ToList());
+        }
+    }
     public void Dispose()
     {
         UnSubscribeEvents();

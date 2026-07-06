@@ -19,7 +19,7 @@ public class ApplyBuffEffect : CardEffectBase
 
     public override void Execute(Card card, BattleContext context)
     {
-        BuffConfig config = (BuffConfig)ServiceLocator.Get<ConfigService>().GetTable<BuffConfig>().GetById(BuffIds.Vulnerable);
+        BuffConfig config = (BuffConfig)ServiceLocator.Get<IConfigService>().GetTable<BuffConfig>().GetById(BuffIds.Vulnerable);
         var buff = BuffFactory.Create(_buffId, config, _stacks);
         context.Target.BuffManager.ApplyBuff(buff);
     }

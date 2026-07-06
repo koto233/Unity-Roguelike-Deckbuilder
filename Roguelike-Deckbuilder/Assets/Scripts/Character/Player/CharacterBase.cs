@@ -9,7 +9,6 @@ public abstract class CharacterBase
    protected int _maxHp;
    protected int _block;
    protected int _strength;      // 力量（影响伤害）
-   protected int _vulnerable;    // 易伤层数（受到伤害+50%）
    public int CurrentHp => _currentHp;
    public int MaxHp => _maxHp;
    public int Block => _block;
@@ -24,7 +23,6 @@ public abstract class CharacterBase
       _currentHp = maxHp;
       _strength = 0;
       _block = 0;
-      _vulnerable = 0;
       _buffManager = new BuffManager(this);
    }
    protected virtual void OnAfterTakeDamage(int damage) { }
@@ -32,9 +30,6 @@ public abstract class CharacterBase
    public void TakeDamage(int damage)
    {
       if (damage <= 0) return;
-      // 易伤增加伤害
-      if (_vulnerable > 0)
-         damage = Mathf.RoundToInt(damage * 1.5f);
       _buffManager.OnBeforeTakeDamage(ref damage);
       int remainingDamage = damage;
       if (_block > 0)
@@ -132,7 +127,6 @@ public abstract class CharacterBase
    // 施加易伤
    public void ApplyVulnerable(int turns = 1)
    {
-      _vulnerable += turns;
       // EventBus<BuffAppliedEvent>.Publish(new BuffAppliedEvent { Character = this, BuffType = "Vulnerable", Stacks = _vulnerable });
    }
 
@@ -145,14 +139,6 @@ public abstract class CharacterBase
    // 回合结束时清理临时效果（易伤层数减1，力量增减等）
    public virtual void OnTurnEnd()
    {
-      if (_vulnerable > 0)
-      {
-         _vulnerable--;
-         if (_vulnerable == 0)
-         {
-            // EventBus<BuffExpiredEvent>.Emit(new BuffExpiredEvent { Character = this, BuffType = "Vulnerable" });
-         }
-
-      }
+   
    }
 }
