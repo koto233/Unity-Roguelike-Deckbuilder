@@ -75,7 +75,15 @@ public class BuffManager
     public void RemoveBuffById(int id)
     {
         var buff = _buffs.FirstOrDefault(b => b.Config.Id == id);
-        if (buff != null) RemoveBuff(buff);
+        if (buff != null)
+        {
+            RemoveBuff(buff);
+            EventBus<BuffRemovedEvent>.Publish(new BuffRemovedEvent
+            {
+                Owner = _owner,
+                Buff = buff
+            });
+        }
     }
 
     /// <summary>
@@ -149,8 +157,25 @@ public class BuffManager
         {
             buff.OnTurnEnd(_owner);
         }
+        CheckAndRemoveExpiredBuffs();
     }
+    private void CheckAndRemoveExpiredBuffs()
+    {
+        // 收集需要移除的 Buff
+        List<IBuff> toRemove = new List<IBuff>();
+        foreach (var buff in _buffs)
+        {
+            buff.OnTurnEnd(_owner);  // 内部做 Duration--
+            if (buff.Stacks == 0)
+                toRemove.Add(buff);
+        }
 
+        // 移除到期的 Buff
+        foreach (var buff in toRemove)
+        {
+            RemoveBuff(buff);
+        }
+    }
     /// <summary>
     /// 受到伤害前：触发所有 Buff 的 OnBeforeTakeDamage
     /// </summary>

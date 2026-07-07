@@ -14,7 +14,7 @@ public class BuffConfig : IConfig
 	public int IsDebuff; // 是否是减益
 	public int Value;
 	public int MaxStacks; // 叠层
-	public string DefaultDuration; // 描述
+	public string Description; // 描述
 }
 
 

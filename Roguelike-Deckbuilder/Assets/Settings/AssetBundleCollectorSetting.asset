@@ -70,6 +70,14 @@ MonoBehaviour:
         FilterRuleName: CollectAll
         AssetTags: 
         UserData: 
+      - CollectPath: Assets/Res/UI/UIBuffItem.prefab
+        CollectorGUID: e94706868eac7124c83742299f5fd8f8
+        CollectorType: 0
+        AddressRuleName: AddressByFileName
+        PackRuleName: PackDirectory
+        FilterRuleName: CollectAll
+        AssetTags: 
+        UserData: 
     - GroupName: Config
       GroupDesc: "\u914D\u7F6E\u8868"
       AssetTags: 

@@ -13,7 +13,7 @@ public partial class UIBattleWindow : UIWindow
     private AssetRef<GameObject> _enemyPrefabRef;
     private AssetRef<GameObject> _playerPrefabRef;
     private UIPlayerItem _playerView;
-    private List<UIEnemyItem> _enemyViews = new();
+    private Dictionary<int, UIEnemyItem> _enemyViews = new();
     private string _poolKey = "CardItem";
     private ObjectPoolService _poolService;
     /// <summary>
@@ -40,7 +40,7 @@ public partial class UIBattleWindow : UIWindow
             new GameObjectPool(_cardPrefabRef.Asset, initialPoolSize: 10)
         );
         _playerView = CreatePlayerView(battleContext.Player);
-        _enemyViews = CreateEnemyViews(battleContext.Enemies);
+        CreateEnemyViews(battleContext.Enemies);
         InitUI();
     }
 
@@ -89,18 +89,25 @@ public partial class UIBattleWindow : UIWindow
         return view;
     }
 
-    private List<UIEnemyItem> CreateEnemyViews(List<Enemy> enemies)
+    private void CreateEnemyViews(List<Enemy> enemies)
     {
-        var views = new List<UIEnemyItem>();
         foreach (var enemy in enemies)
         {
             var go = Instantiate(_enemyPrefabRef.Asset, b_EnemysRoot);
             var view = go.GetComponent<UIEnemyItem>();
             view.SetEnemy(enemy);
             // view.SetEnemyId(enemy.Id);
-            views.Add(view);
+            _enemyViews[enemy.Id] = view;
         }
-        return views;
+    }
+
+    public UIEnemyItem GetEnemyView(int enemyId)
+    {
+        if (_enemyViews.TryGetValue(enemyId, out var view))
+        {
+            return view;
+        }
+        return null;
     }
     private void OnDestroy()
     {
@@ -118,13 +125,9 @@ public partial class UIBattleWindow : UIWindow
         }
         else
         {
-            foreach (var enemyView in _enemyViews)
+            if (_enemyViews.TryGetValue(entityId, out var enemyView))
             {
-                if (enemyView.Enemy.Id == entityId)
-                {
-                    enemyView.UpdateHP(currentHp, maxHp);
-                    break;
-                }
+                enemyView.UpdateHP(currentHp, maxHp);
             }
         }
 
@@ -150,6 +153,18 @@ public partial class UIBattleWindow : UIWindow
         b_HandZone.ResetCard();
     }
     // ===== View 层交互反馈 =====
+
+    public void ShowTooltip(object data, Vector2 position)
+    {
+        Debug.Log($"ShowTooltip: {data} at {position}");
+        b_BuffTooltip.Show(data, position);
+    }
+    public void HideAllTooltips()
+    {
+        b_BuffTooltip.Hide();
+    }
+
+
     public void HighlightTargets(List<string> validTargetIds)
     {
         // 高亮可用的目标（敌人）

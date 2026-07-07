@@ -13,5 +13,13 @@ public class VulnerableBuff : BaseBuff
         damage = Mathf.RoundToInt(damage * multiplier);
         Debug.Log($"最终伤害: {damage}");
     }
+    public override void OnTurnEnd(CharacterBase owner)
+    {
+        if (Stacks > 0)
+        {
+            Stacks--;
+            OnStacksChanged(owner, Stacks + 1, Stacks);
+        }
+    }
 }
 

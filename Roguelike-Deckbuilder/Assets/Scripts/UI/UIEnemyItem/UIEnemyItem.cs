@@ -15,9 +15,9 @@ public partial class UIEnemyItem : UIBase
 
     void OnEnable()
     {
-
+        LoadPrefabAsync().Forget();
     }
-    private async UniTask LoadPrefabAsync(object param)
+    private async UniTask LoadPrefabAsync()
     {
         var assetService = ServiceLocator.Get<IAssetService>();
         _buffPrefabAssetRef = await assetService.LoadRefAsync<GameObject>("Assets/Res/UI/UIBuffItem.prefab");
@@ -69,7 +69,7 @@ public partial class UIEnemyItem : UIBase
                 GameObject go = Instantiate(_buffPrefabAssetRef.Asset);
                 go.transform.SetParent(b_BuffContainer.transform);
                 slot = go.GetComponent<UIBuffItem>();
-                slot.Init();
+                slot.Init(buff);
                 slot.SetStacks(buff.Stacks);
                 _buffSlots[buff.Config.Id] = slot;
             }

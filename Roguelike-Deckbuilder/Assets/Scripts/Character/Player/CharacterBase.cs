@@ -74,12 +74,22 @@ public abstract class CharacterBase
       _buffManager.OnTurnStart();
    }
 
+   // 回合结束时清理临时效果（易伤层数减1，力量增减等）
+   public virtual void OnTurnEnd()
+   {
+      _buffManager.OnTurnEnd();
+   }
    // 使用卡牌时调用
    public virtual void OnCardPlayed(Card card)
    {
       _buffManager.OnCardPlayed(card);
    }
-
+   // 死亡回调（由子类实现）
+   protected virtual void OnDeath()
+   {
+      // EventBus<CharacterDeathEvent>.Publish(new CharacterDeathEvent { Character = this });
+      _buffManager.ClearAll();
+   }
    // 添加 Buff 的便捷方法
    public void ApplyBuff(IBuff buff)
    {
@@ -130,15 +140,6 @@ public abstract class CharacterBase
       // EventBus<BuffAppliedEvent>.Publish(new BuffAppliedEvent { Character = this, BuffType = "Vulnerable", Stacks = _vulnerable });
    }
 
-   // 死亡回调（由子类实现）
-   protected virtual void OnDeath()
-   {
-      // EventBus<CharacterDeathEvent>.Publish(new CharacterDeathEvent { Character = this });
-   }
 
-   // 回合结束时清理临时效果（易伤层数减1，力量增减等）
-   public virtual void OnTurnEnd()
-   {
-   
-   }
+
 }
