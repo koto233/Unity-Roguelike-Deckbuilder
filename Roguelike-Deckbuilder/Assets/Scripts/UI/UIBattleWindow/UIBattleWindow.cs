@@ -52,6 +52,8 @@ public partial class UIBattleWindow : UIWindow
         b_DrawPileBtn.onClick.AddListener(() => OnOpenPile(0));
         b_DiscardPileBtn.onClick.AddListener(() => OnOpenPile(1));
         b_EndTurnBtn.onClick.AddListener(() => OnEndTurn?.Invoke());
+        b_BuffTooltip.Hide();
+        b_IntentTooltip.Hide();
     }
 
     public void OpenPilePanel()
@@ -96,7 +98,6 @@ public partial class UIBattleWindow : UIWindow
             var go = Instantiate(_enemyPrefabRef.Asset, b_EnemysRoot);
             var view = go.GetComponent<UIEnemyItem>();
             view.SetEnemy(enemy);
-            // view.SetEnemyId(enemy.Id);
             _enemyViews[enemy.Id] = view;
         }
     }
@@ -154,17 +155,28 @@ public partial class UIBattleWindow : UIWindow
     }
     // ===== View 层交互反馈 =====
 
-    public void ShowTooltip(object data, Vector2 position)
+    public void ShowBuffTooltip(TooltipData data, Vector2 position)
     {
         Debug.Log($"ShowTooltip: {data} at {position}");
         b_BuffTooltip.Show(data, position);
     }
+    public void ShowIntentToolTip(TooltipData data, Vector2 position)
+    {
+        b_IntentTooltip.Show(data, position);
+    }
     public void HideAllTooltips()
     {
         b_BuffTooltip.Hide();
+        b_IntentTooltip.Hide();
     }
 
-
+    public void RefreshEnemyIntent(Enemy enemy, IntentConfig intentConfig)
+    {
+        if (_enemyViews.TryGetValue(enemy.Id, out var view))
+        {
+            view.RefreshIntent(intentConfig);
+        }
+    }
     public void HighlightTargets(List<string> validTargetIds)
     {
         // 高亮可用的目标（敌人）

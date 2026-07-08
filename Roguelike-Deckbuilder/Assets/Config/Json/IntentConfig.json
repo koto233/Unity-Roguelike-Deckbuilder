@@ -4,41 +4,41 @@
     "Key": "attack",
     "Name": "攻击",
     "Type": "Attack",
-    "Description": ""
+    "Description": "造成 {0} 点伤害"
   },
   "1": {
     "Id": 1,
     "Key": "defend",
     "Name": "防御",
     "Type": "Defend",
-    "Description": ""
+    "Description": "获得 {0} 点格挡"
   },
   "2": {
     "Id": 2,
     "Key": "strong_attack",
     "Name": "蓄力攻击",
     "Type": "StrongAttack",
-    "Description": ""
+    "Description": "蓄力猛击，造成 {0} 点伤害"
   },
   "3": {
     "Id": 3,
     "Key": "multi_attack",
     "Name": "多段攻击",
     "Type": "MultiAttack",
-    "Description": ""
+    "Description": "连续攻击 {0} 次，每次造成 {1} 点伤害"
   },
   "4": {
     "Id": 4,
     "Key": "apply_debuff",
     "Name": "施加减益",
     "Type": "Debuff",
-    "Description": ""
+    "Description": "施加 {0} 层 {1}"
   },
   "5": {
     "Id": 5,
     "Key": "self_buff",
     "Name": "自我强化",
     "Type": "Buff",
-    "Description": ""
+    "Description": "自身获得 {0} 层 {1}"
   }
 }

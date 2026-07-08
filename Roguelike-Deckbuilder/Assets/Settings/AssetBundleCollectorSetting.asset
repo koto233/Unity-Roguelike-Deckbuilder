@@ -78,6 +78,14 @@ MonoBehaviour:
         FilterRuleName: CollectAll
         AssetTags: 
         UserData: 
+      - CollectPath: Assets/Res/UI/UIIntentionItem.prefab
+        CollectorGUID: 72c225dcf2ffb834ba01050aadfcc8dd
+        CollectorType: 0
+        AddressRuleName: AddressByFileName
+        PackRuleName: PackDirectory
+        FilterRuleName: CollectAll
+        AssetTags: 
+        UserData: 
     - GroupName: Config
       GroupDesc: "\u914D\u7F6E\u8868"
       AssetTags: 
@@ -109,6 +117,14 @@ MonoBehaviour:
         UserData: 
       - CollectPath: Assets/Config/Json/BuffConfig.json
         CollectorGUID: 96c6c9f2e729e0f42aa3fc910e7f4ea2
+        CollectorType: 0
+        AddressRuleName: AddressByFileName
+        PackRuleName: PackDirectory
+        FilterRuleName: CollectAll
+        AssetTags: 
+        UserData: 
+      - CollectPath: Assets/Config/Json/IntentConfig.json
+        CollectorGUID: 59508ee74ed0c6f499dc69e2b8df44b7
         CollectorType: 0
         AddressRuleName: AddressByFileName
         PackRuleName: PackDirectory

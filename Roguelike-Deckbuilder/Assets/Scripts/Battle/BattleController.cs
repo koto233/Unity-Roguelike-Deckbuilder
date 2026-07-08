@@ -94,7 +94,6 @@ public class BattleController
         }
     }
 
-
     public async UniTask<TurnResult> ExecuteEnemyTurnAsync()
     {
         foreach (var enemy in Context.Enemies)

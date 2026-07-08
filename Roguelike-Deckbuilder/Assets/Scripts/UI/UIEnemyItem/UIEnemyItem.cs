@@ -9,18 +9,25 @@ using UnityEngine;
 public partial class UIEnemyItem : UIBase
 {
     private AssetRef<GameObject> _buffPrefabAssetRef;
+    private AssetRef<GameObject> _intentionPrefabAssetRef;
+    private UIIntentionItem _intentionUI;
     private Dictionary<int, UIBuffItem> _buffSlots = new();
     public Enemy Enemy { get; private set; }
 
 
-    void OnEnable()
+    void Start()
     {
-        LoadPrefabAsync().Forget();
+        InitAsync().Forget();
     }
-    private async UniTask LoadPrefabAsync()
+    private async UniTask InitAsync()
     {
         var assetService = ServiceLocator.Get<IAssetService>();
         _buffPrefabAssetRef = await assetService.LoadRefAsync<GameObject>("Assets/Res/UI/UIBuffItem.prefab");
+        _intentionPrefabAssetRef = await assetService.LoadRefAsync<GameObject>("Assets/Res/UI/UIIntentionItem.prefab");
+        _intentionUI = Instantiate(_intentionPrefabAssetRef.Asset).GetComponent<UIIntentionItem>();
+        _intentionUI.transform.SetParent(b_IntentionRoot.transform);
+        Enemy.DetermineIntent(null);
+        // _intentionUI.Hide();
     }
     public void UpdateHP(int currentHp, int maxHp)
     {
@@ -67,7 +74,7 @@ public partial class UIEnemyItem : UIBase
             {
                 // 新建 Slot
                 GameObject go = Instantiate(_buffPrefabAssetRef.Asset);
-                go.transform.SetParent(b_BuffContainer.transform);
+                go.transform.SetParent(b_BuffRoot.transform);
                 slot = go.GetComponent<UIBuffItem>();
                 slot.Init(buff);
                 slot.SetStacks(buff.Stacks);
@@ -75,7 +82,19 @@ public partial class UIEnemyItem : UIBase
             }
         }
     }
-
+    public void RefreshIntent(IntentConfig intentConfig)
+    {
+        if (intentConfig != null && _intentionUI != null)
+        {
+            _intentionUI.Show();
+            _intentionUI.Init(intentConfig);
+        }
+        else
+        {
+            // b_IntentionIcon.gameObject.SetActive(false);
+            // _intentionUI.Hide();
+        }
+    }
     // 清理（战斗结束）
     public void ClearBuffs()
     {

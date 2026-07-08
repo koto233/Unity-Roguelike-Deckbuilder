@@ -1,5 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using LitFramework;
+using LitFramework.Config;
+using LitFramework.EventBus;
 using UnityEngine;
 
 public class Enemy : CharacterBase
@@ -25,6 +28,12 @@ public class Enemy : CharacterBase
     public void DetermineIntent(BattleContext context)
     {
         CurrentIntent = AI.DecideIntent(this, context);
+        // Debug.Log("意图" + CurrentIntent);
+        var configService = ServiceLocator.Get<IConfigService>();
+        var intentConfigTable = configService.GetTable<IntentConfig>();
+        IntentConfig intentConfig = intentConfigTable.GetById((int)CurrentIntent) as IntentConfig;
+        // Debug.Log("意图" + intentConfig.Name);
+        EventBus<IntentEvent>.Publish(new IntentEvent { Enemy = this, IntentConfig = intentConfig });
     }
 
     // 执行意图
@@ -39,9 +48,12 @@ public class Enemy : CharacterBase
                 AddBlock(Config.Defend);
                 break;
             case IntentType.StrongAttack:
-
                 break;
         }
         LastIntent = CurrentIntent;
     }
 }
+// public struct IntentDisplayData
+// {
+
+// }

@@ -19,7 +19,8 @@ public class UIBattlePresenter : IDisposable
     private IEventBinding<BuffAppliedEvent> _buffAppliedEventBinding;
     private IEventBinding<BuffRemovedEvent> _buffRemovedEventBinding;
     private IEventBinding<BuffStacksChangedEvent> _buffStacksChangedEventBinding;
-    private IEventBinding<HoverEvent> _hoverEventBinding;
+    private IEventBinding<TooltipShowEvent> _hoverEventBinding;
+    private EventBinding<IntentEvent> _onIntentChanged;
     private BattleController _battleController;
     private Enemy _currentTargetEnemy;
     private int _selectedCardId;
@@ -46,7 +47,8 @@ public class UIBattlePresenter : IDisposable
         _buffAppliedEventBinding = new EventBinding<BuffAppliedEvent>(OnBuffApplied);
         _buffRemovedEventBinding = new EventBinding<BuffRemovedEvent>(OnBuffRemoved);
         _buffStacksChangedEventBinding = new EventBinding<BuffStacksChangedEvent>(OnBuffStacksChanged);
-        _hoverEventBinding = new EventBinding<HoverEvent>(OnHoverEvent);
+        _hoverEventBinding = new EventBinding<TooltipShowEvent>(OnHoverEvent);
+        _onIntentChanged = new EventBinding<IntentEvent>(OnEnemyIntentChanged);
         EventBus<HandChangedEvent>.Subscribe(_handChangedEventBinding);
         EventBus<HpChangedEvent>.Subscribe(_hpChangedEventBinding);
         EventBus<EnergyChangedEvent>.Subscribe(_energyChangedEventBinding);
@@ -55,10 +57,12 @@ public class UIBattlePresenter : IDisposable
         EventBus<BuffAppliedEvent>.Subscribe(_buffAppliedEventBinding);
         EventBus<BuffRemovedEvent>.Subscribe(_buffRemovedEventBinding);
         EventBus<BuffStacksChangedEvent>.Subscribe(_buffStacksChangedEventBinding);
-        EventBus<HoverEvent>.Subscribe(_hoverEventBinding);
+        EventBus<TooltipShowEvent>.Subscribe(_hoverEventBinding);
+        EventBus<IntentEvent>.Subscribe(_onIntentChanged);
         _view.OnOpenPile += OpenPile;
         _view.OnEndTurn += EndTurn;
     }
+
 
 
     private void UnSubscribeEvents()
@@ -71,7 +75,8 @@ public class UIBattlePresenter : IDisposable
         EventBus<BuffAppliedEvent>.Unsubscribe(_buffAppliedEventBinding);
         EventBus<BuffRemovedEvent>.Unsubscribe(_buffRemovedEventBinding);
         EventBus<BuffStacksChangedEvent>.Unsubscribe(_buffStacksChangedEventBinding);
-        EventBus<HoverEvent>.Unsubscribe(_hoverEventBinding);
+        EventBus<TooltipShowEvent>.Unsubscribe(_hoverEventBinding);
+        EventBus<IntentEvent>.Unsubscribe(_onIntentChanged);
         _view.OnOpenPile -= OpenPile;
         _view.OnEndTurn -= EndTurn;
     }
@@ -244,17 +249,33 @@ public class UIBattlePresenter : IDisposable
             enemyView?.RefreshBuffs(owner.BuffManager.AllBuffs.ToList());
         }
     }
-    private void OnHoverEvent(HoverEvent evt)
+    private void OnHoverEvent(TooltipShowEvent evt)
     {
-      
         if (evt.IsHovering)
         {
-            _view.ShowTooltip(evt.Data, evt.ScreenPosition);
+            switch (evt.Type)
+            {
+                case TooltipType.Buff:
+                    {
+                        _view.ShowBuffTooltip(evt.Data, evt.Position);
+                        break;
+                    }
+                case TooltipType.Intent:
+                    {
+                        _view.ShowIntentToolTip(evt.Data, evt.Position);
+                        break;
+                    }
+            }
         }
         else
         {
             _view.HideAllTooltips();
         }
+
+    }
+    private void OnEnemyIntentChanged(IntentEvent evt)
+    {
+        _view.RefreshEnemyIntent(evt.Enemy, evt.IntentConfig);
     }
     public void Dispose()
     {

@@ -25,6 +25,17 @@ namespace LitFramework.UI.Core.Window
             CacheBinds();
             GetUI(); // 子类 partial 中生成
         }
+        public void Show()
+        {
+            IsActive = true;
+            gameObject.SetActive(true);
+        }
+        public void Hide()
+        {
+            IsActive = false;
+            gameObject.SetActive(false);
+        }
+
 
         #region 自动绑定方法
         void CacheBinds()

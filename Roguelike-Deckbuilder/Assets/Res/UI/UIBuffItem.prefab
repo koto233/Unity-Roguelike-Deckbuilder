@@ -162,6 +162,7 @@ GameObject:
   - component: {fileID: 249030008096261420}
   - component: {fileID: 2949902330514991837}
   - component: {fileID: 6861042298310087739}
+  - component: {fileID: 2941272511237229589}
   m_Layer: 6
   m_Name: UIBuffItem
   m_TagString: Untagged
@@ -240,3 +241,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _generatedScriptPath: Scripts/UI/UIBuffItem/Generated
+--- !u!114 &2941272511237229589
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4728165083831030491}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83bd1cb7e999c4e4db4cd8f416832794, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _tooltipType: 2

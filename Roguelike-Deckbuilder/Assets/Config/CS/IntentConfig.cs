@@ -6,7 +6,7 @@
 
 // Generate From D:\GIT\Unity-Roguelike-Deckbuilder\Roguelike-Deckbuilder\Assets\Config\Excel\IntentConfig.xlsx.xlsx
 
-public class IntentConfig
+public class IntentConfig : IConfig
 {
 	public int Id; // Id
 	public string Key; // 资源标识
