@@ -20,7 +20,7 @@ public partial class UICardItem : UIBase, IBeginDragHandler, IDragHandler, IEndD
     private float _followSpeed = 10f;
     private Enemy _Target;
     private bool _isDrag = false;
-    private bool _isHover = false;
+    private bool _canUse = true;
     public void Init(CardDisplayData displayData, Action onPlay = null, Action onCancel = null, Action<int> onDragStart = null, Action<Enemy> onCardDrag = null)
     {
         _onPlay = onPlay;
@@ -32,15 +32,29 @@ public partial class UICardItem : UIBase, IBeginDragHandler, IDragHandler, IEndD
     }
     public void RefreshUI(CardDisplayData data)
     {
+        Debug.Log($"传入的 data.CanUse = {data.CanUse}, data 哈希 = {data.GetHashCode()}");
         _displayData = data;
+        _canUse = data.CanUse;
         b_CostText.SetText(data.Cost.ToString());
+        Color targetColor = _canUse ? Color.black : Color.red;
+        b_CostText.color = targetColor;
+        Debug.Log("卡牌状态刷新" + _canUse + " 卡牌消耗" + _displayData.Cost);
         b_NameText.SetText(data.Name);
         b_DescText.SetText(data.Description);
     }
-
+    public void RefreshState(int currentEnergy)
+    {
+        _canUse = currentEnergy >= _displayData.Cost;
+        Debug.Log("卡牌状态刷新" + _canUse + " 当前能量" + currentEnergy + " 卡牌消耗" + _displayData.Cost);
+        Color targetColor = _canUse ? Color.black : Color.red;
+        // b_CostText.DOColor(targetColor, 0.5f);
+        b_CostText.color = targetColor;
+        Debug.Log("卡牌状态刷新" + targetColor);
+        transform.position = _canUse ? transform.position : new Vector3(transform.position.x, transform.position.y - 10f, transform.position.z);
+    }
     public void OnBeginDrag(PointerEventData eventData)
     {
-        if (!_displayData.CanInteract) return;
+        if (!_canUse) return;
         _isDrag = true;
         _originalPos = b_UICardItemRect.anchoredPosition;
         RectTransformUtility.ScreenPointToLocalPointInRectangle(
@@ -56,7 +70,6 @@ public partial class UICardItem : UIBase, IBeginDragHandler, IDragHandler, IEndD
 
     public void OnDrag(PointerEventData eventData)
     {
-        if (!_displayData.CanInteract) return;
         RectTransformUtility.ScreenPointToLocalPointInRectangle(
                b_UICardItemRect.parent as RectTransform,
                eventData.position,
@@ -64,6 +77,11 @@ public partial class UICardItem : UIBase, IBeginDragHandler, IDragHandler, IEndD
                out Vector2 localMousePos
            );
         Vector2 targetPos = localMousePos + _dragStartOffset;
+        if (!_canUse)
+        {
+            targetPos.y = Mathf.Min(targetPos.y, _maxDragY);
+            return;
+        }
         if (_displayData.NeedTarget)
         {
             targetPos.y = Mathf.Min(targetPos.y, _maxDragY);
@@ -81,7 +99,10 @@ public partial class UICardItem : UIBase, IBeginDragHandler, IDragHandler, IEndD
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        if (!_displayData.CanInteract) return;
+        if (!_canUse)
+        {
+            return;
+        }
         // if (_displayData.NeedTarget && eventData.position.y < _maxDragY - 50)
         // {
 
@@ -131,8 +152,7 @@ public partial class UICardItem : UIBase, IBeginDragHandler, IDragHandler, IEndD
     public void OnPointerEnter(PointerEventData eventData)
     {
 
-        if (_isDrag || !_displayData.CanInteract) return;
-        _isHover = true;
+        if (_isDrag || !_canUse) return;
         _originalPos = b_UICardItemRect.anchoredPosition;
         _originalRotation = b_UICardItemRect.localRotation;
         var parentRect = b_UICardItemRect.parent as RectTransform;
@@ -150,8 +170,7 @@ public partial class UICardItem : UIBase, IBeginDragHandler, IDragHandler, IEndD
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        if (_isDrag || !_displayData.CanInteract) return;
-        _isHover = false;
+        if (_isDrag || !_canUse) return;
         transform.DOScale(1f, 0.2f);
         transform.DORotateQuaternion(_originalRotation, 0.2f);
         transform.DOLocalMove(new Vector3(transform.localPosition.x, _originalPos.y, transform.localPosition.z), 0.2f);

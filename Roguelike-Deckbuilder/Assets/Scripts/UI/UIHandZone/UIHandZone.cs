@@ -52,6 +52,17 @@ public partial class UIHandZone : MonoBehaviour
         }
         _fanLayout.Refresh();
     }
+    /// <summary>
+    ///  根据现有行动点刷新手牌状态
+    /// </summary>
+    /// <param name="currentEnergy"></param>
+    public void RefreshHandState(int currentEnergy)
+    {
+        foreach (var item in _cardItems)
+        {
+            item.RefreshState(currentEnergy);
+        }
+    }
 
     public void ResetCard()
     {

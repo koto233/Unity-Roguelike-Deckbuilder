@@ -107,6 +107,7 @@ public class UIBattlePresenter : IDisposable
     private void OnEnergyChanged(EnergyChangedEvent evt)
     {
         RefreshEnergy(evt.CurrentEnergy, evt.MaxEnergy);
+
     }
 
     private void RefreshAllHp()
@@ -143,7 +144,7 @@ public class UIBattlePresenter : IDisposable
                 Cost = card.CurrentCost,
                 CostColor = costColor,
                 Description = card.Description,
-                CanInteract = true,
+                CanUse = _battleController.Context.Player.Energy >= card.CurrentCost,
                 // Icon = card.Config.Icon,
                 // RarityColor = rarityColor,
                 NeedTarget = card.NeedTarget,
@@ -211,11 +212,12 @@ public class UIBattlePresenter : IDisposable
                 Name = card.Config.Name,
                 Cost = card.CurrentCost,
                 Description = card.Description,
-                CanInteract = false,
+                CanUse = _battleController.Context.Player.Energy >= card.CurrentCost,
                 // Icon = card.Config.Icon,
                 // RarityColor = GetRarityColor(card.Config.Rarity),
                 NeedTarget = card.NeedTarget,
             };
+            Debug.Log($"打开牌组: {display.Name} 消耗: {display.Cost} 当前能量: {_battleController.Context.Player.Energy} 可用: {display.CanUse}");
             _view.SpawnCardInList(display);
         }
         _view.OpenPilePanel();

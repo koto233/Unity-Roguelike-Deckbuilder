@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using DG.Tweening;
 using LitFramework;
 using LitFramework.Asset;
 using LitFramework.ObjectPool;
@@ -121,7 +122,8 @@ public partial class UIBattleWindow : UIWindow
         if (entityType == EntityType.Player)
         {
             b_HPText.SetText(currentHp + "/" + maxHp);
-            b_HPSlider.value = (float)currentHp / maxHp;
+            // b_HPSlider.value = (float)currentHp / maxHp;
+            b_HPSlider.DOValue((float)currentHp / maxHp, 0.5f).SetEase(Ease.Linear);
             _playerView.UpdateHP(currentHp, maxHp);
         }
         else
@@ -136,6 +138,7 @@ public partial class UIBattleWindow : UIWindow
     public void RefreshEnergy(int energy, int maxEnergy)
     {
         b_EnergyText.SetText($"{energy}/{maxEnergy}");
+        b_HandZone.RefreshHandState(energy);
     }
     public void RefreshHand(List<CardDisplayData> hand, Action onPlay = null, Action onCancel = null, Action<int> onDragStart = null, Action<Enemy> onCardDrag = null)
     {

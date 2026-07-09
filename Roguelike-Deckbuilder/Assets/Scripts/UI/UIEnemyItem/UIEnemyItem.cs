@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using DG.Tweening;
 using LitFramework;
 using LitFramework.Asset;
 using LitFramework.UI.Core.Window;
@@ -32,7 +33,7 @@ public partial class UIEnemyItem : UIBase
     public void UpdateHP(int currentHp, int maxHp)
     {
         b_HPText.SetText($"{currentHp}/{maxHp}");
-        b_HPSlider.value = (float)currentHp / maxHp;
+        b_HPSlider.DOValue((float)currentHp / maxHp, 0.5f).SetEase(Ease.Linear);
     }
     public void SetEnemy(Enemy enemy)
     {
