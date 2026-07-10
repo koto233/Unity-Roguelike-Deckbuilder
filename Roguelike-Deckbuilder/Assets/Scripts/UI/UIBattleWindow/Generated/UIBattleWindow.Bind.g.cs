@@ -4,7 +4,7 @@
 //     请勿手动修改此文件，重新生成将覆盖所有改动
 //
 //     来源 UI : UIBattleWindow
-//     生成时间 : 2026-07-08
+//     生成时间 : 2026-07-10
 // </自动生成>
 //------------------------------------------------------------------------------
 
@@ -26,9 +26,9 @@ using TMPro;
         private @RectTransform b_PilePanel;
         private @Button b_ClosePileButton;
         private @Button b_EndTurnBtn;
-        private Tooltip b_BuffTooltip;
+        private @Tooltip b_BuffTooltip;
         private @TextMeshProUGUI b_BuffDescText;
-        private Tooltip b_IntentTooltip;
+        private @Tooltip b_IntentTooltip;
         private @TextMeshProUGUI b_IntentDescText;
 
         protected override void GetUI()
@@ -46,9 +46,9 @@ using TMPro;
             b_PilePanel = GetBind<@RectTransform>(9);
             b_ClosePileButton = GetBind<@Button>(10);
             b_EndTurnBtn = GetBind<@Button>(11);
-            b_BuffTooltip = GetBind<Tooltip>(12);
+            b_BuffTooltip = GetBind<@Tooltip>(12);
             b_BuffDescText = GetBind<@TextMeshProUGUI>(13);
-            b_IntentTooltip = GetBind<Tooltip>(14);
+            b_IntentTooltip = GetBind<@Tooltip>(14);
             b_IntentDescText = GetBind<@TextMeshProUGUI>(15);
         }
     }

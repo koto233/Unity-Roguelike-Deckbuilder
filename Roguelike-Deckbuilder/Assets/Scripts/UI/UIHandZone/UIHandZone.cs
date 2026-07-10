@@ -13,7 +13,9 @@ public partial class UIHandZone : MonoBehaviour
     [SerializeField]
     private FanLayout _fanLayout;
     [SerializeField]
-    private Transform handContainer;
+    private Transform _handContainer;
+    [SerializeField]
+    private Transform _cardDetailTrans;
     private List<UICardItem> _cardItems = new();
     private BattleContext _battleContext;
     private string _poolKey = "CardItem";
@@ -22,6 +24,7 @@ public partial class UIHandZone : MonoBehaviour
     {
         _poolKey = poolKey;
         _poolService = poolService;
+        _cardDetailTrans.gameObject.SetActive(false);
     }
     // void Update()
     // {
@@ -45,12 +48,16 @@ public partial class UIHandZone : MonoBehaviour
         {
             var go = _poolService.GetGameObject(_poolKey);
             go.SetActive(true);
-            go.transform.SetParent(handContainer);
+            go.transform.SetParent(_handContainer);
             var uiCard = go.GetComponent<UICardItem>();
-            uiCard.Init(card, onPlay, onCancel, onDragStart, onCardDrag);
+            uiCard.Init(card, _cardDetailTrans, onPlay, onCancel, onDragStart, onCardDrag);
             _cardItems.Add(uiCard);
         }
         _fanLayout.Refresh();
+        foreach (var item in _cardItems)
+        {
+            item.OnLayoutComplete();
+        }
     }
     /// <summary>
     ///  根据现有行动点刷新手牌状态
