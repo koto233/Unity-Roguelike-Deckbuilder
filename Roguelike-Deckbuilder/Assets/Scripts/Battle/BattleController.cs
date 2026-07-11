@@ -85,7 +85,12 @@ public class BattleController
             }
             Context.Player.Hand.Remove(card);
             Context.Player.DiscardPile.Add(card);
-            EventBus<HandChangedEvent>.Publish(new HandChangedEvent() { Cards = Context.Player.Hand });
+            EventBus<HandChangedEvent>.Publish(new HandChangedEvent()
+            {
+                ChangedCards = new List<Card> { card },
+                Cards = Context.Player.Hand,
+                Type = ChangeType.Refresh
+            });
             return true;
         }
         else
@@ -140,6 +145,7 @@ public class BattleController
     }
     public void EndPlayerTurn()
     {
+
         Context.Player.DiscardAllHand();
     }
 

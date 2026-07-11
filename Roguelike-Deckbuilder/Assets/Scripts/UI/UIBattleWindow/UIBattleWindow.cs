@@ -11,12 +11,16 @@ using UnityEngine;
 public partial class UIBattleWindow : UIWindow
 {
     private AssetRef<GameObject> _cardPrefabRef;
+    private AssetRef<GameObject> _flyPrefabRef;
     private AssetRef<GameObject> _enemyPrefabRef;
     private AssetRef<GameObject> _playerPrefabRef;
     private UIPlayerItem _playerView;
     private Dictionary<int, UIEnemyItem> _enemyViews = new();
-    private string _poolKey = "CardItem";
+    private string _cardPoolKey = "CardItem";
+    private string _flyPoolKey = "FlyItem";
     private ObjectPoolService _poolService;
+    public Transform DiscardPileTrans => b_DiscardPileBtn.transform;
+    public Transform DrawPileTrans => b_DrawPileBtn.transform;
     /// <summary>
     /// 打开卡组，0是抽牌堆，1是弃牌堆
     /// </summary>
@@ -35,10 +39,15 @@ public partial class UIBattleWindow : UIWindow
         _enemyPrefabRef = await assetService.LoadRefAsync<GameObject>("Assets/Res/UI/UIEnemyItem.prefab");
         _playerPrefabRef = await assetService.LoadRefAsync<GameObject>("Assets/Res/UI/UIPlayerItem.prefab");
         _cardPrefabRef = await assetService.LoadRefAsync<GameObject>("Assets/Res/UI/UICardItem.prefab");
+        _flyPrefabRef = await assetService.LoadRefAsync<GameObject>("Assets/Res/UI/CardFlyFx.prefab");
         _poolService = ServiceLocator.Get<ObjectPoolService>();
         _poolService.RegisterGameObjectPool(
-            _poolKey,
+            _cardPoolKey,
             new GameObjectPool(_cardPrefabRef.Asset, initialPoolSize: 10)
+        );
+        _poolService.RegisterGameObjectPool(
+            _flyPoolKey,
+            new GameObjectPool(_flyPrefabRef.Asset, initialPoolSize: 10)
         );
         _playerView = CreatePlayerView(battleContext.Player);
         CreateEnemyViews(battleContext.Enemies);
@@ -47,7 +56,7 @@ public partial class UIBattleWindow : UIWindow
 
     private void InitUI()
     {
-        b_HandZone.Init(_poolKey, _poolService);
+        b_HandZone.Init(_cardPoolKey, _flyPoolKey, _poolService, this);
         b_ClosePileButton.onClick.AddListener(ClosePilePanel);
         ClosePilePanel();
         b_DrawPileBtn.onClick.AddListener(() => OnOpenPile(0));
@@ -71,14 +80,14 @@ public partial class UIBattleWindow : UIWindow
         foreach (var item in _cardItems)
         {
             item.gameObject.SetActive(false);
-            _poolService.ReturnGameObject(_poolKey, item.gameObject);
+            _poolService.ReturnGameObject(_cardPoolKey, item.gameObject);
         }
         _cardItems.Clear();
     }
     public void SpawnCardInList(CardDisplayData data)
     {
 
-        var cardPrefab = _poolService.GetGameObject(_poolKey);
+        var cardPrefab = _poolService.GetGameObject(_cardPoolKey);
         cardPrefab.transform.SetParent(b_PilePanel.transform);
         var uiCard = cardPrefab.GetComponent<UICardItem>();
         uiCard.Init(data, null, null, null, null);
@@ -140,9 +149,9 @@ public partial class UIBattleWindow : UIWindow
         b_EnergyText.SetText($"{energy}/{maxEnergy}");
         b_HandZone.RefreshHandState(energy);
     }
-    public void RefreshHand(List<CardDisplayData> hand, Action onPlay = null, Action onCancel = null, Action<int> onDragStart = null, Action<Enemy> onCardDrag = null)
+    public void RefreshHand(List<CardDisplayData> hand, List<Card> changedCards, ChangeType type, Action onPlay = null, Action onCancel = null, Action<int> onDragStart = null, Action<Enemy> onCardDrag = null)
     {
-        b_HandZone.RefreshHand(hand, onPlay, onCancel, onDragStart, onCardDrag);
+        b_HandZone.RefreshHand(hand, changedCards, type, onPlay, onCancel, onDragStart, onCardDrag);
     }
     public void RefreshBlock(int block, EntityType entityType)
     {
@@ -156,6 +165,7 @@ public partial class UIBattleWindow : UIWindow
     {
         b_HandZone.ResetCard();
     }
+    
     // ===== View 层交互反馈 =====
 
     public void ShowBuffTooltip(TooltipData data, Vector2 position)

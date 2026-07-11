@@ -31,7 +31,7 @@ public class UIBattlePresenter : IDisposable
         var context = _battleController.Context;
         SubscribeEvents();
         RefreshAllHp();
-        RefreshHand(context.Player.Hand);
+        RefreshHand(context.Player.Hand, context.Player.Hand, ChangeType.Add);
         RefreshEnergy(context.Player.Energy, context.Player.MaxEnergy);
         RefreshBlock(context.Player.Block, EntityType.Player);
     }
@@ -98,7 +98,7 @@ public class UIBattlePresenter : IDisposable
 
     private void OnHandChanged(HandChangedEvent evt)
     {
-        RefreshHand(evt.Cards);
+        RefreshHand(evt.Cards, evt.ChangedCards, evt.Type);
     }
     private void OnHpChanged(HpChangedEvent evt)
     {
@@ -129,12 +129,11 @@ public class UIBattlePresenter : IDisposable
     {
         _view.RefreshBlock(block, entityType);
     }
-    private void RefreshHand(List<Card> handCards)
+    private void RefreshHand(List<Card> handCards, List<Card> changedCards, ChangeType type)
     {
         var displayList = new List<CardDisplayData>();
         foreach (var card in handCards)
         {
-            // bool canPlay = _battleController.CanPlayCard(card);          // 外部判断
             bool canPlay = true;
             Color costColor = canPlay ? Color.white : Color.red;
             displayList.Add(new CardDisplayData
@@ -152,7 +151,9 @@ public class UIBattlePresenter : IDisposable
                 IsHighlighted = false
             });
         }
-        _view.RefreshHand(displayList, OnPlayCard, OnCancelCard, OnDragStart, OnDragCard);
+        _view.RefreshHand(displayList, changedCards, type, OnPlayCard, OnCancelCard, OnDragStart, OnDragCard);
+
+
     }
 
 

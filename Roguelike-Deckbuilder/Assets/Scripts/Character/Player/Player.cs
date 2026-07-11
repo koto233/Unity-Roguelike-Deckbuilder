@@ -28,7 +28,7 @@ public class Player : CharacterBase
     /// 抽牌，不会重置牌堆，没有则不抽
     /// </summary>
     /// <param name="count"></param>
-    public void DrawCards(int count)
+    public void DrawCards(int count, bool ignore = true)
     {
         for (int i = 0; i < count; i++)
         {
@@ -39,7 +39,9 @@ public class Player : CharacterBase
                 Hand.Add(card);
             }
         }
-        EventBus<HandChangedEvent>.Publish(new HandChangedEvent() { Cards = Hand });
+        if (ignore)
+            return;
+        EventBus<HandChangedEvent>.Publish(new HandChangedEvent() { Cards = Hand, ChangedCards = new List<Card>(), Type = ChangeType.Add });
     }
     /// <summary>
     /// 回合开始时抽牌 若牌堆为空 则从重置牌堆
@@ -50,8 +52,10 @@ public class Player : CharacterBase
         for (int i = 0; i < count; i++)
         {
             CheckResetPile();
-            DrawCards(1);
+            DrawCards(1, true);
         }
+        EventBus<HandChangedEvent>.Publish(new HandChangedEvent() { Cards = Hand, ChangedCards = new List<Card>(), Type = ChangeType.Add });
+
     }
     /// <summary>
     /// 检查并重置牌堆   
@@ -72,7 +76,7 @@ public class Player : CharacterBase
     {
         Hand.Remove(card);
         DiscardPile.Add(card);
-        EventBus<HandChangedEvent>.Publish(new HandChangedEvent() { Cards = Hand });
+        EventBus<HandChangedEvent>.Publish(new HandChangedEvent() { ChangedCards = new List<Card> { card }, Cards = Hand, Type = ChangeType.Remove });
     }
     /// <summary>
     /// 使用牌
@@ -87,13 +91,14 @@ public class Player : CharacterBase
     /// </summary>
     public void DiscardAllHand()
     {
+        var changedCards = Hand;
         for (int i = Hand.Count - 1; i >= 0; i--)
         {
             var card = Hand[i];
             Hand.RemoveAt(i);
             DiscardPile.Add(card);
         }
-        EventBus<HandChangedEvent>.Publish(new HandChangedEvent() { Cards = Hand });
+        EventBus<HandChangedEvent>.Publish(new HandChangedEvent() { ChangedCards = changedCards, Cards = Hand, Type = ChangeType.Remove });
     }
     public void AddEnergy(int amount)
     {

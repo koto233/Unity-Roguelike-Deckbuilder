@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using LitFramework.UI.Core.Window;
 using UnityEngine;
@@ -9,6 +10,7 @@ using UnityEngine.EventSystems;
 public partial class UICardItem : UIBase, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerDownHandler, IPointerUpHandler
 {
     private CardDisplayData _displayData;
+    public int CardId => _displayData.CardId;
     private Transform _cardDetailTrans;
     private Vector2 _dragStartOffset;  // 开始拖拽时鼠标与卡牌的偏移
     private Vector2 _originalPos;
@@ -23,6 +25,7 @@ public partial class UICardItem : UIBase, IBeginDragHandler, IDragHandler, IEndD
     private Action<Enemy> _onCardDrag;
     private Enemy _Target;
     private bool _canUse = true;
+    private Tween _flyTween; // 用于管理飞行补间，防止冲突
     public void Init(CardDisplayData displayData, Transform cardDetailTrans, Action onPlay = null, Action onCancel = null, Action<int> onDragStart = null, Action<Enemy> onCardDrag = null)
     {
         _onPlay = onPlay;
@@ -46,6 +49,7 @@ public partial class UICardItem : UIBase, IBeginDragHandler, IDragHandler, IEndD
         _maxDragY = _originalPos.y + cardHeight / 2f;
         Debug.Log("卡牌位置刷新" + _selectPositionY);
     }
+
     public void RefreshUI(CardDisplayData data)
     {
         Debug.Log($"传入的 data.CanUse = {data.CanUse}, data 哈希 = {data.GetHashCode()}");

@@ -7,5 +7,17 @@ using LitFramework.EventBus;
 
 public struct HandChangedEvent : IEvent
 {
+    /// <summary>
+    /// 变化的卡牌
+    /// </summary>
+    public List<Card> ChangedCards;
     public List<Card> Cards;
+    public ChangeType Type;
+
+}
+public enum ChangeType
+{
+    Add,        // 抽牌
+    Remove,     // 弃牌
+    Refresh       // 其他变化（如使用卡牌）
 }
