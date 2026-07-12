@@ -84,14 +84,16 @@ public partial class UIBattleWindow : UIWindow
         }
         _cardItems.Clear();
     }
-    public void SpawnCardInList(CardDisplayData data)
+    public void SpawnCardInList(List<Card> cards)
     {
-
-        var cardPrefab = _poolService.GetGameObject(_cardPoolKey);
-        cardPrefab.transform.SetParent(b_PilePanel.transform);
-        var uiCard = cardPrefab.GetComponent<UICardItem>();
-        uiCard.Init(data, null, null, null, null);
-        _cardItems.Add(uiCard);
+        foreach (var data in cards)
+        {
+            var cardPrefab = _poolService.GetGameObject(_cardPoolKey);
+            cardPrefab.transform.SetParent(b_PilePanel.transform);
+            var uiCard = cardPrefab.GetComponent<UICardItem>();
+            uiCard.Init(data, null, null, null, null);
+            _cardItems.Add(uiCard);
+        }
     }
 
     private UIPlayerItem CreatePlayerView(Player data)
@@ -149,7 +151,7 @@ public partial class UIBattleWindow : UIWindow
         b_EnergyText.SetText($"{energy}/{maxEnergy}");
         b_HandZone.RefreshHandState(energy);
     }
-    public void RefreshHand(List<CardDisplayData> hand, List<Card> changedCards, ChangeType type, Action onPlay = null, Action onCancel = null, Action<int> onDragStart = null, Action<Enemy> onCardDrag = null)
+    public void RefreshHand(List<Card> hand, List<Card> changedCards, ChangeType type, Action onPlay = null, Action onCancel = null, Action<int> onDragStart = null, Action<Enemy> onCardDrag = null)
     {
         b_HandZone.RefreshHand(hand, changedCards, type, onPlay, onCancel, onDragStart, onCardDrag);
     }
@@ -165,7 +167,7 @@ public partial class UIBattleWindow : UIWindow
     {
         b_HandZone.ResetCard();
     }
-    
+
     // ===== View 层交互反馈 =====
 
     public void ShowBuffTooltip(TooltipData data, Vector2 position)

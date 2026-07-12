@@ -55,7 +55,7 @@ public class BattleController
     public bool PlayCard(int cardId, Enemy target = null)
     {
         Debug.Log("使用卡牌 " + cardId);
-        var card = Context.Player.Hand.FirstOrDefault(c => c.Config.Id == cardId);
+        var card = Context.Player.Hand.FirstOrDefault(c => c.InstanceId == cardId);
 
         Debug.Log("使用卡牌 " + card.Config.Name);
         if (Context.IsPlayerTurn)
@@ -72,6 +72,14 @@ public class BattleController
                 return false;
 
             }
+            Context.Player.Hand.Remove(card);
+            Context.Player.DiscardPile.Add(card);
+            EventBus<HandChangedEvent>.Publish(new HandChangedEvent()
+            {
+                ChangedCards = new List<Card> { card },
+                Cards = Context.Player.Hand,
+                Type = ChangeType.Refresh
+            });
             Debug.Log($"卡牌效果{card.EffectsInstance.Count} ");
             foreach (var effect in card.EffectsInstance)
             {
@@ -83,14 +91,7 @@ public class BattleController
                 Debug.Log("执行效果 " + effect.GetType().Name);
                 effect.Execute(card, Context);
             }
-            Context.Player.Hand.Remove(card);
-            Context.Player.DiscardPile.Add(card);
-            EventBus<HandChangedEvent>.Publish(new HandChangedEvent()
-            {
-                ChangedCards = new List<Card> { card },
-                Cards = Context.Player.Hand,
-                Type = ChangeType.Refresh
-            });
+
             return true;
         }
         else

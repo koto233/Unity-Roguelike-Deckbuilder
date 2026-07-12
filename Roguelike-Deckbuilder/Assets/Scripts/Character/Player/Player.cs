@@ -30,18 +30,24 @@ public class Player : CharacterBase
     /// <param name="count"></param>
     public void DrawCards(int count, bool ignore = true)
     {
+        List<Card> drawnCards = new List<Card>();
         for (int i = 0; i < count; i++)
         {
-            if (DrawPile.Count > 0)
-            {
-                var card = DrawPile[0];
-                DrawPile.RemoveAt(0);
-                Hand.Add(card);
-            }
+            if (DrawPile.Count == 0) break;
+            Card card = DrawPile[0];
+            DrawPile.RemoveAt(0);
+            Hand.Add(card);
+            drawnCards.Add(card);
         }
-        if (ignore)
-            return;
-        EventBus<HandChangedEvent>.Publish(new HandChangedEvent() { Cards = Hand, ChangedCards = new List<Card>(), Type = ChangeType.Add });
+        if (drawnCards.Count > 0)
+        {
+            EventBus<HandChangedEvent>.Publish(new HandChangedEvent()
+            {
+                Cards = Hand,
+                ChangedCards = drawnCards,  // ← 所有抽到的卡
+                Type = ChangeType.Add
+            });
+        }
     }
     /// <summary>
     /// 回合开始时抽牌 若牌堆为空 则从重置牌堆
@@ -49,12 +55,20 @@ public class Player : CharacterBase
     /// <param name="count"></param>
     public void DrawCardInTurnStart(int count)
     {
+        var changedCards = new List<Card>();
         for (int i = 0; i < count; i++)
         {
+
             CheckResetPile();
-            DrawCards(1, true);
+            if (DrawPile.Count > 0)
+            {
+                var card = DrawPile[0];
+                DrawPile.RemoveAt(0);
+                Hand.Add(card);
+                changedCards.Add(card);
+            }
         }
-        EventBus<HandChangedEvent>.Publish(new HandChangedEvent() { Cards = Hand, ChangedCards = new List<Card>(), Type = ChangeType.Add });
+        EventBus<HandChangedEvent>.Publish(new HandChangedEvent() { Cards = Hand, ChangedCards = changedCards, Type = ChangeType.Add });
 
     }
     /// <summary>
@@ -91,7 +105,7 @@ public class Player : CharacterBase
     /// </summary>
     public void DiscardAllHand()
     {
-        var changedCards = Hand;
+        var changedCards = new List<Card>(Hand);
         for (int i = Hand.Count - 1; i >= 0; i--)
         {
             var card = Hand[i];

@@ -9,8 +9,8 @@ using UnityEngine.EventSystems;
 
 public partial class UICardItem : UIBase, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerDownHandler, IPointerUpHandler
 {
-    private CardDisplayData _displayData;
-    public int CardId => _displayData.CardId;
+    private Card _card;
+    public int InstanceId => _card.InstanceId;
     private Transform _cardDetailTrans;
     private Vector2 _dragStartOffset;  // 开始拖拽时鼠标与卡牌的偏移
     private Vector2 _originalPos;
@@ -26,14 +26,14 @@ public partial class UICardItem : UIBase, IBeginDragHandler, IDragHandler, IEndD
     private Enemy _Target;
     private bool _canUse = true;
     private Tween _flyTween; // 用于管理飞行补间，防止冲突
-    public void Init(CardDisplayData displayData, Transform cardDetailTrans, Action onPlay = null, Action onCancel = null, Action<int> onDragStart = null, Action<Enemy> onCardDrag = null)
+    public void Init(Card card, Transform cardDetailTrans, Action onPlay = null, Action onCancel = null, Action<int> onDragStart = null, Action<Enemy> onCardDrag = null)
     {
         _onPlay = onPlay;
         _onCancel = onCancel;
         _onDragStart = onDragStart;
         _onCardDrag = onCardDrag;
         _cardDetailTrans = cardDetailTrans;
-        RefreshUI(displayData);
+        RefreshUI(card);
     }
 
     public void OnLayoutComplete()
@@ -47,29 +47,24 @@ public partial class UICardItem : UIBase, IBeginDragHandler, IDragHandler, IEndD
         float cardHeight = b_UICardItemRect.rect.height * 1.6f;
         _selectPositionY = localBottom + cardHeight / 2f;
         _maxDragY = _originalPos.y + cardHeight / 2f;
-        Debug.Log("卡牌位置刷新" + _selectPositionY);
     }
 
-    public void RefreshUI(CardDisplayData data)
+    public void RefreshUI(Card card)
     {
-        Debug.Log($"传入的 data.CanUse = {data.CanUse}, data 哈希 = {data.GetHashCode()}");
-        _displayData = data;
-        _canUse = data.CanUse;
-        b_CostText.SetText(data.Cost.ToString());
+        _card = card;
+        _canUse = card.CanUse;
+        b_CostText.SetText(card.Config.Cost.ToString());
         Color targetColor = _canUse ? Color.black : Color.red;
         b_CostText.color = targetColor;
-        Debug.Log("卡牌状态刷新" + _canUse + " 卡牌消耗" + _displayData.Cost);
-        b_NameText.SetText(data.Name);
-        b_DescText.SetText(data.Description);
+        b_NameText.SetText(card.Config.Name);
+        b_DescText.SetText(card.Description);
     }
     public void RefreshState(int currentEnergy)
     {
-        _canUse = currentEnergy >= _displayData.Cost;
-        Debug.Log("卡牌状态刷新" + _canUse + " 当前能量" + currentEnergy + " 卡牌消耗" + _displayData.Cost);
+        _canUse = currentEnergy >= _card.Config.Cost;
         Color targetColor = _canUse ? Color.black : Color.red;
         // b_CostText.DOColor(targetColor, 0.5f);
         b_CostText.color = targetColor;
-        Debug.Log("卡牌状态刷新" + targetColor);
         transform.position = _canUse ? transform.position : new Vector3(transform.position.x, transform.position.y - 10f, transform.position.z);
     }
     public void OnBeginDrag(PointerEventData eventData)
@@ -82,7 +77,7 @@ public partial class UICardItem : UIBase, IBeginDragHandler, IDragHandler, IEndD
        out Vector2 localMousePos
         );
         _dragStartOffset = b_UICardItemRect.anchoredPosition - localMousePos;
-        _onDragStart?.Invoke(_displayData.CardId);
+        _onDragStart?.Invoke(_card.InstanceId);
 
     }
 
@@ -100,12 +95,12 @@ public partial class UICardItem : UIBase, IBeginDragHandler, IDragHandler, IEndD
             targetPos.y = Mathf.Min(targetPos.y, _maxDragY);
             return;
         }
-        if (_displayData.NeedTarget)
+        if (_card.NeedTarget)
         {
             transform.DOScale(1f, 0.1f);
             targetPos = new Vector2(_originalPos.x, _selectPositionY);
             _Target = IsOverTarget(eventData);
-            Debug.Log("获取目标" + _Target == null);
+            // Debug.Log("获取目标" + _Target == null);
         }
 
         b_UICardItemRect.anchoredPosition = targetPos;
@@ -148,7 +143,7 @@ public partial class UICardItem : UIBase, IBeginDragHandler, IDragHandler, IEndD
     public void OnPointerDown(PointerEventData eventData)
     {
         _cardDetailTrans.gameObject.SetActive(true);
-        Debug.Log("卡牌位置刷新" + _selectPositionY);
+        // Debug.Log("卡牌位置刷新" + _selectPositionY);
         transform.DOKill();
         transform.SetParent(_cardDetailTrans, worldPositionStays: true);
         transform.DOScale(1.6f, 0.1f);

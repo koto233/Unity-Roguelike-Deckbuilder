@@ -131,29 +131,11 @@ public class UIBattlePresenter : IDisposable
     }
     private void RefreshHand(List<Card> handCards, List<Card> changedCards, ChangeType type)
     {
-        var displayList = new List<CardDisplayData>();
-        foreach (var card in handCards)
+        foreach (var card in changedCards)
         {
-            bool canPlay = true;
-            Color costColor = canPlay ? Color.white : Color.red;
-            displayList.Add(new CardDisplayData
-            {
-                CardId = card.Config.Id,
-                Name = card.Config.Name,
-                Cost = card.CurrentCost,
-                CostColor = costColor,
-                Description = card.Description,
-                CanUse = _battleController.Context.Player.Energy >= card.CurrentCost,
-                // Icon = card.Config.Icon,
-                // RarityColor = rarityColor,
-                NeedTarget = card.NeedTarget,
-                IsPlayable = canPlay,
-                IsHighlighted = false
-            });
+            card.CanUse = _battleController.Context.Player.Energy >= card.CurrentCost;
         }
-        _view.RefreshHand(displayList, changedCards, type, OnPlayCard, OnCancelCard, OnDragStart, OnDragCard);
-
-
+        _view.RefreshHand(handCards, changedCards, type, OnPlayCard, OnCancelCard, OnDragStart, OnDragCard);
     }
 
 
@@ -204,23 +186,7 @@ public class UIBattlePresenter : IDisposable
         }
         if (drawPile == null) return;
         _view.ClearCardsInList();
-        for (int i = 0; i < drawPile.Count; i++)
-        {
-            var card = drawPile[i];
-            CardDisplayData display = new CardDisplayData
-            {
-                CardId = card.Config.Id,
-                Name = card.Config.Name,
-                Cost = card.CurrentCost,
-                Description = card.Description,
-                CanUse = _battleController.Context.Player.Energy >= card.CurrentCost,
-                // Icon = card.Config.Icon,
-                // RarityColor = GetRarityColor(card.Config.Rarity),
-                NeedTarget = card.NeedTarget,
-            };
-            Debug.Log($"打开牌组: {display.Name} 消耗: {display.Cost} 当前能量: {_battleController.Context.Player.Energy} 可用: {display.CanUse}");
-            _view.SpawnCardInList(display);
-        }
+        _view.SpawnCardInList(drawPile);
         _view.OpenPilePanel();
     }
     private void OnBuffApplied(BuffAppliedEvent evt)
