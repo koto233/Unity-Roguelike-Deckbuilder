@@ -1,4 +1,5 @@
 using System.Linq;
+using LitFramework.UI.Core.Utility;
 using UnityEngine;
 namespace LitFramework.UI.Core.Window
 {
@@ -40,7 +41,7 @@ namespace LitFramework.UI.Core.Window
         #region 自动绑定方法
         void CacheBinds()
         {
-            _binds = GetComponentsInChildren<UIBind>(true)
+            _binds = UIAutoBindGenerator.CollectBinds(this)
             .OrderBy(b => b.Index)
             .ToArray();
         }

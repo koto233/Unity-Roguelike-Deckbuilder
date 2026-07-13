@@ -1245,7 +1245,7 @@ GameObject:
   - component: {fileID: 1467199249067393940}
   - component: {fileID: 2316054793727525772}
   m_Layer: 5
-  m_Name: BuffDescText
+  m_Name: DescText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1379,7 +1379,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a59cf173a332bc6458d2f8d7e9f4adc3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  index: 13
+  index: 0
   target: {fileID: 1467199249067393940}
   manualOverride: 0
 --- !u!1 &4719332609964366047
@@ -1395,7 +1395,7 @@ GameObject:
   - component: {fileID: 8260307342646222537}
   - component: {fileID: 2598977293724281950}
   m_Layer: 5
-  m_Name: IntentDescText
+  m_Name: DescText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1529,7 +1529,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a59cf173a332bc6458d2f8d7e9f4adc3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  index: 15
+  index: 0
   target: {fileID: 8260307342646222537}
   manualOverride: 0
 --- !u!1 &4765449523027352851
@@ -1868,7 +1868,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c880792bfd76277419f4763b2825d5a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _generatedScriptPath: Scripts/UI/BuffTooltip/Generated
+  _generatedScriptPath: Scripts/UI/Tooltip/Generated
 --- !u!225 &2577471296716363895
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -1893,7 +1893,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a59cf173a332bc6458d2f8d7e9f4adc3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  index: 14
+  index: 13
   target: {fileID: 6906603534407960276}
   manualOverride: 0
 --- !u!1 &5777535094824105393
@@ -3112,7 +3112,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c880792bfd76277419f4763b2825d5a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _generatedScriptPath: Scripts/UI/BuffTooltip/Generated
+  _generatedScriptPath: Scripts/UI/Tooltip/Generated
 --- !u!114 &2303870156948747019
 MonoBehaviour:
   m_ObjectHideFlags: 0

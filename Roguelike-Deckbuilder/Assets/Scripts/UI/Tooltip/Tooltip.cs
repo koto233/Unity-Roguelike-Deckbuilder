@@ -16,5 +16,4 @@ public partial class Tooltip : UIBase
         gameObject.SetActive(true);
     }
 
-    public void Hide() => gameObject.SetActive(false);
 }

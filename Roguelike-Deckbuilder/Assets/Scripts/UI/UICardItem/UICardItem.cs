@@ -27,8 +27,10 @@ public partial class UICardItem : UIBase, IBeginDragHandler, IDragHandler, IEndD
     private bool _canUse = true;
     private bool _isDragging = false;
     private Tween _flyTween; // 用于管理飞行补间，防止冲突
+    private RectTransform _rect;
     public void Init(Card card, Transform cardDetailTrans, Action onPlay = null, Action onCancel = null, Action<int> onDragStart = null, Action<Enemy> onCardDrag = null)
     {
+        _rect = GetComponent<RectTransform>();
         _onPlay = onPlay;
         _onCancel = onCancel;
         _onDragStart = onDragStart;
@@ -39,13 +41,13 @@ public partial class UICardItem : UIBase, IBeginDragHandler, IDragHandler, IEndD
 
     public void OnLayoutComplete()
     {
-        _originalPos = b_UICardItemRect.localPosition;
-        _originalRotation = b_UICardItemRect.localRotation;
+        _originalPos = _rect.localPosition;
+        _originalRotation = _rect.localRotation;
         _originalParent = transform.parent;
         _originalSiblingIndex = transform.GetSiblingIndex();
-        var parentRect = b_UICardItemRect.parent as RectTransform;
+        var parentRect = _rect.parent as RectTransform;
         var localBottom = parentRect.rect.yMin;
-        float cardHeight = b_UICardItemRect.rect.height * 1.6f;
+        float cardHeight = _rect.rect.height * 1.6f;
         _selectPositionY = localBottom + cardHeight / 2f;
         _maxDragY = _originalPos.y + cardHeight / 2f;
     }
@@ -72,12 +74,12 @@ public partial class UICardItem : UIBase, IBeginDragHandler, IDragHandler, IEndD
         if (!_canUse) return;
         _isDragging = true;
         RectTransformUtility.ScreenPointToLocalPointInRectangle(
-       b_UICardItemRect.parent as RectTransform,
+       _rect.parent as RectTransform,
        eventData.position,
        eventData.pressEventCamera,
        out Vector2 localMousePos
         );
-        _dragStartOffset = b_UICardItemRect.anchoredPosition - localMousePos;
+        _dragStartOffset = _rect.anchoredPosition - localMousePos;
         _onDragStart?.Invoke(_card.InstanceId);
 
     }
@@ -85,7 +87,7 @@ public partial class UICardItem : UIBase, IBeginDragHandler, IDragHandler, IEndD
     public void OnDrag(PointerEventData eventData)
     {
         RectTransformUtility.ScreenPointToLocalPointInRectangle(
-               b_UICardItemRect.parent as RectTransform,
+               _rect.parent as RectTransform,
                eventData.position,
                eventData.pressEventCamera,
                out Vector2 localMousePos
@@ -103,7 +105,7 @@ public partial class UICardItem : UIBase, IBeginDragHandler, IDragHandler, IEndD
             _Target = IsOverTarget(eventData);
         }
 
-        b_UICardItemRect.anchoredPosition = targetPos;
+        _rect.anchoredPosition = targetPos;
         _onCardDrag?.Invoke(_Target);
     }
 

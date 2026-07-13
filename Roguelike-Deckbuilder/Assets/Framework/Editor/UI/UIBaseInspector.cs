@@ -4,6 +4,7 @@ using System.Linq;
 using LitFramework.UI.Core.Window;
 using LitFramework.UI.Core.Utility;
 using LitFramework.UI.Core;
+using System.Collections.Generic;
 namespace LitFramework.UI.EditorTools
 {
     [CustomEditor(typeof(UIBase), true)]
@@ -14,7 +15,20 @@ namespace LitFramework.UI.EditorTools
 
         void OnEnable()
         {
-            _pathProp = serializedObject.FindProperty("_generatedScriptPath");
+            try
+            {
+                // 只有 target 存在且不是销毁状态才尝试获取
+                if (target != null)
+                {
+                    _pathProp = serializedObject.FindProperty("_generatedScriptPath");
+                }
+            }
+            catch (System.Exception e)
+            {
+                // 捕获异常，打印轻度警告，不影响编辑器其他功能
+                Debug.LogWarning($"UIBaseInspector 加载序列化数据失败（可能选中了损坏的预制体）: {e.Message}");
+                _pathProp = null; // 置空，后续 GUI 逻辑判断跳过显示即可
+            }
         }
         public override void OnInspectorGUI()
         {
@@ -37,12 +51,11 @@ namespace LitFramework.UI.EditorTools
             var ui = target as UIBase;
             if (ui == null) return;
 
-            // 1️⃣ 自动生成绑定预览
+            //  自动生成绑定预览
             DrawBindingsPreview(ui);
-            DrawSubUIPreview(ui);
             EditorGUILayout.Space();
 
-            // 2️⃣ 其余正常字段（排除自动生成字段和 m_Script）
+            //  其余正常字段（排除自动生成字段和 m_Script）
             DrawPropertiesExcluding(serializedObject, new string[] { "m_Script", "_generatedScriptPath" });
 
             serializedObject.ApplyModifiedProperties();
@@ -52,14 +65,18 @@ namespace LitFramework.UI.EditorTools
 
             if (GUILayout.Button("🔧 生成 UI 绑定代码"))
             {
-                UIAutoBindGenerator.Generate(ui);
+                UIAutoBindGenerator.CollectAndGenerate(ui);
             }
         }
-
+        /// <summary>
+        /// 绘制自动绑定字段预览
+        /// </summary>
+        /// <param name="ui"></param>
         void DrawBindingsPreview(UIBase ui)
         {
-            var binds = ui.GetComponentsInChildren<UIBind>(true);
-            if (binds == null || binds.Length == 0) return;
+            var binds = new List<UIBind>();
+            UIAutoBindGenerator.CollectBindsExcludingSubUI(ui.transform, ui, binds);
+            if (binds.Count == 0) return;
 
             EditorGUILayout.LabelField("自动绑定预览", EditorStyles.boldLabel);
 
@@ -94,51 +111,5 @@ namespace LitFramework.UI.EditorTools
 
             EditorGUILayout.EndVertical();
         }
-        void DrawSubUIPreview(UIBase ui)
-        {
-            var subUIs = ui.GetComponentsInChildren<UIBase>(true)
-                           .Where(x => x != ui)
-                           .ToArray();
-
-            if (subUIs.Length == 0)
-                return;
-
-            var referenced = UIBindAutoResolver.CollectReferencedUIs(ui);
-
-            EditorGUILayout.Space(8);
-            EditorGUILayout.LabelField("子 UI 模块预览", EditorStyles.boldLabel);
-
-            EditorGUILayout.BeginVertical("box");
-
-            foreach (var sub in subUIs)
-            {
-                bool used = referenced.TryGetValue(sub, out var fieldName);
-                string label = used
-                              ? $"已引用 ({fieldName})"
-                              : "未引用!";
-                Color old = GUI.color;
-                GUI.color = used
-                    ? new Color(0.7f, 1f, 0.7f)
-                    : new Color(1f, 0.85f, 0.5f);
-
-                EditorGUILayout.BeginHorizontal();
-
-                EditorGUILayout.LabelField(sub.GetType().Name, GUILayout.Width(160));
-                EditorGUILayout.ObjectField(sub, typeof(UIBase), true);
-
-                if (GUILayout.Button("查看", GUILayout.Width(40)))
-                {
-                    Selection.activeObject = sub.gameObject;
-                }
-
-                EditorGUILayout.LabelField(label, GUILayout.Width(120));
-
-                EditorGUILayout.EndHorizontal();
-                GUI.color = old;
-            }
-
-            EditorGUILayout.EndVertical();
-        }
-
     }
 }
