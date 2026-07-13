@@ -29,6 +29,7 @@ public partial class UIHandZone : MonoBehaviour
     private List<UniTask> _flyTasks = new List<UniTask>();
     public void Init(string cardPoolKey, string orbPoolKey, ObjectPoolService poolService, UIBattleWindow battleWindow)
     {
+
         _cardPoolKey = cardPoolKey;
         _orbPoolKey = orbPoolKey;
         _poolService = poolService;
@@ -41,90 +42,17 @@ public partial class UIHandZone : MonoBehaviour
     //     _fanLayout.Refresh();
     // }
 
-    // public void RefreshHand(List<CardDisplayData> handCards, List<Card> changedCards, ChangeType type, Action onPlay = null, Action onCancel = null, Action<int> onDragStart = null, Action<Enemy> onCardDrag = null)
-    // {
-    //     Debug.Log("刷新手牌");
-    //     foreach (var card in changedCards)
-    //     {
-    //         switch (type)
-    //         {
-    //             case ChangeType.Add:
-    //                 if (_cardItems.ContainsKey(card.Config.Id))
-    //                 {
-    //                     // DiscardCard(card.Config.Id, _battleWindow.DrawPileTrans.position).Forget();
-    //                 }
-    //                 Debug.Log($"手牌新增 {card.Config.Id}");
-    //                 break;
-    //             case ChangeType.Remove:
-    //                 if (_cardItems.ContainsKey(card.Config.Id))
-    //                 {
-    //                     DiscardCard(card.Config.Id, _battleWindow.DiscardPileTrans.position).Forget();
-    //                 }
-    //                 Debug.Log($"手牌移除 {card.Config.Id}");
-    //                 break;
-    //             case ChangeType.Refresh:
-    //                 Debug.Log($"手牌刷新 {card.Config.Id}");
-    //                 break;
-    //         }
 
-    //     }
-    //     // 清除现有
-    //     foreach (var item in _cardItems.Values)
-    //     {
-    //         ReturnCard(item);
-    //     }
-    //     _cardItems.Clear();
-
-    //     // 重新生成
-    //     foreach (var card in handCards)
-    //     {
-    //         var go = _poolService.GetGameObject(_cardPoolKey);
-    //         go.SetActive(true);
-    //         go.transform.SetParent(_handContainer);
-    //         var uiCard = go.GetComponent<UICardItem>();
-    //         uiCard.Init(card, _cardDetailTrans, onPlay, onCancel, onDragStart, onCardDrag);
-    //         _cardItems.Add(card.CardId, uiCard);
-    //     }
-    //     _fanLayout.Refresh();
-    //     foreach (var item in _cardItems.Values)
-    //     {
-    //         item.OnLayoutComplete();
-    //     }
-    // }
-    // private void ReturnCard(UICardItem item)
-    // {
-    //     item.gameObject.SetActive(false);
-    //     item.transform.localScale = Vector3.one;
-    //     item.transform.localRotation = Quaternion.identity;
-    //     _cardItems.Remove(item.CardId);
-    //     _poolService.ReturnGameObject(_cardPoolKey, item.gameObject);
-
-    // }
-    // public async UniTask DiscardCard(int cardId, Vector2 targetPos = default)
-    // {
-    //     if (_cardItems.TryGetValue(cardId, out var cardItem))
-    //     {
-    //         ReturnCard(cardItem);
-    //     }
-    //     else
-    //     {
-    //         Debug.LogWarning($"手牌中未找到卡牌 {cardId}");
-    //         return;
-    //     }
-    //     var flyFx = _poolService.GetGameObject(_orbPoolKey).GetComponent<CardFlyFx>();
-    //     flyFx.gameObject.SetActive(true);
-    //     try
-    //     {
-    //         await flyFx.FlyToTarget(transform.position, targetPos, transform, 0.4f);
-    //         Debug.Log("光点已抵达弃牌堆");
-    //     }
-    //     finally
-    //     {
-
-    //         _poolService.ReturnGameObject(_orbPoolKey, flyFx.gameObject);
-    //     }
-    // }
-    // ---- 外部调用接口 ----
+    /// <summary>
+    ///  刷新手牌
+    /// </summary>
+    /// <param name="handCards"></param>
+    /// <param name="changedCards"></param>
+    /// <param name="type"></param>
+    /// <param name="onPlay"></param>
+    /// <param name="onCancel"></param>
+    /// <param name="onDragStart"></param>
+    /// <param name="onCardDrag"></param> 
     public void RefreshHand(
         List<Card> handCards,
         List<Card> changedCards,
@@ -187,12 +115,15 @@ public partial class UIHandZone : MonoBehaviour
             var go = _poolService.GetGameObject(_cardPoolKey);
             go.SetActive(true);
             go.transform.SetParent(_handContainer);
+            var rect = go.GetComponent<RectTransform>();
+            Debug.Log($"取卡 {card.InstanceId}: sizeDelta = {rect.sizeDelta}, pivot = {rect.pivot}");
             var uiCard = go.GetComponent<UICardItem>();
             uiCard.Init(card, _cardDetailTrans, onPlay, onCancel, onDragStart, onCardDrag);
             _cardItems.Add(card.InstanceId, uiCard);
         }
 
         _fanLayout.Refresh();
+
         foreach (var item in _cardItems.Values)
         {
             item.OnLayoutComplete();
@@ -299,7 +230,6 @@ public partial class UIHandZone : MonoBehaviour
         item.gameObject.SetActive(false);
         item.transform.localScale = Vector3.one;
         item.transform.localRotation = Quaternion.identity;
-        // 注意：这里不要 Remove 字典，由调用方决定何时移除
         _poolService.ReturnGameObject(_cardPoolKey, item.gameObject);
     }
     /// <summary>

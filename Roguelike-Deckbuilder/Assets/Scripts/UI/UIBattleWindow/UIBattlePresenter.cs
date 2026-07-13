@@ -32,8 +32,8 @@ public class UIBattlePresenter : IDisposable
         SubscribeEvents();
         RefreshAllHp();
         RefreshHand(context.Player.Hand, context.Player.Hand, ChangeType.Add);
-        RefreshEnergy(context.Player.Energy, context.Player.MaxEnergy);
         RefreshBlock(context.Player.Block, EntityType.Player);
+        RefreshEnergy(context.Player.Energy, context.Player.MaxEnergy);
     }
 
 
@@ -131,10 +131,11 @@ public class UIBattlePresenter : IDisposable
     }
     private void RefreshHand(List<Card> handCards, List<Card> changedCards, ChangeType type)
     {
-        foreach (var card in changedCards)
+        foreach (var card in handCards)
         {
             card.CanUse = _battleController.Context.Player.Energy >= card.CurrentCost;
         }
+        Debug.Log("CurrentEnergy:" + _battleController.Context.Player.Energy);
         _view.RefreshHand(handCards, changedCards, type, OnPlayCard, OnCancelCard, OnDragStart, OnDragCard);
     }
 

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 
 public class FanLayout : MonoBehaviour
@@ -30,7 +31,6 @@ public class FanLayout : MonoBehaviour
                 if (rect != null) _cards.Add(rect);
             }
         }
-
         int count = _cards.Count;
         if (count == 0) return;
 

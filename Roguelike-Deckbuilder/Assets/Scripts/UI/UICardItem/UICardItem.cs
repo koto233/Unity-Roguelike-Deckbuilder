@@ -25,6 +25,7 @@ public partial class UICardItem : UIBase, IBeginDragHandler, IDragHandler, IEndD
     private Action<Enemy> _onCardDrag;
     private Enemy _Target;
     private bool _canUse = true;
+    private bool _isDragging = false;
     private Tween _flyTween; // 用于管理飞行补间，防止冲突
     public void Init(Card card, Transform cardDetailTrans, Action onPlay = null, Action onCancel = null, Action<int> onDragStart = null, Action<Enemy> onCardDrag = null)
     {
@@ -48,7 +49,6 @@ public partial class UICardItem : UIBase, IBeginDragHandler, IDragHandler, IEndD
         _selectPositionY = localBottom + cardHeight / 2f;
         _maxDragY = _originalPos.y + cardHeight / 2f;
     }
-
     public void RefreshUI(Card card)
     {
         _card = card;
@@ -70,6 +70,7 @@ public partial class UICardItem : UIBase, IBeginDragHandler, IDragHandler, IEndD
     public void OnBeginDrag(PointerEventData eventData)
     {
         if (!_canUse) return;
+        _isDragging = true;
         RectTransformUtility.ScreenPointToLocalPointInRectangle(
        b_UICardItemRect.parent as RectTransform,
        eventData.position,
@@ -100,7 +101,6 @@ public partial class UICardItem : UIBase, IBeginDragHandler, IDragHandler, IEndD
             transform.DOScale(1f, 0.1f);
             targetPos = new Vector2(_originalPos.x, _selectPositionY);
             _Target = IsOverTarget(eventData);
-            // Debug.Log("获取目标" + _Target == null);
         }
 
         b_UICardItemRect.anchoredPosition = targetPos;
@@ -109,7 +109,13 @@ public partial class UICardItem : UIBase, IBeginDragHandler, IDragHandler, IEndD
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        if (!_canUse || transform.localPosition.y < _maxDragY)
+        _isDragging = false;
+        if (!_canUse)
+        {
+            ResetCard();
+            return;
+        }
+        if (!_card.NeedTarget && transform.localPosition.y < _maxDragY)
         {
             ResetCard();
             return;
@@ -118,7 +124,7 @@ public partial class UICardItem : UIBase, IBeginDragHandler, IDragHandler, IEndD
     }
     private Enemy IsOverTarget(PointerEventData eventData)
     {
-        int layerMask = 1 << LayerMask.NameToLayer("Target");
+        // int layerMask = 1 << LayerMask.NameToLayer("Target");
         var results = new List<RaycastResult>();
         EventSystem.current.RaycastAll(eventData, results);
 
@@ -127,7 +133,6 @@ public partial class UICardItem : UIBase, IBeginDragHandler, IDragHandler, IEndD
             // ✅ 用 Tag 判断具体类型
             if (result.gameObject.CompareTag("Enemy"))
             {
-
                 // ✅ 用 Tag 获取目标
                 return result.gameObject.GetComponent<UIEnemyItem>().Enemy;
             }
@@ -138,6 +143,8 @@ public partial class UICardItem : UIBase, IBeginDragHandler, IDragHandler, IEndD
     public void ResetCard()
     {
         transform.DOLocalMove(_originalPos, 0.2f);
+        transform.DOScale(1f, 0.1f);
+        transform.DORotateQuaternion(_originalRotation, 0.1f);
     }
 
     public void OnPointerDown(PointerEventData eventData)
@@ -155,10 +162,13 @@ public partial class UICardItem : UIBase, IBeginDragHandler, IDragHandler, IEndD
     {
         transform.DOKill();
         transform.SetParent(_originalParent, worldPositionStays: true);
-        transform.DOScale(1f, 0.1f);
-        transform.DORotateQuaternion(_originalRotation, 0.1f);
-        transform.DOLocalMove(_originalPos, 0.1f);
-        transform.SetSiblingIndex(_originalSiblingIndex);
         _cardDetailTrans.gameObject.SetActive(false);
+        transform.SetSiblingIndex(_originalSiblingIndex);
+        if (_isDragging)
+        {
+            return;
+        }
+        ResetCard();
+
     }
 }
