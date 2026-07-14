@@ -3,34 +3,32 @@ using System.Collections.Generic;
 using LitFramework.FSM;
 using UnityEngine;
 
-public class BattleEndState : IState
+public class BattleEndState : TurnStateBase
 {
-    private BattleController _battleController;
-    public BattleEndState(BattleController battleController)
+    public BattleEndState(BattleController controller, StateMachine stateMachine) : base(controller, stateMachine)
     {
-        _battleController = battleController;
     }
 
-    public void OnEnter()
+    public override void OnEnter()
     {
         Debug.Log("战斗结束");
     }
 
-    public void OnExit()
+    public override void OnExit()
     {
 
     }
 
-    public void OnInit()
+    public override void OnInit()
     {
 
     }
 
-    public void OnUpdate()
+    public override void OnUpdate()
     {
 
     }
-    public void OnDestroy()
+    public override void OnDestroy()
     {
 
     }

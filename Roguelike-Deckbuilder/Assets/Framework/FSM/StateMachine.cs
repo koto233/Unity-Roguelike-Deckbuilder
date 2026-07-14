@@ -7,7 +7,7 @@ namespace LitFramework.FSM
     public class StateMachine
     {
         private Dictionary<Type, IState> _states = new();
-        private IState _currentState;
+        public IState CurrentState { get; private set; }
         public event Action<Type, Type> OnStateChanged;
 
         public void RegisterState<T>(T state) where T : IState
@@ -25,7 +25,7 @@ namespace LitFramework.FSM
 
         public void Update()
         {
-            _currentState?.OnUpdate();
+            CurrentState?.OnUpdate();
         }
 
 
@@ -41,10 +41,10 @@ namespace LitFramework.FSM
                 return;
             }
 
-            var prevType = _currentState?.GetType();
-            _currentState?.OnExit();
-            _currentState = newState;
-            _currentState.OnEnter();
+            var prevType = CurrentState?.GetType();
+            CurrentState?.OnExit();
+            CurrentState = newState;
+            CurrentState.OnEnter();
 
             OnStateChanged?.Invoke(prevType, newStateType);
         }
@@ -53,7 +53,7 @@ namespace LitFramework.FSM
         {
             foreach (var state in _states.Values) state.OnDestroy();
             _states.Clear();
-            _currentState = null;
+            CurrentState = null;
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
+using LitFramework;
 using LitFramework.UI.Core.Window;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -28,6 +29,7 @@ public partial class UICardItem : UIBase, IBeginDragHandler, IDragHandler, IEndD
     private bool _isDragging = false;
     private Tween _flyTween; // 用于管理飞行补间，防止冲突
     private RectTransform _rect;
+    private BattleInteractionService _battleInteraction;
     public void Init(Card card, Transform cardDetailTrans, Action onPlay = null, Action onCancel = null, Action<int> onDragStart = null, Action<Enemy> onCardDrag = null)
     {
         _rect = GetComponent<RectTransform>();
@@ -37,6 +39,7 @@ public partial class UICardItem : UIBase, IBeginDragHandler, IDragHandler, IEndD
         _onCardDrag = onCardDrag;
         _cardDetailTrans = cardDetailTrans;
         RefreshUI(card);
+        _battleInteraction = ServiceLocator.Get<BattleInteractionService>();
     }
 
     public void OnLayoutComplete()
@@ -71,8 +74,10 @@ public partial class UICardItem : UIBase, IBeginDragHandler, IDragHandler, IEndD
     }
     public void OnBeginDrag(PointerEventData eventData)
     {
+        if (!_battleInteraction.CanInteract()) return;
         if (!_canUse) return;
         _isDragging = true;
+        _battleInteraction.StartDrag(this);
         RectTransformUtility.ScreenPointToLocalPointInRectangle(
        _rect.parent as RectTransform,
        eventData.position,
@@ -86,6 +91,9 @@ public partial class UICardItem : UIBase, IBeginDragHandler, IDragHandler, IEndD
 
     public void OnDrag(PointerEventData eventData)
     {
+        if (!_battleInteraction.IsDragging) return;
+        if (_battleInteraction.DraggingCard != this) return;
+
         RectTransformUtility.ScreenPointToLocalPointInRectangle(
                _rect.parent as RectTransform,
                eventData.position,
@@ -111,6 +119,10 @@ public partial class UICardItem : UIBase, IBeginDragHandler, IDragHandler, IEndD
 
     public void OnEndDrag(PointerEventData eventData)
     {
+        if (!_battleInteraction.IsDragging) return;
+        if (_battleInteraction.DraggingCard != this) return;
+
+        _battleInteraction.EndDrag();
         _isDragging = false;
         if (!_canUse)
         {
@@ -151,6 +163,7 @@ public partial class UICardItem : UIBase, IBeginDragHandler, IDragHandler, IEndD
 
     public void OnPointerDown(PointerEventData eventData)
     {
+        if (!_battleInteraction.CanInteract()) return;
         _cardDetailTrans.gameObject.SetActive(true);
         // Debug.Log("卡牌位置刷新" + _selectPositionY);
         transform.DOKill();
@@ -166,7 +179,7 @@ public partial class UICardItem : UIBase, IBeginDragHandler, IDragHandler, IEndD
         transform.SetParent(_originalParent, worldPositionStays: true);
         _cardDetailTrans.gameObject.SetActive(false);
         transform.SetSiblingIndex(_originalSiblingIndex);
-        if (_isDragging)
+        if (_battleInteraction.IsDragging)
         {
             return;
         }

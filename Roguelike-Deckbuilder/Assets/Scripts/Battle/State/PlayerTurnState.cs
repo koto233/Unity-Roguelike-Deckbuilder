@@ -3,48 +3,40 @@ using System.Collections.Generic;
 using LitFramework.FSM;
 using UnityEngine;
 
-public class PlayerTurnState : IState
+public class PlayerTurnState : TurnStateBase
 {
-    private BattleController _battleController;
-    public PlayerTurnState(BattleController battleController)
+    public PlayerTurnState(BattleController controller, StateMachine stateMachine) : base(controller, stateMachine)
     {
-        _battleController = battleController;
-    }
-    public void OnInit()
-    {
-
     }
 
+    public override void OnInit()
+    {
 
-    public void OnEnter()
+    }
+
+
+    public override void OnEnter()
     {
         Debug.Log("玩家回合开始");
         // TODO: 玩家回合开始 抽卡，恢复能量 解锁 UI 交互
-        _battleController.StartPlayerTurn();
+        Controller.StartPlayerTurn();
     }
 
-    public void OnExit()
+    public override void OnExit()
     {
         // TODO: 玩家回合结束 锁定 UI 交互
-        _battleController.EndPlayerTurn();
-       
+        Controller.EndPlayerTurn();
+
     }
 
 
-    public void OnUpdate()
+    public override void OnUpdate()
     {
 
     }
-    public void OnDestroy()
+    public override void OnDestroy()
     {
 
     }
 }
 
-public enum TurnResult
-{
-    Continue,
-    PlayerWin,
-    PlayerLose,
-    GameOver
-}

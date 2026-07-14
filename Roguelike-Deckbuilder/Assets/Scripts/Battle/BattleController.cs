@@ -48,9 +48,9 @@ public class BattleController
     private void InitFsm()
     {
         BattleFSM = new StateMachine();
-        BattleFSM.RegisterState(new PlayerTurnState(this));
-        BattleFSM.RegisterState(new EnemyTurnState(this));
-        BattleFSM.RegisterState(new BattleEndState(this));
+        BattleFSM.RegisterState(new PlayerTurnState(this, BattleFSM));
+        BattleFSM.RegisterState(new EnemyTurnState(this, BattleFSM));
+        BattleFSM.RegisterState(new BattleEndState(this, BattleFSM));
     }
     public bool PlayCard(int cardId, Enemy target = null)
     {
