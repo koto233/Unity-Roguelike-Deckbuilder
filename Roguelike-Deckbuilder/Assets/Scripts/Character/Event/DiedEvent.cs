@@ -1,6 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using LitFramework.EventBus;
-using UnityEngine;
 
-public struct DiedEvent : IEvent { }
+public struct DiedEvent : IEvent
+{
+    public EntityType EntityType;
+    public CharacterBase Character;
+}

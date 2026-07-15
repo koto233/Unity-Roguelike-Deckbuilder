@@ -87,7 +87,7 @@ public abstract class CharacterBase
    // 死亡回调（由子类实现）
    protected virtual void OnDeath()
    {
-      // EventBus<CharacterDeathEvent>.Publish(new CharacterDeathEvent { Character = this });
+      EventBus<DiedEvent>.Publish(new DiedEvent { EntityType = EntityType, Character = this });
       _buffManager.ClearAll();
    }
    // 添加 Buff 的便捷方法

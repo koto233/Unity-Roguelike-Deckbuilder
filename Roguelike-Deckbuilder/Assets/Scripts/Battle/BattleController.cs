@@ -14,7 +14,7 @@ public class BattleController
     public BattleContext Context { get; private set; }
     public StateMachine BattleFSM { get; private set; }
     private Action _onBattleEnd;   // 战斗结束回调（胜利/失败）
-
+    private IEventBinding<DiedEvent> _diedEventBinding;
     public BattleController(BattleContext context, Action onBattleEnd)
     {
         Context = context;
@@ -40,6 +40,8 @@ public class BattleController
         }
         InitFsm();
         BattleFSM.ChangeState<PlayerTurnState>();
+        _diedEventBinding = new EventBinding<DiedEvent>(OnCharacterDied);
+        EventBus<DiedEvent>.Subscribe(_diedEventBinding);
     }
 
     /// <summary>
@@ -159,19 +161,26 @@ public class BattleController
         BattleFSM.ChangeState<PlayerTurnState>();
     }
 
-
-    private void RemoveDeadEnemies()
+    private void OnCharacterDied(DiedEvent evt)
     {
-        Context.Enemies.RemoveAll(e => e.CurrentHp <= 0);
-        if (Context.Enemies.Count == 0)
-            OnAllEnemiesDefeated();
+        if (evt.EntityType == EntityType.Player)
+        {
+            EventBus<DiedEvent>.Unsubscribe(_diedEventBinding);
+            BattleFSM.ChangeState<BattleEndState>();
+            _onBattleEnd?.Invoke();
+            return;
+        }
+        if (evt.EntityType == EntityType.Enemy)
+        {
+            Context.Enemies.Remove(evt.Character as Enemy);
+            if (Context.Enemies.Count == 0)
+            {
+                EventBus<DiedEvent>.Unsubscribe(_diedEventBinding);
+                BattleFSM.ChangeState<BattleEndState>();
+                _onBattleEnd?.Invoke();
+            }
+        }
     }
-
-    public void OnPlayerDeath()
-    {
-        _onBattleEnd?.Invoke();  // 失败回调，状态机切换到游戏结束
-    }
-
     public void OnAllEnemiesDefeated()
     {
 

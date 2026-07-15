@@ -8,14 +8,20 @@ using LitFramework.UI.Core.Window;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public partial class UICardItem : UIBase, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerDownHandler, IPointerUpHandler
+public partial class UICardItem
+    : UIBase,
+        IBeginDragHandler,
+        IDragHandler,
+        IEndDragHandler,
+        IPointerDownHandler,
+        IPointerUpHandler
 {
     private Card _card;
     public int InstanceId => _card.InstanceId;
     private Transform _cardDetailTrans;
-    private Vector2 _dragStartOffset;  // 开始拖拽时鼠标与卡牌的偏移
+    private Vector2 _dragStartOffset; // 开始拖拽时鼠标与卡牌的偏移
     private Vector2 _originalPos;
-    private float _selectPositionY;  // 拖拽时鼠标与卡牌的偏移
+    private float _selectPositionY; // 拖拽时鼠标与卡牌的偏移
     private float _maxDragY = 200f;
     private Quaternion _originalRotation;
     private Transform _originalParent;
@@ -26,11 +32,18 @@ public partial class UICardItem : UIBase, IBeginDragHandler, IDragHandler, IEndD
     private Action<Enemy> _onCardDrag;
     private Enemy _Target;
     private bool _canUse = true;
-    private bool _isDragging = false;
-    private Tween _flyTween; // 用于管理飞行补间，防止冲突
+    private bool _isScaleNormalized = false;
     private RectTransform _rect;
     private BattleInteractionService _battleInteraction;
-    public void Init(Card card, Transform cardDetailTrans, Action onPlay = null, Action onCancel = null, Action<int> onDragStart = null, Action<Enemy> onCardDrag = null)
+
+    public void Init(
+        Card card,
+        Transform cardDetailTrans,
+        Action onPlay = null,
+        Action onCancel = null,
+        Action<int> onDragStart = null,
+        Action<Enemy> onCardDrag = null
+    )
     {
         _rect = GetComponent<RectTransform>();
         _onPlay = onPlay;
@@ -54,6 +67,7 @@ public partial class UICardItem : UIBase, IBeginDragHandler, IDragHandler, IEndD
         _selectPositionY = localBottom + cardHeight / 2f;
         _maxDragY = _originalPos.y + cardHeight / 2f;
     }
+
     public void RefreshUI(Card card)
     {
         _card = card;
@@ -64,51 +78,60 @@ public partial class UICardItem : UIBase, IBeginDragHandler, IDragHandler, IEndD
         b_NameText.SetText(card.Config.Name);
         b_DescText.SetText(card.Description);
     }
+
     public void RefreshState(int currentEnergy)
     {
         _canUse = currentEnergy >= _card.Config.Cost;
         Color targetColor = _canUse ? Color.black : Color.red;
         // b_CostText.DOColor(targetColor, 0.5f);
         b_CostText.color = targetColor;
-        transform.position = _canUse ? transform.position : new Vector3(transform.position.x, transform.position.y - 10f, transform.position.z);
+        transform.position = _canUse
+            ? transform.position
+            : new Vector3(transform.position.x, transform.position.y - 10f, transform.position.z);
     }
+
     public void OnBeginDrag(PointerEventData eventData)
     {
-        if (!_battleInteraction.CanInteract()) return;
-        if (!_canUse) return;
-        _isDragging = true;
+        if (!_battleInteraction.CanInteract())
+            return;
+        if (!_canUse)
+            return;
         _battleInteraction.StartDrag(this);
         RectTransformUtility.ScreenPointToLocalPointInRectangle(
-       _rect.parent as RectTransform,
-       eventData.position,
-       eventData.pressEventCamera,
-       out Vector2 localMousePos
+            _rect.parent as RectTransform,
+            eventData.position,
+            eventData.pressEventCamera,
+            out Vector2 localMousePos
         );
         _dragStartOffset = _rect.anchoredPosition - localMousePos;
         _onDragStart?.Invoke(_card.InstanceId);
-
     }
 
     public void OnDrag(PointerEventData eventData)
     {
-        if (!_battleInteraction.IsDragging) return;
-        if (_battleInteraction.DraggingCard != this) return;
+        if (!_battleInteraction.IsDragging)
+            return;
+        if (_battleInteraction.DraggingCard != this)
+            return;
 
         RectTransformUtility.ScreenPointToLocalPointInRectangle(
-               _rect.parent as RectTransform,
-               eventData.position,
-               eventData.pressEventCamera,
-               out Vector2 localMousePos
-           );
+            _rect.parent as RectTransform,
+            eventData.position,
+            eventData.pressEventCamera,
+            out Vector2 localMousePos
+        );
         Vector2 targetPos = localMousePos + _dragStartOffset;
         if (!_canUse)
         {
             targetPos.y = Mathf.Min(targetPos.y, _maxDragY);
-            return;
         }
         if (_card.NeedTarget)
         {
-            transform.DOScale(1f, 0.1f);
+            if (!_isScaleNormalized)
+            {
+                transform.DOScale(1f, 0.1f);
+                _isScaleNormalized = true;
+            }
             targetPos = new Vector2(_originalPos.x, _selectPositionY);
             _Target = IsOverTarget(eventData);
         }
@@ -119,23 +142,25 @@ public partial class UICardItem : UIBase, IBeginDragHandler, IDragHandler, IEndD
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        if (!_battleInteraction.IsDragging) return;
-        if (_battleInteraction.DraggingCard != this) return;
+        if (!_battleInteraction.IsDragging || _battleInteraction.DraggingCard != this)
+            return;
 
         _battleInteraction.EndDrag();
-        _isDragging = false;
-        if (!_canUse)
+
+        if (ShouldCancelDrag())
         {
             ResetCard();
             return;
         }
-        if (!_card.NeedTarget && transform.localPosition.y < _maxDragY)
-        {
-            ResetCard();
-            return;
-        }
+
         _onPlay?.Invoke();
     }
+
+    private bool ShouldCancelDrag()
+    {
+        return !_canUse || (_card.NeedTarget ? _Target == null : transform.localPosition.y < _maxDragY);
+    }
+
     private Enemy IsOverTarget(PointerEventData eventData)
     {
         // int layerMask = 1 << LayerMask.NameToLayer("Target");
@@ -148,14 +173,20 @@ public partial class UICardItem : UIBase, IBeginDragHandler, IDragHandler, IEndD
             if (result.gameObject.CompareTag("Enemy"))
             {
                 // ✅ 用 Tag 获取目标
-                return result.gameObject.GetComponent<UIEnemyItem>().Enemy;
+                var enemy = result.gameObject.GetComponent<UIEnemyItem>();
+                if (enemy != null)
+                {
+                    return enemy.Enemy;
+                }
             }
         }
         // 判断鼠标位置是否在目标区域（由 View 层的碰撞检测负责）
         return null;
     }
+
     public void ResetCard()
     {
+        _isScaleNormalized = false;
         transform.DOLocalMove(_originalPos, 0.2f);
         transform.DOScale(1f, 0.1f);
         transform.DORotateQuaternion(_originalRotation, 0.1f);
@@ -163,13 +194,17 @@ public partial class UICardItem : UIBase, IBeginDragHandler, IDragHandler, IEndD
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        if (!_battleInteraction.CanInteract()) return;
+        if (!_battleInteraction.CanInteract())
+            return;
         _cardDetailTrans.gameObject.SetActive(true);
         // Debug.Log("卡牌位置刷新" + _selectPositionY);
         transform.DOKill();
         transform.SetParent(_cardDetailTrans, worldPositionStays: true);
         transform.DOScale(1.6f, 0.1f);
-        transform.DOLocalMove(new Vector3(transform.localPosition.x, _selectPositionY, transform.localPosition.z), 0.1f);
+        transform.DOLocalMove(
+            new Vector3(transform.localPosition.x, _selectPositionY, transform.localPosition.z),
+            0.1f
+        );
         transform.rotation = Quaternion.Euler(0, 0, 0);
     }
 
@@ -179,11 +214,11 @@ public partial class UICardItem : UIBase, IBeginDragHandler, IDragHandler, IEndD
         transform.SetParent(_originalParent, worldPositionStays: true);
         _cardDetailTrans.gameObject.SetActive(false);
         transform.SetSiblingIndex(_originalSiblingIndex);
+        _dragStartOffset = Vector2.zero;
         if (_battleInteraction.IsDragging)
         {
             return;
         }
         ResetCard();
-
     }
 }
