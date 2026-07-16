@@ -196,4 +196,13 @@ public partial class UIBattleWindow : UIWindow
         await uiFloatingText.PlayAsync(text, position, color, fontSize, isCritical);
         _poolService.ReturnGameObject<UIFloatingTextItem>(item);
     }
+
+    protected override void OnClose()
+    {
+        base.OnClose();
+        b_BuffTooltip.Hide();
+        b_IntentTooltip.Hide();
+        b_HandZone.CancelAnimations();
+
+    }
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using LitFramework;
@@ -13,17 +14,13 @@ using UnityEngine;
 
 public partial class UIHandZone : MonoBehaviour
 {
-    [SerializeField]
-    private FanLayout _fanLayout;
-    [SerializeField]
-    private Transform _handContainer;
-    [SerializeField]
-    private Transform _cardDetailTrans;
+    [SerializeField] private FanLayout _fanLayout;
+    [SerializeField] private Transform _handContainer;
+    [SerializeField] private Transform _cardDetailTrans;
     private readonly Dictionary<int, UICardItem> _cardItems = new();
     private ObjectPoolService _poolService;
     private UIBattleWindow _battleWindow;
-    private readonly List<GameObject> _flyObjs = new();
-    private readonly List<UniTask> _flyTasks = new List<UniTask>();
+    private CancellationTokenSource _animationCts;
 
     public void Init(ObjectPoolService poolService, UIBattleWindow battleWindow)
     {
@@ -31,22 +28,7 @@ public partial class UIHandZone : MonoBehaviour
         _battleWindow = battleWindow;
         _cardDetailTrans.gameObject.SetActive(false);
     }
-    // void Update()
-    // {
-    //     _fanLayout.Refresh();
-    // }
 
-
-    /// <summary>
-    ///  刷新手牌
-    /// </summary>
-    /// <param name="handCards"></param>
-    /// <param name="changedCards"></param>
-    /// <param name="type"></param>
-    /// <param name="onPlay"></param>
-    /// <param name="onCancel"></param>
-    /// <param name="onDragStart"></param>
-    /// <param name="onCardDrag"></param> 
     public void RefreshHand(
         List<Card> handCards,
         List<Card> changedCards,
@@ -60,50 +42,60 @@ public partial class UIHandZone : MonoBehaviour
         switch (type)
         {
             case ChangeType.Remove:
-                // ★ 第一步：先把“要消失的卡”从手牌容器里抢出来，移到顶层画布
                 List<UICardItem> removedItems = new List<UICardItem>();
                 Debug.Log($"手牌移除 {changedCards.Count} 张");
-                // ★ 获取要删除的卡牌
                 foreach (var card in changedCards)
                 {
                     if (_cardItems.TryGetValue(card.InstanceId, out var item))
                     {
                         _cardItems.Remove(card.InstanceId);
-                        // 移出容器，放到顶层画布（这样UI刷新时不会动它）
                         item.transform.SetParent(transform.parent, worldPositionStays: true);
                         removedItems.Add(item);
                     }
                 }
                 _fanLayout.Refresh();
-                // // ★ 第二步：立即重建UI（手牌容器已经清掉了要删除的卡）
-                // RebuildUI(handCards, onPlay, onCancel, onDragStart, onCardDrag);
-
-                // ★ 第三步：播放飞行光点动画（不阻塞UI刷新）
-                PlayDiscardAnimations(removedItems);
+                // 改为 UniTask 启动，不阻塞 UI
+                PlayDiscardAnimations(removedItems).Forget();
                 break;
 
             case ChangeType.Add:
-                RebuildUI(handCards, onPlay, onCancel, onDragStart, onCardDrag);
-                PlayAddAnimations(changedCards);
+                AddCards(changedCards, onPlay, onCancel, onDragStart, onCardDrag);
+                PlayAddAnimations(changedCards).Forget();
                 break;
 
             case ChangeType.Refresh:
-                // 无动画，直接全量刷新
                 RebuildUI(handCards, onPlay, onCancel, onDragStart, onCardDrag);
                 break;
         }
     }
 
-    // ---- 重建UI（纯同步，不碰动画） ----
+    private void AddCards(List<Card> changedCards, Action onPlay, Action onCancel, Action<int> onDragStart, Action<Enemy> onCardDrag)
+    {
+        foreach (var card in changedCards)
+        {
+            if (_cardItems.ContainsKey(card.InstanceId))
+                continue;
+
+            var go = _poolService.GetGameObject<UICardItem>();
+            go.SetActive(true);
+            go.transform.SetParent(_handContainer);
+            var uiCard = go.GetComponent<UICardItem>();
+            uiCard.Init(card, _cardDetailTrans, onPlay, onCancel, onDragStart, onCardDrag);
+            _cardItems.Add(card.InstanceId, uiCard);
+        }
+
+        _fanLayout.Refresh();
+        foreach (var item in _cardItems.Values)
+            item.OnLayoutComplete();
+    }
+
     private void RebuildUI(List<Card> handCards, Action onPlay, Action onCancel, Action<int> onDragStart, Action<Enemy> onCardDrag)
     {
         Debug.Log("手牌数" + handCards.Count);
         ClearHandContainer();
         Debug.Log("_handContainer" + _handContainer.childCount);
-        // 清空字典（但不要动 _animatingItems）
         _cardItems.Clear();
 
-        // 生成新卡
         foreach (var card in handCards)
         {
             var go = _poolService.GetGameObject<UICardItem>();
@@ -117,106 +109,163 @@ public partial class UIHandZone : MonoBehaviour
         }
 
         _fanLayout.Refresh();
-
         foreach (var item in _cardItems.Values)
-        {
             item.OnLayoutComplete();
-        }
     }
 
-    // ---- 播放移除动画（光点飞行） ----
-    private async void PlayDiscardAnimations(List<UICardItem> cards)
+    // ========== 🔥 核心改动：播放移除动画（真正可取消） ==========
+    private async UniTask PlayDiscardAnimations(List<UICardItem> cards)
     {
         if (cards.Count == 0) return;
-        _flyTasks.Clear();
-        _flyObjs.Clear();
-        foreach (var item in cards)
-        {
-            await item.transform.DOScale(Vector3.zero, 0.1f);
-            var flyFx = _poolService.GetComponent<CardFlyFx>();
-            flyFx.gameObject.SetActive(true);
-            _flyObjs.Add(flyFx.gameObject);
-            // 启动飞行
-            _flyTasks.Add(flyFx.FlyToTarget(item.transform.position, _battleWindow.DiscardPileTrans.position, transform.parent, 0.2f));
-        }
 
-        // 等待所有光点飞完
-        await UniTask.WhenAll(_flyTasks);
+        // 取消旧动画
+        CancelAnimations();
+        _animationCts = new CancellationTokenSource();
+        var cts = _animationCts;
+        var token = cts.Token;
 
-        // 所有光点飞完后，回收卡牌视图和光点
-        foreach (var item in cards)
-        {
-            // 回收卡牌视图到池
-            ReturnCardToPool(item);
-        }
-        foreach (var flyObj in _flyObjs)
-        {
-            _poolService.ReturnGameObject<CardFlyFx>(flyObj);
-        }
-    }
+        var flyTasks = new List<UniTask>();
+        var flyObjs = new List<GameObject>();
 
-    // ---- 播放新增动画 ----
-    private async void PlayAddAnimations(List<Card> changedCards)
-    {
-        Debug.Log("添加手牌数" + changedCards.Count);
-        _flyTasks.Clear();
-        _flyObjs.Clear();
-        List<UICardItem> newItems = new List<UICardItem>();
-        // 从手牌容器里找到新增的卡，播放飞入动画
-        foreach (var card in changedCards)
+        try
         {
-            if (_cardItems.TryGetValue(card.InstanceId, out var item))
+            // ---- 阶段1：缩卡 + 创建飞行任务 ----
+            foreach (var item in cards)
             {
-                item.gameObject.SetActive(false);
-                item.transform.localScale = Vector3.zero;
+                // 🔥 每轮循环检查取消
+                token.ThrowIfCancellationRequested();
+
+                // 缩放动画传入 token，支持中途停止
+                await item.transform.DOScale(Vector3.zero, 0.1f)
+                    .ToUniTask(cancellationToken: token);
+
                 var flyFx = _poolService.GetComponent<CardFlyFx>();
                 flyFx.gameObject.SetActive(true);
-                _flyObjs.Add(flyFx.gameObject);
-                newItems.Add(item);
-                // 启动飞行
-                _flyTasks.Add(flyFx.FlyToTarget(_battleWindow.DrawPileTrans.position, item.transform.position, transform.parent, 0.2f));
+                flyObjs.Add(flyFx.gameObject);
+
+                // 🔥 飞行任务传入 token，由 FlyToTarget 内部响应取消
+                flyTasks.Add(flyFx.FlyToTarget(
+                    item.transform.position,
+                    _battleWindow.DiscardPileTrans.position,
+                    transform.parent, token, 0.2f));
             }
+
+            // ---- 阶段2：等待所有飞行完成 ----
+            // 🔥 不再使用 AttachExternalCancellation，直接等待
+            // 取消时 flyTasks 内部会抛 OperationCanceledException
+            await UniTask.WhenAll(flyTasks);
         }
-        await UniTask.WhenAll(_flyTasks);
-        foreach (var item in newItems)
+        catch (OperationCanceledException)
         {
-            item.transform.DOScale(Vector3.one, 0.1f);
-            item.gameObject.SetActive(true);
+            // 🔥 取消是预期的，静默退出
+            Debug.Log("丢弃动画被取消");
         }
-        foreach (var flyObj in _flyObjs)
+        finally
         {
-            _poolService.ReturnGameObject<CardFlyFx>(flyObj);
+            // 回收卡牌
+            foreach (var item in cards)
+                ReturnCardToPool(item);
+            // 回收飞行特效
+            foreach (var flyObj in flyObjs)
+                _poolService.ReturnGameObject<CardFlyFx>(flyObj);
+
+            // 如果已经取消了，把 cts 标记为 null（避免重复取消）
+            if (cts.IsCancellationRequested)
+                _animationCts = null;
         }
     }
+
+    // ========== 🔥 核心改动：播放新增动画（真正可取消） ==========
+    private async UniTask PlayAddAnimations(List<Card> changedCards)
+    {
+        if (changedCards.Count == 0) return;
+
+        Debug.Log("添加手牌数" + changedCards.Count);
+
+        CancelAnimations();
+        _animationCts = new CancellationTokenSource();
+        var cts = _animationCts;
+        var token = cts.Token;
+
+        var flyTasks = new List<UniTask>();
+        var flyObjs = new List<GameObject>();
+        var newItems = new List<UICardItem>();
+
+        try
+        {
+            // ---- 阶段1：隐藏卡牌 + 创建飞行任务 ----
+            foreach (var card in changedCards)
+            {
+                token.ThrowIfCancellationRequested();
+
+                if (_cardItems.TryGetValue(card.InstanceId, out var item))
+                {
+                    item.gameObject.SetActive(false);
+                    item.transform.localScale = Vector3.zero;
+
+                    var flyFx = _poolService.GetComponent<CardFlyFx>();
+                    flyFx.gameObject.SetActive(true);
+                    flyObjs.Add(flyFx.gameObject);
+                    newItems.Add(item);
+
+                    flyTasks.Add(flyFx.FlyToTarget(
+                        _battleWindow.DrawPileTrans.position,
+                        item.transform.position,
+                        transform.parent, token,
+                        0.2f
+                        ));
+                }
+            }
+
+            // ---- 阶段2：等待所有飞行完成 ----
+            await UniTask.WhenAll(flyTasks);
+
+            // ---- 阶段3：显示卡牌（缩放弹出） ----
+            foreach (var item in newItems)
+            {
+                token.ThrowIfCancellationRequested();
+                await item.transform.DOScale(Vector3.one, 0.1f)
+                    .ToUniTask(cancellationToken: token);
+                item.gameObject.SetActive(true);
+            }
+        }
+        catch (OperationCanceledException)
+        {
+            Debug.Log("添加动画被取消");
+        }
+        finally
+        {
+            foreach (var flyObj in flyObjs)
+                _poolService.ReturnGameObject<CardFlyFx>(flyObj);
+
+            if (cts.IsCancellationRequested)
+                _animationCts = null;
+        }
+    }
+
+    public void CancelAnimations()
+    {
+        if (_animationCts != null)
+        {
+            _animationCts.Cancel();
+            _animationCts.Dispose();
+            _animationCts = null;
+        }
+    }
+
     private void ClearHandContainer()
     {
-        // 1. 先收集所有子物体
-        List<UICardItem> itemsToRemove = new List<UICardItem>();
         foreach (Transform child in _handContainer)
         {
             var item = child.GetComponent<UICardItem>();
             if (item != null)
-            {
-                itemsToRemove.Add(item);
-            }
+                ReturnCardToPool(item);
             else
-            {
-                // 非 UICardItem 的直接销毁
                 Destroy(child.gameObject);
-            }
         }
-
-        // 2. 统一处理收集到的卡
-        foreach (var item in itemsToRemove)
-        {
-            _cardItems.Remove(item.InstanceId);
-            ReturnCardToPool(item); // 确保移出容器
-        }
-
-        // 3. 清空字典（双保险）
         _cardItems.Clear();
     }
-    // ---- 回收卡牌到对象池 ----
+
     private void ReturnCardToPool(UICardItem item)
     {
         if (item == null) return;
@@ -225,24 +274,17 @@ public partial class UIHandZone : MonoBehaviour
         item.transform.localRotation = Quaternion.identity;
         _poolService.ReturnGameObject<UICardItem>(item.gameObject);
     }
-    /// <summary>
-    ///  根据现有行动点刷新手牌状态
-    /// </summary>
-    /// <param name="currentEnergy"></param>
+
     public void RefreshHandState(int currentEnergy)
     {
         foreach (var item in _cardItems.Values)
-        {
             item.RefreshState(currentEnergy);
-        }
     }
 
     public void ResetCard()
     {
         foreach (var item in _cardItems.Values)
-        {
             item.ResetCard();
-        }
         _fanLayout.Refresh();
     }
 }
