@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
@@ -13,15 +12,12 @@ public class BattleController
 {
     public BattleContext Context { get; private set; }
     public StateMachine BattleFSM { get; private set; }
-    private Action _onBattleEnd;   // 战斗结束回调（胜利/失败）
-    private IEventBinding<DiedEvent> _diedEventBinding;
+    private Action _onBattleEnd;
+
     public BattleController(BattleContext context, Action onBattleEnd)
     {
         Context = context;
         _onBattleEnd = onBattleEnd;
-        // var mono = ServiceLocator.Get<MonoService>();
-        // mono.AddUpdate(this);
-        // mono.AddDestroyNotify(this);
     }
 
     public void StartBattle()
@@ -38,10 +34,10 @@ public class BattleController
             var card = new Card(cardConfig);
             Context.Player.DrawPile.Add(card);
         }
+
         InitFsm();
+        EventBus<DiedEvent>.Subscribe(OnCharacterDied);
         BattleFSM.ChangeState<PlayerTurnState>();
-        _diedEventBinding = new EventBinding<DiedEvent>(OnCharacterDied);
-        EventBus<DiedEvent>.Subscribe(_diedEventBinding);
     }
 
     /// <summary>
@@ -148,8 +144,21 @@ public class BattleController
     }
     public void EndPlayerTurn()
     {
-
         Context.Player.DiscardAllHand();
+        BattleFSM.ChangeState<EnemyTurnState>();
+    }
+
+    public void UpdateCardUsability()
+    {
+        foreach (var card in Context.Player.Hand)
+        {
+            card.CanUse = Context.Player.Energy >= card.CurrentCost;
+        }
+    }
+
+    public List<Card> GetPile(int pileType)
+    {
+        return pileType == 0 ? Context.Player.DrawPile : Context.Player.DiscardPile;
     }
 
     public void StartEnemyTurn()
@@ -165,7 +174,7 @@ public class BattleController
     {
         if (evt.EntityType == EntityType.Player)
         {
-            EventBus<DiedEvent>.Unsubscribe(_diedEventBinding);
+            EventBus<DiedEvent>.Unsubscribe(OnCharacterDied);
             BattleFSM.ChangeState<BattleEndState>();
             _onBattleEnd?.Invoke();
             return;
@@ -175,7 +184,7 @@ public class BattleController
             Context.Enemies.Remove(evt.Character as Enemy);
             if (Context.Enemies.Count == 0)
             {
-                EventBus<DiedEvent>.Unsubscribe(_diedEventBinding);
+                EventBus<DiedEvent>.Unsubscribe(OnCharacterDied);
                 BattleFSM.ChangeState<BattleEndState>();
                 _onBattleEnd?.Invoke();
             }

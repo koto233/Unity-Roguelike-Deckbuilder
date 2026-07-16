@@ -12,12 +12,11 @@ public partial class UIBattleWindow : UIWindow
 {
     private AssetRef<GameObject> _cardPrefabRef;
     private AssetRef<GameObject> _flyPrefabRef;
+    private AssetRef<GameObject> _floatingTextPrefabRef;
     private AssetRef<GameObject> _enemyPrefabRef;
     private AssetRef<GameObject> _playerPrefabRef;
     private UIPlayerItem _playerView;
     private Dictionary<int, UIEnemyItem> _enemyViews = new();
-    private string _cardPoolKey = "CardItem";
-    private string _flyPoolKey = "FlyItem";
     private ObjectPoolService _poolService;
     public Transform DiscardPileTrans => b_DiscardPileBtn.transform;
     public Transform DrawPileTrans => b_DrawPileBtn.transform;
@@ -40,23 +39,24 @@ public partial class UIBattleWindow : UIWindow
         _playerPrefabRef = await assetService.LoadRefAsync<GameObject>("Assets/Res/UI/UIPlayerItem.prefab");
         _cardPrefabRef = await assetService.LoadRefAsync<GameObject>("Assets/Res/UI/UICardItem.prefab");
         _flyPrefabRef = await assetService.LoadRefAsync<GameObject>("Assets/Res/UI/CardFlyFx.prefab");
+        _floatingTextPrefabRef = await assetService.LoadRefAsync<GameObject>("Assets/Res/UI/UIFloatingText.prefab");
         _poolService = ServiceLocator.Get<ObjectPoolService>();
-        _poolService.RegisterGameObjectPool(
-            _cardPoolKey,
-            new GameObjectPool(_cardPrefabRef.Asset, initialPoolSize: 10)
-        );
-        _poolService.RegisterGameObjectPool(
-            _flyPoolKey,
-            new GameObjectPool(_flyPrefabRef.Asset, initialPoolSize: 10)
-        );
+        InitObjectPools();
         _playerView = CreatePlayerView(battleContext.Player);
         CreateEnemyViews(battleContext.Enemies);
         InitUI();
     }
 
+    private void InitObjectPools()
+    {
+        _poolService.RegisterGameObjectPool<UICardItem>(_cardPrefabRef.Asset, initialPoolSize: 10);
+        _poolService.RegisterGameObjectPool<CardFlyFx>(_flyPrefabRef.Asset, initialPoolSize: 10);
+        _poolService.RegisterGameObjectPool<UIFloatingTextItem>(_floatingTextPrefabRef.Asset, initialPoolSize: 10);
+    }
+
     private void InitUI()
     {
-        b_HandZone.Init(_cardPoolKey, _flyPoolKey, _poolService, this);
+        b_HandZone.Init(_poolService, this);
         b_ClosePileButton.onClick.AddListener(ClosePilePanel);
         ClosePilePanel();
         b_DrawPileBtn.onClick.AddListener(() => OnOpenPile(0));
@@ -80,7 +80,7 @@ public partial class UIBattleWindow : UIWindow
         foreach (var item in _cardItems)
         {
             item.gameObject.SetActive(false);
-            _poolService.ReturnGameObject(_cardPoolKey, item.gameObject);
+            _poolService.ReturnGameObject<UICardItem>(item.gameObject);
         }
         _cardItems.Clear();
     }
@@ -88,7 +88,7 @@ public partial class UIBattleWindow : UIWindow
     {
         foreach (var data in cards)
         {
-            var cardPrefab = _poolService.GetGameObject(_cardPoolKey);
+            var cardPrefab = _poolService.GetGameObject<UICardItem>();
             cardPrefab.transform.SetParent(b_PilePanel.transform);
             var uiCard = cardPrefab.GetComponent<UICardItem>();
             uiCard.Init(data, null, null, null, null);
@@ -122,12 +122,7 @@ public partial class UIBattleWindow : UIWindow
         }
         return null;
     }
-    private void OnDestroy()
-    {
-        _cardPrefabRef?.Dispose();
-        _playerPrefabRef?.Dispose();
-        _enemyPrefabRef?.Dispose();
-    }
+
     public void RefreshHp(int currentHp, int maxHp, EntityType entityType, int entityId)
     {
         if (entityType == EntityType.Player)
@@ -192,65 +187,13 @@ public partial class UIBattleWindow : UIWindow
             view.RefreshIntent(intentConfig);
         }
     }
-    public void HighlightTargets(List<string> validTargetIds)
-    {
-        // 高亮可用的目标（敌人）
-        // foreach (Transform child in _enemyParent)
-        // {
-        //     var enemyView = child.GetComponent<UIEnemyItem>();
-        //     enemyView.SetHighlight(validTargetIds.Contains(enemyView.EnemyId));
-        // }
-    }
 
-    public void ClearHighlights()
+    public async UniTask ShowFloatingText(string text, Vector3 position, Color color, float fontSize, bool isCritical)
     {
-        // foreach (Transform child in _enemyParent)
-        // {
-        //     var enemyView = child.GetComponent<UIEnemyItem>();
-        //     enemyView.SetHighlight(false);
-        // }
-    }
-
-    public void ShowCardGhost(Vector2 position, Card data)
-    {
-        // 显示卡牌跟随鼠标的幻影
-        // 简化版：直接移动卡牌本身，或者创建一个克隆体
-    }
-
-    public void HideCardGhost()
-    {
-        // 隐藏幻影
-    }
-
-    // ===== 拖拽回调（View 层触发） =====
-    private void OnCardDragStart(string cardId)
-    {
-        // View 层纯粹通知 Presenter，不做业务判断
-        // _onCardPlay?.Invoke(cardId); // 或者通过 EventBus 发送
-    }
-
-    private void OnCardDrag(string cardId, Vector2 position)
-    {
-        // 更新幻影位置
-        // 检查是否悬停在目标上，更新高亮
-    }
-
-    private void OnCardDrop(string cardId)
-    {
-        // 通知 Presenter 卡牌被释放
-    }
-
-    private void OnCardCancel(string cardId)
-    {
-        // 取消使用卡牌
-    }
-
-    private void ClearCards()
-    {
-        // foreach (var item in _cardItems)
-        // {
-        //     Destroy(item.gameObject);
-        // }
-        // _cardItems.Clear();
+        var item = _poolService.GetGameObject<UIFloatingTextItem>();
+        item.transform.position = position;
+        var uiFloatingText = item.GetComponent<UIFloatingTextItem>();
+        await uiFloatingText.PlayAsync(text, position, color, fontSize, isCritical);
+        _poolService.ReturnGameObject<UIFloatingTextItem>(item);
     }
 }

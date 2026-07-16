@@ -1,20 +1,13 @@
-using System.Collections.Generic;
+using System;
+
 namespace LitFramework.EventBus
 {
-    /// <summary>
-    /// 事件总线，负责管理事件的注册、注销和触发
-    /// </summary>
-    /// <typeparam name="T"></typeparam> 
     public static class EventBus<T> where T : IEvent
     {
-        private static readonly List<IEventBinding<T>> _bindings = new();
+        private static Action<T> _handlers;
 
-        public static void Subscribe(IEventBinding<T> handler) => _bindings.Add(handler);
-        public static void Unsubscribe(IEventBinding<T> handler) => _bindings.Remove(handler);
-        public static void Publish(T eventData)
-        {
-            for (int i = _bindings.Count - 1; i >= 0; i--)
-                _bindings[i].OnEvent?.Invoke(eventData);
-        }
+        public static void Subscribe(Action<T> handler) => _handlers += handler;
+        public static void Unsubscribe(Action<T> handler) => _handlers -= handler;
+        public static void Publish(T eventData) => _handlers?.Invoke(eventData);
     }
 }

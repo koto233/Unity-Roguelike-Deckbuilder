@@ -6,25 +6,18 @@ using System.Text;
 using LitFramework;
 using LitFramework.Config;
 using LitFramework.EventBus;
+using LitFramework.ObjectPool;
 using UnityEngine;
 
-public class UIBattlePresenter : IDisposable
+public class BattlePresenter : IDisposable
 {
     private UIBattleWindow _view;
-    private IEventBinding<HpChangedEvent> _hpChangedEventBinding;
-    private IEventBinding<HandChangedEvent> _handChangedEventBinding;
-    private IEventBinding<EnergyChangedEvent> _energyChangedEventBinding;
-    private IEventBinding<BlockChangedEvent> _blockChangedEventBinding;
-    private IEventBinding<PlayerMaxHpChangedEvent> _playerMaxHpChangedEventBinding;
-    private IEventBinding<BuffAppliedEvent> _buffAppliedEventBinding;
-    private IEventBinding<BuffRemovedEvent> _buffRemovedEventBinding;
-    private IEventBinding<BuffStacksChangedEvent> _buffStacksChangedEventBinding;
-    private IEventBinding<TooltipShowEvent> _hoverEventBinding;
-    private EventBinding<IntentEvent> _onIntentChanged;
     private BattleController _battleController;
     private Enemy _currentTargetEnemy;
     private int _selectedCardId;
-    public UIBattlePresenter(UIBattleWindow view, BattleController battleController)
+
+ 
+    public BattlePresenter(UIBattleWindow view, BattleController battleController)
     {
         _view = view;
         _battleController = battleController;
@@ -39,50 +32,42 @@ public class UIBattlePresenter : IDisposable
 
     private void SubscribeEvents()
     {
-        _hpChangedEventBinding = new EventBinding<HpChangedEvent>(OnHpChanged);
-        _handChangedEventBinding = new EventBinding<HandChangedEvent>(OnHandChanged);
-        _energyChangedEventBinding = new EventBinding<EnergyChangedEvent>(OnEnergyChanged);
-        _blockChangedEventBinding = new EventBinding<BlockChangedEvent>(OnBlockChanged);
-        _playerMaxHpChangedEventBinding = new EventBinding<PlayerMaxHpChangedEvent>(OnPlayerMaxHpChanged);
-        _buffAppliedEventBinding = new EventBinding<BuffAppliedEvent>(OnBuffApplied);
-        _buffRemovedEventBinding = new EventBinding<BuffRemovedEvent>(OnBuffRemoved);
-        _buffStacksChangedEventBinding = new EventBinding<BuffStacksChangedEvent>(OnBuffStacksChanged);
-        _hoverEventBinding = new EventBinding<TooltipShowEvent>(OnHoverEvent);
-        _onIntentChanged = new EventBinding<IntentEvent>(OnEnemyIntentChanged);
-        EventBus<HandChangedEvent>.Subscribe(_handChangedEventBinding);
-        EventBus<HpChangedEvent>.Subscribe(_hpChangedEventBinding);
-        EventBus<EnergyChangedEvent>.Subscribe(_energyChangedEventBinding);
-        EventBus<BlockChangedEvent>.Subscribe(_blockChangedEventBinding);
-        EventBus<PlayerMaxHpChangedEvent>.Subscribe(_playerMaxHpChangedEventBinding);
-        EventBus<BuffAppliedEvent>.Subscribe(_buffAppliedEventBinding);
-        EventBus<BuffRemovedEvent>.Subscribe(_buffRemovedEventBinding);
-        EventBus<BuffStacksChangedEvent>.Subscribe(_buffStacksChangedEventBinding);
-        EventBus<TooltipShowEvent>.Subscribe(_hoverEventBinding);
-        EventBus<IntentEvent>.Subscribe(_onIntentChanged);
+        EventBus<HandChangedEvent>.Subscribe(OnHandChanged);
+        EventBus<HpChangedEvent>.Subscribe(OnHpChanged);
+        EventBus<EnergyChangedEvent>.Subscribe(OnEnergyChanged);
+        EventBus<BlockChangedEvent>.Subscribe(OnBlockChanged);
+        EventBus<PlayerMaxHpChangedEvent>.Subscribe(OnPlayerMaxHpChanged);
+        EventBus<BuffAppliedEvent>.Subscribe(OnBuffApplied);
+        EventBus<BuffRemovedEvent>.Subscribe(OnBuffRemoved);
+        EventBus<BuffStacksChangedEvent>.Subscribe(OnBuffStacksChanged);
+        EventBus<TooltipShowEvent>.Subscribe(OnHoverEvent);
+        EventBus<IntentEvent>.Subscribe(OnEnemyIntentChanged);
+        EventBus<FloatingTextEvent>.Subscribe(OnFloatingTextEvent);
         _view.OnOpenPile += OpenPile;
         _view.OnEndTurn += EndTurn;
     }
 
-
-
     private void UnSubscribeEvents()
     {
-        EventBus<HandChangedEvent>.Unsubscribe(_handChangedEventBinding);
-        EventBus<HpChangedEvent>.Unsubscribe(_hpChangedEventBinding);
-        EventBus<EnergyChangedEvent>.Unsubscribe(_energyChangedEventBinding);
-        EventBus<BlockChangedEvent>.Unsubscribe(_blockChangedEventBinding);
-        EventBus<PlayerMaxHpChangedEvent>.Unsubscribe(_playerMaxHpChangedEventBinding);
-        EventBus<BuffAppliedEvent>.Unsubscribe(_buffAppliedEventBinding);
-        EventBus<BuffRemovedEvent>.Unsubscribe(_buffRemovedEventBinding);
-        EventBus<BuffStacksChangedEvent>.Unsubscribe(_buffStacksChangedEventBinding);
-        EventBus<TooltipShowEvent>.Unsubscribe(_hoverEventBinding);
-        EventBus<IntentEvent>.Unsubscribe(_onIntentChanged);
+        EventBus<HandChangedEvent>.Unsubscribe(OnHandChanged);
+        EventBus<HpChangedEvent>.Unsubscribe(OnHpChanged);
+        EventBus<EnergyChangedEvent>.Unsubscribe(OnEnergyChanged);
+        EventBus<BlockChangedEvent>.Unsubscribe(OnBlockChanged);
+        EventBus<PlayerMaxHpChangedEvent>.Unsubscribe(OnPlayerMaxHpChanged);
+        EventBus<BuffAppliedEvent>.Unsubscribe(OnBuffApplied);
+        EventBus<BuffRemovedEvent>.Unsubscribe(OnBuffRemoved);
+        EventBus<BuffStacksChangedEvent>.Unsubscribe(OnBuffStacksChanged);
+        EventBus<TooltipShowEvent>.Unsubscribe(OnHoverEvent);
+        EventBus<IntentEvent>.Unsubscribe(OnEnemyIntentChanged);
+        EventBus<FloatingTextEvent>.Unsubscribe(OnFloatingTextEvent);
         _view.OnOpenPile -= OpenPile;
         _view.OnEndTurn -= EndTurn;
     }
+
+
     private void EndTurn()
     {
-        _battleController.BattleFSM.ChangeState<EnemyTurnState>();
+        _battleController.EndPlayerTurn();
     }
 
 
@@ -131,11 +116,7 @@ public class UIBattlePresenter : IDisposable
     }
     private void RefreshHand(List<Card> handCards, List<Card> changedCards, ChangeType type)
     {
-        foreach (var card in handCards)
-        {
-            card.CanUse = _battleController.Context.Player.Energy >= card.CurrentCost;
-        }
-        Debug.Log("CurrentEnergy:" + _battleController.Context.Player.Energy);
+        _battleController.UpdateCardUsability();
         _view.RefreshHand(handCards, changedCards, type, OnPlayCard, OnCancelCard, OnDragStart, OnDragCard);
     }
 
@@ -173,21 +154,9 @@ public class UIBattlePresenter : IDisposable
     /// <param name="index"></param>
     private void OpenPile(int index)
     {
-        List<Card> drawPile = null;
-        switch (index)
-        {
-            case 0:
-                drawPile = _battleController.Context.Player.DrawPile;
-                break;
-            case 1:
-                drawPile = _battleController.Context.Player.DiscardPile;
-                break;
-            default:
-                break;
-        }
-        if (drawPile == null) return;
+        var pile = _battleController.GetPile(index);
         _view.ClearCardsInList();
-        _view.SpawnCardInList(drawPile);
+        _view.SpawnCardInList(pile);
         _view.OpenPilePanel();
     }
     private void OnBuffApplied(BuffAppliedEvent evt)
@@ -251,4 +220,10 @@ public class UIBattlePresenter : IDisposable
     {
         UnSubscribeEvents();
     }
+
+    private async void OnFloatingTextEvent(FloatingTextEvent evt)
+    {
+        await _view.ShowFloatingText(evt.Text, evt.Position, evt.Color, evt.FontSize, evt.IsCritical);
+    }
+
 }

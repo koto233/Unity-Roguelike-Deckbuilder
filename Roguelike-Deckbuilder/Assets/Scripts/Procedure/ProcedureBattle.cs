@@ -12,7 +12,7 @@ namespace LitFramework.FSM.Procedure
     public class ProcedureBattle : ProcedureBase
     {
         public ProcedureBattle(ProcedureManager procedureManager) : base(procedureManager) { }
-        private UIBattlePresenter _uiBattlePresenter;
+        private BattlePresenter _uiBattlePresenter;
         public override void OnInit()
         {
 
@@ -60,7 +60,7 @@ namespace LitFramework.FSM.Procedure
                 uiService.OpenAsync<UITitleWindow>().Forget();
             });
             var uiBattleWindow = await uiService.OpenAsync<UIBattleWindow>(battleContext);
-            var uiBattlePresenter = new UIBattlePresenter(uiBattleWindow, battleController);
+            var uiBattlePresenter = new BattlePresenter(uiBattleWindow, battleController);
             battleController.StartBattle();
             uiService.Close<UITitleWindow>();
         }

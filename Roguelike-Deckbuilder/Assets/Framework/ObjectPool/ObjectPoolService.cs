@@ -3,127 +3,125 @@ using UnityEngine;
 
 namespace LitFramework.ObjectPool
 {
-    /// <summary>
-    /// 管理多个不同对象的池子
-    /// </summary> 
     public class ObjectPoolService
     {
-        private Dictionary<string, object> _pools = new Dictionary<string, object>();
-        /// <summary>
-        /// 注册泛型对象池
-        /// </summary>
-        /// <typeparam name="T">类型</typeparam>
-        /// <param name="poolName">池子名称</param>
-        /// <param name="pool">对象池</param>
+        private readonly Dictionary<string, object> _pools = new Dictionary<string, object>();
+
+        private static string GetKey<T>() => typeof(T).Name;
+
+        public void RegisterPool<T>(ObjectPool<T> pool) where T : class
+        {
+            RegisterPool(GetKey<T>(), pool);
+        }
+
         public void RegisterPool<T>(string poolName, ObjectPool<T> pool) where T : class
         {
             if (_pools.ContainsKey(poolName))
-            {
                 return;
-            }
             _pools.Add(poolName, pool);
         }
-        /// <summary>
-        /// 注册GameObject对象池
-        /// </summary>
-        /// <param name="poolName">池子名称</param>
-        /// <param name="pool">对象池</param>
-        public void RegisterGameObjectPool(string poolName, GameObjectPool pool)
+
+        public void RegisterGameObjectPool<T>(GameObject prefab, int initialPoolSize = 0, int maxPoolSize = 100) where T : Component
+        {
+            RegisterGameObjectPool(GetKey<T>(), prefab, initialPoolSize, maxPoolSize);
+        }
+
+        private void RegisterGameObjectPool(string poolName, GameObject prefab, int initialPoolSize = 0, int maxPoolSize = 100)
         {
             if (_pools.ContainsKey(poolName))
-            {
                 return;
-            }
-            _pools.Add(poolName, pool);
+            _pools.Add(poolName, new GameObjectPool(prefab, null, initialPoolSize, maxPoolSize));
         }
-        /// <summary>
-        /// 获取泛型对象池中的对象
-        /// </summary>
-        /// <typeparam name="T">对象类型</typeparam>
-        /// <param name="poolName">池子名称</param>
-        /// <returns>对象</returns>
-        public T GetT<T>(string poolName) where T : class
+
+        public T Get<T>() where T : class
         {
-            if (_pools.TryGetValue(poolName, out var pool) && pool is ObjectPool<T> typedPool)
-            {
-                return typedPool.Get();
-            }
-            else
-            {
-                Debug.LogError($"对象池 {poolName} 不存在或类型不匹配");
-                return null;
-            }
+            return GetT<T>(GetKey<T>());
         }
-        /// <summary>
-        /// 获取GameObject对象池中的对象
-        /// </summary>
-        /// <param name="poolName">池子名称</param>
-        /// <returns>对象</returns>
-        /// </summary>
-        public GameObject GetGameObject(string poolName)
+
+        public T Get<T>(string poolName) where T : class
+        {
+            return GetT<T>(poolName);
+        }
+
+        public GameObject GetGameObject<T>() where T : Component
+        {
+            return GetGameObject(GetKey<T>());
+        }
+
+        private GameObject GetGameObject(string poolName)
         {
             if (_pools.TryGetValue(poolName, out var pool) && pool is GameObjectPool typedPool)
             {
                 return typedPool.Get();
             }
-            else
-            {
-                Debug.LogError($"GameObject对象池 {poolName} 不存在或类型不匹配");
-                return null;
-            }
+            Debug.LogError($"GameObject对象池 {poolName} 不存在");
+            return null;
         }
-        /// <summary>
-        /// 归还泛型对象池中的对象
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        public void ReturnT<T>(string poolName, T obj) where T : class
+
+        public T GetComponent<T>() where T : Component
         {
-            if (_pools.TryGetValue(poolName, out var pool) && pool is ObjectPool<T> typedPool)
-            {
-                typedPool.Return(obj);
-            }
-            else
-            {
-                Debug.LogError($"对象池 {poolName} 不存在或类型不匹配");
-                if (obj is GameObject go)
-                {
-                    Object.Destroy(go);
-                }
-                else if (obj is Component comp)
-                {
-                    Object.Destroy(comp.gameObject);
-                }
-            }
+            var go = GetGameObject<T>();
+            return go?.GetComponent<T>();
         }
-        /// <summary>
-        /// 归还GameObject对象池中的对象
-        /// </summary>
-        /// <param name="poolName"></param>
-        /// <param name="go"></param> 
-        public void ReturnGameObject(string poolName, GameObject go)
+
+        public void Return<T>(T obj) where T : class
+        {
+            ReturnT(GetKey<T>(), obj);
+        }
+
+        public void Return<T>(string poolName, T obj) where T : class
+        {
+            ReturnT(poolName, obj);
+        }
+
+        public void ReturnGameObject<T>(GameObject go) where T : Component
+        {
+            ReturnGameObject(GetKey<T>(), go);
+        }
+
+        private void ReturnGameObject(string poolName, GameObject go)
         {
             if (_pools.TryGetValue(poolName, out var pool) && pool is GameObjectPool typedPool)
             {
                 typedPool.Return(go);
+                return;
             }
-            else
-            {
-                Debug.LogError($"对象池 {poolName} 不存在或类型不匹配");
-                Object.Destroy(go);
-            }
+            Debug.LogError($"GameObject对象池 {poolName} 不存在");
+            Object.Destroy(go);
         }
+
+        private T GetT<T>(string poolName) where T : class
+        {
+            if (_pools.TryGetValue(poolName, out var pool) && pool is ObjectPool<T> typedPool)
+            {
+                return typedPool.Get();
+            }
+            Debug.LogError($"对象池 {poolName} 不存在或类型不匹配");
+            return null;
+        }
+
+        private void ReturnT<T>(string poolName, T obj) where T : class
+        {
+            if (_pools.TryGetValue(poolName, out var pool) && pool is ObjectPool<T> typedPool)
+            {
+                typedPool.Return(obj);
+                return;
+            }
+            Debug.LogError($"对象池 {poolName} 不存在或类型不匹配");
+            if (obj is GameObject go)
+                Object.Destroy(go);
+            else if (obj is Component comp)
+                Object.Destroy(comp.gameObject);
+        }
+
         public void Clear()
         {
-            foreach (var pool in _pools)
+            foreach (var pool in _pools.Values)
             {
-                if (pool.Value is ObjectPool<Object> typedPool)
-                {
+                if (pool is ObjectPool<object> typedPool)
                     typedPool.Clear();
-                }
-                else if (pool.Value is GameObjectPool goPool)
-                {
+                else if (pool is GameObjectPool goPool)
                     goPool.Clear();
-                }
             }
             _pools.Clear();
         }

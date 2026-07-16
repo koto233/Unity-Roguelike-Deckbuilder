@@ -19,23 +19,17 @@ public partial class UIHandZone : MonoBehaviour
     private Transform _handContainer;
     [SerializeField]
     private Transform _cardDetailTrans;
-    private Dictionary<int, UICardItem> _cardItems = new();
-    private BattleContext _battleContext;
-    private string _cardPoolKey;
-    private string _orbPoolKey;
+    private readonly Dictionary<int, UICardItem> _cardItems = new();
     private ObjectPoolService _poolService;
     private UIBattleWindow _battleWindow;
-    private List<GameObject> _flyObjs = new();
-    private List<UniTask> _flyTasks = new List<UniTask>();
-    public void Init(string cardPoolKey, string orbPoolKey, ObjectPoolService poolService, UIBattleWindow battleWindow)
-    {
+    private readonly List<GameObject> _flyObjs = new();
+    private readonly List<UniTask> _flyTasks = new List<UniTask>();
 
-        _cardPoolKey = cardPoolKey;
-        _orbPoolKey = orbPoolKey;
+    public void Init(ObjectPoolService poolService, UIBattleWindow battleWindow)
+    {
         _poolService = poolService;
         _battleWindow = battleWindow;
         _cardDetailTrans.gameObject.SetActive(false);
-
     }
     // void Update()
     // {
@@ -112,7 +106,7 @@ public partial class UIHandZone : MonoBehaviour
         // 生成新卡
         foreach (var card in handCards)
         {
-            var go = _poolService.GetGameObject(_cardPoolKey);
+            var go = _poolService.GetGameObject<UICardItem>();
             go.SetActive(true);
             go.transform.SetParent(_handContainer);
             var rect = go.GetComponent<RectTransform>();
@@ -139,8 +133,7 @@ public partial class UIHandZone : MonoBehaviour
         foreach (var item in cards)
         {
             await item.transform.DOScale(Vector3.zero, 0.1f);
-            // 从对象池取光点
-            var flyFx = _poolService.GetGameObject(_orbPoolKey).GetComponent<CardFlyFx>();
+            var flyFx = _poolService.GetComponent<CardFlyFx>();
             flyFx.gameObject.SetActive(true);
             _flyObjs.Add(flyFx.gameObject);
             // 启动飞行
@@ -158,7 +151,7 @@ public partial class UIHandZone : MonoBehaviour
         }
         foreach (var flyObj in _flyObjs)
         {
-            _poolService.ReturnGameObject(_orbPoolKey, flyObj);
+            _poolService.ReturnGameObject<CardFlyFx>(flyObj);
         }
     }
 
@@ -176,7 +169,7 @@ public partial class UIHandZone : MonoBehaviour
             {
                 item.gameObject.SetActive(false);
                 item.transform.localScale = Vector3.zero;
-                var flyFx = _poolService.GetGameObject(_orbPoolKey).GetComponent<CardFlyFx>();
+                var flyFx = _poolService.GetComponent<CardFlyFx>();
                 flyFx.gameObject.SetActive(true);
                 _flyObjs.Add(flyFx.gameObject);
                 newItems.Add(item);
@@ -192,7 +185,7 @@ public partial class UIHandZone : MonoBehaviour
         }
         foreach (var flyObj in _flyObjs)
         {
-            _poolService.ReturnGameObject(_orbPoolKey, flyObj);
+            _poolService.ReturnGameObject<CardFlyFx>(flyObj);
         }
     }
     private void ClearHandContainer()
@@ -230,7 +223,7 @@ public partial class UIHandZone : MonoBehaviour
         item.gameObject.SetActive(false);
         item.transform.localScale = Vector3.one;
         item.transform.localRotation = Quaternion.identity;
-        _poolService.ReturnGameObject(_cardPoolKey, item.gameObject);
+        _poolService.ReturnGameObject<UICardItem>(item.gameObject);
     }
     /// <summary>
     ///  根据现有行动点刷新手牌状态
