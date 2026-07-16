@@ -30,8 +30,7 @@ public class Enemy : CharacterBase
         CurrentIntent = AI.DecideIntent(this, context);
         // Debug.Log("意图" + CurrentIntent);
         var configService = ServiceLocator.Get<IConfigService>();
-        var intentConfigTable = configService.GetTable<IntentConfig>();
-        IntentConfig intentConfig = intentConfigTable.GetById((int)CurrentIntent) as IntentConfig;
+        var intentConfig = configService.GetTable<IntentConfig>().Get((int)CurrentIntent);
         // Debug.Log("意图" + intentConfig.Name);
         EventBus<IntentEvent>.Publish(new IntentEvent { Enemy = this, IntentConfig = intentConfig });
     }

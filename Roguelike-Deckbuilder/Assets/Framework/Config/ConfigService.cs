@@ -4,71 +4,48 @@ using Cysharp.Threading.Tasks;
 using LitFramework.Asset;
 using Newtonsoft.Json;
 using UnityEngine;
+
 namespace LitFramework.Config
 {
     public class ConfigService : IConfigService
     {
-        private Dictionary<Type, IConfigTable> _tables = new();
+        private readonly Dictionary<Type, object> _tables = new();
         private IAssetService _assetManager;
-        private IAssetService AssetManager =>
-        _assetManager ??= ServiceLocator.Get<IAssetService>();
+        private IAssetService AssetManager => _assetManager ??= ServiceLocator.Get<IAssetService>();
 
-
-
-        /// <summary>
-        /// 加载一张配置表为字典
-        /// </summary>
         public async UniTask LoadDictTableAsync<T>(string jsonPath) where T : IConfig
         {
-            TextAsset asset = await AssetManager.LoadAsync<TextAsset>(jsonPath);
+            var asset = await AssetManager.LoadAsync<TextAsset>(jsonPath);
             if (asset == null)
             {
                 Debug.LogError($"配置表加载失败：{jsonPath}");
+                return;
             }
-            else
-            {
-                Debug.Log($"配置表加载成功：{jsonPath}");
-            }
+
             var dict = JsonConvert.DeserializeObject<Dictionary<int, T>>(asset.text);
-            var table = new DictConfigTable<T>(dict);
-            _tables[typeof(T)] = table;
+            _tables[typeof(T)] = new DictConfigTable<T>(dict);
+            Debug.Log($"配置表加载成功：{jsonPath}");
         }
+
         public async UniTask LoadListTableAsync<T>(string jsonPath) where T : IConfig
         {
-
-            TextAsset asset = await AssetManager.LoadAsync<TextAsset>(jsonPath);
+            var asset = await AssetManager.LoadAsync<TextAsset>(jsonPath);
             if (asset == null)
             {
                 Debug.LogError($"配置表加载失败：{jsonPath}");
+                return;
             }
-            else
-            {
-                Debug.Log($"配置表加载成功：{jsonPath}");
-            }
-            var list = JsonConvert.DeserializeObject<List<T>>(asset.text);
-            var table = new ListConfigTable<T>(list);
-            _tables[typeof(T)] = table;
 
+            var list = JsonConvert.DeserializeObject<List<T>>(asset.text);
+            _tables[typeof(T)] = new ListConfigTable<T>(list);
+            Debug.Log($"配置表加载成功：{jsonPath}");
         }
 
-        public IConfigTable GetTable<T>() where T : IConfig
+        public IConfigTable<T> GetTable<T>() where T : IConfig
         {
             if (_tables.TryGetValue(typeof(T), out var obj))
-                return obj;
+                return obj as IConfigTable<T>;
             return null;
         }
-        // public DataTable<T> GetTable<T>() where T : IConfig
-        // {
-        //     if (_tables.TryGetValue(typeof(T), out var obj))
-        //         return obj as DataTable<T>;
-        //     return null;
-        // }
     }
-
-    // // 辅助包装类，适配 JsonUtility（因为它不支持顶级数组）
-    // [Serializable]
-    // public class Wrapper<T>
-    // {
-    //     public List<T> items;
-    // }
 }

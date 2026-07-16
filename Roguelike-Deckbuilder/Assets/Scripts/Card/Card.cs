@@ -42,12 +42,10 @@ public class Card
         Config = config;
         CurrentCost = config.Cost;
         var configService = ServiceLocator.Get<IConfigService>();
-        var effectsConfigTable = configService.GetTable<CardEffectsConfig>();
         StringBuilder sb = new StringBuilder();
         foreach (var effect in config.Effects)
         {
-
-            var effectConfig = effectsConfigTable.GetById(effect.EffectId) as CardEffectsConfig;
+            var effectConfig = configService.GetTable<CardEffectsConfig>().Get(effect.EffectId);
             Debug.Log($"生成效果{JsonConvert.SerializeObject(effect)} {JsonConvert.SerializeObject(effectConfig)}");
             var effectInstance = CardEffectFactory.Create(effectConfig, effect.Value);
             EffectsInstance.Add(effectInstance);

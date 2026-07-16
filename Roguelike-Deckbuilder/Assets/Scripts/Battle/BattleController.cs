@@ -30,7 +30,7 @@ public class BattleController
         for (int i = 0; i < 20; i++)
         {
             int randomId = UnityEngine.Random.Range(1, 12);
-            var cardConfig = cardConfigTable.GetById(randomId) as CardConfig;
+            var cardConfig = cardConfigTable.Get(randomId);
             var card = new Card(cardConfig);
             Context.Player.DrawPile.Add(card);
         }

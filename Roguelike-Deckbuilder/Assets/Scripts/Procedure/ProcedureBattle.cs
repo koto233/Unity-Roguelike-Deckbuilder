@@ -41,7 +41,7 @@ namespace LitFramework.FSM.Procedure
             var assetService = ServiceLocator.Get<IAssetService>();
             var uiService = ServiceLocator.Get<UIService>();
             var configService = ServiceLocator.Get<IConfigService>();
-            var enemyConfig = configService.GetTable<EnemyConfig>().GetById(1) as EnemyConfig;
+            var enemyConfig = configService.GetTable<EnemyConfig>().Get(1);
             var battleContext = new BattleContext()
             {
                 Player = new Player(100, 3),
