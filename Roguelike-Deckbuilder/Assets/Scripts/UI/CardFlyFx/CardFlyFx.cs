@@ -22,12 +22,11 @@ public class CardFlyFx : MonoBehaviour
         Vector3 startWorldPos,
         Vector3 targetPos,
         Transform flightContainer,  // TopLayerCanvas
-     CancellationToken token
-       , float duration = 0.4f)
+        float duration = 0.4f)
     {
         transform.SetParent(flightContainer, worldPositionStays: true);
         transform.position = startWorldPos;
-        await transform.DOMove(targetPos, duration).ToUniTask(cancellationToken: token);
+        await transform.DOMove(targetPos, duration);
         transform.gameObject.SetActive(false);
     }
 
