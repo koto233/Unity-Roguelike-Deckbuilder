@@ -4,7 +4,7 @@
 //     请勿手动修改此文件，重新生成将覆盖所有改动
 //
 //     来源 UI : UIEnemyItem
-//     生成时间 : 2026-07-13
+//     生成时间 : 2026-07-17
 // </自动生成>
 //------------------------------------------------------------------------------
 
@@ -19,6 +19,7 @@ using TMPro;
         private @TextMeshProUGUI b_HPText;
         private @HorizontalLayoutGroup b_IntentionRoot;
         private @HorizontalLayoutGroup b_BuffRoot;
+        private @RectTransform b_DamageTextPos;
 
         protected override void GetUI()
         {
@@ -28,5 +29,6 @@ using TMPro;
             b_HPText = GetBind<@TextMeshProUGUI>(2);
             b_IntentionRoot = GetBind<@HorizontalLayoutGroup>(3);
             b_BuffRoot = GetBind<@HorizontalLayoutGroup>(4);
+            b_DamageTextPos = GetBind<@RectTransform>(5);
         }
     }

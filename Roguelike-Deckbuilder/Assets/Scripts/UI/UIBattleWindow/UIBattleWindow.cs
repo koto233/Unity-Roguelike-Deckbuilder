@@ -188,15 +188,28 @@ public partial class UIBattleWindow : UIWindow
         }
     }
 
-    public async UniTask ShowFloatingText(string text, Vector3 position, Color color, float fontSize, bool isCritical)
+    public async UniTask ShowFloatingText(string text, Vector3 position, Color color, bool isCritical)
     {
         var item = _poolService.GetGameObject<UIFloatingTextItem>();
+        item.transform.SetParent(transform);
         item.transform.position = position;
         var uiFloatingText = item.GetComponent<UIFloatingTextItem>();
-        await uiFloatingText.PlayAsync(text, position, color, fontSize, isCritical);
+        await uiFloatingText.PlayAsync(text, position, color, isCritical);
         _poolService.ReturnGameObject<UIFloatingTextItem>(item);
     }
-
+    public Vector3 GetEntityPosition(EntityType entityType, int entityId)
+    {
+        if (entityType == EntityType.Player)
+        {
+            return _playerView.DamageTextPos;
+        }
+        else if (entityType == EntityType.Enemy)
+        {
+            if (_enemyViews.TryGetValue(entityId, out var enemyView))
+                return enemyView.DamageTextPos;
+        }
+        return Vector3.zero;
+    }
     protected override void OnClose()
     {
         base.OnClose();

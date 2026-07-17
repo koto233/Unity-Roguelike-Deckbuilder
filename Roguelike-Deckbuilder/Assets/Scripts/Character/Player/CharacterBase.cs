@@ -52,7 +52,7 @@ public abstract class CharacterBase
          }
       }
 
-      EventBus<FloatingTextEvent>.Publish(new FloatingTextEvent { Text = damage.ToString(), Position = Vector3.zero, Color = Color.red, FontSize = 20, IsCritical = false });
+      EventBus<FloatingTextEvent>.Publish(new FloatingTextEvent { Text = damage.ToString(), Color = Color.red, IsCritical = false, EntityType = EntityType, EntityId = Id });
    }
 
    // 治疗

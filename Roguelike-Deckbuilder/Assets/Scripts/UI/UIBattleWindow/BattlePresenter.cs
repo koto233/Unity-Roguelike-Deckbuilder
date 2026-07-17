@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Cysharp.Threading.Tasks;
 using LitFramework;
 using LitFramework.Config;
 using LitFramework.EventBus;
@@ -16,7 +17,7 @@ public class BattlePresenter : IDisposable
     private Enemy _currentTargetEnemy;
     private int _selectedCardId;
 
- 
+
     public BattlePresenter(UIBattleWindow view, BattleController battleController)
     {
         _view = view;
@@ -212,6 +213,7 @@ public class BattlePresenter : IDisposable
         }
 
     }
+   
     private void OnEnemyIntentChanged(IntentEvent evt)
     {
         _view.RefreshEnemyIntent(evt.Enemy, evt.IntentConfig);
@@ -221,9 +223,10 @@ public class BattlePresenter : IDisposable
         UnSubscribeEvents();
     }
 
-    private async void OnFloatingTextEvent(FloatingTextEvent evt)
+    private void OnFloatingTextEvent(FloatingTextEvent evt)
     {
-        await _view.ShowFloatingText(evt.Text, evt.Position, evt.Color, evt.FontSize, evt.IsCritical);
+        Vector3 position = _view.GetEntityPosition(evt.EntityType, evt.EntityId);
+        _view.ShowFloatingText(evt.Text, position, evt.Color, evt.IsCritical).Forget();
     }
 
 }

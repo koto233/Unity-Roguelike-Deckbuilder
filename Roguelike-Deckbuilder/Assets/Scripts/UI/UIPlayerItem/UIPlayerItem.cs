@@ -6,6 +6,7 @@ using UnityEngine;
 
 public partial class UIPlayerItem : UIBase
 {
+    public Vector3 DamageTextPos => b_DamageTextPos.transform.position;
     public void UpdateHP(int currentHp, int maxHp)
     {
         b_HPText.SetText($"{currentHp}/{maxHp}");

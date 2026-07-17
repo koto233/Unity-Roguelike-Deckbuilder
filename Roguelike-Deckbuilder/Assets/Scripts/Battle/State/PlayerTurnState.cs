@@ -25,7 +25,6 @@ public class PlayerTurnState : TurnStateBase
     public override void OnExit()
     {
         // TODO: 玩家回合结束 锁定 UI 交互
-        Controller.EndPlayerTurn();
 
     }
 

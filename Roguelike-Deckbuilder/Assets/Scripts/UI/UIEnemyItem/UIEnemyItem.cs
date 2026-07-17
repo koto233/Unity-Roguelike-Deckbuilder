@@ -13,8 +13,8 @@ public partial class UIEnemyItem : UIBase
     private AssetRef<GameObject> _intentionPrefabAssetRef;
     private UIIntentionItem _intentionUI;
     private Dictionary<int, UIBuffItem> _buffSlots = new();
+    public Vector3 DamageTextPos => b_DamageTextPos.transform.position;
     public Enemy Enemy { get; private set; }
-
 
     void Start()
     {

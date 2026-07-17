@@ -224,8 +224,8 @@ public partial class UIHandZone : MonoBehaviour
             foreach (var item in newItems)
             {
                 token.ThrowIfCancellationRequested();
-                await item.transform.DOScale(Vector3.one, 0.1f)
-                    .ToUniTask(cancellationToken: token);
+                item.transform.DOScale(Vector3.one, 0.1f)
+                   .ToUniTask(cancellationToken: token).Forget();
                 item.gameObject.SetActive(true);
             }
         }
@@ -255,8 +255,9 @@ public partial class UIHandZone : MonoBehaviour
 
     private void ClearHandContainer()
     {
-        foreach (Transform child in _handContainer)
+        for (int i = _handContainer.childCount - 1; i >= 0; i--)
         {
+            Transform child = _handContainer.GetChild(i);
             var item = child.GetComponent<UICardItem>();
             if (item != null)
                 ReturnCardToPool(item);
@@ -265,7 +266,6 @@ public partial class UIHandZone : MonoBehaviour
         }
         _cardItems.Clear();
     }
-
     private void ReturnCardToPool(UICardItem item)
     {
         if (item == null) return;
