@@ -51,6 +51,8 @@ public abstract class CharacterBase
                OnDeath();
          }
       }
+
+      EventBus<FloatingTextEvent>.Publish(new FloatingTextEvent { Text = damage.ToString(), Position = Vector3.zero, Color = Color.red, FontSize = 20, IsCritical = false });
    }
 
    // 治疗

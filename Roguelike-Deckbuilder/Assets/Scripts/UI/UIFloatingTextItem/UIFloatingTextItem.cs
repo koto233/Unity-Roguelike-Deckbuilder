@@ -2,24 +2,38 @@ using System.Collections;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
+using LitFramework.UI.Core.Window;
 using TMPro;
 using UnityEngine;
 
-public class UIFloatingTextItem : MonoBehaviour
+public class UIFloatingTextItem : UIBase
 {
-    [SerializeField] private TextMeshProUGUI _text;
-    [SerializeField] private CanvasGroup _canvasGroup;
+    private TextMeshProUGUI _damageText;
+    private CanvasGroup _canvasGroup;
     private RectTransform _rectTransform;
     private Vector2 _startPos;
 
-    private void Awake() => _rectTransform = GetComponent<RectTransform>();
+    protected override void Awake()
+    {
+        _rectTransform = GetComponent<RectTransform>();
+        _damageText = GetComponent<TextMeshProUGUI>();
+        _canvasGroup = GetComponent<CanvasGroup>();
+    }
 
-    // 由Pool取出后调用，返回UniTask供外部等待回收
+    /// <summary>
+    /// 播放飘字动画
+    /// </summary>
+    /// <param name="text"></param>
+    /// <param name="screenPos"></param>
+    /// <param name="color"></param>
+    /// <param name="fontSize"></param>
+    /// <param name="isCritical"></param>
+    /// <returns></returns> <summary>
     public async UniTask PlayAsync(string text, Vector2 screenPos, Color color, float fontSize, bool isCritical)
     {
-        _text.text = text;
-        _text.color = color;
-        _text.fontSize = isCritical ? fontSize * 1.8f : fontSize;
+        _damageText.SetText(text);
+        _damageText.color = color;
+        // _damageText.fontSize = isCritical ? fontSize * 1.8f : fontSize;
         _canvasGroup.alpha = 1f;
         _rectTransform.anchoredPosition = screenPos;
         _startPos = screenPos;

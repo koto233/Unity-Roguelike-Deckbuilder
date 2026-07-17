@@ -94,6 +94,14 @@ MonoBehaviour:
         FilterRuleName: CollectAll
         AssetTags: 
         UserData: 
+      - CollectPath: Assets/Res/UI/UIFloatingText.prefab
+        CollectorGUID: f06dce96906110b489ac572f82ccb570
+        CollectorType: 0
+        AddressRuleName: AddressByFileName
+        PackRuleName: PackDirectory
+        FilterRuleName: CollectAll
+        AssetTags: 
+        UserData: 
     - GroupName: Config
       GroupDesc: "\u914D\u7F6E\u8868"
       AssetTags: 
