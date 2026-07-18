@@ -16,8 +16,7 @@ public partial class UICardItem
         IPointerDownHandler,
         IPointerUpHandler
 {
-    private Card _card;
-    public int InstanceId => _card.InstanceId;
+    public Card _card { get; private set; }
     private Transform _cardDetailTrans;
     private Vector2 _dragStartOffset; // 开始拖拽时鼠标与卡牌的偏移
     private Vector2 _originalPos;

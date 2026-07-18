@@ -156,7 +156,7 @@ public class BattlePresenter : IDisposable
     private void OpenPile(int index)
     {
         var pile = _battleController.GetPile(index);
-        _view.ClearCardsInList();
+        _view.ClearCardsInPileUI();
         _view.SpawnCardInList(pile);
         _view.OpenPilePanel();
     }

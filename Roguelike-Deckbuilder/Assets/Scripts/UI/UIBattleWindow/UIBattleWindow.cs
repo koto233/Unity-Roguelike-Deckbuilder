@@ -11,6 +11,7 @@ using UnityEngine;
 public partial class UIBattleWindow : UIWindow
 {
     private AssetRef<GameObject> _cardPrefabRef;
+    private AssetRef<GameObject> _cardDisplayPrefabRef;
     private AssetRef<GameObject> _flyPrefabRef;
     private AssetRef<GameObject> _floatingTextPrefabRef;
     private AssetRef<GameObject> _enemyPrefabRef;
@@ -25,7 +26,7 @@ public partial class UIBattleWindow : UIWindow
     /// </summary>
     public event Action<int> OnOpenPile;
     public event Action OnEndTurn;
-    private List<UICardItem> _cardItems = new();
+    private List<UICardDisplay> _cardDisplays = new();
     protected override async UniTask OnOpenAsync(object param)
     {
         var battleContext = param as BattleContext;
@@ -38,6 +39,7 @@ public partial class UIBattleWindow : UIWindow
         _enemyPrefabRef = await assetService.LoadRefAsync<GameObject>("Assets/Res/UI/UIEnemyItem.prefab");
         _playerPrefabRef = await assetService.LoadRefAsync<GameObject>("Assets/Res/UI/UIPlayerItem.prefab");
         _cardPrefabRef = await assetService.LoadRefAsync<GameObject>("Assets/Res/UI/UICardItem.prefab");
+        _cardDisplayPrefabRef = await assetService.LoadRefAsync<GameObject>("Assets/Res/UI/UICardDisplay.prefab");
         _flyPrefabRef = await assetService.LoadRefAsync<GameObject>("Assets/Res/UI/CardFlyFx.prefab");
         _floatingTextPrefabRef = await assetService.LoadRefAsync<GameObject>("Assets/Res/UI/UIFloatingText.prefab");
         _poolService = ServiceLocator.Get<ObjectPoolService>();
@@ -50,6 +52,7 @@ public partial class UIBattleWindow : UIWindow
     private void InitObjectPools()
     {
         _poolService.RegisterGameObjectPool<UICardItem>(_cardPrefabRef.Asset, initialPoolSize: 10);
+        _poolService.RegisterGameObjectPool<UICardDisplay>(_cardDisplayPrefabRef.Asset, initialPoolSize: 10);
         _poolService.RegisterGameObjectPool<CardFlyFx>(_flyPrefabRef.Asset, initialPoolSize: 10);
         _poolService.RegisterGameObjectPool<UIFloatingTextItem>(_floatingTextPrefabRef.Asset, initialPoolSize: 10);
     }
@@ -75,24 +78,24 @@ public partial class UIBattleWindow : UIWindow
     {
         b_PilePanel.gameObject.SetActive(false);
     }
-    public void ClearCardsInList()
+    public void ClearCardsInPileUI()
     {
-        foreach (var item in _cardItems)
+        foreach (var item in _cardDisplays)
         {
             item.gameObject.SetActive(false);
-            _poolService.ReturnGameObject<UICardItem>(item.gameObject);
+            _poolService.ReturnGameObject<UICardDisplay>(item.gameObject);
         }
-        _cardItems.Clear();
+        _cardDisplays.Clear();
     }
     public void SpawnCardInList(List<Card> cards)
     {
         foreach (var data in cards)
         {
-            var cardPrefab = _poolService.GetGameObject<UICardItem>();
-            cardPrefab.transform.SetParent(b_PilePanel.transform);
-            var uiCard = cardPrefab.GetComponent<UICardItem>();
-            uiCard.Init(data, null, null, null, null);
-            _cardItems.Add(uiCard);
+            var cardDisplayPrefab = _poolService.GetGameObject<UICardDisplay>();
+            cardDisplayPrefab.transform.SetParent(b_PilePanel.transform);
+            var uiCard = cardDisplayPrefab.GetComponent<UICardDisplay>();
+            uiCard.Init(data);
+            _cardDisplays.Add(uiCard);
         }
     }
 
