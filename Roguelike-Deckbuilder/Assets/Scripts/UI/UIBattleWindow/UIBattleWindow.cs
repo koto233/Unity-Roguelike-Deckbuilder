@@ -198,7 +198,8 @@ public partial class UIBattleWindow : UIWindow
         item.transform.position = position;
         var uiFloatingText = item.GetComponent<UIFloatingTextItem>();
         await uiFloatingText.PlayAsync(text, position, color, isCritical);
-        _poolService.ReturnGameObject<UIFloatingTextItem>(item);
+        if (item != null)
+            _poolService.ReturnGameObject<UIFloatingTextItem>(item);
     }
     public Vector3 GetEntityPosition(EntityType entityType, int entityId)
     {
@@ -219,6 +220,33 @@ public partial class UIBattleWindow : UIWindow
         b_BuffTooltip.Hide();
         b_IntentTooltip.Hide();
         b_HandZone.CancelAnimations();
+        UnsubscribeEvents();
+        ReleaseAssets();
+    }
 
+    private void UnsubscribeEvents()
+    {
+        b_ClosePileButton.onClick.RemoveAllListeners();
+        b_DrawPileBtn.onClick.RemoveAllListeners();
+        b_DiscardPileBtn.onClick.RemoveAllListeners();
+        b_EndTurnBtn.onClick.RemoveAllListeners();
+        OnOpenPile = null;
+        OnEndTurn = null;
+    }
+
+  
+
+    private void ReleaseAssets()
+    {
+        _poolService.RemovePool<UICardItem>();
+        _poolService.RemovePool<UICardDisplay>();
+        _poolService.RemovePool<CardFlyFx>();
+        _poolService.RemovePool<UIFloatingTextItem>();
+        _cardPrefabRef?.Dispose();
+        _cardDisplayPrefabRef?.Dispose();
+        _flyPrefabRef?.Dispose();
+        _floatingTextPrefabRef?.Dispose();
+        _enemyPrefabRef?.Dispose();
+        _playerPrefabRef?.Dispose();
     }
 }

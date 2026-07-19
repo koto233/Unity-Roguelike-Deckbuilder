@@ -103,4 +103,9 @@ public partial class UIEnemyItem : UIBase
             Destroy(kv.Value.gameObject);
         _buffSlots.Clear();
     }
+    void OnDestroy()
+    {
+        _buffPrefabAssetRef?.Dispose();
+        _intentionPrefabAssetRef?.Dispose();
+    }
 }

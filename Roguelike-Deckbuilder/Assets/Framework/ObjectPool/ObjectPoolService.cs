@@ -125,5 +125,22 @@ namespace LitFramework.ObjectPool
             }
             _pools.Clear();
         }
+
+        public void RemovePool<T>() where T : class
+        {
+            RemovePool(GetKey<T>());
+        }
+
+        private void RemovePool(string poolName)
+        {
+            if (_pools.TryGetValue(poolName, out var pool))
+            {
+                if (pool is ObjectPool<object> typedPool)
+                    typedPool.Clear();
+                else if (pool is GameObjectPool goPool)
+                    goPool.Clear();
+                _pools.Remove(poolName);
+            }
+        }
     }
 }
