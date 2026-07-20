@@ -1,0 +1,66 @@
+[
+  {
+    "Templateld": 1,
+    "Row": 0,
+    "ColumnPositions": [
+      0
+    ],
+    "BattleWeight": 100,
+    "EliteWeight": 0,
+    "RestWeight": 0,
+    "ShopWeight": 0,
+    "EventWeight": 0
+  },
+  {
+    "Templateld": 1,
+    "Row": 1,
+    "ColumnPositions": [
+      0,
+      2
+    ],
+    "BattleWeight": 60,
+    "EliteWeight": 10,
+    "RestWeight": 15,
+    "ShopWeight": 10,
+    "EventWeight": 5
+  },
+  {
+    "Templateld": 1,
+    "Row": 2,
+    "ColumnPositions": [
+      0,
+      1,
+      3
+    ],
+    "BattleWeight": 50,
+    "EliteWeight": 20,
+    "RestWeight": 15,
+    "ShopWeight": 10,
+    "EventWeight": 5
+  },
+  {
+    "Templateld": 1,
+    "Row": 3,
+    "ColumnPositions": [
+      1,
+      3
+    ],
+    "BattleWeight": 40,
+    "EliteWeight": 30,
+    "RestWeight": 15,
+    "ShopWeight": 10,
+    "EventWeight": 5
+  },
+  {
+    "Templateld": 1,
+    "Row": 4,
+    "ColumnPositions": [
+      0
+    ],
+    "BattleWeight": 0,
+    "EliteWeight": 0,
+    "RestWeight": 0,
+    "ShopWeight": 0,
+    "EventWeight": 0
+  }
+]
