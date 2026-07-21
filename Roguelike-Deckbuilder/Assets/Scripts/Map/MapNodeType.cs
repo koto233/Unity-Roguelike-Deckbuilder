@@ -8,6 +8,6 @@ public enum MapNodeType
     Elite,     // 精英
     Rest,      // 篝火（休息/锻造）
     Shop,      // 商店
-    Treasure,  // 宝箱
+    Event,  // 宝箱
     Boss       // Boss
 }

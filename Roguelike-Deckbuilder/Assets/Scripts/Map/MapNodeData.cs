@@ -11,4 +11,12 @@ public class MapNodeData
     public List<string> NextNodes;    // 指向下一行的节点ID列表
     public bool IsVisited;
     public bool IsLocked = true;      // 默认锁定，只有上一行解锁了才能选
+    public bool IsStart;              // 是否为起始节点
+    public MapNodeData(int row, int col)
+    {
+        Row = row;
+        Column = col;
+        Id = $"{row}_{col}";
+        NextNodes = new List<string>();
+    }
 }
