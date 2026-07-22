@@ -12,7 +12,9 @@ namespace LitFramework.FSM.Procedure
     public class ProcedureBattle : ProcedureBase
     {
         public ProcedureBattle(ProcedureManager procedureManager) : base(procedureManager) { }
-        private BattlePresenter _uiBattlePresenter;
+        private BattlePresenter _battlePresenter;
+        private BattleController _battleController;
+        private const string BattleSceneName = "Battle Scene"; // 与场景文件名称一致
         public override void OnInit()
         {
 
@@ -25,7 +27,9 @@ namespace LitFramework.FSM.Procedure
 
         public override void OnExit()
         {
-            _uiBattlePresenter?.Dispose();
+            CleanupBattleAsync().Forget();
+            _battlePresenter?.Dispose();
+            _battlePresenter = null;
         }
 
 
@@ -38,6 +42,7 @@ namespace LitFramework.FSM.Procedure
         }
         private async UniTaskVoid InitBattleAsync()
         {
+            var sceneLoader = ServiceLocator.Get<ISceneLoader>();
             var assetService = ServiceLocator.Get<IAssetService>();
             var uiService = ServiceLocator.Get<UIService>();
             var configService = ServiceLocator.Get<IConfigService>();
@@ -54,15 +59,34 @@ namespace LitFramework.FSM.Procedure
                 Target = null,
                 GoldReward = 0
             };
-            var battleController = new BattleController(battleContext, () =>
-            {
-                uiService.Close<UIBattleWindow>();
-                uiService.OpenAsync<UITitleWindow>().Forget();
-            });
-            var uiBattleWindow = await uiService.OpenAsync<UIBattleWindow>(battleContext);
-            var uiBattlePresenter = new BattlePresenter(uiBattleWindow, battleController);
-            battleController.StartBattle();
+
+            // var uiBattleWindow = await uiService.OpenAsync<UIBattleWindow>(battleContext);
+            var scene = await sceneLoader.LoadAdditiveAsync(BattleSceneName);
+
+            _battleController = new BattleController(battleContext, () =>
+          {
+              GameRoot.Instance.ProcedureManager.ChangeProcedure<ProcedureTitle>(); // 假设有地图状态
+          });
+            var uiBattleWindow = GameObject.FindObjectOfType<UIBattleWindow>(true);
+             await uiBattleWindow.InitAsync(battleContext);
+            var uiBattlePresenter = new BattlePresenter(uiBattleWindow, _battleController);
+
+            _battleController.StartBattle();
             uiService.Close<UITitleWindow>();
+        }
+        private async UniTaskVoid CleanupBattleAsync()
+        {
+            // 释放 Presenter
+            _battlePresenter?.Dispose();
+            _battlePresenter = null;
+            _battleController = null;
+
+            // 卸载战斗场景
+            var sceneLoader = ServiceLocator.Get<ISceneLoader>();
+            if (sceneLoader.IsSceneLoaded(BattleSceneName))
+            {
+                await sceneLoader.UnloadAdditiveAsync(BattleSceneName);
+            }
         }
     }
 }

@@ -30,8 +30,8 @@ namespace LitFramework.FSM.Procedure
             ServiceLocator.Register<IAudioService>(new AudioService());
             ServiceLocator.Register(new UIService());
             ServiceLocator.Register(new BattleInteractionService());
+            ServiceLocator.Register<ISceneLoader>(new SceneLoader());
             ServiceLocator.Get<UIService>().Register<UITitleWindow>("Assets/Res/UI/UITitleWindow.prefab", UILayer.Normal);
-            ServiceLocator.Get<UIService>().Register<UIBattleWindow>("Assets/Res/UI/UIBattleWindow.prefab", UILayer.Normal);
             ModelContainer.Register(new PlayerModel());
 
             _isInitDone = true;

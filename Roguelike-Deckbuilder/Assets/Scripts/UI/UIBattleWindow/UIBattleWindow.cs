@@ -8,7 +8,7 @@ using LitFramework.ObjectPool;
 using LitFramework.UI.Core.Window;
 using UnityEngine;
 
-public partial class UIBattleWindow : UIWindow
+public partial class UIBattleWindow : UIBase
 {
     private AssetRef<GameObject> _cardPrefabRef;
     private AssetRef<GameObject> _cardDisplayPrefabRef;
@@ -27,9 +27,9 @@ public partial class UIBattleWindow : UIWindow
     public event Action<int> OnOpenPile;
     public event Action OnEndTurn;
     private List<UICardDisplay> _cardDisplays = new();
-    protected override async UniTask OnOpenAsync(object param)
+    
+    public async UniTask InitAsync(BattleContext battleContext)
     {
-        var battleContext = param as BattleContext;
         if (battleContext == null)
         {
             Debug.LogError("参数类型错误，需要 BattleContext");
@@ -214,9 +214,8 @@ public partial class UIBattleWindow : UIWindow
         }
         return Vector3.zero;
     }
-    protected override void OnClose()
+    void OnDisable()
     {
-        base.OnClose();
         b_BuffTooltip.Hide();
         b_IntentTooltip.Hide();
         b_HandZone.CancelAnimations();
@@ -234,7 +233,7 @@ public partial class UIBattleWindow : UIWindow
         OnEndTurn = null;
     }
 
-  
+
 
     private void ReleaseAssets()
     {
