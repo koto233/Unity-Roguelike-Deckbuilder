@@ -102,6 +102,14 @@ MonoBehaviour:
         FilterRuleName: CollectAll
         AssetTags: 
         UserData: 
+      - CollectPath: Assets/Res/UI/UIMapNode.prefab
+        CollectorGUID: d12d82dcdb2e72448b1f37464fbd01fe
+        CollectorType: 0
+        AddressRuleName: AddressByFileName
+        PackRuleName: PackDirectory
+        FilterRuleName: CollectAll
+        AssetTags: 
+        UserData: 
     - GroupName: Config
       GroupDesc: "\u914D\u7F6E\u8868"
       AssetTags: 
