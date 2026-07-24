@@ -30,6 +30,7 @@ namespace LitFramework.FSM.Procedure
             CleanupBattleAsync().Forget();
             _battlePresenter?.Dispose();
             _battlePresenter = null;
+            _battleController = null;
         }
 
 
@@ -68,8 +69,9 @@ namespace LitFramework.FSM.Procedure
               GameRoot.Instance.ProcedureManager.ChangeProcedure<ProcedureTitle>(); // 假设有地图状态
           });
             var uiBattleWindow = GameObject.FindObjectOfType<UIBattleWindow>(true);
-             await uiBattleWindow.InitAsync(battleContext);
-            var uiBattlePresenter = new BattlePresenter(uiBattleWindow, _battleController);
+            if (uiBattleWindow != null)
+                await uiBattleWindow.InitAsync(battleContext);
+            _battlePresenter = new BattlePresenter(uiBattleWindow, _battleController);
 
             _battleController.StartBattle();
             uiService.Close<UITitleWindow>();
