@@ -46,6 +46,7 @@ namespace LitFramework
             _procedureManager.RegisterProcedure(new ProcedureInitConfig(_procedureManager));
             _procedureManager.RegisterProcedure(new ProcedureTitle(_procedureManager));
             _procedureManager.RegisterProcedure(new ProcedureBattle(_procedureManager));
+            _procedureManager.RegisterProcedure(new ProcedureMap(_procedureManager));
             // 监听状态变化（可选）
             fsm.OnStateChanged += (from, to) =>
             {

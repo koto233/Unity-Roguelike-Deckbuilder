@@ -1,108 +1,72 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
-
-using System.Collections.Generic;
-using UnityEngine;
-
 public static class MapGenerator
 {
-    public static List<MapNodeData> Generate(MapConfig config)
+ public static List<MapNodeData> Generate(List<MapConfig> rowConfigs)
     {
-        var nodes = new List<MapNodeData>();
-        int rowCount = config.Row; // 行数
-        int[] columnPositions = config.ColumnPositions; // 每行的列索引数组（长度=行数）
+        if (rowConfigs == null || rowConfigs.Count == 0)
+            return null;
 
-        // 1. 生成所有节点，分配类型
-        for (int row = 0; row < rowCount; row++)
+        var nodes = new List<MapNodeData>();
+
+        // 1. 生成所有节点
+        for (int rowIdx = 0; rowIdx < rowConfigs.Count; rowIdx++)
         {
-            int colCount = columnPositions[row]; // 假设 ColumnPositions 存储的是该行的列数（或具体列索引）
-            // 如果你希望 ColumnPositions 存储具体的列索引列表，则需改为 List<int[]> 结构。
-            // 这里简化：假设 ColumnPositions 是每行的列数，列索引从 0 到 colCount-1。
-            for (int col = 0; col < colCount; col++)
+            var rowCfg = rowConfigs[rowIdx];
+            foreach (int col in rowCfg.ColumnPositions)
             {
-                var node = new MapNodeData(row, col);
-                // 最后一行强制 Boss
-                if (row == rowCount - 1)
+                var node = new MapNodeData(rowIdx, col);
+                // 最后一行强制 Boss（仅第一个列节点，其余可设为精英或战斗）
+                if (rowIdx == rowConfigs.Count - 1)
                 {
-                    node.Type = MapNodeType.Boss;
-                    // Boss 可能只需要一个节点，所以只生成一个？但若 colCount > 1，则只取第一个为 Boss，其他可废弃？
-                    // 简单处理：若最后一行有多个节点，只保留第一个作为 Boss，其余改为 Elite 或 Battle
-                    if (col > 0) node.Type = MapNodeType.Elite; // 或者直接不生成
+                    node.Type = (col == rowCfg.ColumnPositions[0]) ? MapNodeType.Boss : MapNodeType.Elite;
                 }
                 else
                 {
-                    node.Type = WeightedRandom.PickType(config);
+                    node.Type = WeightedRandom.PickType(rowCfg);
                 }
-                // 生成敌人 ID（如果是战斗类型）
+                // 如果是战斗类型，设置 EnemyId（此处示例）
                 if (node.Type == MapNodeType.Battle || node.Type == MapNodeType.Elite)
-                {
-                    node.EnemyId = SelectEnemyId(node.Type); // 你需要实现根据类型选择敌人ID的逻辑
-                }
+                    node.EnemyId = "enemy_001"; // 实际应从配置获取
                 nodes.Add(node);
             }
         }
 
-        // 2. 建立行间连接（从第0行到倒数第二行）
-        for (int row = 0; row < rowCount - 1; row++)
+        // 2. 建立行间连接（保证连通性）
+        for (int row = 0; row < rowConfigs.Count - 1; row++)
         {
-            // 获取当前行和下一行的所有节点
-            var currentRowNodes = nodes.FindAll(n => n.Row == row);
+            var curRowNodes = nodes.FindAll(n => n.Row == row);
             var nextRowNodes = nodes.FindAll(n => n.Row == row + 1);
-            if (nextRowNodes.Count == 0) break; // 安全保护
-
-            // 为当前行每个节点添加指向下一行的连接（保证每个节点至少连一个）
-            foreach (var curNode in currentRowNodes)
+            // 为每个当前节点随机连接下一行的 1~2 个节点（确保连通）
+            foreach (var cur in curRowNodes)
             {
-                int col = curNode.Column;
-                // 随机选择 1~3 个下一行节点，优先选择相邻索引（使路线自然）
-                int count = Random.Range(1, Mathf.Min(3, nextRowNodes.Count) + 1);
-                // 以当前列为中心，选取 count 个不同节点
-                var candidates = new List<MapNodeData>();
-                int startIdx = col - count / 2;
-                for (int i = 0; i < nextRowNodes.Count; i++)
-                {
-                    int idx = (startIdx + i + nextRowNodes.Count) % nextRowNodes.Count;
-                    candidates.Add(nextRowNodes[idx]);
-                }
-                // 打乱后取前 count 个
-                Shuffle(candidates);
-                for (int i = 0; i < count && i < candidates.Count; i++)
-                {
-                    if (!curNode.NextNodes.Contains(candidates[i].Id))
-                        curNode.NextNodes.Add(candidates[i].Id);
-                }
+                int count = Random.Range(1, Mathf.Min(3, nextRowNodes.Count + 1));
+                // 简单随机取 count 个不同节点（需确保不重复）
+                var shuffled = nextRowNodes.OrderBy(x => Random.value).Take(count).ToList();
+                foreach (var next in shuffled)
+                    cur.NextNodes.Add(next.Id);
             }
-
-            // 确保下一行的每个节点至少被一个上一行节点指向（连通性保证）
-            foreach (var nextNode in nextRowNodes)
+            // 确保下一行每个节点至少被一个上一行节点连接
+            foreach (var next in nextRowNodes)
             {
-                bool hasIncoming = false;
-                foreach (var curNode in currentRowNodes)
+                if (!curRowNodes.Any(c => c.NextNodes.Contains(next.Id)))
                 {
-                    if (curNode.NextNodes.Contains(nextNode.Id))
-                    {
-                        hasIncoming = true;
-                        break;
-                    }
-                }
-                if (!hasIncoming)
-                {
-                    // 随机选一个当前行节点，强制添加指向 nextNode
-                    var randomCur = currentRowNodes[Random.Range(0, currentRowNodes.Count)];
-                    if (!randomCur.NextNodes.Contains(nextNode.Id))
-                        randomCur.NextNodes.Add(nextNode.Id);
+                    var randomCur = curRowNodes[Random.Range(0, curRowNodes.Count)];
+                    if (!randomCur.NextNodes.Contains(next.Id))
+                        randomCur.NextNodes.Add(next.Id);
                 }
             }
         }
 
-        // 3. 标记起始节点（第0行中间列或第0列）
-        var startRowNodes = nodes.FindAll(n => n.Row == 0);
-        if (startRowNodes.Count > 0)
+        // 3. 标记起始节点（第0行中间列）
+        var startRow = nodes.FindAll(n => n.Row == 0);
+        if (startRow.Count > 0)
         {
-            int startCol = startRowNodes.Count / 2;
-            startRowNodes[startCol].IsStart = true;
-            startRowNodes[startCol].IsLocked = false; // 起始解锁
+            int mid = startRow.Count / 2;
+            startRow[mid].IsStart = true;
+            startRow[mid].IsLocked = false;
         }
 
         return nodes;

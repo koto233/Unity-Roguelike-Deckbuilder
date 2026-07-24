@@ -13,7 +13,7 @@ public partial class UIMap : UIBase
     private List<Transform> _rows = new List<Transform>();
     private List<UIMapNode> _nodes = new List<UIMapNode>();
 
-    public async UniTask InitAsync(BattleContext battleContext)
+    public async UniTask InitAsync()
     {
         var assetService = ServiceLocator.Get<IAssetService>();
         _nodePrefabRef = await assetService.LoadRefAsync<GameObject>("Assets/Res/UI/UIMapNode.prefab");
@@ -47,7 +47,7 @@ public partial class UIMap : UIBase
     {
         // 如果有多个 LineRenderer 对象池，清空或隐藏
         // 简单起见，直接清除所有子 LineRenderer
-        foreach (Transform child in _lineRenderer.transform) Destroy(child.gameObject);
+        // foreach (Transform child in _lineRenderer.transform) Destroy(child.gameObject);
     }
 
     public void DrawLine(UIMapNode from, UIMapNode to, bool active)

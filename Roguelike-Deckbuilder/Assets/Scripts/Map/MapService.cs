@@ -1,24 +1,30 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using LitFramework;
 using LitFramework.Config;
 using UnityEngine;
 
 public class MapService
 {
-    
+
     private List<MapNodeData> _mapNodes;
+
     private IConfigService _configService;
 
-    public MapService(IConfigService configService)
-    {
-        _configService = configService;
-    }
+    private IConfigService ConfigService =>
+    _configService ??= ServiceLocator.Get<IConfigService>();
 
     public void GenerateMap(int templateId)
     {
-        var config = _configService.GetTable<MapConfig>().Get(templateId);
-        if (config == null) return;
-        _mapNodes = MapGenerator.Generate(config);
+        var allConfigs = ConfigService.GetTable<MapConfig>().GetAll();
+        if (allConfigs == null) return;
+        var rowConfigs = allConfigs
+      .Where(c => c.Templateld == templateId)
+      .OrderBy(c => c.Row)
+      .ToList();
+
+        _mapNodes = MapGenerator.Generate(rowConfigs);
     }
 
     public List<MapNodeData> CurrentMap => _mapNodes;

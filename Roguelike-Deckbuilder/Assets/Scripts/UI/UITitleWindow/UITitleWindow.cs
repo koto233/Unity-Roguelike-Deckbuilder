@@ -23,7 +23,7 @@ public partial class UITitleWindow : UIWindow
     
     private void OnClickStart()
     {
-        GameRoot.Instance.ProcedureManager.ChangeProcedure<ProcedureBattle>();
+        GameRoot.Instance.ProcedureManager.ChangeProcedure<ProcedureMap>();
         // StartBattleAsync().Forget();
     }
 
