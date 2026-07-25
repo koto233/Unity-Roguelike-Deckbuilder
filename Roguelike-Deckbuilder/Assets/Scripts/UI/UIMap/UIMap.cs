@@ -1,37 +1,124 @@
-using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Cysharp.Threading.Tasks;
 using LitFramework;
 using LitFramework.Asset;
 using LitFramework.UI.Core.Window;
 using UnityEngine;
+using UnityEngine.UI;
 
 public partial class UIMap : UIBase
 {
-    private LineRenderer _lineRenderer;
+    [SerializeField] private GameObject _linePrefab;
+    [SerializeField] private Transform _lineContainer; // 可选，建议单独放线的父物体
+
     private AssetRef<GameObject> _nodePrefabRef;
     private List<Transform> _rows = new List<Transform>();
     private List<UIMapNode> _nodes = new List<UIMapNode>();
+    private List<Image> _lines = new List<Image>();
+    private Dictionary<string, UIMapNode> _nodeDict = new Dictionary<string, UIMapNode>();
+
+    public event System.Action<string> OnNodeClicked; // 节点点击事件，参数为节点ID
 
     public async UniTask InitAsync()
     {
         var assetService = ServiceLocator.Get<IAssetService>();
         _nodePrefabRef = await assetService.LoadRefAsync<GameObject>("Assets/Res/UI/UIMapNode.prefab");
     }
-    public Transform CreateRow()
+
+    // 外部调用：传入最新的节点数据，完全刷新地图
+    public void RefreshMap(List<MapNodeData> nodes)
+    {
+        Clear();
+        if (nodes == null || nodes.Count == 0) return;
+
+        // 1. 按行分组创建节点
+        var rows = nodes.GroupBy(n => n.Row).OrderBy(g => g.Key);
+        foreach (var rowGroup in rows)
+        {
+            var rowGO = CreateRow();
+            foreach (var nodeData in rowGroup.OrderBy(n => n.Column))
+            {
+                var nodeView = CreateNode(nodeData, rowGO.transform);
+                UpdateNodeVisual(nodeView, nodeData); // 设置视觉状态
+            }
+        }
+        Canvas.ForceUpdateCanvases();
+        // 2. 绘制连线
+        DrawAllLines(nodes);
+    }
+
+    private Transform CreateRow()
     {
         var row = Instantiate(b_Row, b_Content).transform;
         _rows.Add(row);
         return row;
     }
 
-    public UIMapNode CreateNode(MapNodeData data, Transform parent)
+    private UIMapNode CreateNode(MapNodeData data, Transform parent)
     {
-        var node = Instantiate(_nodePrefabRef.Asset, parent);
-        var uiMapNode = node.GetComponent<UIMapNode>();
-        node.name = $"Node_{data.Id}";
+        var nodeGO = Instantiate(_nodePrefabRef.Asset, parent);
+        var uiMapNode = nodeGO.GetComponent<UIMapNode>();
+        nodeGO.name = $"Node_{data.Id}";
         _nodes.Add(uiMapNode);
+        _nodeDict[data.Id] = uiMapNode;
+
+        // 绑定点击事件
+        var button = uiMapNode.Button; // 假设 UIMapNode 有 Button 组件
+        if (button != null)
+            button.onClick.AddListener(() => OnNodeClicked?.Invoke(data.Id));
+
         return uiMapNode;
+    }
+
+    private void UpdateNodeVisual(UIMapNode view, MapNodeData data)
+    {
+        view.SetType(data.Type);
+        view.SetLocked(data.IsLocked);
+        view.Button.interactable = !data.IsLocked && !data.IsVisited;
+        view.SetVisited(data.IsVisited);
+        view.SetStart(data.IsStart);
+    }
+
+    private void DrawAllLines(List<MapNodeData> nodes)
+    {
+        ClearLines();
+        foreach (var nodeData in nodes)
+        {
+            if (nodeData.NextNodes == null || nodeData.NextNodes.Count == 0) continue;
+            if (!_nodeDict.TryGetValue(nodeData.Id, out var fromView)) continue;
+
+            foreach (var nextId in nodeData.NextNodes)
+            {
+                if (!_nodeDict.TryGetValue(nextId, out var toView)) continue;
+                bool isActive = nodeData.IsVisited && !nodeData.IsLocked;
+                DrawLine(fromView, toView, isActive);
+            }
+        }
+    }
+
+    private void DrawLine(UIMapNode from, UIMapNode to, bool active)
+    {
+        var lineGO = Instantiate(_linePrefab, _lineContainer ?? transform);
+        var lineImage = lineGO.GetComponent<Image>();
+        _lines.Add(lineImage);
+        lineImage.color = active ? Color.white : new Color(0.5f, 0.5f, 0.5f, 0.5f);
+        UpdateLineImage(lineImage, (RectTransform)from.transform, (RectTransform)to.transform);
+    }
+
+    private void UpdateLineImage(Image line, RectTransform fromRT, RectTransform toRT)
+    {
+        // 假设 fromRT 和 toRT 有相同的父级（即都在同一个容器下）
+        Vector2 fromPos = fromRT.anchoredPosition;
+        Vector2 toPos = toRT.anchoredPosition;
+        Vector2 dir = toPos - fromPos;
+        float dist = dir.magnitude;
+        Vector2 mid = (fromPos + toPos) / 2f;
+
+        RectTransform rt = line.rectTransform;
+        rt.anchoredPosition = mid;
+        rt.sizeDelta = new Vector2(dist, 4f);
+        rt.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg);
     }
 
     public void Clear()
@@ -40,32 +127,14 @@ public partial class UIMap : UIBase
         _rows.Clear();
         foreach (var node in _nodes) Destroy(node.gameObject);
         _nodes.Clear();
+        _nodeDict.Clear();
         ClearLines();
     }
 
-    public void ClearLines()
+    private void ClearLines()
     {
-        // 如果有多个 LineRenderer 对象池，清空或隐藏
-        // 简单起见，直接清除所有子 LineRenderer
-        // foreach (Transform child in _lineRenderer.transform) Destroy(child.gameObject);
-    }
-
-    public void DrawLine(UIMapNode from, UIMapNode to, bool active)
-    {
-        // 实例化一个 LineRenderer（或使用对象池）
-        var lineGO = new GameObject("Line", typeof(LineRenderer));
-        lineGO.transform.SetParent(_lineRenderer.transform);
-        var lr = lineGO.GetComponent<LineRenderer>();
-        // 设置材质、宽度、颜色等
-        lr.startColor = active ? Color.white : Color.gray;
-        lr.endColor = active ? Color.white : Color.gray;
-        // 设置位置：将世界坐标转换为 UI 坐标（需要 Screen Space - Camera 模式）
-        // 如果 Canvas 是 Overlay，则使用 RectTransform 的 anchoredPosition 转世界坐标
-        Vector3 fromPos = from.transform.position; // 对于 Overlay，transform.position 就是屏幕坐标
-        Vector3 toPos = to.transform.position;
-        // 如果使用 Camera，需要转换，这里简单用屏幕坐标
-        lr.SetPosition(0, fromPos);
-        lr.SetPosition(1, toPos);
-        // 也可以添加中间点形成曲线
+        foreach (var line in _lines)
+            Destroy(line.gameObject);
+        _lines.Clear();
     }
 }
