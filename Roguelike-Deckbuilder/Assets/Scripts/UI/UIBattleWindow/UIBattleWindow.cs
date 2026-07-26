@@ -27,7 +27,7 @@ public partial class UIBattleWindow : UIBase
     public event Action<int> OnOpenPile;
     public event Action OnEndTurn;
     private List<UICardDisplay> _cardDisplays = new();
-    
+
     public async UniTask InitAsync(BattleContext battleContext)
     {
         if (battleContext == null)
