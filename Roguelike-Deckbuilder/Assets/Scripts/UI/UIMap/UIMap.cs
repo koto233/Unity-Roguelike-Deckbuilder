@@ -113,7 +113,7 @@ public partial class UIMap : UIBase
     private void DrawLine(UIMapNode from, UIMapNode to, bool active)
     {
         var lineGO = _poolService.GetGameObject<UIMapLine>();
-        lineGO.transform.SetParent(transform);
+        lineGO.transform.SetParent(b_LinesRoot);
         lineGO.SetActive(true);
         var lineUI = lineGO.GetComponent<UIMapLine>();
         var lineImage = lineUI.LineImage;
