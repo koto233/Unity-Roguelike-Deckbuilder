@@ -19,10 +19,10 @@ public partial class UIHandZone : MonoBehaviour
     [SerializeField] private Transform _cardDetailTrans;
     private readonly Dictionary<int, UICardItem> _cardItems = new();
     private ObjectPoolService _poolService;
-    private UIBattleWindow _battleWindow;
+    private UIBattle _battleWindow;
     private CancellationTokenSource _animationCts;
 
-    public void Init(ObjectPoolService poolService, UIBattleWindow battleWindow)
+    public void Init(ObjectPoolService poolService, UIBattle battleWindow)
     {
         _poolService = poolService;
         _battleWindow = battleWindow;

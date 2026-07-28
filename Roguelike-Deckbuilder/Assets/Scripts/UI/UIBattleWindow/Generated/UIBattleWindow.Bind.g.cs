@@ -12,7 +12,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-    public partial class UIBattleWindow
+    public partial class UIBattle
     {
         private @Slider b_HPSlider;
         private @TextMeshProUGUI b_HPText;

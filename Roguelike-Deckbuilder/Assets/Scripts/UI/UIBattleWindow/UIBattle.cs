@@ -8,7 +8,7 @@ using LitFramework.ObjectPool;
 using LitFramework.UI.Core.Window;
 using UnityEngine;
 
-public partial class UIBattleWindow : UIBase
+public partial class UIBattle : UIBase
 {
     private AssetRef<GameObject> _cardPrefabRef;
     private AssetRef<GameObject> _cardDisplayPrefabRef;

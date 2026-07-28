@@ -4,18 +4,64 @@ using UnityEngine.UI;
 
 public partial class UIMapNode : UIBase
 {
-    public Button Button => b_Button;
-
     private MapNodeData _nodeData;
-
-    public void SetNodeData(MapNodeData data)
+    public event System.Action<string> OnNodeClicked;
+    private string _nodeId;
+    public MapNodeData GetNodeData() => _nodeData;
+    // ========== 对外唯一入口 ==========
+    public void Initialize(MapNodeData data)
     {
         _nodeData = data;
+        _nodeId = data.Id;
+
+        // 1. 清理旧监听（池复用必须）
+        b_Button.onClick.RemoveAllListeners();
+        b_Button.onClick.AddListener(() => OnNodeClicked?.Invoke(_nodeData.Id));
+        // 2. 一次性刷新所有视觉
+        Refresh();
     }
 
-    public void SetType(MapNodeType type)
+    // ========== 回收时调用 ==========
+    public void ResetNode()
     {
-        b_Name.text = type switch
+        b_Button.onClick.RemoveAllListeners();
+        _nodeData = null;
+        _nodeId = null;
+    }
+
+    public void UpdateState(MapNodeData data)
+    {
+        _nodeData = data;
+        Refresh();
+    }
+
+    private void Refresh()
+    {
+        bool isStart = _nodeData.IsStart;
+        bool isVisited = _nodeData.IsVisited;
+        bool isLocked = _nodeData.IsLocked;
+
+        // --- 名称 ---
+        b_Name.text = isStart ? "起点" : GetTypeName(_nodeData.Type);
+
+        // --- 颜色（优先级：起点 > 访问 > 类型） ---
+        Color color = isStart ? Color.blue : GetTypeColor(_nodeData.Type);
+        if (isVisited) color = Color.gray;
+        b_Icon.color = color;
+
+        // --- 高亮 ---
+        b_HighLight.gameObject.SetActive(!isVisited && !isStart);
+
+        // --- 锁 ---
+        b_Lock.gameObject.SetActive(isLocked);
+
+        // --- 交互 ---
+        b_Button.interactable = !isLocked && !isVisited;
+    }
+
+    private string GetTypeName(MapNodeType type)
+    {
+        return type switch
         {
             MapNodeType.Battle => "战斗",
             MapNodeType.Elite => "精英",
@@ -25,8 +71,11 @@ public partial class UIMapNode : UIBase
             MapNodeType.Boss => "Boss",
             _ => "未知"
         };
+    }
 
-        Color color = type switch
+    private Color GetTypeColor(MapNodeType type)
+    {
+        return type switch
         {
             MapNodeType.Battle => Color.red,
             MapNodeType.Elite => new Color(1f, 0.7f, 0f),
@@ -36,33 +85,5 @@ public partial class UIMapNode : UIBase
             MapNodeType.Boss => new Color(0.5f, 0f, 0.5f),
             _ => Color.gray
         };
-        b_Icon.color = color;
-    }
-
-    public void SetLocked(bool isLocked)
-    {
-        b_Lock.gameObject.SetActive(isLocked);
-    }
-
-    public void SetVisited(bool isVisited)
-    {
-        if (isVisited)
-        {
-            b_Icon.color = new Color(0.5f, 0.5f, 0.5f);
-            b_HighLight.gameObject.SetActive(false);
-        }
-        else
-        {
-            b_HighLight.gameObject.SetActive(true);
-        }
-    }
-
-    public void SetStart(bool isStart)
-    {
-        if (isStart)
-        {
-            b_Name.text = "起点";
-            b_HighLight.color = Color.blue;
-        }
     }
 }

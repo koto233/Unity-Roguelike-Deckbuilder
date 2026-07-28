@@ -12,9 +12,9 @@ public partial class UIMap : UIBase
 {
     private AssetRef<GameObject> _nodePrefabRef;
     private AssetRef<GameObject> _linePrefabRef;
-    private List<Transform> _rows = new List<Transform>();
-    private List<UIMapNode> _nodes = new List<UIMapNode>();
-    private List<Image> _lines = new List<Image>();
+    private List<Transform> _rows = new();
+    private List<UIMapNode> _nodes = new();
+    private List<UIMapLine> _lines = new();
     private Dictionary<string, UIMapNode> _nodeDict = new Dictionary<string, UIMapNode>();
     private ObjectPoolService _poolService;
     public event System.Action<string> OnNodeClicked; // 节点点击事件，参数为节点ID
@@ -34,7 +34,7 @@ public partial class UIMap : UIBase
         _poolService.RegisterGameObjectPool<UIMapLine>(_linePrefabRef.Asset, initialPoolSize: 10);
     }
     // 外部调用：传入最新的节点数据，完全刷新地图
-    public void RefreshMap(List<MapNodeData> nodes)
+    public void CreateMap(List<MapNodeData> nodes)
     {
         Clear();
         if (nodes == null || nodes.Count == 0) return;
@@ -47,7 +47,6 @@ public partial class UIMap : UIBase
             foreach (var nodeData in rowGroup.OrderBy(n => n.Column))
             {
                 var nodeView = CreateNode(nodeData, rowGO.transform);
-                UpdateNodeVisual(nodeView, nodeData); // 设置视觉状态
             }
         }
         Canvas.ForceUpdateCanvases();
@@ -59,7 +58,38 @@ public partial class UIMap : UIBase
         // 2. 绘制连线
         DrawAllLines(nodes);
     }
+    public void RefreshMap(List<MapNodeData> updatedNodes, string currentNodeId)
+    {
+        // 1. 更新每个节点的视觉状态
+        foreach (var data in updatedNodes)
+        {
+            if (_nodeDict.TryGetValue(data.Id, out var nodeView))
+            {
+                nodeView.UpdateState(data);
+            }
+        }
 
+        // 2. 更新每条线的颜色
+        foreach (var lineUI in _lines)
+        {
+            bool isActive = IsLineActive(lineUI.FromId, lineUI.ToId, currentNodeId, updatedNodes);
+            lineUI.LineImage.color = isActive ? Color.white : new Color(0.5f, 0.5f, 0.5f, 0.5f);
+        }
+    }
+
+    // ============ 判断线条是否高亮 ============
+    private bool IsLineActive(string fromId, string toId, string currentNodeId, List<MapNodeData> allNodes)
+    {
+        // 只有从当前节点出发的线才可能高亮
+        if (fromId != currentNodeId) return false;
+
+        // 找到目标节点数据
+        var target = allNodes.FirstOrDefault(n => n.Id == toId);
+        if (target == null) return false;
+
+        // 目标未被访问且未锁定
+        return !target.IsVisited && !target.IsLocked;
+    }
     private Transform CreateRow()
     {
         var row = Instantiate(b_Row, b_Content).transform;
@@ -70,28 +100,22 @@ public partial class UIMap : UIBase
 
     private UIMapNode CreateNode(MapNodeData data, Transform parent)
     {
-        var nodeGO = Instantiate(_nodePrefabRef.Asset, parent);
+        // 1. 从池里拿对象（你已经在 Clear 里回池了，这里也要用池拿）
+        var nodeGO = _poolService.GetGameObject<UIMapNode>();
+        nodeGO.transform.SetParent(parent, false);
+        nodeGO.SetActive(true);
+
         var uiMapNode = nodeGO.GetComponent<UIMapNode>();
+        // 2. 一行初始化：数据 + 点击回调
+        uiMapNode.Initialize(data);
+        uiMapNode.OnNodeClicked += OnNodeClicked;
         nodeGO.name = $"Node_{data.Id}";
         _nodes.Add(uiMapNode);
         _nodeDict[data.Id] = uiMapNode;
-
-        // 绑定点击事件
-        var button = uiMapNode.Button; // 假设 UIMapNode 有 Button 组件
-        if (button != null)
-            button.onClick.AddListener(() => OnNodeClicked?.Invoke(data.Id));
-
         return uiMapNode;
     }
 
-    private void UpdateNodeVisual(UIMapNode view, MapNodeData data)
-    {
-        view.SetType(data.Type);
-        view.SetLocked(data.IsLocked);
-        view.Button.interactable = !data.IsLocked && !data.IsVisited;
-        view.SetVisited(data.IsVisited);
-        view.SetStart(data.IsStart);
-    }
+
 
     private void DrawAllLines(List<MapNodeData> nodes)
     {
@@ -117,13 +141,14 @@ public partial class UIMap : UIBase
         lineGO.SetActive(true);
         var lineUI = lineGO.GetComponent<UIMapLine>();
         var lineImage = lineUI.LineImage;
-        _lines.Add(lineImage);
+        _lines.Add(lineUI);
         lineImage.color = active ? Color.white : new Color(0.5f, 0.5f, 0.5f, 0.5f);
         UpdateLineImage(lineImage, from.transform, to.transform);
     }
 
     private void UpdateLineImage(Image line, Transform fromRT, Transform toRT)
     {
+        Debug.Log($"fromRT: {fromRT.position}, toRT: {toRT.position}");
         // 假设 fromRT 和 toRT 有相同的父级（即都在同一个容器下）
         Vector2 fromPos = fromRT.position;
         Vector2 toPos = toRT.position;

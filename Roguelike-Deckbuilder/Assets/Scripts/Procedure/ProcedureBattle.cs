@@ -68,7 +68,7 @@ namespace LitFramework.FSM.Procedure
           {
               GameRoot.Instance.ProcedureManager.ChangeProcedure<ProcedureTitle>(); // 假设有地图状态
           });
-            var uiBattleWindow = GameObject.FindObjectOfType<UIBattleWindow>(true);
+            var uiBattleWindow = GameObject.FindObjectOfType<UIBattle>(true);
             if (uiBattleWindow != null)
                 await uiBattleWindow.InitAsync(battleContext);
             _battlePresenter = new BattlePresenter(uiBattleWindow, _battleController);

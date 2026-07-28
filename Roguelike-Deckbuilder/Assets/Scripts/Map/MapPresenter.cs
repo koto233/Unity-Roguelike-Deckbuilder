@@ -1,23 +1,36 @@
+using System;
 using LitFramework;
 using LitFramework.EventBus;
 using UnityEngine;
 
-public class MapPresenter
+public class MapPresenter : IDisposable
 {
     private MapService _mapService;
     private UIMap _view;
 
     public MapPresenter(UIMap view)
     {
+        SubscribeEvents();
         _mapService = ServiceLocator.Get<MapService>();
         _view = view;
         _view.OnNodeClicked += OnNodeClicked;
     }
 
+
+    private void SubscribeEvents()
+    {
+
+    }
+
+    private void UnSubscribeEvents()
+    {
+
+    }
+
     public void GenerateMap(int templateId)
     {
         _mapService.GenerateMap(templateId);
-        _view.RefreshMap(_mapService.CurrentMap);
+        _view.CreateMap(_mapService.CurrentMap);
     }
 
     private void OnNodeClicked(string nodeId)
@@ -29,8 +42,8 @@ public class MapPresenter
         // 访问节点（会解锁相邻节点）
         _mapService.VisitNode(nodeId);
 
-        // 刷新 UI（全量刷新，简单可靠）
-        _view.RefreshMap(_mapService.CurrentMap);
+        // 刷新 UI
+        _view.RefreshMap(_mapService.CurrentMap, nodeId);
 
         // 根据节点类型触发业务事件
         switch (data.Type)
@@ -52,5 +65,10 @@ public class MapPresenter
                 EventBus<BossBattleStartEvent>.Publish(new BossBattleStartEvent { EnemyId = data.EnemyId });
                 break;
         }
+
+    }
+    public void Dispose()
+    {
+        UnSubscribeEvents();
     }
 }

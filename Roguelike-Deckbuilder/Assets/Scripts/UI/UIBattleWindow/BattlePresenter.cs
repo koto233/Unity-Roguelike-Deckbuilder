@@ -12,13 +12,13 @@ using UnityEngine;
 
 public class BattlePresenter : IDisposable
 {
-    private UIBattleWindow _view;
+    private UIBattle _view;
     private BattleController _battleController;
     private Enemy _currentTargetEnemy;
     private int _selectedCardId;
 
 
-    public BattlePresenter(UIBattleWindow view, BattleController battleController)
+    public BattlePresenter(UIBattle view, BattleController battleController)
     {
         _view = view;
         _battleController = battleController;
@@ -213,7 +213,7 @@ public class BattlePresenter : IDisposable
         }
 
     }
-   
+
     private void OnEnemyIntentChanged(IntentEvent evt)
     {
         _view.RefreshEnemyIntent(evt.Enemy, evt.IntentConfig);
