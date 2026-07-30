@@ -40,7 +40,7 @@ public partial class UIMapNode : UIBase
         bool isStart = _nodeData.IsStart;
         bool isVisited = _nodeData.IsVisited;
         bool isLocked = _nodeData.IsLocked;
-
+        bool isInteractable = _nodeData.IsInteractable;
         // --- 名称 ---
         b_Name.text = isStart ? "起点" : GetTypeName(_nodeData.Type);
 
@@ -56,7 +56,7 @@ public partial class UIMapNode : UIBase
         b_Lock.gameObject.SetActive(isLocked);
 
         // --- 交互 ---
-        b_Button.interactable = !isLocked && !isVisited;
+        b_Button.interactable = isInteractable;
     }
 
     private string GetTypeName(MapNodeType type)

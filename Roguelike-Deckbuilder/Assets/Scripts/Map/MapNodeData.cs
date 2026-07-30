@@ -12,6 +12,7 @@ public class MapNodeData
     public bool IsVisited;
     public bool IsLocked = true;      // 默认锁定，只有上一行解锁了才能选
     public bool IsStart;              // 是否为起始节点
+    public bool IsInteractable;
     public MapNodeData(int row, int col)
     {
         Row = row;

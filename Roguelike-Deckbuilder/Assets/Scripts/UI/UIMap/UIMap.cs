@@ -65,6 +65,7 @@ public partial class UIMap : UIBase
         {
             if (_nodeDict.TryGetValue(data.Id, out var nodeView))
             {
+                Debug.Log($"节点 {data.Id} (行 {data.Row}) -> 状态: {data.IsVisited} {data.IsLocked}");
                 nodeView.UpdateState(data);
             }
         }
@@ -148,7 +149,7 @@ public partial class UIMap : UIBase
 
     private void UpdateLineImage(Image line, Transform fromRT, Transform toRT)
     {
-        Debug.Log($"fromRT: {fromRT.position}, toRT: {toRT.position}");
+        // Debug.Log($"fromRT: {fromRT.position}, toRT: {toRT.position}");
         // 假设 fromRT 和 toRT 有相同的父级（即都在同一个容器下）
         Vector2 fromPos = fromRT.position;
         Vector2 toPos = toRT.position;
