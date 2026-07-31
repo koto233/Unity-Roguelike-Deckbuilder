@@ -22,7 +22,12 @@ namespace LitFramework.FSM.Procedure
 
         public override void OnEnter()
         {
-            InitBattleAsync().Forget();
+            if (!_procedureManager.TryGetArgs<BattleStartParams>(out var args))
+            {
+                Debug.LogError("缺少战斗参数，无法初始化");
+                return;
+            }
+            InitBattleAsync(args).Forget();
         }
 
         public override void OnExit()
@@ -41,13 +46,13 @@ namespace LitFramework.FSM.Procedure
         {
 
         }
-        private async UniTaskVoid InitBattleAsync()
+        private async UniTaskVoid InitBattleAsync(BattleStartParams args)
         {
             var sceneLoader = ServiceLocator.Get<ISceneLoader>();
             var assetService = ServiceLocator.Get<IAssetService>();
             var uiService = ServiceLocator.Get<UIService>();
             var configService = ServiceLocator.Get<IConfigService>();
-            var enemyConfig = configService.GetTable<EnemyConfig>().Get(1);
+            var enemyConfig = configService.GetTable<EnemyConfig>().Get(args.EnemyId);
             var battleContext = new BattleContext()
             {
                 Player = new Player(100, 3),

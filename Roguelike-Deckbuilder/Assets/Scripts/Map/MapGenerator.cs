@@ -4,7 +4,7 @@ using System.Linq;
 using UnityEngine;
 public static class MapGenerator
 {
- public static List<MapNodeData> Generate(List<MapConfig> rowConfigs)
+    public static List<MapNodeData> Generate(List<MapConfig> rowConfigs)
     {
         if (rowConfigs == null || rowConfigs.Count == 0)
             return null;
@@ -29,7 +29,7 @@ public static class MapGenerator
                 }
                 // 如果是战斗类型，设置 EnemyId（此处示例）
                 if (node.Type == MapNodeType.Battle || node.Type == MapNodeType.Elite)
-                    node.EnemyId = "enemy_001"; // 实际应从配置获取
+                    node.EnemyId = 1; // 实际应从配置获取
                 nodes.Add(node);
             }
         }

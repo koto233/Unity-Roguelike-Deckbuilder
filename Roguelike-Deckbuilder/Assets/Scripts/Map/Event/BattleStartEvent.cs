@@ -2,6 +2,6 @@ using LitFramework.EventBus;
 
 public struct BattleStartEvent : IEvent
 {
-    public string EnemyId;
+    public int EnemyId;
     public bool IsElite;
 }
