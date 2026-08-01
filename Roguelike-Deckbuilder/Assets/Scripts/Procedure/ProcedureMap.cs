@@ -28,6 +28,7 @@ namespace LitFramework.FSM.Procedure
 
         public override void OnExit()
         {
+            UnloadMapSceneAsync().Forget();
             // ★ 取消订阅
             UnsubscribeEventHandlers();
             _mapPresenter = null;
@@ -109,6 +110,16 @@ namespace LitFramework.FSM.Procedure
                 Debug.LogError("UIMap 组件未找到");
             }
             uiService.Close<UITitleWindow>();
+        }
+
+        private async UniTaskVoid UnloadMapSceneAsync()
+        {
+            var sceneLoader = ServiceLocator.Get<ISceneLoader>();
+            if (sceneLoader.IsSceneLoaded(MapSceneName))
+            {
+                await sceneLoader.UnloadAdditiveAsync(MapSceneName);
+                Debug.Log("地图场景已卸载");
+            }
         }
     }
 }
