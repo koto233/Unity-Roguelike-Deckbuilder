@@ -11,6 +11,7 @@ public class BattleEndState : TurnStateBase
 
     public override void OnEnter()
     {
+        Controller.EndBattle();
         Debug.Log("战斗结束");
     }
 

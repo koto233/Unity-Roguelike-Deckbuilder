@@ -176,7 +176,6 @@ public class BattleController
         {
             EventBus<DiedEvent>.Unsubscribe(OnCharacterDied);
             BattleFSM.ChangeState<BattleEndState>();
-            _onBattleEnd?.Invoke();
             return;
         }
         if (evt.EntityType == EntityType.Enemy)
@@ -186,9 +185,12 @@ public class BattleController
             {
                 EventBus<DiedEvent>.Unsubscribe(OnCharacterDied);
                 BattleFSM.ChangeState<BattleEndState>();
-                _onBattleEnd?.Invoke();
             }
         }
+    }
+    public void EndBattle()
+    {
+        _onBattleEnd?.Invoke();
     }
     public void OnAllEnemiesDefeated()
     {

@@ -69,10 +69,7 @@ namespace LitFramework.FSM.Procedure
             // var uiBattleWindow = await uiService.OpenAsync<UIBattleWindow>(battleContext);
             var scene = await sceneLoader.LoadAdditiveAsync(BattleSceneName);
 
-            _battleController = new BattleController(battleContext, () =>
-          {
-              GameRoot.Instance.ProcedureManager.ChangeProcedure<ProcedureTitle>(); // 假设有地图状态
-          });
+            _battleController = new BattleController(battleContext, OnBattleEnd);
             var uiBattleWindow = GameObject.FindObjectOfType<UIBattle>(true);
             if (uiBattleWindow != null)
                 await uiBattleWindow.InitAsync(battleContext);
@@ -94,6 +91,12 @@ namespace LitFramework.FSM.Procedure
             {
                 await sceneLoader.UnloadAdditiveAsync(BattleSceneName);
             }
+        }
+
+        private void OnBattleEnd()
+        {
+            // 切换到地图流程
+            _procedureManager.ChangeProcedure<ProcedureMap>();
         }
     }
 }
