@@ -1,16 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using LitFramework;
+using LitFramework.Config;
 using UnityEngine;
 public static class MapGenerator
 {
-    public static Dictionary<string, MapNodeData> Generate(List<MapConfig> rowConfigs)
+    public static Dictionary<string, MapNodeData> Generate(List<MapConfig> rowConfigs, int seed = 0)
     {
         if (rowConfigs == null || rowConfigs.Count == 0)
             return null;
 
         var nodes = new Dictionary<string, MapNodeData>();
-
+     
         // 1. 生成所有节点
         for (int rowIdx = 0; rowIdx < rowConfigs.Count; rowIdx++)
         {
@@ -33,60 +35,43 @@ public static class MapGenerator
                     node.EnemyIds = new List<int> { 1 };
                 }
                 nodes.Add(node.Id, node);
-                }
             }
-
-            // 2. 建立行间连接（保证连通性）
-            for (int row = 0; row < rowConfigs.Count - 1; row++)
-            {
-                var curRowNodes = nodes.Values.Where(n => n.Row == row).ToList();
-                var nextRowNodes = nodes.Values.Where(n => n.Row == row + 1).ToList();
-                // 为每个当前节点随机连接下一行的 1~2 个节点（确保连通）
-                foreach (var cur in curRowNodes)
-                {
-                    int count = Random.Range(1, Mathf.Min(3, nextRowNodes.Count + 1));
-                    // 简单随机取 count 个不同节点（需确保不重复）
-                    var shuffled = nextRowNodes.OrderBy(x => Random.value).Take(count).ToList();
-                    foreach (var next in shuffled)
-                        cur.NextNodes.Add(next.Id);
-                }
-                // 确保下一行每个节点至少被一个上一行节点连接
-                foreach (var next in nextRowNodes)
-                {
-                    if (!curRowNodes.Any(c => c.NextNodes.Contains(next.Id)))
-                    {
-                        var randomCur = curRowNodes[Random.Range(0, curRowNodes.Count)];
-                        if (!randomCur.NextNodes.Contains(next.Id))
-                            randomCur.NextNodes.Add(next.Id);
-                    }
-                }
-            }
-
-            // 3. 标记起始节点
-            if (nodes.TryGetValue("0_0", out var startRowNode))
-            {
-                startRowNode.IsStart = true;
-                startRowNode.IsLocked = false;
-            }
-
-            return nodes;
         }
 
-    private static void Shuffle<T>(List<T> list)
-    {
-        for (int i = 0; i < list.Count; i++)
+        // 2. 建立行间连接（保证连通性）
+        for (int row = 0; row < rowConfigs.Count - 1; row++)
         {
-            int j = Random.Range(i, list.Count);
-            T temp = list[i];
-            list[i] = list[j];
-            list[j] = temp;
+            var curRowNodes = nodes.Values.Where(n => n.Row == row).ToList();
+            var nextRowNodes = nodes.Values.Where(n => n.Row == row + 1).ToList();
+            // 为每个当前节点随机连接下一行的 1~2 个节点（确保连通）
+            foreach (var cur in curRowNodes)
+            {
+                int count = Random.Range(1, Mathf.Min(3, nextRowNodes.Count + 1));
+                // 简单随机取 count 个不同节点（需确保不重复）
+                var shuffled = nextRowNodes.OrderBy(x => Random.value).Take(count).ToList();
+                foreach (var next in shuffled)
+                    cur.NextNodes.Add(next.Id);
+            }
+            // 确保下一行每个节点至少被一个上一行节点连接
+            foreach (var next in nextRowNodes)
+            {
+                if (!curRowNodes.Any(c => c.NextNodes.Contains(next.Id)))
+                {
+                    var randomCur = curRowNodes[Random.Range(0, curRowNodes.Count)];
+                    if (!randomCur.NextNodes.Contains(next.Id))
+                        randomCur.NextNodes.Add(next.Id);
+                }
+            }
         }
-    }
 
-    private static string SelectEnemyId(MapNodeType type)
-    {
-        // 示例：根据类型从配置中挑选敌人 ID
-        // 实际应从 EnemyConfig 中根据权重或等级选取
-        return type == MapNodeType.Elite ? "Elite_001" : "Battle_001";
+        // 3. 标记起始节点
+        if (nodes.TryGetValue("0_0", out var startRowNode))
+        {
+            startRowNode.IsStart = true;
+            startRowNode.IsLocked = false;
+        }
+
+        return nodes;
     }
+  
 }
