@@ -20,9 +20,10 @@ public partial class UITitleWindow : UIWindow
         var assetService = ServiceLocator.Get<IAssetService>();
         // assetService.LoadAsync<GameObject>("Assets/Res/UI/UICardItem.prefab", null);
     }
-    
+
     private void OnClickStart()
     {
+        ServiceLocator.Get<MapService>().GenerateMap(1);
         GameRoot.Instance.ProcedureManager.ChangeProcedure<ProcedureMap>();
         // StartBattleAsync().Forget();
     }

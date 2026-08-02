@@ -58,39 +58,27 @@ public partial class UIMap : UIBase
         // 2. 绘制连线
         DrawAllLines(nodes);
     }
-    public void RefreshMap(IReadOnlyCollection<MapNodeData> updatedNodes, string currentNodeId)
+    public void RefreshMap(Dictionary<string, MapNodeData> updatedNodes)
     {
-        // 1. 更新每个节点的视觉状态
-        foreach (var data in updatedNodes)
+        // 更新节点状态
+        foreach (var kv in updatedNodes)
         {
-            if (_nodeDict.TryGetValue(data.Id, out var nodeView))
-            {
-                Debug.Log($"节点 {data.Id} (行 {data.Row}) -> 状态: {data.IsVisited} {data.IsLocked}");
-                nodeView.UpdateState(data);
-            }
+            if (_nodeDict.TryGetValue(kv.Key, out var nodeView))
+                nodeView.UpdateState(kv.Value);
         }
 
-        // 2. 更新每条线的颜色
+        // 更新线条颜色
         foreach (var lineUI in _lines)
         {
-            bool isActive = IsLineActive(lineUI.FromId, lineUI.ToId, currentNodeId, updatedNodes);
-            lineUI.LineImage.color = isActive ? Color.white : new Color(0.5f, 0.5f, 0.5f, 0.5f);
+            if (updatedNodes.TryGetValue(lineUI.ToId, out var targetNode))
+            {
+                bool isVisited = targetNode.IsVisited;
+                lineUI.LineImage.color = isVisited ? Color.white : new Color(0.5f, 0.5f, 0.5f);
+            }
         }
     }
 
-    // ============ 判断线条是否高亮 ============
-    private bool IsLineActive(string fromId, string toId, string currentNodeId, IReadOnlyCollection<MapNodeData> allNodes)
-    {
-        // 只有从当前节点出发的线才可能高亮
-        if (fromId != currentNodeId) return false;
 
-        // 找到目标节点数据
-        var target = allNodes.FirstOrDefault(n => n.Id == toId);
-        if (target == null) return false;
-
-        // 目标未被访问且未锁定
-        return !target.IsVisited && !target.IsLocked;
-    }
     private Transform CreateRow()
     {
         var row = Instantiate(b_Row, b_Content).transform;
@@ -129,7 +117,7 @@ public partial class UIMap : UIBase
             foreach (var nextId in nodeData.NextNodes)
             {
                 if (!_nodeDict.TryGetValue(nextId, out var toView)) continue;
-                bool isActive = nodeData.IsVisited && !nodeData.IsLocked;
+                bool isActive = nodeData.IsVisited;
                 DrawLine(fromView, toView, isActive);
             }
         }
@@ -143,6 +131,7 @@ public partial class UIMap : UIBase
         var lineUI = lineGO.GetComponent<UIMapLine>();
         var lineImage = lineUI.LineImage;
         _lines.Add(lineUI);
+        lineUI.SetConnection(from.GetNodeData().Id, to.GetNodeData().Id);
         lineImage.color = active ? Color.white : new Color(0.5f, 0.5f, 0.5f, 0.5f);
         UpdateLineImage(lineImage, from.transform, to.transform);
     }

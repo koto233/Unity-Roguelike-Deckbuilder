@@ -4,7 +4,7 @@
 //     请勿手动修改此文件，重新生成将覆盖所有改动
 //
 //     来源 UI : UITitleWindow
-//     生成时间 : 2026-06-11
+//     生成时间 : 2026-08-02
 // </自动生成>
 //------------------------------------------------------------------------------
 
@@ -13,11 +13,17 @@ using UnityEngine.UI;
 
     public partial class UITitleWindow
     {
+        private @Button b_ContinueButton;
         private @Button b_StartButton;
+        private @Button b_SettingButton;
+        private @Button b_QuitButton;
 
         protected override void GetUI()
         {
             base.GetUI();
-            b_StartButton = GetBind<@Button>(0);
+            b_ContinueButton = GetBind<@Button>(0);
+            b_StartButton = GetBind<@Button>(1);
+            b_SettingButton = GetBind<@Button>(2);
+            b_QuitButton = GetBind<@Button>(3);
         }
     }

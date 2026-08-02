@@ -103,7 +103,7 @@ namespace LitFramework.FSM.Procedure
             {
                 await uiMap.InitAsync();
                 _mapPresenter = new MapPresenter(uiMap);
-                _mapPresenter.GenerateMap(1);
+                _mapPresenter.CreateMapUI();
             }
             else
             {
