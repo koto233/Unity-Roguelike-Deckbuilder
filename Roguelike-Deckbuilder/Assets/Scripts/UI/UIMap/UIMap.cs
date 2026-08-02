@@ -34,7 +34,7 @@ public partial class UIMap : UIBase
         _poolService.RegisterGameObjectPool<UIMapLine>(_linePrefabRef.Asset, initialPoolSize: 10);
     }
     // 外部调用：传入最新的节点数据，完全刷新地图
-    public void CreateMap(List<MapNodeData> nodes)
+    public void CreateMap(IReadOnlyCollection<MapNodeData> nodes)
     {
         Clear();
         if (nodes == null || nodes.Count == 0) return;
@@ -58,7 +58,7 @@ public partial class UIMap : UIBase
         // 2. 绘制连线
         DrawAllLines(nodes);
     }
-    public void RefreshMap(List<MapNodeData> updatedNodes, string currentNodeId)
+    public void RefreshMap(IReadOnlyCollection<MapNodeData> updatedNodes, string currentNodeId)
     {
         // 1. 更新每个节点的视觉状态
         foreach (var data in updatedNodes)
@@ -79,7 +79,7 @@ public partial class UIMap : UIBase
     }
 
     // ============ 判断线条是否高亮 ============
-    private bool IsLineActive(string fromId, string toId, string currentNodeId, List<MapNodeData> allNodes)
+    private bool IsLineActive(string fromId, string toId, string currentNodeId, IReadOnlyCollection<MapNodeData> allNodes)
     {
         // 只有从当前节点出发的线才可能高亮
         if (fromId != currentNodeId) return false;
@@ -118,7 +118,7 @@ public partial class UIMap : UIBase
 
 
 
-    private void DrawAllLines(List<MapNodeData> nodes)
+    private void DrawAllLines(IReadOnlyCollection<MapNodeData> nodes)
     {
         ClearLines();
         foreach (var nodeData in nodes)

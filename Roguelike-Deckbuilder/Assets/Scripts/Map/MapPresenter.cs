@@ -30,7 +30,7 @@ public class MapPresenter : IDisposable
     public void GenerateMap(int templateId)
     {
         _mapService.GenerateMap(templateId);
-        _view.CreateMap(_mapService.CurrentMap);
+        _view.CreateMap(_mapService.CurrentMapList);
     }
 
     private void OnNodeClicked(string nodeId)
@@ -43,7 +43,7 @@ public class MapPresenter : IDisposable
         _mapService.VisitNode(nodeId);
 
         // 刷新 UI
-        _view.RefreshMap(_mapService.CurrentMap, nodeId);
+        _view.RefreshMap(_mapService.CurrentMapList, nodeId);
 
         // 根据节点类型触发业务事件
         switch (data.Type)

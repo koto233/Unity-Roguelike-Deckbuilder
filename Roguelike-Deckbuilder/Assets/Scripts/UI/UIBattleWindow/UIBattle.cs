@@ -160,6 +160,7 @@ public partial class UIBattle : UIBase
             return;
         }
         b_BlockText.SetText(block.ToString());
+        b_BlockText.transform.parent.gameObject.SetActive(block > 0);
     }
     public void ResetCard()
     {

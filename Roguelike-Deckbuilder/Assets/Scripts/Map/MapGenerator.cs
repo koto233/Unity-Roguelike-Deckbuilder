@@ -4,12 +4,12 @@ using System.Linq;
 using UnityEngine;
 public static class MapGenerator
 {
-    public static List<MapNodeData> Generate(List<MapConfig> rowConfigs)
+    public static Dictionary<string, MapNodeData> Generate(List<MapConfig> rowConfigs)
     {
         if (rowConfigs == null || rowConfigs.Count == 0)
             return null;
 
-        var nodes = new List<MapNodeData>();
+        var nodes = new Dictionary<string, MapNodeData>();
 
         // 1. 生成所有节点
         for (int rowIdx = 0; rowIdx < rowConfigs.Count; rowIdx++)
@@ -30,15 +30,15 @@ public static class MapGenerator
                 // 如果是战斗类型，设置 EnemyId（此处示例）
                 if (node.Type == MapNodeType.Battle || node.Type == MapNodeType.Elite)
                     node.EnemyId = 1; // 实际应从配置获取
-                nodes.Add(node);
+                nodes.Add(node.Id, node);
             }
         }
 
         // 2. 建立行间连接（保证连通性）
         for (int row = 0; row < rowConfigs.Count - 1; row++)
         {
-            var curRowNodes = nodes.FindAll(n => n.Row == row);
-            var nextRowNodes = nodes.FindAll(n => n.Row == row + 1);
+            var curRowNodes = nodes.Values.Where(n => n.Row == row).ToList();
+            var nextRowNodes = nodes.Values.Where(n => n.Row == row + 1).ToList();
             // 为每个当前节点随机连接下一行的 1~2 个节点（确保连通）
             foreach (var cur in curRowNodes)
             {
@@ -60,13 +60,11 @@ public static class MapGenerator
             }
         }
 
-        // 3. 标记起始节点（第0行中间列）
-        var startRow = nodes.FindAll(n => n.Row == 0);
-        if (startRow.Count > 0)
+        // 3. 标记起始节点
+        if (nodes.TryGetValue("0_0", out var startRowNode))
         {
-            int mid = startRow.Count / 2;
-            startRow[mid].IsStart = true;
-            startRow[mid].IsLocked = false;
+            startRowNode.IsStart = true;
+            startRowNode.IsLocked = false;
         }
 
         return nodes;
