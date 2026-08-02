@@ -66,8 +66,8 @@ namespace LitFramework.FSM.Procedure
         // ============ 事件处理器 ============
         private void OnBattleStart(BattleStartEvent evt)
         {
-            Debug.Log($"进入战斗，敌人ID：{evt.EnemyId}，是否精英：{evt.IsElite}");
-            var args = new BattleStartParams { EnemyId = evt.EnemyId, IsElite = evt.IsElite };
+           
+            var args = new BattleStartParams { EnemyIds = evt.EnemyIds };
             _procedureManager.ChangeProcedure<ProcedureBattle, BattleStartParams>(args);
         }
 

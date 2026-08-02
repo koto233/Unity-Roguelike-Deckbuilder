@@ -8,6 +8,7 @@
     "Defend": 1,
     "StrongRate": 2,
     "BaseBlock": 0,
+    "AIType": "Slime",
     "Description": "造成{0}点伤害。"
   },
   "2": {
@@ -19,6 +20,7 @@
     "Defend": 2,
     "StrongRate": 2,
     "BaseBlock": 0,
+    "AIType": "Brute",
     "Description": "造成{0}点伤害。"
   },
   "3": {
@@ -30,6 +32,7 @@
     "Defend": 3,
     "StrongRate": 2,
     "BaseBlock": 0,
+    "AIType": "Default",
     "Description": "获得{0}点格挡。"
   },
   "4": {
@@ -41,6 +44,7 @@
     "Defend": 4,
     "StrongRate": 2,
     "BaseBlock": 0,
+    "AIType": "Default",
     "Description": "获得{0}点格挡。"
   },
   "5": {
@@ -52,6 +56,7 @@
     "Defend": 5,
     "StrongRate": 2,
     "BaseBlock": 5,
+    "AIType": "Default",
     "Description": "造成{0}点伤害。"
   },
   "6": {
@@ -63,6 +68,7 @@
     "Defend": 6,
     "StrongRate": 2,
     "BaseBlock": 10,
+    "AIType": "Default",
     "Description": "造成{0} 点伤害。"
   }
 }

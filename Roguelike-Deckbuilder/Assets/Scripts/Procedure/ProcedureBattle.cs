@@ -52,19 +52,23 @@ namespace LitFramework.FSM.Procedure
             var assetService = ServiceLocator.Get<IAssetService>();
             var uiService = ServiceLocator.Get<UIService>();
             var configService = ServiceLocator.Get<IConfigService>();
-            var enemyConfig = configService.GetTable<EnemyConfig>().Get(args.EnemyId);
+
+
             var battleContext = new BattleContext()
             {
                 Player = new Player(100, 3),
-                Enemies = new List<Enemy>()
-                {
-                    new (enemyConfig,new SlimeAI()),
-                },
+                Enemies = new(),
                 CurrentTurn = 0,
                 IsPlayerTurn = true,
                 Target = null,
                 GoldReward = 0
             };
+            foreach (var enemyId in args.EnemyIds)
+            {
+                var enemyConfig = configService.GetTable<EnemyConfig>().Get(enemyId);
+                var enemyAi = EnemyAIFactory.Create(enemyConfig.AIType);
+                battleContext.Enemies.Add(new Enemy(enemyConfig, enemyAi));
+            }
 
             // var uiBattleWindow = await uiService.OpenAsync<UIBattleWindow>(battleContext);
             var scene = await sceneLoader.LoadAdditiveAsync(BattleSceneName);

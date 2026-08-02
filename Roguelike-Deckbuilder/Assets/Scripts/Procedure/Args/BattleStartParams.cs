@@ -6,6 +6,6 @@ using System.Threading.Tasks;
 
 public class BattleStartParams : IProcedureArgs
 {
-    public int EnemyId { get; set; }
+    public List<int> EnemyIds { get; set; }
     public bool IsElite { get; set; }
 }

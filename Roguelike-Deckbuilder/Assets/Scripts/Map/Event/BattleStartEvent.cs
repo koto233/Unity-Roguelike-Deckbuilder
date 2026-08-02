@@ -1,7 +1,7 @@
+using System.Collections.Generic;
 using LitFramework.EventBus;
 
 public struct BattleStartEvent : IEvent
 {
-    public int EnemyId;
-    public bool IsElite;
+    public List<int> EnemyIds { get; set; }
 }

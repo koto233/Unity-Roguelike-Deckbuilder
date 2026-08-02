@@ -48,10 +48,10 @@ public class MapPresenter : IDisposable
         switch (data.Type)
         {
             case MapNodeType.Battle:
-                EventBus<BattleStartEvent>.Publish(new BattleStartEvent { EnemyId = data.EnemyId, IsElite = data.Type == MapNodeType.Elite });
+                EventBus<BattleStartEvent>.Publish(new BattleStartEvent { EnemyIds = data.EnemyIds });
                 break;
             case MapNodeType.Elite:
-                EventBus<BattleStartEvent>.Publish(new BattleStartEvent { EnemyId = data.EnemyId, IsElite = data.Type == MapNodeType.Elite });
+                EventBus<BattleStartEvent>.Publish(new BattleStartEvent { EnemyIds = data.EnemyIds });
                 break;
             case MapNodeType.Rest:
                 EventBus<RestStartEvent>.Publish(new RestStartEvent());
@@ -63,7 +63,7 @@ public class MapPresenter : IDisposable
                 EventBus<EventStartEvent>.Publish(new EventStartEvent());
                 break;
             case MapNodeType.Boss:
-                EventBus<BattleStartEvent>.Publish(new BattleStartEvent { EnemyId = data.EnemyId, IsElite = data.Type == MapNodeType.Elite });
+                EventBus<BattleStartEvent>.Publish(new BattleStartEvent { EnemyIds = data.EnemyIds });
                 break;
         }
 

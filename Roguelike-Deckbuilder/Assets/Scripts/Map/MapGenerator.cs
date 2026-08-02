@@ -28,47 +28,49 @@ public static class MapGenerator
                     node.Type = WeightedRandom.PickType(rowCfg);
                 }
                 // 如果是战斗类型，设置 EnemyId（此处示例）
-                if (node.Type == MapNodeType.Battle || node.Type == MapNodeType.Elite)
-                    node.EnemyId = 1; // 实际应从配置获取
-                nodes.Add(node.Id, node);
-            }
-        }
-
-        // 2. 建立行间连接（保证连通性）
-        for (int row = 0; row < rowConfigs.Count - 1; row++)
-        {
-            var curRowNodes = nodes.Values.Where(n => n.Row == row).ToList();
-            var nextRowNodes = nodes.Values.Where(n => n.Row == row + 1).ToList();
-            // 为每个当前节点随机连接下一行的 1~2 个节点（确保连通）
-            foreach (var cur in curRowNodes)
-            {
-                int count = Random.Range(1, Mathf.Min(3, nextRowNodes.Count + 1));
-                // 简单随机取 count 个不同节点（需确保不重复）
-                var shuffled = nextRowNodes.OrderBy(x => Random.value).Take(count).ToList();
-                foreach (var next in shuffled)
-                    cur.NextNodes.Add(next.Id);
-            }
-            // 确保下一行每个节点至少被一个上一行节点连接
-            foreach (var next in nextRowNodes)
-            {
-                if (!curRowNodes.Any(c => c.NextNodes.Contains(next.Id)))
+                if (node.Type == MapNodeType.Battle || node.Type == MapNodeType.Elite || node.Type == MapNodeType.Boss)
                 {
-                    var randomCur = curRowNodes[Random.Range(0, curRowNodes.Count)];
-                    if (!randomCur.NextNodes.Contains(next.Id))
-                        randomCur.NextNodes.Add(next.Id);
+                    node.EnemyIds = new List<int> { 1 };
+                }
+                nodes.Add(node.Id, node);
                 }
             }
-        }
 
-        // 3. 标记起始节点
-        if (nodes.TryGetValue("0_0", out var startRowNode))
-        {
-            startRowNode.IsStart = true;
-            startRowNode.IsLocked = false;
-        }
+            // 2. 建立行间连接（保证连通性）
+            for (int row = 0; row < rowConfigs.Count - 1; row++)
+            {
+                var curRowNodes = nodes.Values.Where(n => n.Row == row).ToList();
+                var nextRowNodes = nodes.Values.Where(n => n.Row == row + 1).ToList();
+                // 为每个当前节点随机连接下一行的 1~2 个节点（确保连通）
+                foreach (var cur in curRowNodes)
+                {
+                    int count = Random.Range(1, Mathf.Min(3, nextRowNodes.Count + 1));
+                    // 简单随机取 count 个不同节点（需确保不重复）
+                    var shuffled = nextRowNodes.OrderBy(x => Random.value).Take(count).ToList();
+                    foreach (var next in shuffled)
+                        cur.NextNodes.Add(next.Id);
+                }
+                // 确保下一行每个节点至少被一个上一行节点连接
+                foreach (var next in nextRowNodes)
+                {
+                    if (!curRowNodes.Any(c => c.NextNodes.Contains(next.Id)))
+                    {
+                        var randomCur = curRowNodes[Random.Range(0, curRowNodes.Count)];
+                        if (!randomCur.NextNodes.Contains(next.Id))
+                            randomCur.NextNodes.Add(next.Id);
+                    }
+                }
+            }
 
-        return nodes;
-    }
+            // 3. 标记起始节点
+            if (nodes.TryGetValue("0_0", out var startRowNode))
+            {
+                startRowNode.IsStart = true;
+                startRowNode.IsLocked = false;
+            }
+
+            return nodes;
+        }
 
     private static void Shuffle<T>(List<T> list)
     {

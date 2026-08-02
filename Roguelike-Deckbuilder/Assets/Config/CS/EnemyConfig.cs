@@ -5,9 +5,6 @@
 // 2. 表格约定：第一行是变量名称，第二行是变量类型
 
 // Generate From D:\GIT\Unity-Roguelike-Deckbuilder\Roguelike-Deckbuilder\Assets\Config\Excel\EnemyConfig.xlsx.xlsx
-using System;
-
-[Serializable]
 
 public class EnemyConfig : IConfig
 {
@@ -19,11 +16,9 @@ public class EnemyConfig : IConfig
 	public int Defend; // 防御
 	public int StrongRate; // 蓄力倍率
 	public int BaseBlock; // 护甲
+	public string AIType; // AI类型
 	public string Description; // 描述
 }
-
-
-// End of Auto Generated Code
 
 
 // End of Auto Generated Code
