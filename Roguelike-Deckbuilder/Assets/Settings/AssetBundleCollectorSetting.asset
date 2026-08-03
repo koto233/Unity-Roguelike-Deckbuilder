@@ -39,7 +39,7 @@ MonoBehaviour:
         AssetTags: 
         UserData: 
       - CollectPath: Assets/Res/UI/UICardItem.prefab
-        CollectorGUID: faf36d7a7d13a4d428cc455e8a848813
+        CollectorGUID: 
         CollectorType: 0
         AddressRuleName: AddressByFileName
         PackRuleName: PackDirectory
@@ -184,3 +184,56 @@ MonoBehaviour:
       AssetTags: 
       ActiveRuleName: EnableGroup
       Collectors: []
+    - GroupName: Art
+      GroupDesc: 
+      AssetTags: 
+      ActiveRuleName: EnableGroup
+      Collectors:
+      - CollectPath: Assets/Res/Art/MapNode/Battle.png
+        CollectorGUID: e7f8874d3060c9043bf71dadb9e075c8
+        CollectorType: 0
+        AddressRuleName: AddressByFileName
+        PackRuleName: PackDirectory
+        FilterRuleName: CollectAll
+        AssetTags: 
+        UserData: 
+      - CollectPath: Assets/Res/Art/MapNode/Boss.png
+        CollectorGUID: f4cd7c7f27e46984aaafc7d48644ffcf
+        CollectorType: 0
+        AddressRuleName: AddressByFileName
+        PackRuleName: PackDirectory
+        FilterRuleName: CollectAll
+        AssetTags: 
+        UserData: 
+      - CollectPath: Assets/Res/Art/MapNode/Chest.png
+        CollectorGUID: 1f25bb3a64af91f4abe6370f8461b709
+        CollectorType: 0
+        AddressRuleName: AddressByFileName
+        PackRuleName: PackDirectory
+        FilterRuleName: CollectAll
+        AssetTags: 
+        UserData: 
+      - CollectPath: Assets/Res/Art/MapNode/Event.png
+        CollectorGUID: 0159a98a835cd7140afb135527c53c6f
+        CollectorType: 0
+        AddressRuleName: AddressByFileName
+        PackRuleName: PackDirectory
+        FilterRuleName: CollectAll
+        AssetTags: 
+        UserData: 
+      - CollectPath: Assets/Res/Art/MapNode/Shop.png
+        CollectorGUID: c641761fa9a9c1c42b978b7e48517d24
+        CollectorType: 0
+        AddressRuleName: AddressByFileName
+        PackRuleName: PackDirectory
+        FilterRuleName: CollectAll
+        AssetTags: 
+        UserData: 
+      - CollectPath: Assets/Res/Art/MapNode/Rest.png
+        CollectorGUID: 9af1791da87c0d4479a509252e8c23cd
+        CollectorType: 0
+        AddressRuleName: AddressByFileName
+        PackRuleName: PackDirectory
+        FilterRuleName: CollectAll
+        AssetTags: 
+        UserData: 
