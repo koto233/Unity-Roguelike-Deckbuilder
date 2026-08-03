@@ -33,6 +33,7 @@ public class MapService
     private void InitStartNode()
     {
         _currentNode = GetNode("0_0");
+        _currentNode.IsVisited = true;
         // 访问后自动解锁下一层相邻节点
         foreach (var nextId in _currentNode.NextNodes)
         {

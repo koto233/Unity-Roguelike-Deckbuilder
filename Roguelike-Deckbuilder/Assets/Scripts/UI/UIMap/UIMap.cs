@@ -70,10 +70,11 @@ public partial class UIMap : UIBase
         // 更新线条颜色
         foreach (var lineUI in _lines)
         {
-            if (updatedNodes.TryGetValue(lineUI.ToId, out var targetNode))
+            if (updatedNodes.TryGetValue(lineUI.FromId, out var fromNode) &&
+                updatedNodes.TryGetValue(lineUI.ToId, out var toNode))
             {
-                bool isVisited = targetNode.IsVisited;
-                lineUI.LineImage.color = isVisited ? Color.white : new Color(0.5f, 0.5f, 0.5f);
+                bool isVisitedPath = fromNode.IsVisited && toNode.IsVisited;
+                lineUI.LineImage.color = isVisitedPath ? Color.white : new Color(0.5f, 0.5f, 0.5f, 0.5f);
             }
         }
     }
@@ -117,13 +118,12 @@ public partial class UIMap : UIBase
             foreach (var nextId in nodeData.NextNodes)
             {
                 if (!_nodeDict.TryGetValue(nextId, out var toView)) continue;
-                bool isActive = nodeData.IsVisited;
-                DrawLine(fromView, toView, isActive);
+                DrawLine(fromView, toView);
             }
         }
     }
 
-    private void DrawLine(UIMapNode from, UIMapNode to, bool active)
+    private void DrawLine(UIMapNode from, UIMapNode to)
     {
         var lineGO = _poolService.GetGameObject<UIMapLine>();
         lineGO.transform.SetParent(b_LinesRoot);
@@ -132,7 +132,7 @@ public partial class UIMap : UIBase
         var lineImage = lineUI.LineImage;
         _lines.Add(lineUI);
         lineUI.SetConnection(from.GetNodeData().Id, to.GetNodeData().Id);
-        lineImage.color = active ? Color.white : new Color(0.5f, 0.5f, 0.5f, 0.5f);
+        lineImage.color = to.GetNodeData().IsVisited && from.GetNodeData().IsVisited ? Color.white : new Color(0.5f, 0.5f, 0.5f, 0.5f);
         UpdateLineImage(lineImage, from.transform, to.transform);
     }
 

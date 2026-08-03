@@ -1,3 +1,7 @@
+using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
+using LitFramework;
+using LitFramework.Asset;
 using LitFramework.UI.Core.Window;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,12 +12,23 @@ public partial class UIMapNode : UIBase
     public event System.Action<string> OnNodeClicked;
     private string _nodeId;
     public MapNodeData GetNodeData() => _nodeData;
+    private AssetRef<Sprite> _iconRef;
+    private static readonly IReadOnlyDictionary<MapNodeType, string> IconPathMap = 
+    new Dictionary<MapNodeType, string>
+    {
+        [MapNodeType.Battle] = "Assets/Res/Art/MapNode/Battle.png",
+        [MapNodeType.Elite]  = "Assets/Res/Art/MapNode/Battle.png", // 与 Battle 共用
+        [MapNodeType.Rest]   = "Assets/Res/Art/MapNode/Rest.png",
+        [MapNodeType.Event]  = "Assets/Res/Art/MapNode/Event.png",
+        [MapNodeType.Boss]   = "Assets/Res/Art/MapNode/Boss.png",
+        [MapNodeType.Shop]   = "Assets/Res/Art/MapNode/Shop.png",
+    };
     // ========== 对外唯一入口 ==========
     public void Initialize(MapNodeData data)
     {
         _nodeData = data;
         _nodeId = data.Id;
-
+        SetIcon(data.Type).Forget();
         // 1. 清理旧监听（池复用必须）
         b_Button.onClick.RemoveAllListeners();
         b_Button.onClick.AddListener(() => OnNodeClicked?.Invoke(_nodeData.Id));
@@ -21,6 +36,13 @@ public partial class UIMapNode : UIBase
         Refresh();
     }
 
+
+    private async UniTask SetIcon(MapNodeType type)
+    {
+        var assetService = ServiceLocator.Get<IAssetService>();
+        _iconRef = await assetService.LoadRefAsync<Sprite>(IconPathMap[type]);
+        b_Icon.sprite = _iconRef.Asset;
+    }
     // ========== 回收时调用 ==========
     public void ResetNode()
     {
