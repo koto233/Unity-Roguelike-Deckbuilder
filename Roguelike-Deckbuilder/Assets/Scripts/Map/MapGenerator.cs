@@ -69,6 +69,7 @@ public static class MapGenerator
         {
             startRowNode.IsStart = true;
             startRowNode.IsLocked = false;
+            startRowNode.Type = MapNodeType.Start;
         }
 
         return nodes;

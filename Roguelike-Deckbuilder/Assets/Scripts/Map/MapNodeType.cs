@@ -4,6 +4,7 @@ using UnityEngine;
 
 public enum MapNodeType
 {
+    Start,
     Battle,    // 普通战斗
     Elite,     // 精英
     Rest,      // 篝火（休息/锻造）

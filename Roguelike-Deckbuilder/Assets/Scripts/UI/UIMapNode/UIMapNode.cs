@@ -13,15 +13,16 @@ public partial class UIMapNode : UIBase
     private string _nodeId;
     public MapNodeData GetNodeData() => _nodeData;
     private AssetRef<Sprite> _iconRef;
-    private static readonly IReadOnlyDictionary<MapNodeType, string> IconPathMap = 
+    private static readonly IReadOnlyDictionary<MapNodeType, string> IconPathMap =
     new Dictionary<MapNodeType, string>
     {
+        [MapNodeType.Start] = "Assets/Res/Art/MapNode/Start.png",
         [MapNodeType.Battle] = "Assets/Res/Art/MapNode/Battle.png",
-        [MapNodeType.Elite]  = "Assets/Res/Art/MapNode/Battle.png", // 与 Battle 共用
-        [MapNodeType.Rest]   = "Assets/Res/Art/MapNode/Rest.png",
-        [MapNodeType.Event]  = "Assets/Res/Art/MapNode/Event.png",
-        [MapNodeType.Boss]   = "Assets/Res/Art/MapNode/Boss.png",
-        [MapNodeType.Shop]   = "Assets/Res/Art/MapNode/Shop.png",
+        [MapNodeType.Elite] = "Assets/Res/Art/MapNode/Elite.png",
+        [MapNodeType.Rest] = "Assets/Res/Art/MapNode/Rest.png",
+        [MapNodeType.Event] = "Assets/Res/Art/MapNode/Event.png",
+        [MapNodeType.Boss] = "Assets/Res/Art/MapNode/Boss.png",
+        [MapNodeType.Shop] = "Assets/Res/Art/MapNode/Shop.png",
     };
     // ========== 对外唯一入口 ==========
     public void Initialize(MapNodeData data)
@@ -41,6 +42,7 @@ public partial class UIMapNode : UIBase
     {
         var assetService = ServiceLocator.Get<IAssetService>();
         _iconRef = await assetService.LoadRefAsync<Sprite>(IconPathMap[type]);
+        // Debug.Log($"加载完成，asset: {_iconRef.Asset}, 类型: {_iconRef.Asset?.GetType()}");
         b_Icon.sprite = _iconRef.Asset;
     }
     // ========== 回收时调用 ==========
@@ -72,10 +74,7 @@ public partial class UIMapNode : UIBase
         b_Icon.color = color;
 
         // --- 高亮 ---
-        b_HighLight.gameObject.SetActive(!isVisited && !isStart);
-
-        // --- 锁 ---
-        b_Lock.gameObject.SetActive(isLocked);
+        // b_HighLight.gameObject.SetActive(!isVisited && !isStart);
 
         // --- 交互 ---
         b_Button.interactable = isInteractable;

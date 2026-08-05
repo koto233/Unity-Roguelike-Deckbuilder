@@ -197,7 +197,7 @@ MonoBehaviour:
         FilterRuleName: CollectAll
         AssetTags: 
         UserData: 
-      - CollectPath: Assets/Res/Art/MapNode/Boss.png
+      - CollectPath: Assets/Res/Art/MapNode/Elite.png
         CollectorGUID: f4cd7c7f27e46984aaafc7d48644ffcf
         CollectorType: 0
         AddressRuleName: AddressByFileName
@@ -231,6 +231,22 @@ MonoBehaviour:
         UserData: 
       - CollectPath: Assets/Res/Art/MapNode/Rest.png
         CollectorGUID: 9af1791da87c0d4479a509252e8c23cd
+        CollectorType: 0
+        AddressRuleName: AddressByFileName
+        PackRuleName: PackDirectory
+        FilterRuleName: CollectAll
+        AssetTags: 
+        UserData: 
+      - CollectPath: Assets/Res/Art/MapNode/Start.png
+        CollectorGUID: 35ff4310e932e88448e931df17615f66
+        CollectorType: 0
+        AddressRuleName: AddressByFileName
+        PackRuleName: PackDirectory
+        FilterRuleName: CollectAll
+        AssetTags: 
+        UserData: 
+      - CollectPath: Assets/Res/Art/MapNode/Boss.png
+        CollectorGUID: 07f26459b8201da4f84a25254cc891c6
         CollectorType: 0
         AddressRuleName: AddressByFileName
         PackRuleName: PackDirectory
