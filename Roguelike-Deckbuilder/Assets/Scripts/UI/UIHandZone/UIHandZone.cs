@@ -34,9 +34,9 @@ public partial class UIHandZone : MonoBehaviour
         List<Card> changedCards,
         ChangeType type,
         Action onPlay = null,
-        Action onCancel = null,
-        Action<int> onDragStart = null,
-        Action<Enemy> onCardDrag = null)
+        Action _onDragEnd = null,
+        Action<int, Vector2> onDragStart = null,
+        Action<Enemy, Vector2> onCardDrag = null)
     {
         Debug.Log("刷新手牌" + type);
         switch (type)
@@ -59,17 +59,17 @@ public partial class UIHandZone : MonoBehaviour
                 break;
 
             case ChangeType.Add:
-                AddCards(changedCards, onPlay, onCancel, onDragStart, onCardDrag);
+                AddCards(changedCards, onPlay, _onDragEnd, onDragStart, onCardDrag);
                 PlayAddAnimations(changedCards).Forget();
                 break;
 
             case ChangeType.Refresh:
-                RebuildUI(handCards, onPlay, onCancel, onDragStart, onCardDrag);
+                RebuildUI(handCards, onPlay, _onDragEnd, onDragStart, onCardDrag);
                 break;
         }
     }
 
-    private void AddCards(List<Card> changedCards, Action onPlay, Action onCancel, Action<int> onDragStart, Action<Enemy> onCardDrag)
+    private void AddCards(List<Card> changedCards, Action onPlay, Action _onDragEnd, Action<int, Vector2> onDragStart, Action<Enemy, Vector2> onCardDrag)
     {
         foreach (var card in changedCards)
         {
@@ -80,7 +80,7 @@ public partial class UIHandZone : MonoBehaviour
             go.SetActive(true);
             go.transform.SetParent(_handContainer);
             var uiCard = go.GetComponent<UICardItem>();
-            uiCard.Init(card, _cardDetailTrans, onPlay, onCancel, onDragStart, onCardDrag);
+            uiCard.Init(card, _cardDetailTrans, onPlay, _onDragEnd, onDragStart, onCardDrag);
             _cardItems.Add(card.InstanceId, uiCard);
         }
 
@@ -89,7 +89,7 @@ public partial class UIHandZone : MonoBehaviour
             item.OnLayoutComplete();
     }
 
-    private void RebuildUI(List<Card> handCards, Action onPlay, Action onCancel, Action<int> onDragStart, Action<Enemy> onCardDrag)
+    private void RebuildUI(List<Card> handCards, Action onPlay, Action _onDragEnd, Action<int, Vector2> onDragStart, Action<Enemy, Vector2> onCardDrag)
     {
         Debug.Log("手牌数" + handCards.Count);
         ClearHandContainer();
@@ -104,7 +104,7 @@ public partial class UIHandZone : MonoBehaviour
             var rect = go.GetComponent<RectTransform>();
             Debug.Log($"取卡 {card.InstanceId}: sizeDelta = {rect.sizeDelta}, pivot = {rect.pivot}");
             var uiCard = go.GetComponent<UICardItem>();
-            uiCard.Init(card, _cardDetailTrans, onPlay, onCancel, onDragStart, onCardDrag);
+            uiCard.Init(card, _cardDetailTrans, onPlay, _onDragEnd, onDragStart, onCardDrag);
             _cardItems.Add(card.InstanceId, uiCard);
         }
 

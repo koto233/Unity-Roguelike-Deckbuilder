@@ -67,6 +67,7 @@ public partial class UIBattle : UIBase
         b_EndTurnBtn.onClick.AddListener(() => OnEndTurn?.Invoke());
         b_BuffTooltip.Hide();
         b_IntentTooltip.Hide();
+        HideArrow();
     }
 
     public void OpenPilePanel()
@@ -149,7 +150,7 @@ public partial class UIBattle : UIBase
         b_EnergyText.SetText($"{energy}/{maxEnergy}");
         b_HandZone.RefreshHandState(energy);
     }
-    public void RefreshHand(List<Card> hand, List<Card> changedCards, ChangeType type, Action onPlay = null, Action onCancel = null, Action<int> onDragStart = null, Action<Enemy> onCardDrag = null)
+    public void RefreshHand(List<Card> hand, List<Card> changedCards, ChangeType type, Action onPlay = null, Action onCancel = null, Action<int, Vector2> onDragStart = null, Action<Enemy, Vector2> onCardDrag = null)
     {
         b_HandZone.RefreshHand(hand, changedCards, type, onPlay, onCancel, onDragStart, onCardDrag);
     }
@@ -168,7 +169,19 @@ public partial class UIBattle : UIBase
     }
 
     // ===== View 层交互反馈 =====
-
+    public void ShowArrow(Vector2 start, Vector2 end, Vector2 controlOffset)
+    {
+        b_TargetArrow.Show();
+        b_TargetArrow.Init(start, end, controlOffset);
+    }
+    public void UpdateArrow(Vector2 end)
+    {
+        b_TargetArrow.UpdateArrow(end);
+    }
+    public void HideArrow()
+    {
+        b_TargetArrow.Hide();
+    }
     public void ShowBuffTooltip(TooltipData data, Vector2 position)
     {
         Debug.Log($"ShowTooltip: {data} at {position}");

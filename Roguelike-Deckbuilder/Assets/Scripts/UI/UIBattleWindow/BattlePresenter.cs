@@ -118,20 +118,24 @@ public class BattlePresenter : IDisposable
     private void RefreshHand(List<Card> handCards, List<Card> changedCards, ChangeType type)
     {
         _battleController.UpdateCardUsability();
-        _view.RefreshHand(handCards, changedCards, type, OnPlayCard, OnCancelCard, OnDragStart, OnDragCard);
+        _view.RefreshHand(handCards, changedCards, type, OnPlayCard, OnDragEnd, OnDragStart, OnDragCard);
     }
 
 
-    private void OnDragStart(int cardId)
+    private void OnDragStart(int cardId, Vector2 position)
     {
         // Debug.Log("OnDragStart:" + cardId);
         _selectedCardId = cardId;
+        _view.ShowArrow(position, position, Vector2.up * 150);
     }
-    private void OnDragCard(Enemy enemy)
+    private void OnDragCard(Enemy enemy, Vector2 position)
     {
         _currentTargetEnemy = enemy;
+        _view.UpdateArrow(position);
         // Debug.Log("OnDragCard:" + enemy == null);
     }
+
+
     private void OnPlayCard()
     {
         if (!_battleController.PlayCard(_selectedCardId, _currentTargetEnemy))
@@ -139,9 +143,9 @@ public class BattlePresenter : IDisposable
             _view.ResetCard();
         }
     }
-    private void OnCancelCard()
+    private void OnDragEnd()
     {
-
+        _view.HideArrow();
     }
 
     private void RefreshEnergy(int energy, int maxEnergy)

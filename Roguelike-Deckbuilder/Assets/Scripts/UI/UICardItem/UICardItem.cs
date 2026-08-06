@@ -26,9 +26,9 @@ public partial class UICardItem
     private Transform _originalParent;
     private int _originalSiblingIndex;
     private Action _onPlay;
-    private Action _onCancel;
-    private Action<int> _onDragStart;
-    private Action<Enemy> _onCardDrag;
+    private Action _onDragEnd;
+    private Action<int, Vector2> _onDragStart;
+    private Action<Enemy, Vector2> _onCardDrag;
     private Enemy _Target;
     private bool _canUse = true;
     private bool _isScaleNormalized = false;
@@ -39,15 +39,15 @@ public partial class UICardItem
         Card card,
         Transform cardDetailTrans,
         Action onPlay = null,
-        Action onCancel = null,
-        Action<int> onDragStart = null,
-        Action<Enemy> onCardDrag = null
+        Action _onDragEnd = null,
+        Action<int, Vector2> onDragStart = null,
+        Action<Enemy, Vector2> onCardDrag = null
     )
     {
         _rect = GetComponent<RectTransform>();
         _onPlay = onPlay;
-        _onCancel = onCancel;
-        _onDragStart = onDragStart;
+        this._onDragEnd = _onDragEnd;
+        this._onDragStart = onDragStart;
         _onCardDrag = onCardDrag;
         _cardDetailTrans = cardDetailTrans;
         RefreshUI(card);
@@ -103,7 +103,8 @@ public partial class UICardItem
             out Vector2 localMousePos
         );
         _dragStartOffset = _rect.anchoredPosition - localMousePos;
-        _onDragStart?.Invoke(_card.InstanceId);
+        Vector2 localStartPos = _rect.parent.InverseTransformPoint(b_ArrowStartRoot.position);
+        _onDragStart?.Invoke(_card.InstanceId, localMousePos);
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -136,7 +137,7 @@ public partial class UICardItem
         }
 
         _rect.anchoredPosition = targetPos;
-        _onCardDrag?.Invoke(_Target);
+        _onCardDrag?.Invoke(_Target, localMousePos);
     }
 
     public void OnEndDrag(PointerEventData eventData)
@@ -145,7 +146,7 @@ public partial class UICardItem
             return;
 
         _battleInteraction.EndDrag();
-
+        _onDragEnd?.Invoke();
         if (ShouldCancelDrag())
         {
             ResetCard();
