@@ -13,7 +13,8 @@ namespace LitFramework
         public static GameRoot Instance { get; private set; }
         private ProcedureManager _procedureManager;
         public ProcedureManager ProcedureManager => _procedureManager;
-        public Canvas UIRoot { get; private set; }
+        [SerializeField] private Canvas _uiRoot;
+        public Canvas UIRoot => _uiRoot;
 
         void Awake()
         {
@@ -38,7 +39,6 @@ namespace LitFramework
 
         private void Init()
         {
-            UIRoot = GameObject.Find("UIRoot").GetComponent<Canvas>();
             var fsm = new StateMachine();
             _procedureManager = new ProcedureManager(fsm);
             _procedureManager.RegisterProcedure(new ProcedureInitService(_procedureManager));

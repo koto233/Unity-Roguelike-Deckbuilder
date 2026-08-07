@@ -74,7 +74,13 @@ namespace LitFramework.FSM.Procedure
             var scene = await sceneLoader.LoadAdditiveAsync(BattleSceneName);
 
             _battleController = new BattleController(battleContext, OnBattleEnd);
-            var uiBattleWindow = GameObject.FindObjectOfType<UIBattle>(true);
+            BattleSceneRoot battleCtx = null;
+            foreach (var root in scene.GetRootGameObjects())
+            {
+                if (root.TryGetComponent(out battleCtx))
+                    break;
+            }
+            var uiBattleWindow = battleCtx.UIBattle;
             if (uiBattleWindow != null)
                 await uiBattleWindow.InitAsync(battleContext);
             _battlePresenter = new BattlePresenter(uiBattleWindow, _battleController);

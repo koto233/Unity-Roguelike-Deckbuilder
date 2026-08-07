@@ -59,4 +59,9 @@ public class SceneLoader : ISceneLoader
     }
 
     public bool IsSceneLoaded(string sceneName) => _loadedScenes.Contains(sceneName);
+
+    public UniTask<T> LoadSceneWithContext<T>(string sceneName) where T : MonoBehaviour
+    {
+        throw new System.NotImplementedException();
+    }
 }
