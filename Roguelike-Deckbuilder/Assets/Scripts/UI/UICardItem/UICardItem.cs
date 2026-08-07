@@ -16,7 +16,7 @@ public partial class UICardItem
         IPointerDownHandler,
         IPointerUpHandler
 {
-    public Card _card { get; private set; }
+    public Card Card { get; private set; }
     private Transform _cardDetailTrans;
     private Vector2 _dragStartOffset; // 开始拖拽时鼠标与卡牌的偏移
     private Vector2 _originalPos;
@@ -25,30 +25,19 @@ public partial class UICardItem
     private Quaternion _originalRotation;
     private Transform _originalParent;
     private int _originalSiblingIndex;
-    private Action _onPlay;
-    private Action _onDragEnd;
-    private Action<int, Vector2> _onDragStart;
-    private Action<Enemy, Vector2> _onCardDrag;
+    public event Action<Card> OnPlay;
+    public event Action<Card, Vector2> OnDragStart;
+    public event Action<Enemy, Vector2> OnCardDrag;
+    public event Action<Card> OnDragEnd;
     private Enemy _Target;
     private bool _canUse = true;
     private bool _isScaleNormalized = false;
     private RectTransform _rect;
     private BattleInteractionService _battleInteraction;
 
-    public void Init(
-        Card card,
-        Transform cardDetailTrans,
-        Action onPlay = null,
-        Action _onDragEnd = null,
-        Action<int, Vector2> onDragStart = null,
-        Action<Enemy, Vector2> onCardDrag = null
-    )
+    public void Init(Card card, Transform cardDetailTrans)
     {
         _rect = GetComponent<RectTransform>();
-        _onPlay = onPlay;
-        this._onDragEnd = _onDragEnd;
-        this._onDragStart = onDragStart;
-        _onCardDrag = onCardDrag;
         _cardDetailTrans = cardDetailTrans;
         RefreshUI(card);
         _battleInteraction = ServiceLocator.Get<BattleInteractionService>();
@@ -69,7 +58,7 @@ public partial class UICardItem
 
     public void RefreshUI(Card card)
     {
-        _card = card;
+        Card = card;
         _canUse = card.CanUse;
         b_CostText.SetText(card.Config.Cost.ToString());
         Color targetColor = _canUse ? Color.black : Color.red;
@@ -80,7 +69,7 @@ public partial class UICardItem
 
     public void RefreshState(int currentEnergy)
     {
-        _canUse = currentEnergy >= _card.Config.Cost;
+        _canUse = currentEnergy >= Card.Config.Cost;
         Color targetColor = _canUse ? Color.black : Color.red;
         // b_CostText.DOColor(targetColor, 0.5f);
         b_CostText.color = targetColor;
@@ -104,7 +93,7 @@ public partial class UICardItem
         );
         _dragStartOffset = _rect.anchoredPosition - localMousePos;
         Vector2 localStartPos = _rect.parent.InverseTransformPoint(b_ArrowStartRoot.position);
-        _onDragStart?.Invoke(_card.InstanceId, localMousePos);
+        OnDragStart?.Invoke(Card, localMousePos);
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -125,7 +114,7 @@ public partial class UICardItem
         {
             targetPos.y = Mathf.Min(targetPos.y, _maxDragY);
         }
-        if (_card.NeedTarget)
+        if (Card.NeedTarget)
         {
             if (!_isScaleNormalized)
             {
@@ -137,7 +126,7 @@ public partial class UICardItem
         }
 
         _rect.anchoredPosition = targetPos;
-        _onCardDrag?.Invoke(_Target, localMousePos);
+        OnCardDrag?.Invoke(_Target, localMousePos);
     }
 
     public void OnEndDrag(PointerEventData eventData)
@@ -146,19 +135,19 @@ public partial class UICardItem
             return;
 
         _battleInteraction.EndDrag();
-        _onDragEnd?.Invoke();
+        OnDragEnd?.Invoke(Card);
         if (ShouldCancelDrag())
         {
             ResetCard();
             return;
         }
 
-        _onPlay?.Invoke();
+        OnPlay?.Invoke(Card);
     }
 
     private bool ShouldCancelDrag()
     {
-        return !_canUse || (_card.NeedTarget ? _Target == null : transform.localPosition.y < _maxDragY);
+        return !_canUse || (Card.NeedTarget ? _Target == null : transform.localPosition.y < _maxDragY);
     }
 
     private Enemy IsOverTarget(PointerEventData eventData)

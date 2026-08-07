@@ -15,9 +15,7 @@ public class BattlePresenter : IDisposable
     private UIBattle _view;
     private BattleController _battleController;
     private Enemy _currentTargetEnemy;
-    private int _selectedCardId;
-
-
+    private Card _selectedCard;
     public BattlePresenter(UIBattle view, BattleController battleController)
     {
         _view = view;
@@ -46,6 +44,11 @@ public class BattlePresenter : IDisposable
         EventBus<FloatingTextEvent>.Subscribe(OnFloatingTextEvent);
         _view.OnOpenPile += OpenPile;
         _view.OnEndTurn += EndTurn;
+        _view.OnCardDragStartRequested += OnDragStart;
+        _view.OnCardDragRequested += OnDragCard;
+        _view.OnCardDragEndRequested += OnDragEnd;
+        _view.OnCardPlayRequested += OnCardPlay;
+
     }
 
     private void UnSubscribeEvents()
@@ -118,15 +121,18 @@ public class BattlePresenter : IDisposable
     private void RefreshHand(List<Card> handCards, List<Card> changedCards, ChangeType type)
     {
         _battleController.UpdateCardUsability();
-        _view.RefreshHand(handCards, changedCards, type, OnPlayCard, OnDragEnd, OnDragStart, OnDragCard);
+        _view.RefreshHand(handCards, changedCards, type);
     }
 
 
-    private void OnDragStart(int cardId, Vector2 position)
+    private void OnDragStart(Card card, Vector2 position)
     {
         // Debug.Log("OnDragStart:" + cardId);
-        _selectedCardId = cardId;
-        _view.ShowArrow(position, position, Vector2.up * 150);
+        _selectedCard = card;
+        if (card.NeedTarget)
+        {
+            _view.ShowArrow(position, position, Vector2.up * 150);
+        }
     }
     private void OnDragCard(Enemy enemy, Vector2 position)
     {
@@ -136,14 +142,19 @@ public class BattlePresenter : IDisposable
     }
 
 
-    private void OnPlayCard()
+    private void OnCardPlay(Card card)
     {
-        if (!_battleController.PlayCard(_selectedCardId, _currentTargetEnemy))
+        if (_selectedCard != card)
+        {
+            Debug.LogError("拖拽的卡牌不一致");
+            return;
+        }
+        if (!_battleController.PlayCard(_selectedCard, _currentTargetEnemy))
         {
             _view.ResetCard();
         }
     }
-    private void OnDragEnd()
+    private void OnDragEnd(Card card)
     {
         _view.HideArrow();
     }

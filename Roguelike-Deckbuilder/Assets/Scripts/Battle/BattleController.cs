@@ -50,11 +50,8 @@ public class BattleController
         BattleFSM.RegisterState(new EnemyTurnState(this, BattleFSM));
         BattleFSM.RegisterState(new BattleEndState(this, BattleFSM));
     }
-    public bool PlayCard(int cardId, Enemy target = null)
+    public bool PlayCard(Card card, Enemy target = null)
     {
-        Debug.Log("使用卡牌 " + cardId);
-        var card = Context.Player.Hand.FirstOrDefault(c => c.InstanceId == cardId);
-
         Debug.Log("使用卡牌 " + card.Config.Name);
         if (Context.IsPlayerTurn)
         {

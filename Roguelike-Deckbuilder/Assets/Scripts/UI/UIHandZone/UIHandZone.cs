@@ -21,7 +21,10 @@ public partial class UIHandZone : MonoBehaviour
     private ObjectPoolService _poolService;
     private UIBattle _battleWindow;
     private CancellationTokenSource _animationCts;
-
+    public event Action<Card> OnAnyCardPlay;
+    public event Action<Card, Vector2> OnAnyCardDragStart;
+    public event Action<Card> OnAnyCardDragEnd;
+    public event Action<Enemy, Vector2> OnAnyCardDrag;
     public void Init(ObjectPoolService poolService, UIBattle battleWindow)
     {
         _poolService = poolService;
@@ -32,11 +35,7 @@ public partial class UIHandZone : MonoBehaviour
     public void RefreshHand(
         List<Card> handCards,
         List<Card> changedCards,
-        ChangeType type,
-        Action onPlay = null,
-        Action _onDragEnd = null,
-        Action<int, Vector2> onDragStart = null,
-        Action<Enemy, Vector2> onCardDrag = null)
+        ChangeType type)
     {
         Debug.Log("刷新手牌" + type);
         switch (type)
@@ -59,28 +58,23 @@ public partial class UIHandZone : MonoBehaviour
                 break;
 
             case ChangeType.Add:
-                AddCards(changedCards, onPlay, _onDragEnd, onDragStart, onCardDrag);
+                AddCards(changedCards);
                 PlayAddAnimations(changedCards).Forget();
                 break;
 
             case ChangeType.Refresh:
-                RebuildUI(handCards, onPlay, _onDragEnd, onDragStart, onCardDrag);
+                RebuildUI(handCards);
                 break;
         }
     }
 
-    private void AddCards(List<Card> changedCards, Action onPlay, Action _onDragEnd, Action<int, Vector2> onDragStart, Action<Enemy, Vector2> onCardDrag)
+    private void AddCards(List<Card> changedCards)
     {
         foreach (var card in changedCards)
         {
             if (_cardItems.ContainsKey(card.InstanceId))
                 continue;
-
-            var go = _poolService.GetGameObject<UICardItem>();
-            go.SetActive(true);
-            go.transform.SetParent(_handContainer);
-            var uiCard = go.GetComponent<UICardItem>();
-            uiCard.Init(card, _cardDetailTrans, onPlay, _onDragEnd, onDragStart, onCardDrag);
+            var uiCard = CreateCard(card);
             _cardItems.Add(card.InstanceId, uiCard);
         }
 
@@ -89,31 +83,37 @@ public partial class UIHandZone : MonoBehaviour
             item.OnLayoutComplete();
     }
 
-    private void RebuildUI(List<Card> handCards, Action onPlay, Action _onDragEnd, Action<int, Vector2> onDragStart, Action<Enemy, Vector2> onCardDrag)
+    private void RebuildUI(List<Card> handCards)
     {
-        Debug.Log("手牌数" + handCards.Count);
         ClearHandContainer();
-        Debug.Log("_handContainer" + _handContainer.childCount);
         _cardItems.Clear();
-
         foreach (var card in handCards)
         {
-            var go = _poolService.GetGameObject<UICardItem>();
-            go.SetActive(true);
-            go.transform.SetParent(_handContainer);
-            var rect = go.GetComponent<RectTransform>();
-            Debug.Log($"取卡 {card.InstanceId}: sizeDelta = {rect.sizeDelta}, pivot = {rect.pivot}");
-            var uiCard = go.GetComponent<UICardItem>();
-            uiCard.Init(card, _cardDetailTrans, onPlay, _onDragEnd, onDragStart, onCardDrag);
+            var uiCard = CreateCard(card);
             _cardItems.Add(card.InstanceId, uiCard);
         }
-
         _fanLayout.Refresh();
         foreach (var item in _cardItems.Values)
             item.OnLayoutComplete();
     }
+    /// <summary>
+    /// 从池中获取一个卡牌实例并初始化
+    /// </summary>
+    private UICardItem CreateCard(Card card)
+    {
+        var go = _poolService.GetGameObject<UICardItem>();
+        go.SetActive(true);
+        go.transform.SetParent(_handContainer);
 
-    // ========== 🔥 核心改动：播放移除动画（真正可取消） ==========
+        var uiCard = go.GetComponent<UICardItem>();
+        uiCard.Init(card, _cardDetailTrans);
+        uiCard.OnPlay += (c) => OnAnyCardPlay?.Invoke(c);
+        uiCard.OnDragStart += (c, pos) => OnAnyCardDragStart?.Invoke(c, pos);
+        uiCard.OnDragEnd += (c) => OnAnyCardDragEnd?.Invoke(c);
+        uiCard.OnCardDrag += (c, enemy) => OnAnyCardDrag?.Invoke(c, enemy);
+        return uiCard;
+    }
+
     private async UniTask PlayDiscardAnimations(List<UICardItem> cards)
     {
         if (cards.Count == 0) return;

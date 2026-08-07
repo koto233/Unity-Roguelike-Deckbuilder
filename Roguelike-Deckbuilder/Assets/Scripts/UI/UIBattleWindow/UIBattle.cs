@@ -21,6 +21,10 @@ public partial class UIBattle : UIBase
     private ObjectPoolService _poolService;
     public Transform DiscardPileTrans => b_DiscardPileBtn.transform;
     public Transform DrawPileTrans => b_DrawPileBtn.transform;
+    public event Action<Card> OnCardPlayRequested;
+    public event Action<Card, Vector2> OnCardDragStartRequested;
+    public event Action<Card> OnCardDragEndRequested;
+    public event Action<Enemy, Vector2> OnCardDragRequested;
     /// <summary>
     /// 打开卡组，0是抽牌堆，1是弃牌堆
     /// </summary>
@@ -47,6 +51,7 @@ public partial class UIBattle : UIBase
         _playerView = CreatePlayerView(battleContext.Player);
         CreateEnemyViews(battleContext.Enemies);
         InitUI();
+        SubscribeEvents();
     }
 
     private void InitObjectPools()
@@ -69,7 +74,13 @@ public partial class UIBattle : UIBase
         b_IntentTooltip.Hide();
         HideArrow();
     }
-
+    private void SubscribeEvents()
+    {
+        b_HandZone.OnAnyCardPlay += (c) => OnCardPlayRequested?.Invoke(c);
+        b_HandZone.OnAnyCardDragStart += (c, pos) => OnCardDragStartRequested?.Invoke(c, pos);
+        b_HandZone.OnAnyCardDragEnd += (c) => OnCardDragEndRequested?.Invoke(c);
+        b_HandZone.OnAnyCardDrag += (c, e) => OnCardDragRequested?.Invoke(c, e);
+    }
     public void OpenPilePanel()
     {
         b_PilePanel.gameObject.SetActive(true);
@@ -150,9 +161,9 @@ public partial class UIBattle : UIBase
         b_EnergyText.SetText($"{energy}/{maxEnergy}");
         b_HandZone.RefreshHandState(energy);
     }
-    public void RefreshHand(List<Card> hand, List<Card> changedCards, ChangeType type, Action onPlay = null, Action onCancel = null, Action<int, Vector2> onDragStart = null, Action<Enemy, Vector2> onCardDrag = null)
+    public void RefreshHand(List<Card> hand, List<Card> changedCards, ChangeType type)
     {
-        b_HandZone.RefreshHand(hand, changedCards, type, onPlay, onCancel, onDragStart, onCardDrag);
+        b_HandZone.RefreshHand(hand, changedCards, type);
     }
     public void RefreshBlock(int block, EntityType entityType)
     {
