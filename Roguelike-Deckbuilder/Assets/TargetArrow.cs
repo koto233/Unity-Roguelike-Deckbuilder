@@ -56,7 +56,7 @@ public class TargetArrow : UIBase
             _arrowHead.anchoredPosition = end;
             Vector2 dir = (end - _points[_points.Length - 2]).normalized;
             float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-               angle -= 90f; 
+            angle -= 90f;
             _arrowHead.rotation = Quaternion.Euler(0, 0, angle);
         }
     }

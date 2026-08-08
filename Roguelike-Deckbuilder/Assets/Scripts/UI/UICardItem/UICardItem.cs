@@ -93,7 +93,7 @@ public partial class UICardItem
         );
         _dragStartOffset = _rect.anchoredPosition - localMousePos;
         Vector2 localStartPos = _rect.parent.InverseTransformPoint(b_ArrowStartRoot.position);
-        OnDragStart?.Invoke(Card, localMousePos);
+        OnDragStart?.Invoke(Card, localStartPos);
     }
 
     public void OnDrag(PointerEventData eventData)
