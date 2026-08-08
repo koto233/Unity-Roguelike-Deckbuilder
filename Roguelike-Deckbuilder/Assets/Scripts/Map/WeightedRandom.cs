@@ -4,9 +4,7 @@ using UnityEngine;
 
 public static class WeightedRandom
 {
-    private static System.Random rand = new System.Random();
-
-    public static MapNodeType PickType(MapConfig config)
+    public static MapNodeType PickType(MapConfig config, System.Random rng)
     {
         // 构建权重列表（只包含非 Boss 类型，Boss 单独处理）
         var types = new List<MapNodeType> { MapNodeType.Battle, MapNodeType.Elite,
@@ -20,7 +18,7 @@ public static class WeightedRandom
         foreach (var w in weights) total += w;
         if (total == 0) return MapNodeType.Battle; // 容错
 
-        int r = rand.Next(total);
+        int r = rng.Next(total);
         int cumulative = 0;
         for (int i = 0; i < types.Count; i++)
         {

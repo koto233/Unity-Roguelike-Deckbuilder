@@ -10,9 +10,9 @@ public static class MapGenerator
     {
         if (rowConfigs == null || rowConfigs.Count == 0)
             return null;
-
+        var rng = new System.Random(seed);
         var nodes = new Dictionary<string, MapNodeData>();
-     
+
         // 1. 生成所有节点
         for (int rowIdx = 0; rowIdx < rowConfigs.Count; rowIdx++)
         {
@@ -27,7 +27,7 @@ public static class MapGenerator
                 }
                 else
                 {
-                    node.Type = WeightedRandom.PickType(rowCfg);
+                    node.Type = WeightedRandom.PickType(rowCfg, rng);
                 }
                 // 如果是战斗类型，设置 EnemyId（此处示例）
                 if (node.Type == MapNodeType.Battle || node.Type == MapNodeType.Elite || node.Type == MapNodeType.Boss)
@@ -46,9 +46,9 @@ public static class MapGenerator
             // 为每个当前节点随机连接下一行的 1~2 个节点（确保连通）
             foreach (var cur in curRowNodes)
             {
-                int count = Random.Range(1, Mathf.Min(3, nextRowNodes.Count + 1));
+                int count = rng.Next(1, Mathf.Min(3, nextRowNodes.Count + 1));
                 // 简单随机取 count 个不同节点（需确保不重复）
-                var shuffled = nextRowNodes.OrderBy(x => Random.value).Take(count).ToList();
+                var shuffled = nextRowNodes.OrderBy(x => rng.NextDouble()).Take(count).ToList();
                 foreach (var next in shuffled)
                     cur.NextNodes.Add(next.Id);
             }
@@ -57,7 +57,7 @@ public static class MapGenerator
             {
                 if (!curRowNodes.Any(c => c.NextNodes.Contains(next.Id)))
                 {
-                    var randomCur = curRowNodes[Random.Range(0, curRowNodes.Count)];
+                    var randomCur = curRowNodes[rng.Next(0, curRowNodes.Count)];
                     if (!randomCur.NextNodes.Contains(next.Id))
                         randomCur.NextNodes.Add(next.Id);
                 }
@@ -74,5 +74,5 @@ public static class MapGenerator
 
         return nodes;
     }
-  
+
 }
