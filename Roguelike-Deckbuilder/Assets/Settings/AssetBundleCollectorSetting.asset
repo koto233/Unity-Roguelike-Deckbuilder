@@ -118,6 +118,22 @@ MonoBehaviour:
         FilterRuleName: CollectAll
         AssetTags: 
         UserData: 
+      - CollectPath: Assets/Res/UI/UITopBar.prefab
+        CollectorGUID: cadc1ac3f4a16b1469dedd5ff1c1a6ea
+        CollectorType: 0
+        AddressRuleName: AddressByFileName
+        PackRuleName: PackDirectory
+        FilterRuleName: CollectAll
+        AssetTags: 
+        UserData: 
+      - CollectPath: Assets/Res/UI/UISetting.prefab
+        CollectorGUID: 7024e954a0af5e9439bea48c3f50e0c6
+        CollectorType: 0
+        AddressRuleName: AddressByFileName
+        PackRuleName: PackDirectory
+        FilterRuleName: CollectAll
+        AssetTags: 
+        UserData: 
     - GroupName: Config
       GroupDesc: "\u914D\u7F6E\u8868"
       AssetTags: 
