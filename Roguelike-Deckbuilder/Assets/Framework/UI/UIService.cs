@@ -11,6 +11,7 @@ namespace LitFramework.UI.Core.Service
     {
         private readonly Dictionary<Type, UIConfig> _configs = new();
         private readonly Dictionary<Type, UIWindow> _opened = new();
+        private Dictionary<Type, IPresenter> _presenters = new();
         private readonly Dictionary<UILayer, RectTransform> _layers = new();
         private IAssetService _assetManager;
 
@@ -39,8 +40,13 @@ namespace LitFramework.UI.Core.Service
             _configs[typeof(T)] = new UIConfig(prefabPath, layer);
         }
 
-        // public T OpenUI<T>(IUIArgs args = null)
-        //     where T : UIWindow
+        // /// <summary>
+        // /// UniTask版本异步打开窗口
+        // /// </summary>
+        // /// <typeparam name="T"></typeparam>
+        // /// <param name="args"></param>
+        // /// <returns></returns> 
+        // public async UniTask<T> OpenAsync<T>(object args = null) where T : UIWindow
         // {
         //     var type = typeof(T);
 
@@ -50,47 +56,59 @@ namespace LitFramework.UI.Core.Service
         //     }
 
         //     var cfg = _configs[type];
-        //     Debug.Log($"加载窗口: {cfg.PrefabPath}");
-        //     var prefab = AssetManager.Load<GameObject>(cfg.PrefabPath);
+        //     var prefab = await AssetManager.LoadAsync<GameObject>(cfg.PrefabPath);
         //     var go = UnityEngine.Object.Instantiate(prefab, _layers[cfg.Layer]);
-
         //     var window = go.GetComponent<T>();
-        //     window.OnOpen(args);
-
+        //     // window.OnOpen(args);
+        //     await window.OpenInternalAsync(args);
         //     _opened[type] = window;
         //     return window;
         // }
         /// <summary>
-        /// UniTask版本异步打开窗口
+        /// 打开 UI，并自动创建 Presenter 绑定生命周期
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="args"></param>
-        /// <returns></returns> 
-        public async UniTask<T> OpenAsync<T>(object args = null) where T : UIWindow
+        public async UniTask<TView> OpenAsync<TView, TPresenter>(object args = null)
+            where TView : UIWindow
+            where TPresenter : IPresenter<TView>, new() // 👈 约束 Presenter 可 new
         {
-            var type = typeof(T);
+            var type = typeof(TView);
 
+            // ✅ 如果已经打开，直接返回（不重复创建 Presenter）
             if (_opened.TryGetValue(type, out var existing))
             {
-                return existing as T;
+                return existing as TView;
             }
 
+            // 1. 加载并实例化 View
             var cfg = _configs[type];
             var prefab = await AssetManager.LoadAsync<GameObject>(cfg.PrefabPath);
             var go = UnityEngine.Object.Instantiate(prefab, _layers[cfg.Layer]);
-            var window = go.GetComponent<T>();
-            // window.OnOpen(args);
-            await window.OpenInternalAsync(args);
-            _opened[type] = window;
-            return window;
+            var view = go.GetComponent<TView>();
+
+            // 2. 创建 Presenter 并绑定 View
+            var presenter = new TPresenter();
+            presenter.Bind(view);
+            _presenters[type] = presenter; // 存储 Presenter，方便后续管理
+            // 3. 打开 View（传递参数）
+            await view.OpenInternalAsync(args);
+
+            // 4. 存储到已打开字典
+            _opened[type] = view;
+
+            return view;
         }
         public void Close<T>() where T : UIWindow
         {
             var type = typeof(T);
-
+            if (_presenters.TryGetValue(type, out var presenter))
+            {
+                presenter.Unbind();
+                _presenters.Remove(type);
+            }
             if (_opened.TryGetValue(type, out var window))
             {
                 window.CloseInternal();
+
                 GameObject.Destroy(window.gameObject);
                 _opened.Remove(type);
             }

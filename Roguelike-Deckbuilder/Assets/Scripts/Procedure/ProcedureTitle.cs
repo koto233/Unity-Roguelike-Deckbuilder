@@ -17,7 +17,7 @@ namespace LitFramework.FSM.Procedure
         }
         public override void OnEnter()
         {
-            ServiceLocator.Get<UIService>().OpenAsync<UITitleWindow>().Forget();
+            ServiceLocator.Get<UIService>().OpenAsync<UITitleWindow, TitlePresenter>().Forget();
         }
         public override void OnUpdate()
         {

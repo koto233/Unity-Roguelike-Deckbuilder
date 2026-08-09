@@ -66,7 +66,7 @@ namespace LitFramework.FSM.Procedure
         // ============ 事件处理器 ============
         private void OnBattleStart(BattleStartEvent evt)
         {
-           
+
             var args = new BattleStartParams { EnemyIds = evt.EnemyIds };
             _procedureManager.ChangeProcedure<ProcedureBattle, BattleStartParams>(args);
         }
@@ -98,6 +98,7 @@ namespace LitFramework.FSM.Procedure
             var sceneLoader = ServiceLocator.Get<ISceneLoader>();
             var uiService = ServiceLocator.Get<UIService>();
             await sceneLoader.LoadAdditiveAsync(MapSceneName);
+            var topBar = await uiService.OpenAsync<UITopBar, TopBarPresenter>();
             var uiMap = GameObject.FindObjectOfType<UIMap>(true);
             if (uiMap != null)
             {

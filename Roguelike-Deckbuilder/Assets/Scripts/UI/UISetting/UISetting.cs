@@ -10,7 +10,7 @@ public partial class UISetting : UIWindow
     public event System.Action OnClickQuit;
     public void Init()
     {
-        SubscribeEvents();
+
     }
     private void SubscribeEvents()
     {
@@ -18,7 +18,10 @@ public partial class UISetting : UIWindow
         b_GiveUp.onClick.AddListener(() => OnClickGiveUp?.Invoke());
         b_SaveAndQuit.onClick.AddListener(() => OnClickQuit?.Invoke());
     }
-
+    void OnEnable()
+    {
+        SubscribeEvents();
+    }
     void OnDisable()
     {
         b_Continue.onClick.RemoveAllListeners();

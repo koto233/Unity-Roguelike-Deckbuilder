@@ -35,6 +35,8 @@ namespace LitFramework.FSM.Procedure
             ServiceLocator.Register(new SaveLoadService());
             ServiceLocator.Register(new PlayerDataService());
             ServiceLocator.Get<UIService>().Register<UITitleWindow>("Assets/Res/UI/UITitleWindow.prefab", UILayer.Normal);
+            ServiceLocator.Get<UIService>().Register<UITopBar>("Assets/Res/UI/UITopBar.prefab", UILayer.Overlay);
+            ServiceLocator.Get<UIService>().Register<UISetting>("Assets/Res/UI/UISetting.prefab", UILayer.Popup);
             ModelContainer.Register(new PlayerModel());
 
             _isInitDone = true;
