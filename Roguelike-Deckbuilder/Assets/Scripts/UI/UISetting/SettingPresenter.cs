@@ -46,6 +46,8 @@ public class SettingPresenter : IPresenter<UISetting>
     }
     private void HandleClickQuit()
     {
+        var saveService = ServiceLocator.Get<SaveService>();
+        saveService.SaveGame();
         Application.Quit();
     }
 

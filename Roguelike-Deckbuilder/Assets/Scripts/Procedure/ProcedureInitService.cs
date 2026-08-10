@@ -32,7 +32,7 @@ namespace LitFramework.FSM.Procedure
             ServiceLocator.Register(new BattleInteractionService());
             ServiceLocator.Register<ISceneLoader>(new SceneLoader());
             ServiceLocator.Register(new MapService());
-            ServiceLocator.Register(new SaveLoadService());
+            ServiceLocator.Register(new SaveService(new JsonSaveStorage()));
             ServiceLocator.Register(new PlayerDataService());
             ServiceLocator.Get<UIService>().Register<UITitleWindow>("Assets/Res/UI/UITitleWindow.prefab", UILayer.Normal);
             ServiceLocator.Get<UIService>().Register<UITopBar>("Assets/Res/UI/UITopBar.prefab", UILayer.Overlay);
