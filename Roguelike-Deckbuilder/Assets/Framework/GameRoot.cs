@@ -60,7 +60,7 @@ namespace LitFramework
             var fsm = new StateMachine();
             _procedureManager = new ProcedureManager(fsm);
             ServiceLocator.Register(_procedureManager);
-            _procedureManager.RegisterProcedure(new ProcedureInitService(_procedureManager));
+            // _procedureManager.RegisterProcedure(new ProcedureInitService(_procedureManager));
             _procedureManager.RegisterProcedure(new ProcedureInitResource(_procedureManager));
             _procedureManager.RegisterProcedure(new ProcedureInitConfig(_procedureManager));
             _procedureManager.RegisterProcedure(new ProcedureTitle(_procedureManager));
@@ -71,7 +71,7 @@ namespace LitFramework
             {
                 Debug.Log($"流程状态变化: {from?.Name} → {to?.Name}");
             };
-            _procedureManager.ChangeProcedure<ProcedureInitService>();
+            _procedureManager.ChangeProcedure<ProcedureInitResource>();
             // _procedureManager.SetSharedData();
         }
 

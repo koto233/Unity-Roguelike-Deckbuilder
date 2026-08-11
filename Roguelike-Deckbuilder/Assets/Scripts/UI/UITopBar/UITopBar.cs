@@ -29,4 +29,12 @@ public partial class UITopBar : UIWindow
         b_MapBtn.onClick.RemoveAllListeners();
         b_PileBtn.onClick.RemoveAllListeners();
     }
+    public void RefreshCoin(int Coin)
+    {
+        b_CoinText.SetText(Coin.ToString());
+    }
+    public void RefreshHp(int hp)
+    {
+        b_HpText.SetText(hp.ToString());
+    }
 }

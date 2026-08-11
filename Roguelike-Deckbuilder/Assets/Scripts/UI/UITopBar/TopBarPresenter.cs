@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using LitFramework;
+using LitFramework.EventBus;
 using LitFramework.UI.Core.Service;
 using UnityEngine;
 
@@ -10,15 +11,14 @@ public class TopBarPresenter : IPresenter<UITopBar>
 {
     private UITopBar _view;
     private UIService _uiService;
-    public TopBarPresenter()
-    {
-        _uiService = ServiceLocator.Get<UIService>();
-    }
 
     public void Bind(UITopBar view)
     {
         _view = view;
         SubscribeEvents();
+        var playerDataService = ServiceLocator.Get<PlayerDataService>();
+        _view.RefreshHp(playerDataService.MaxHp);
+        _view.RefreshCoin(playerDataService.Coin);
     }
 
     public void Unbind()
@@ -30,12 +30,19 @@ public class TopBarPresenter : IPresenter<UITopBar>
         _view.OnClickSetting += HandleClickSetting;
         _view.OnClickMap += HandleClickMap;
         _view.OnClickPile += HandleClickPile;
+        EventBus<CoinChangedEvent>.Subscribe(HandleCoinChanged);
+        EventBus<MaxHpChangedEvent>.Subscribe(HandleMaxHpChanged);
     }
+
+
+
     private void UnsubscribeEvents()
     {
         _view.OnClickSetting -= HandleClickSetting;
         _view.OnClickMap -= HandleClickMap;
         _view.OnClickPile -= HandleClickPile;
+        EventBus<CoinChangedEvent>.Unsubscribe(HandleCoinChanged);
+        EventBus<MaxHpChangedEvent>.Unsubscribe(HandleMaxHpChanged);
     }
     private async void HandleClickSetting()
     {
@@ -50,7 +57,15 @@ public class TopBarPresenter : IPresenter<UITopBar>
     {
 
     }
+    private void HandleMaxHpChanged(MaxHpChangedEvent @event)
+    {
+        _view.RefreshHp(@event.NewValue);
+    }
 
+    private void HandleCoinChanged(CoinChangedEvent @event)
+    {
+        _view.RefreshCoin(@event.NewValue);
+    }
     public void Dispose()
     {
         UnsubscribeEvents();

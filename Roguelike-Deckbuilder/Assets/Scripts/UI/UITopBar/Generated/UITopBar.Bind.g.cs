@@ -4,7 +4,7 @@
 //     请勿手动修改此文件，重新生成将覆盖所有改动
 //
 //     来源 UI : UITopBar
-//     生成时间 : 2026-08-09
+//     生成时间 : 2026-08-11
 // </自动生成>
 //------------------------------------------------------------------------------
 
@@ -18,6 +18,8 @@ using TMPro;
         private @Button b_PileBtn;
         private @TextMeshProUGUI b_Num;
         private @Button b_SettingBtn;
+        private @TextMeshProUGUI b_HpText;
+        private @TextMeshProUGUI b_CoinText;
 
         protected override void GetUI()
         {
@@ -26,5 +28,7 @@ using TMPro;
             b_PileBtn = GetBind<@Button>(1);
             b_Num = GetBind<@TextMeshProUGUI>(2);
             b_SettingBtn = GetBind<@Button>(3);
+            b_HpText = GetBind<@TextMeshProUGUI>(4);
+            b_CoinText = GetBind<@TextMeshProUGUI>(5);
         }
     }

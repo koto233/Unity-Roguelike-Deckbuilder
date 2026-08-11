@@ -4,7 +4,7 @@ using System.Collections.Generic;
 [Serializable]
 public class PlayerSaveData
 {
-    public int Gold;
+    public int Coin;
     public int MaxHp;
     public int CurrentHp;
     public List<string> DeckCardIds;     // 牌组（卡牌ID列表）
