@@ -14,7 +14,6 @@ public partial class UICardDisplay : UIBase
     {
         _card = card;
         b_CostText.SetText(card.Config.Cost.ToString());
-        b_CostText.color = Color.black;
         b_NameText.SetText(card.Config.Name);
         b_DescText.SetText(card.Description);
     }

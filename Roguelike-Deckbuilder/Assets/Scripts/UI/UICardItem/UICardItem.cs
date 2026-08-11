@@ -61,7 +61,7 @@ public partial class UICardItem
         Card = card;
         _canUse = card.CanUse;
         b_CostText.SetText(card.Config.Cost.ToString());
-        Color targetColor = _canUse ? Color.black : Color.red;
+        Color targetColor = _canUse ? Color.white : Color.red;
         b_CostText.color = targetColor;
         b_NameText.SetText(card.Config.Name);
         b_DescText.SetText(card.Description);
@@ -70,7 +70,7 @@ public partial class UICardItem
     public void RefreshState(int currentEnergy)
     {
         _canUse = currentEnergy >= Card.Config.Cost;
-        Color targetColor = _canUse ? Color.black : Color.red;
+        Color targetColor = _canUse ? Color.white : Color.red;
         // b_CostText.DOColor(targetColor, 0.5f);
         b_CostText.color = targetColor;
         transform.position = _canUse

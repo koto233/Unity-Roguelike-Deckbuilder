@@ -19,6 +19,7 @@ public class TopBarPresenter : IPresenter<UITopBar>
         var playerDataService = ServiceLocator.Get<PlayerDataService>();
         _view.RefreshHp(playerDataService.MaxHp);
         _view.RefreshCoin(playerDataService.Coin);
+        _uiService = ServiceLocator.Get<UIService>();
     }
 
     public void Unbind()
