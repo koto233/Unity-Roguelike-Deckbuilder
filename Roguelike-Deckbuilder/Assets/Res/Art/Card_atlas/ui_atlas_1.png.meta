@@ -1,0 +1,1491 @@
+fileFormatVersion: 2
+guid: 7412c83a346de654ea1b16a1f803fa93
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: ancient_banner
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 1865
+        width: 671
+        height: 182
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7c247d432f65d9da0800000000000000
+      internalID: -5936493135535848761
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: card_banner
+      rect:
+        serializedVersion: 2
+        x: 674
+        y: 1902
+        width: 653
+        height: 145
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f915f3cf7725f4c70800000000000000
+      internalID: 8957468859149799839
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: card_portrait_border_attack_s
+      rect:
+        serializedVersion: 2
+        x: 1329
+        y: 1627
+        width: 551
+        height: 420
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 47bf0066d12f8f4b0800000000000000
+      internalID: -5406305144578966668
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: compendium
+      rect:
+        serializedVersion: 2
+        x: 1882
+        y: 1898
+        width: 140
+        height: 149
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d16b5ef0133a2cce0800000000000000
+      internalID: -1386366304161253859
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: map_ping
+      rect:
+        serializedVersion: 2
+        x: 1882
+        y: 1768
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ea082a2e7920b5720800000000000000
+      internalID: 2835863241725477038
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: small_scrollbar_track_center
+      rect:
+        serializedVersion: 2
+        x: 2012
+        y: 1864
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cbf28ccc10a8b77a0800000000000000
+      internalID: -6378352706904903748
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: small_scrollbar_train
+      rect:
+        serializedVersion: 2
+        x: 2012
+        y: 1810
+        width: 28
+        height: 52
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b079eff1b3a92b040800000000000000
+      internalID: 4661958143012411147
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: settings_tiny_right_arrow
+      rect:
+        serializedVersion: 2
+        x: 1882
+        y: 1646
+        width: 109
+        height: 120
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6cbb4fe48697c30c0800000000000000
+      internalID: -4594664030916527162
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: map_marker_ironclad
+      rect:
+        serializedVersion: 2
+        x: 1993
+        y: 1714
+        width: 46
+        height: 52
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a5af49ccb283eeb80800000000000000
+      internalID: -8363685697213367718
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: map_marker_defect
+      rect:
+        serializedVersion: 2
+        x: 1993
+        y: 1652
+        width: 43
+        height: 60
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 64dd5f14f631bac20800000000000000
+      internalID: 3218687727255280966
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: map_marker_necrobinder
+      rect:
+        serializedVersion: 2
+        x: 1993
+        y: 1590
+        width: 38
+        height: 60
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 83836bc25fe7d0020800000000000000
+      internalID: 2309641775393159224
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: card_enchant_s
+      rect:
+        serializedVersion: 2
+        x: 1882
+        y: 1568
+        width: 100
+        height: 76
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 365660356bcfe65f0800000000000000
+      internalID: -761393426971859613
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cursor_eraser_tilted
+      rect:
+        serializedVersion: 2
+        x: 1984
+        y: 1531
+        width: 63
+        height: 57
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b5c34843dc6502f80800000000000000
+      internalID: -8133405487681749925
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: card_portrait_border_power_s
+      rect:
+        serializedVersion: 2
+        x: 674
+        y: 1480
+        width: 551
+        height: 420
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9295d5b159df982e0800000000000000
+      internalID: -2122886932477421271
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: map_unknown_elite
+      rect:
+        serializedVersion: 2
+        x: 1227
+        y: 1830
+        width: 89
+        height: 70
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cdd5ae003661d0df0800000000000000
+      internalID: -212488992943612452
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: top_bar_ascension
+      rect:
+        serializedVersion: 2
+        x: 1227
+        y: 1700
+        width: 88
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9985ce8e0cf7c4d40800000000000000
+      internalID: 5569967305668712601
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: map_chest
+      rect:
+        serializedVersion: 2
+        x: 1227
+        y: 1639
+        width: 84
+        height: 59
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 612a67624f478d300800000000000000
+      internalID: 277099969049436694
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: map_unknown_chest
+      rect:
+        serializedVersion: 2
+        x: 1227
+        y: 1578
+        width: 84
+        height: 59
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d037f6387c30f8660800000000000000
+      internalID: 7390129668976767757
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: card_portrait_border_skill_s
+      rect:
+        serializedVersion: 2
+        x: 1313
+        y: 1205
+        width: 551
+        height: 420
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 166e8a997a276ba80800000000000000
+      internalID: -8451441586551069087
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: map_burly_monster
+      rect:
+        serializedVersion: 2
+        x: 1866
+        y: 1344
+        width: 180
+        height: 185
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1d36f7b4216c20dc0800000000000000
+      internalID: -3674156564102552623
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timer_icon
+      rect:
+        serializedVersion: 2
+        x: 1227
+        y: 1497
+        width: 80
+        height: 79
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 42c86685b0b4a16d0800000000000000
+      internalID: -3019018088098657244
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: top_bar_floor
+      rect:
+        serializedVersion: 2
+        x: 1227
+        y: 1420
+        width: 80
+        height: 75
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9f429a05a364c8020800000000000000
+      internalID: 2345326722228495609
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: peek_button
+      rect:
+        serializedVersion: 2
+        x: 1866
+        y: 1221
+        width: 166
+        height: 121
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f002be82d811e7410800000000000000
+      internalID: 1476637025798660111
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: energy_quest
+      rect:
+        serializedVersion: 2
+        x: 1866
+        y: 1145
+        width: 74
+        height: 74
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: da190b251ba162950800000000000000
+      internalID: 6423851267389428141
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: energy_regent
+      rect:
+        serializedVersion: 2
+        x: 1942
+        y: 1145
+        width: 74
+        height: 74
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c519b5100fddbdda0800000000000000
+      internalID: -5918893262363717284
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: proceed_button
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 1685
+        width: 381
+        height: 178
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ab3f3531706a03ed0800000000000000
+      internalID: -2436264849088187462
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: lagavulin_matriarch_boss_icon
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 1618
+        width: 288
+        height: 245
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c38e4a4996a8df5c0800000000000000
+      internalID: -4180032693059917764
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: map_legend
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 1171
+        width: 368
+        height: 512
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3a526043ff7691a00800000000000000
+      internalID: 727727160584185251
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: the_kin_boss_icon
+      rect:
+        serializedVersion: 2
+        x: 371
+        y: 1357
+        width: 282
+        height: 259
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 10456b2a56a3207a0800000000000000
+      internalID: -6412498711226199039
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: knowledge_demon_boss_icon
+      rect:
+        serializedVersion: 2
+        x: 655
+        y: 1249
+        width: 267
+        height: 229
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 581bda2a084d70d00800000000000000
+      internalID: 938952696280232325
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: confirm_button
+      rect:
+        serializedVersion: 2
+        x: 371
+        y: 1223
+        width: 257
+        height: 132
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f853778e2872362e0800000000000000
+      internalID: -2133818355244124785
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: map_spoils_map_marker
+      rect:
+        serializedVersion: 2
+        x: 924
+        y: 1222
+        width: 256
+        height: 256
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 912243f24286659f0800000000000000
+      internalID: -480081805648322023
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: back_button
+      rect:
+        serializedVersion: 2
+        x: 630
+        y: 1116
+        width: 256
+        height: 131
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c711e8aaa5a43a5a0800000000000000
+      internalID: -6511278882978655876
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: test_subject_boss_icon
+      rect:
+        serializedVersion: 2
+        x: 371
+        y: 992
+        width: 250
+        height: 229
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fa86e2edcd58c8f50800000000000000
+      internalID: 6885025114009528495
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: energy_silent
+      rect:
+        serializedVersion: 2
+        x: 1182
+        y: 1344
+        width: 74
+        height: 74
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 350260420ac5b5a00800000000000000
+      internalID: 746292006128853075
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: energy_necrobinder
+      rect:
+        serializedVersion: 2
+        x: 1182
+        y: 1273
+        width: 74
+        height: 69
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f8ace208ee45bada0800000000000000
+      internalID: -5932554700800996721
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: map_unknown
+      rect:
+        serializedVersion: 2
+        x: 1182
+        y: 1199
+        width: 73
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c006be28a12fab800800000000000000
+      internalID: 629081293651140620
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: vantom_boss_icon
+      rect:
+        serializedVersion: 2
+        x: 888
+        y: 1106
+        width: 250
+        height: 114
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6d7eb09db5aa95500800000000000000
+      internalID: 385526554577070038
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: infested_boss_icon
+      rect:
+        serializedVersion: 2
+        x: 623
+        y: 946
+        width: 234
+        height: 168
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e9fbe2841e7206d40800000000000000
+      internalID: 5575500187216822174
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: soul_fysh_boss_icon
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 1001
+        width: 234
+        height: 168
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d4b901e992fc969e0800000000000000
+      internalID: -1627542012665226419
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: energy_defect
+      rect:
+        serializedVersion: 2
+        x: 237
+        y: 1097
+        width: 71
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: aaabeaad58fd57330800000000000000
+      internalID: 3708115634202000042
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cursor_pencil
+      rect:
+        serializedVersion: 2
+        x: 310
+        y: 1105
+        width: 59
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f0fc960d82a76a6d0800000000000000
+      internalID: -2979559787745128689
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scrollbar_train_large
+      rect:
+        serializedVersion: 2
+        x: 310
+        y: 1014
+        width: 58
+        height: 89
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0a7e610b2258aa3f0800000000000000
+      internalID: -888751592422578272
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: energy_colorless
+      rect:
+        serializedVersion: 2
+        x: 237
+        y: 1024
+        width: 71
+        height: 71
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 43f5c3da0231a1b60800000000000000
+      internalID: 7717501942519062324
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: map_shop
+      rect:
+        serializedVersion: 2
+        x: 237
+        y: 950
+        width: 69
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b3fe0c84d520d5730800000000000000
+      internalID: 3989347444595945275
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cursor_eraser
+      rect:
+        serializedVersion: 2
+        x: 308
+        y: 950
+        width: 60
+        height: 62
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 82f011fa784a04180800000000000000
+      internalID: -9133119141642694872
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ancient_node_tezcatara_outline
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 810
+        width: 208
+        height: 189
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7ea72a88a49c20770800000000000000
+      internalID: 8575637962423958247
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ancient_node_neow_outline
+      rect:
+        serializedVersion: 2
+        x: 370
+        y: 818
+        width: 208
+        height: 172
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 02732f4bba9f99df0800000000000000
+      internalID: -172832594806556896
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: map_unknown_shop
+      rect:
+        serializedVersion: 2
+        x: 211
+        y: 876
+        width: 69
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fa7ee256e37c97760800000000000000
+      internalID: 7456209728888039343
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cursor_pencil_tilted
+      rect:
+        serializedVersion: 2
+        x: 282
+        y: 886
+        width: 64
+        height: 62
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ef285008205289280800000000000000
+      internalID: -9036431959650893058
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: scrollbar_track_edge2
+      rect:
+        serializedVersion: 2
+        x: 282
+        y: 848
+        width: 60
+        height: 36
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2012934a8ad4c5790800000000000000
+      internalID: -7540066289420001022
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ancient_node_neow
+      rect:
+        serializedVersion: 2
+        x: 1257
+        y: 1037
+        width: 204
+        height: 166
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5e58746993971ed80800000000000000
+      internalID: -8223158156360448539
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ancient_node_tezcatara
+      rect:
+        serializedVersion: 2
+        x: 859
+        y: 921
+        width: 203
+        height: 183
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2e9486ce19b7355f0800000000000000
+      internalID: -769135244683490846
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ancient_node_vakuu
+      rect:
+        serializedVersion: 2
+        x: 1064
+        y: 902
+        width: 190
+        height: 202
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d4f3afbf3728806a0800000000000000
+      internalID: -6482788228939497651
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ancient_node_tanx_outline
+      rect:
+        serializedVersion: 2
+        x: 580
+        y: 739
+        width: 202
+        height: 205
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dac8162fa8309af10800000000000000
+      internalID: 2281358581546716333
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: map_eraser_1
+      rect:
+        serializedVersion: 2
+        x: 784
+        y: 717
+        width: 202
+        height: 202
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0fd464f0bdef05f30800000000000000
+      internalID: 4562426639333871088
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: map_pencil_1
+      rect:
+        serializedVersion: 2
+        x: 211
+        y: 614
+        width: 202
+        height: 202
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 43c6cdc6168a7a250800000000000000
+      internalID: 5955914168612449332
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: map_clean_up
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 608
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 45daa52f50e7def40800000000000000
+      internalID: 5759398062482697556
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ancient_node_pael
+      rect:
+        serializedVersion: 2
+        x: 415
+        y: 535
+        width: 196
+        height: 202
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 71d95a8c7220c8410800000000000000
+      internalID: 1480560747391327511
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ancient_node_tanx
+      rect:
+        serializedVersion: 2
+        x: 203
+        y: 412
+        width: 196
+        height: 200
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 587acb130390b4aa0800000000000000
+      internalID: -6175832361410975867
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ancient_node_orobas_outline
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 405
+        width: 192
+        height: 201
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3eff59aae8abe76c0800000000000000
+      internalID: -4143669485224198173
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ancient_node_orobas
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 209
+        width: 185
+        height: 194
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c9e17280eb64e9a70800000000000000
+      internalID: 8835577300942003868
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      ancient_banner: -5936493135535848761
+      ancient_node_neow: -8223158156360448539
+      ancient_node_neow_outline: -172832594806556896
+      ancient_node_orobas: 8835577300942003868
+      ancient_node_orobas_outline: -4143669485224198173
+      ancient_node_pael: 1480560747391327511
+      ancient_node_tanx: -6175832361410975867
+      ancient_node_tanx_outline: 2281358581546716333
+      ancient_node_tezcatara: -769135244683490846
+      ancient_node_tezcatara_outline: 8575637962423958247
+      ancient_node_vakuu: -6482788228939497651
+      back_button: -6511278882978655876
+      card_banner: 8957468859149799839
+      card_enchant_s: -761393426971859613
+      card_portrait_border_attack_s: -5406305144578966668
+      card_portrait_border_power_s: -2122886932477421271
+      card_portrait_border_skill_s: -8451441586551069087
+      compendium: -1386366304161253859
+      confirm_button: -2133818355244124785
+      cursor_eraser: -9133119141642694872
+      cursor_eraser_tilted: -8133405487681749925
+      cursor_pencil: -2979559787745128689
+      cursor_pencil_tilted: -9036431959650893058
+      energy_colorless: 7717501942519062324
+      energy_defect: 3708115634202000042
+      energy_necrobinder: -5932554700800996721
+      energy_quest: 6423851267389428141
+      energy_regent: -5918893262363717284
+      energy_silent: 746292006128853075
+      infested_boss_icon: 5575500187216822174
+      knowledge_demon_boss_icon: 938952696280232325
+      lagavulin_matriarch_boss_icon: -4180032693059917764
+      map_burly_monster: -3674156564102552623
+      map_chest: 277099969049436694
+      map_clean_up: 5759398062482697556
+      map_eraser_1: 4562426639333871088
+      map_legend: 727727160584185251
+      map_marker_defect: 3218687727255280966
+      map_marker_ironclad: -8363685697213367718
+      map_marker_necrobinder: 2309641775393159224
+      map_pencil_1: 5955914168612449332
+      map_ping: 2835863241725477038
+      map_shop: 3989347444595945275
+      map_spoils_map_marker: -480081805648322023
+      map_unknown: 629081293651140620
+      map_unknown_chest: 7390129668976767757
+      map_unknown_elite: -212488992943612452
+      map_unknown_shop: 7456209728888039343
+      peek_button: 1476637025798660111
+      proceed_button: -2436264849088187462
+      scrollbar_track_edge2: -7540066289420001022
+      scrollbar_train_large: -888751592422578272
+      settings_tiny_right_arrow: -4594664030916527162
+      small_scrollbar_track_center: -6378352706904903748
+      small_scrollbar_train: 4661958143012411147
+      soul_fysh_boss_icon: -1627542012665226419
+      test_subject_boss_icon: 6885025114009528495
+      the_kin_boss_icon: -6412498711226199039
+      timer_icon: -3019018088098657244
+      top_bar_ascension: 5569967305668712601
+      top_bar_floor: 2345326722228495609
+      vantom_boss_icon: 385526554577070038
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
