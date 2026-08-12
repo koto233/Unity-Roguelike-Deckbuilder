@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using LitFramework;
+using LitFramework.Asset;
 using LitFramework.UI.Core.Window;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -62,6 +63,7 @@ public partial class UICardItem
         _canUse = card.CanUse;
         b_CostText.SetText(card.Config.Cost.ToString());
         Color targetColor = _canUse ? Color.white : Color.red;
+        // b_Icon.sprite = ServiceLocator.Get<IAssetService>().LoadRefAsync<Sprite>("Assets/Res/Art/Card_atlas/" + card.Config.Image + ".png");
         b_CostText.color = targetColor;
         b_NameText.SetText(card.Config.Name);
         b_DescText.SetText(card.Description);

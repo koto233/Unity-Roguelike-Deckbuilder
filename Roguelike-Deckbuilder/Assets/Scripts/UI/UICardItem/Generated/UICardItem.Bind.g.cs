@@ -4,15 +4,20 @@
 //     请勿手动修改此文件，重新生成将覆盖所有改动
 //
 //     来源 UI : UICardItem
-//     生成时间 : 2026-08-06
+//     生成时间 : 2026-08-12
 // </自动生成>
 //------------------------------------------------------------------------------
 
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 
     public partial class UICardItem
     {
+        private @Image b_Icon;
+        private @Image b_Frame;
+        private @Image b_PortraitBorder;
+        private @Image b_Banner;
         private @TextMeshProUGUI b_CostText;
         private @TextMeshProUGUI b_NameText;
         private @TextMeshProUGUI b_DescText;
@@ -21,9 +26,13 @@ using TMPro;
         protected override void GetUI()
         {
             base.GetUI();
-            b_CostText = GetBind<@TextMeshProUGUI>(0);
-            b_NameText = GetBind<@TextMeshProUGUI>(1);
-            b_DescText = GetBind<@TextMeshProUGUI>(2);
-            b_ArrowStartRoot = GetBind<@RectTransform>(3);
+            b_Icon = GetBind<@Image>(0);
+            b_Frame = GetBind<@Image>(1);
+            b_PortraitBorder = GetBind<@Image>(2);
+            b_Banner = GetBind<@Image>(3);
+            b_CostText = GetBind<@TextMeshProUGUI>(4);
+            b_NameText = GetBind<@TextMeshProUGUI>(5);
+            b_DescText = GetBind<@TextMeshProUGUI>(6);
+            b_ArrowStartRoot = GetBind<@RectTransform>(7);
         }
     }
