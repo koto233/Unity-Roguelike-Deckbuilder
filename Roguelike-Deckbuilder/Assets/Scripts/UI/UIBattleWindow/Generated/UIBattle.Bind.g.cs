@@ -4,7 +4,7 @@
 //     请勿手动修改此文件，重新生成将覆盖所有改动
 //
 //     来源 UI : UIBattle
-//     生成时间 : 2026-08-06
+//     生成时间 : 2026-08-14
 // </自动生成>
 //------------------------------------------------------------------------------
 
@@ -20,6 +20,7 @@ using TMPro;
         private @UIHandZone b_HandZone;
         private @RectTransform b_EnemysRoot;
         private @RectTransform b_PlayerRoot;
+        private @TargetArrow b_TargetArrow;
         private @TextMeshProUGUI b_EnergyText;
         private @Button b_DrawPileBtn;
         private @Button b_DiscardPileBtn;
@@ -28,7 +29,6 @@ using TMPro;
         private @Button b_EndTurnBtn;
         private @Tooltip b_BuffTooltip;
         private @Tooltip b_IntentTooltip;
-        private @TargetArrow b_TargetArrow;
 
         protected override void GetUI()
         {
@@ -39,14 +39,14 @@ using TMPro;
             b_HandZone = GetBind<@UIHandZone>(3);
             b_EnemysRoot = GetBind<@RectTransform>(4);
             b_PlayerRoot = GetBind<@RectTransform>(5);
-            b_EnergyText = GetBind<@TextMeshProUGUI>(6);
-            b_DrawPileBtn = GetBind<@Button>(7);
-            b_DiscardPileBtn = GetBind<@Button>(8);
-            b_PilePanel = GetBind<@RectTransform>(9);
-            b_ClosePileButton = GetBind<@Button>(10);
-            b_EndTurnBtn = GetBind<@Button>(11);
-            b_BuffTooltip = GetBind<@Tooltip>(12);
-            b_IntentTooltip = GetBind<@Tooltip>(13);
-            b_TargetArrow = GetBind<@TargetArrow>(14);
+            b_TargetArrow = GetBind<@TargetArrow>(6);
+            b_EnergyText = GetBind<@TextMeshProUGUI>(7);
+            b_DrawPileBtn = GetBind<@Button>(8);
+            b_DiscardPileBtn = GetBind<@Button>(9);
+            b_PilePanel = GetBind<@RectTransform>(10);
+            b_ClosePileButton = GetBind<@Button>(11);
+            b_EndTurnBtn = GetBind<@Button>(12);
+            b_BuffTooltip = GetBind<@Tooltip>(13);
+            b_IntentTooltip = GetBind<@Tooltip>(14);
         }
     }

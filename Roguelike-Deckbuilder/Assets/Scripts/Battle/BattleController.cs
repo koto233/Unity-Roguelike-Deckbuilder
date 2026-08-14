@@ -13,7 +13,10 @@ public class BattleController
     public BattleContext Context { get; private set; }
     public StateMachine BattleFSM { get; private set; }
     private Action _onBattleEnd;
-
+    private List<int> _startDeck = new List<int>()
+    {
+        1,1,1,1,1,3,3,3,3,5
+    };
     public BattleController(BattleContext context, Action onBattleEnd)
     {
         Context = context;
@@ -27,14 +30,13 @@ public class BattleController
         var configService = ServiceLocator.Get<IConfigService>();
         var cardConfigTable = configService.GetTable<CardConfig>();
 
-        for (int i = 0; i < 20; i++)
+        foreach (var id in _startDeck)
         {
-            int randomId = UnityEngine.Random.Range(1, 12);
-            var cardConfig = cardConfigTable.Get(randomId);
+            var cardConfig = cardConfigTable.Get(id);
             var card = new Card(cardConfig);
-            Context.Player.DrawPile.Add(card);
+            Context.Player.DrawDeck.Add(card);
         }
-
+        Context.Player.ShuffleDrawDeck();
         InitFsm();
         EventBus<DiedEvent>.Subscribe(OnCharacterDied);
         BattleFSM.ChangeState<PlayerTurnState>();
@@ -68,7 +70,7 @@ public class BattleController
 
             }
             Context.Player.Hand.Remove(card);
-            Context.Player.DiscardPile.Add(card);
+            Context.Player.DiscardDeck.Add(card);
             EventBus<HandChangedEvent>.Publish(new HandChangedEvent()
             {
                 ChangedCards = new List<Card> { card },
@@ -155,7 +157,7 @@ public class BattleController
 
     public List<Card> GetPile(int pileType)
     {
-        return pileType == 0 ? Context.Player.DrawPile : Context.Player.DiscardPile;
+        return pileType == 0 ? Context.Player.DrawDeck : Context.Player.DiscardDeck;
     }
 
     public void StartEnemyTurn()

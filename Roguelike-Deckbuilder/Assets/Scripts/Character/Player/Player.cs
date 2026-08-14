@@ -5,9 +5,9 @@ using UnityEngine;
 
 public class Player : CharacterBase
 {
-    public List<Card> DrawPile { get; private set; }      // 抽牌堆
+    public List<Card> DrawDeck { get; private set; }      // 抽牌堆
     public List<Card> Hand { get; private set; }          // 手牌
-    public List<Card> DiscardPile { get; private set; }   // 弃牌堆
+    public List<Card> DiscardDeck { get; private set; }   // 弃牌堆
     private int _energy;
     private int _maxEnergy;
     public int Energy => _energy;
@@ -21,8 +21,8 @@ public class Player : CharacterBase
         _maxEnergy = maxEnergy;
         _energy = maxEnergy;
         Hand = new();
-        DrawPile = new();
-        DiscardPile = new();
+        DrawDeck = new();
+        DiscardDeck = new();
     }
     /// <summary>
     /// 抽牌，不会重置牌堆，没有则不抽
@@ -33,9 +33,9 @@ public class Player : CharacterBase
         List<Card> drawnCards = new List<Card>();
         for (int i = 0; i < count; i++)
         {
-            if (DrawPile.Count == 0) break;
-            Card card = DrawPile[0];
-            DrawPile.RemoveAt(0);
+            if (DrawDeck.Count == 0) break;
+            Card card = DrawDeck[0];
+            DrawDeck.RemoveAt(0);
             Hand.Add(card);
             drawnCards.Add(card);
         }
@@ -60,10 +60,10 @@ public class Player : CharacterBase
         {
 
             CheckResetPile();
-            if (DrawPile.Count > 0)
+            if (DrawDeck.Count > 0)
             {
-                var card = DrawPile[0];
-                DrawPile.RemoveAt(0);
+                var card = DrawDeck[0];
+                DrawDeck.RemoveAt(0);
                 Hand.Add(card);
                 changedCards.Add(card);
             }
@@ -76,11 +76,11 @@ public class Player : CharacterBase
     /// </summary>
     public void CheckResetPile()
     {
-        if (DrawPile.Count == 0)
+        if (DrawDeck.Count == 0)
         {
-            DrawPile.AddRange(DiscardPile);
-            ShuffleDrawPile();
-            DiscardPile.Clear();
+            DrawDeck.AddRange(DiscardDeck);
+            ShuffleDrawDeck();
+            DiscardDeck.Clear();
         }
     }
     /// <summary>
@@ -89,7 +89,7 @@ public class Player : CharacterBase
     public void DiscardCard(Card card)
     {
         Hand.Remove(card);
-        DiscardPile.Add(card);
+        DiscardDeck.Add(card);
         EventBus<HandChangedEvent>.Publish(new HandChangedEvent() { ChangedCards = new List<Card> { card }, Cards = Hand, Type = ChangeType.Remove });
     }
     /// <summary>
@@ -110,7 +110,7 @@ public class Player : CharacterBase
         {
             var card = Hand[i];
             Hand.RemoveAt(i);
-            DiscardPile.Add(card);
+            DiscardDeck.Add(card);
         }
         EventBus<HandChangedEvent>.Publish(new HandChangedEvent() { ChangedCards = changedCards, Cards = Hand, Type = ChangeType.Remove });
     }
@@ -132,9 +132,9 @@ public class Player : CharacterBase
         _energy = _maxEnergy;
         EventBus<EnergyChangedEvent>.Publish(new EnergyChangedEvent { CurrentEnergy = _energy, MaxEnergy = _maxEnergy });
     }
-    public void ShuffleDrawPile()
+    public void ShuffleDrawDeck()
     {
-        ShuffleWithUnityRandom(DrawPile);
+        ShuffleWithUnityRandom(DrawDeck);
     }
 
     public void ShuffleWithUnityRandom<T>(List<T> list)
