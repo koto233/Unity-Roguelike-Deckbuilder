@@ -1,5 +1,6 @@
 using System;
 using Cysharp.Threading.Tasks;
+using YooAsset;
 
 namespace LitFramework.Asset
 {
@@ -13,6 +14,9 @@ namespace LitFramework.Asset
         /// 异步加载资源，需手动管理释放
         /// </summary>
         UniTask<T> LoadAsync<T>(string path) where T : UnityEngine.Object;
+        UniTask<SubAssetsHandle> LoadSubAssetsAsync<T>(string path) where T : UnityEngine.Object;
+
+        UniTask<T> LoadSubAssetByNameAsync<T>(string path, string subName) where T : UnityEngine.Object;
         /// <summary>
         /// 增加引用计数（用于预加载或手动保持资源）
         /// </summary>

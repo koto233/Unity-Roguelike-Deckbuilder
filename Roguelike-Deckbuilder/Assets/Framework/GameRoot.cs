@@ -52,6 +52,8 @@ namespace LitFramework
             ServiceLocator.Register(new MapService());
             ServiceLocator.Register(new SaveService(new JsonSaveStorage()));
             ServiceLocator.Register(new PlayerDataService());
+            ServiceLocator.Register(new CardIconService());
+            ServiceLocator.Register(new UIAtlasService());
             ServiceLocator.Get<UIService>().Register<UITitleWindow>("Assets/Res/UI/UITitleWindow.prefab", UILayer.Normal);
             ServiceLocator.Get<UIService>().Register<UITopBar>("Assets/Res/UI/UITopBar.prefab", UILayer.Overlay);
             ServiceLocator.Get<UIService>().Register<UISetting>("Assets/Res/UI/UISetting.prefab", UILayer.Popup);

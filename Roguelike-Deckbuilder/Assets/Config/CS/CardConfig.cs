@@ -23,7 +23,7 @@ public class CardConfig : IConfig
     /// 关联的效果
     /// </summary>
     public List<CardEffectEntry> Effects;
-    public string Image; // 图片
+    public string IconName; // 图片
 }
 
 

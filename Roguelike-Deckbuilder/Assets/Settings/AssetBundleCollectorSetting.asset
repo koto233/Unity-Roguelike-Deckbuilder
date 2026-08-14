@@ -269,23 +269,7 @@ MonoBehaviour:
         FilterRuleName: CollectAll
         AssetTags: 
         UserData: 
-      - CollectPath: Assets/Res/Art/Card_atlas/ui_atlas_0.png
-        CollectorGUID: 2c260a11f97b3b84b922291192b027e4
-        CollectorType: 0
-        AddressRuleName: AddressByFileName
-        PackRuleName: PackDirectory
-        FilterRuleName: CollectAll
-        AssetTags: 
-        UserData: 
-      - CollectPath: Assets/Res/Art/Card_atlas/ui_atlas_1.png
-        CollectorGUID: 7412c83a346de654ea1b16a1f803fa93
-        CollectorType: 0
-        AddressRuleName: AddressByFileName
-        PackRuleName: PackDirectory
-        FilterRuleName: CollectAll
-        AssetTags: 
-        UserData: 
-      - CollectPath: Assets/Res/Art/Card_atlas/card_atlas_0.png
+      - CollectPath: Assets/Res/Art/CardAtlas/card_atlas_0.png
         CollectorGUID: b00c10d386348f4468ecf37aaf64edbd
         CollectorType: 0
         AddressRuleName: AddressByFileName
@@ -293,7 +277,7 @@ MonoBehaviour:
         FilterRuleName: CollectAll
         AssetTags: 
         UserData: 
-      - CollectPath: Assets/Res/Art/Card_atlas/card_atlas_1.png
+      - CollectPath: Assets/Res/Art/CardAtlas/card_atlas_1.png
         CollectorGUID: 96fed1be08ed7534c85e56918f3cd91c
         CollectorType: 0
         AddressRuleName: AddressByFileName
@@ -301,8 +285,24 @@ MonoBehaviour:
         FilterRuleName: CollectAll
         AssetTags: 
         UserData: 
-      - CollectPath: Assets/Res/Art/Card_atlas/card_atlas_2.png
+      - CollectPath: Assets/Res/Art/CardAtlas/card_atlas_2.png
         CollectorGUID: 33cfe148095fc764ca907a627052595c
+        CollectorType: 0
+        AddressRuleName: AddressByFileName
+        PackRuleName: PackDirectory
+        FilterRuleName: CollectAll
+        AssetTags: 
+        UserData: 
+      - CollectPath: Assets/Res/Art/UIAtlas/ui_atlas_0.png
+        CollectorGUID: 2c260a11f97b3b84b922291192b027e4
+        CollectorType: 0
+        AddressRuleName: AddressByFileName
+        PackRuleName: PackDirectory
+        FilterRuleName: CollectAll
+        AssetTags: 
+        UserData: 
+      - CollectPath: Assets/Res/Art/UIAtlas/ui_atlas_1.png
+        CollectorGUID: 7412c83a346de654ea1b16a1f803fa93
         CollectorType: 0
         AddressRuleName: AddressByFileName
         PackRuleName: PackDirectory

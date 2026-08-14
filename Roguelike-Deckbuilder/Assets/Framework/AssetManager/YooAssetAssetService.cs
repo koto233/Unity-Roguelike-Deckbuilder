@@ -17,6 +17,13 @@ namespace LitFramework.Asset
         private readonly Dictionary<string, AsyncLazy<UnityEngine.Object>> _lazyCache = new();
         private Dictionary<string, int> _refCounts = new();
         private Dictionary<string, UniTaskCompletionSource<UnityEngine.Object>> _pendingTasks = new();
+        // 存储 SubAssetsOperationHandle，键为资源路径
+        private Dictionary<string, SubAssetsHandle> _subHandles = new();
+        // 子资源引用计数
+        private Dictionary<string, int> _subRefCounts = new();
+        // 子资源懒加载缓存，值为 UnityEngine.Object[]，实际存储 T[]
+        private Dictionary<string, AsyncLazy<UnityEngine.Object[]>> _subLazyCache = new();
+        private Dictionary<string, AsyncLazy<SubAssetsHandle>> _subHandleCache = new();
 
         public YooAssetAssetService(ResourcePackage package)
         {
@@ -75,52 +82,49 @@ namespace LitFramework.Asset
 
             // return asset as T;
         }
+        /// <summary>
+        /// 异步加载子资源（如图集），返回操作句柄，可后续按名称查询
+        /// </summary>
+        public async UniTask<SubAssetsHandle> LoadSubAssetsAsync<T>(string path) where T : UnityEngine.Object
+        {
+            if (!_subHandleCache.TryGetValue(path, out var lazy))
+            {
+                lazy = new AsyncLazy<SubAssetsHandle>(async () =>
+                {
+                    var handle = _defaultPackage.LoadSubAssetsAsync<T>(path);
+                    await handle.ToUniTask();
+                    if (handle.Status != EOperationStatus.Succeeded)
+                        throw new Exception($"加载子资源失败: {handle.Error}");
+                    return handle;
+                });
+                _subHandleCache[path] = lazy;
+            }
 
-        // public async UniTask<T> LoadAsync<T>(string path) where T : UnityEngine.Object
-        // {
-        //     Debug.Log($"开始加载资源: {path}");
-        //     // 1. 如果已经加载并缓存
-        //     if (_handles.ContainsKey(path))
-        //     {
-        //         _refCounts[path]++;
-        //         return _handles[path].AssetObject as T;
-        //     }
-        //     // 2. 如果正在加载中，等待该任务完成
-        //     if (_pendingTasks.TryGetValue(path, out var existingTcs))
-        //     {
-        //         var result = await existingTcs.Task;
-        //         return result as T;
-        //     }
-        //     // 3. 首次加载 开始异步加载
-        //     var tcs = new UniTaskCompletionSource<UnityEngine.Object>();
-        //     _pendingTasks[path] = tcs;
-        //     var handle = _defaultPackage.LoadAssetAsync<T>(path);
-        //     _handles[path] = handle;
-        //     await handle;
-        //     var asset = handle.AssetObject;
-        //     _refCounts[path] = 1;
-        //     tcs.TrySetResult(asset);
-        //     EventBus<AssetLoadedEvent>.Publish(new AssetLoadedEvent { Path = path, Asset = asset });
-        //     _pendingTasks.Remove(path);
-        //     return asset as T;
-        // }
-        // public async UniTask PreloadAsync(string[] paths, IProgress<float> progress = null)
-        // {
-        //     if (paths == null || paths.Length == 0)
-        //         return;
+            try
+            {
+                var handle = await lazy.GetValueAsync();
+                // 引用计数 +1
+                lock (_refCounts) { _refCounts[path] = _refCounts.TryGetValue(path, out int c) ? c + 1 : 1; }
+                return handle;
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"[LoadSubAssetsAsync] 加载失败: {path}, {ex.Message}");
+                throw;
+            }
+        }
 
-        //     // 并行启动所有加载任务
-        //     var tasks = paths.Select(path => LoadAsync<UnityEngine.Object>(path)).ToList();
-        //     int loaded = 0;
-        //     int total = tasks.Count;
-
-        //     // 使用 UniTask.WhenEach 逐个获取完成的任务，实时更新进度
-        //     await foreach (var _ in UniTask.WhenEach(tasks))
-        //     {
-        //         loaded++;
-        //         progress?.Report(loaded / (float)total);
-        //     }
-        // }
+        /// <summary>
+        /// 便捷方法：按名称获取单个子资源（内部调用上述加载）
+        /// </summary>
+        public async UniTask<T> LoadSubAssetByNameAsync<T>(string path, string subName) where T : UnityEngine.Object
+        {
+            var handle = await LoadSubAssetsAsync<T>(path);
+            var asset = handle.GetSubAssetObject<T>(subName);
+            if (asset == null)
+                throw new Exception($"在路径 {path} 中未找到子资源 '{subName}'");
+            return asset;
+        }
 
         public void Release(string path)
         {
@@ -159,8 +163,40 @@ namespace LitFramework.Asset
             if (_pendingTasks.ContainsKey(path))
                 _pendingTasks.Remove(path);
         }
+        /// <summary>
+        /// 释放指定路径的子资源（减少引用计数）
+        /// </summary>
+        public void ReleaseSubAssets(string path)
+        {
+            lock (_subRefCounts)
+            {
+                if (_subRefCounts.TryGetValue(path, out int count) && count > 0)
+                {
+                    _subRefCounts[path] = --count;
+                    if (_subRefCounts[path] == 0)
+                    {
+                        // 释放操作句柄
+                        if (_subHandles.TryGetValue(path, out var handle))
+                        {
+                            handle.Release();
+                            _subHandles.Remove(path);
+                        }
+                        // 移除引用计数
+                        _subRefCounts.Remove(path);
+                        // 清理懒加载缓存（可选，下次加载会重新创建）
+                        if (_subLazyCache.ContainsKey(path))
+                            _subLazyCache.Remove(path);
+                    }
+                }
+                else
+                {
+                    Debug.LogWarning($"尝试释放未加载或计数为0的子资源: {path}");
+                }
+            }
+        }
         public void ClearUnused()
         {
+            // 普通资源清理（原有逻辑）
             List<string> toRemove = new List<string>();
             foreach (var kv in _refCounts)
             {
@@ -169,6 +205,20 @@ namespace LitFramework.Asset
             }
             foreach (string path in toRemove)
                 Unload(path);
+
+            // 子资源清理（可选）
+            List<string> subToRemove = new List<string>();
+            foreach (var kv in _subRefCounts)
+            {
+                if (kv.Value <= 0)
+                    subToRemove.Add(kv.Key);
+            }
+            foreach (string path in subToRemove)
+                ReleaseSubAssets(path);
         }
+
+
     }
+
+
 }
