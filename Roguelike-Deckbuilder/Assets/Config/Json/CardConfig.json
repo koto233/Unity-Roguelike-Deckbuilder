@@ -62,32 +62,40 @@
   "5": {
     "Id": 5,
     "Key": 5,
-    "Name": "猛击",
+    "Name": "痛击",
     "Cost": 2,
     "Type": "Attack",
     "Effects": [
       {
         "EffectId": 1,
-        "Value": 12
+        "Value": 8
+      },
+      {
+        "EffectId": 5,
+        "Value": 1
       }
     ],
     "NeedTarget": "",
-    "IconName": "test"
+    "IconName": "bash"
   },
   "6": {
     "Id": 6,
     "Key": 6,
-    "Name": "猛击+",
+    "Name": "痛击+",
     "Cost": 2,
     "Type": "Attack",
     "Effects": [
       {
         "EffectId": 1,
-        "Value": 16
+        "Value": 10
+      },
+      {
+        "EffectId": 5,
+        "Value": 1
       }
     ],
     "NeedTarget": "",
-    "IconName": "test"
+    "IconName": "bash"
   },
   "7": {
     "Id": 7,
