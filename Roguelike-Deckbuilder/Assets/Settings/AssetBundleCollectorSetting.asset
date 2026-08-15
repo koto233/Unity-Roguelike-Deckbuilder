@@ -70,14 +70,6 @@ MonoBehaviour:
         FilterRuleName: CollectAll
         AssetTags: 
         UserData: 
-      - CollectPath: Assets/Res/UI/UIIntentionItem.prefab
-        CollectorGUID: 72c225dcf2ffb834ba01050aadfcc8dd
-        CollectorType: 0
-        AddressRuleName: AddressByFileName
-        PackRuleName: PackDirectory
-        FilterRuleName: CollectAll
-        AssetTags: 
-        UserData: 
       - CollectPath: Assets/Res/UI/CardFlyFx.prefab
         CollectorGUID: 2b667addea150df4b96fee15a8b062de
         CollectorType: 0
@@ -95,7 +87,7 @@ MonoBehaviour:
         AssetTags: 
         UserData: 
       - CollectPath: Assets/Res/UI/UICardDisplay.prefab
-        CollectorGUID: 179d38e4e1147b448981de9482ef1a36
+        CollectorGUID: 
         CollectorType: 0
         AddressRuleName: AddressByFileName
         PackRuleName: PackDirectory
@@ -303,6 +295,14 @@ MonoBehaviour:
         UserData: 
       - CollectPath: Assets/Res/Art/UIAtlas/ui_atlas_1.png
         CollectorGUID: 7412c83a346de654ea1b16a1f803fa93
+        CollectorType: 0
+        AddressRuleName: AddressByFileName
+        PackRuleName: PackDirectory
+        FilterRuleName: CollectAll
+        AssetTags: 
+        UserData: 
+      - CollectPath: Assets/Res/Art/Intents
+        CollectorGUID: 33de2070e206e07498395d9e99b75043
         CollectorType: 0
         AddressRuleName: AddressByFileName
         PackRuleName: PackDirectory
