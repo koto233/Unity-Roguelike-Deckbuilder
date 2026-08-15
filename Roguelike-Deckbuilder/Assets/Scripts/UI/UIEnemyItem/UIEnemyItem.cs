@@ -10,8 +10,7 @@ using UnityEngine;
 public partial class UIEnemyItem : UIBase
 {
     private AssetRef<GameObject> _buffPrefabAssetRef;
-    private AssetRef<GameObject> _intentionPrefabAssetRef;
-    private UIIntentionItem _intentionUI;
+    [SerializeField] private UIIntentionItem _intentionUI;
     private Dictionary<int, UIBuffItem> _buffSlots = new();
     public Vector3 DamageTextPos => b_DamageTextPos.transform.position;
     public Enemy Enemy { get; private set; }
@@ -24,11 +23,7 @@ public partial class UIEnemyItem : UIBase
     {
         var assetService = ServiceLocator.Get<IAssetService>();
         _buffPrefabAssetRef = await assetService.LoadRefAsync<GameObject>("Assets/Res/UI/UIBuffItem.prefab");
-        _intentionPrefabAssetRef = await assetService.LoadRefAsync<GameObject>("Assets/Res/UI/UIIntentionItem.prefab");
-        _intentionUI = Instantiate(_intentionPrefabAssetRef.Asset).GetComponent<UIIntentionItem>();
-        _intentionUI.transform.SetParent(b_IntentionRoot.transform);
         Enemy.DetermineIntent(null);
-        // _intentionUI.Hide();
     }
     public void UpdateHP(int currentHp, int maxHp)
     {
@@ -106,6 +101,5 @@ public partial class UIEnemyItem : UIBase
     void OnDestroy()
     {
         _buffPrefabAssetRef?.Dispose();
-        _intentionPrefabAssetRef?.Dispose();
     }
 }

@@ -4,20 +4,20 @@
 //     请勿手动修改此文件，重新生成将覆盖所有改动
 //
 //     来源 UI : UIIntentionItem
-//     生成时间 : 2026-07-13
+//     生成时间 : 2026-08-15
 // </自动生成>
 //------------------------------------------------------------------------------
 
 using UnityEngine;
-using UnityEngine.UI;
+using TMPro;
 
     public partial class UIIntentionItem
     {
-        private @Image b_Icon;
+        private @TextMeshProUGUI b_Num;
 
         protected override void GetUI()
         {
             base.GetUI();
-            b_Icon = GetBind<@Image>(0);
+            b_Num = GetBind<@TextMeshProUGUI>(0);
         }
     }
