@@ -4,7 +4,7 @@
 //     请勿手动修改此文件，重新生成将覆盖所有改动
 //
 //     来源 UI : UIBattle
-//     生成时间 : 2026-08-14
+//     生成时间 : 2026-08-15
 // </自动生成>
 //------------------------------------------------------------------------------
 
@@ -23,7 +23,9 @@ using TMPro;
         private @TargetArrow b_TargetArrow;
         private @TextMeshProUGUI b_EnergyText;
         private @Button b_DrawPileBtn;
+        private @TextMeshProUGUI b_DrawPileCount;
         private @Button b_DiscardPileBtn;
+        private @TextMeshProUGUI b_DiscardPileCount;
         private @RectTransform b_PilePanel;
         private @Button b_ClosePileButton;
         private @Button b_EndTurnBtn;
@@ -42,11 +44,13 @@ using TMPro;
             b_TargetArrow = GetBind<@TargetArrow>(6);
             b_EnergyText = GetBind<@TextMeshProUGUI>(7);
             b_DrawPileBtn = GetBind<@Button>(8);
-            b_DiscardPileBtn = GetBind<@Button>(9);
-            b_PilePanel = GetBind<@RectTransform>(10);
-            b_ClosePileButton = GetBind<@Button>(11);
-            b_EndTurnBtn = GetBind<@Button>(12);
-            b_BuffTooltip = GetBind<@Tooltip>(13);
-            b_IntentTooltip = GetBind<@Tooltip>(14);
+            b_DrawPileCount = GetBind<@TextMeshProUGUI>(9);
+            b_DiscardPileBtn = GetBind<@Button>(10);
+            b_DiscardPileCount = GetBind<@TextMeshProUGUI>(11);
+            b_PilePanel = GetBind<@RectTransform>(12);
+            b_ClosePileButton = GetBind<@Button>(13);
+            b_EndTurnBtn = GetBind<@Button>(14);
+            b_BuffTooltip = GetBind<@Tooltip>(15);
+            b_IntentTooltip = GetBind<@Tooltip>(16);
         }
     }

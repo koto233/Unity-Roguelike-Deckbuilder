@@ -10,8 +10,8 @@ public struct HandChangedEvent : IEvent
     /// <summary>
     /// 变化的卡牌
     /// </summary>
-    public List<Card> ChangedCards;
-    public List<Card> Cards;
+    public IReadOnlyList<Card> ChangedCards;
+    public IReadOnlyList<Card> Cards;
     public ChangeType Type;
 
 }

@@ -5,9 +5,14 @@ using UnityEngine;
 
 public class Player : CharacterBase
 {
-    public List<Card> DrawDeck { get; private set; }      // 抽牌堆
-    public List<Card> Hand { get; private set; }          // 手牌
-    public List<Card> DiscardDeck { get; private set; }   // 弃牌堆
+    private List<Card> _drawPile = new();    // 抽牌堆
+    private List<Card> _hand = new();         // 手牌
+    private List<Card> _discardPile = new();  // 弃牌堆
+    public IReadOnlyList<Card> DrawPile => _drawPile;
+    public IReadOnlyList<Card> Hand => _hand;
+    public IReadOnlyList<Card> DiscardPile => _discardPile;
+    public int DrawPileCount => DrawPile.Count;
+    public int DiscardPileCount => DiscardPile.Count;
     private int _energy;
     private int _maxEnergy;
     public int Energy => _energy;
@@ -20,9 +25,33 @@ public class Player : CharacterBase
     {
         _maxEnergy = maxEnergy;
         _energy = maxEnergy;
-        Hand = new();
-        DrawDeck = new();
-        DiscardDeck = new();
+    }
+    public void AddCardToDrawPile(Card card)
+    {
+        _discardPile.Add(card);
+    }
+    public void AddCardToHand(Card card)
+    {
+        _hand.Add(card);
+        EventBus<HandChangedEvent>.Publish(new HandChangedEvent() { ChangedCards = new List<Card> { card }, Cards = Hand, Type = ChangeType.Add });
+    }
+    public void AddCardToDiscardPile(Card card)
+    {
+        _discardPile.Add(card);
+    }
+    public void RemoveCardFromDrawPile(Card card)
+    {
+        _discardPile.Remove(card);
+
+    }
+    public void RemoveCardFromHand(Card card)
+    {
+        _hand.Remove(card);
+        EventBus<HandChangedEvent>.Publish(new HandChangedEvent() { ChangedCards = new List<Card> { card }, Cards = Hand, Type = ChangeType.Remove });
+    }
+    public void RemoveCardFromDiscardPile(Card card)
+    {
+        _discardPile.Remove(card);
     }
     /// <summary>
     /// 抽牌，不会重置牌堆，没有则不抽
@@ -33,10 +62,10 @@ public class Player : CharacterBase
         List<Card> drawnCards = new List<Card>();
         for (int i = 0; i < count; i++)
         {
-            if (DrawDeck.Count == 0) break;
-            Card card = DrawDeck[0];
-            DrawDeck.RemoveAt(0);
-            Hand.Add(card);
+            if (DrawPile.Count == 0) break;
+            Card card = DrawPile[0];
+            _drawPile.RemoveAt(0);
+            _hand.Add(card);
             drawnCards.Add(card);
         }
         if (drawnCards.Count > 0)
@@ -49,6 +78,7 @@ public class Player : CharacterBase
             });
         }
     }
+
     /// <summary>
     /// 回合开始时抽牌 若牌堆为空 则从重置牌堆
     /// </summary>
@@ -60,11 +90,11 @@ public class Player : CharacterBase
         {
 
             CheckResetPile();
-            if (DrawDeck.Count > 0)
+            if (DrawPile.Count > 0)
             {
-                var card = DrawDeck[0];
-                DrawDeck.RemoveAt(0);
-                Hand.Add(card);
+                var card = DrawPile[0];
+                _drawPile.RemoveAt(0);
+                _hand.Add(card);
                 changedCards.Add(card);
             }
         }
@@ -76,11 +106,11 @@ public class Player : CharacterBase
     /// </summary>
     public void CheckResetPile()
     {
-        if (DrawDeck.Count == 0)
+        if (DrawPile.Count == 0)
         {
-            DrawDeck.AddRange(DiscardDeck);
+            _drawPile.AddRange(DiscardPile);
             ShuffleDrawDeck();
-            DiscardDeck.Clear();
+            _discardPile.Clear();
         }
     }
     /// <summary>
@@ -88,8 +118,8 @@ public class Player : CharacterBase
     /// </summary>
     public void DiscardCard(Card card)
     {
-        Hand.Remove(card);
-        DiscardDeck.Add(card);
+        _hand.Remove(card);
+        _discardPile.Add(card);
         EventBus<HandChangedEvent>.Publish(new HandChangedEvent() { ChangedCards = new List<Card> { card }, Cards = Hand, Type = ChangeType.Remove });
     }
     /// <summary>
@@ -109,8 +139,8 @@ public class Player : CharacterBase
         for (int i = Hand.Count - 1; i >= 0; i--)
         {
             var card = Hand[i];
-            Hand.RemoveAt(i);
-            DiscardDeck.Add(card);
+            _hand.RemoveAt(i);
+            _discardPile.Add(card);
         }
         EventBus<HandChangedEvent>.Publish(new HandChangedEvent() { ChangedCards = changedCards, Cards = Hand, Type = ChangeType.Remove });
     }
@@ -134,7 +164,7 @@ public class Player : CharacterBase
     }
     public void ShuffleDrawDeck()
     {
-        ShuffleWithUnityRandom(DrawDeck);
+        ShuffleWithUnityRandom(_drawPile);
     }
 
     public void ShuffleWithUnityRandom<T>(List<T> list)

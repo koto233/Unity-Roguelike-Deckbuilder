@@ -99,7 +99,7 @@ public partial class UIBattle : UIBase
         }
         _cardDisplays.Clear();
     }
-    public void SpawnCardInList(List<Card> cards)
+    public void SpawnCardInList(IReadOnlyList<Card> cards)
     {
         foreach (var data in cards)
         {
@@ -161,7 +161,7 @@ public partial class UIBattle : UIBase
         b_EnergyText.SetText($"{energy}/{maxEnergy}");
         b_HandZone.RefreshHandState(energy);
     }
-    public void RefreshHand(List<Card> hand, List<Card> changedCards, ChangeType type)
+    public void RefreshHand(IReadOnlyList<Card> hand, IReadOnlyList<Card> changedCards, ChangeType type)
     {
         b_HandZone.RefreshHand(hand, changedCards, type);
     }
@@ -178,6 +178,15 @@ public partial class UIBattle : UIBase
     {
         b_HandZone.ResetCard();
     }
+    public void RefreshDrawPileCount(int count)
+    {
+        b_DrawPileCount.SetText(count.ToString());
+    }
+    public void RefreshDiscardPileCount(int count)
+    {
+        b_DiscardPileCount.SetText(count.ToString());
+    }
+
 
     // ===== View 层交互反馈 =====
     public void ShowArrow(Vector2 start, Vector2 end, Vector2 controlOffset)

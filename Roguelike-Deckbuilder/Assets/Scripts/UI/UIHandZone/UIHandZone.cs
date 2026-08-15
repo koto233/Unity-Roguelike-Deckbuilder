@@ -33,8 +33,8 @@ public partial class UIHandZone : MonoBehaviour
     }
 
     public void RefreshHand(
-        List<Card> handCards,
-        List<Card> changedCards,
+        IReadOnlyList<Card> handCards,
+        IReadOnlyList<Card> changedCards,
         ChangeType type)
     {
         Debug.Log("刷新手牌" + type);
@@ -68,7 +68,7 @@ public partial class UIHandZone : MonoBehaviour
         }
     }
 
-    private void AddCards(List<Card> changedCards)
+    private void AddCards(IReadOnlyList<Card> changedCards)
     {
         foreach (var card in changedCards)
         {
@@ -83,7 +83,7 @@ public partial class UIHandZone : MonoBehaviour
             item.OnLayoutComplete();
     }
 
-    private void RebuildUI(List<Card> handCards)
+    private void RebuildUI(IReadOnlyList<Card> handCards)
     {
         ClearHandContainer();
         _cardItems.Clear();
@@ -176,7 +176,7 @@ public partial class UIHandZone : MonoBehaviour
     }
 
     // ========== 🔥 核心改动：播放新增动画（真正可取消） ==========
-    private async UniTask PlayAddAnimations(List<Card> changedCards)
+    private async UniTask PlayAddAnimations(IReadOnlyList<Card> changedCards)
     {
         if (changedCards.Count == 0) return;
 

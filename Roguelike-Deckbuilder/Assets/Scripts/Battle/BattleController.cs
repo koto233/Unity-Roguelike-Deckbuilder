@@ -34,7 +34,7 @@ public class BattleController
         {
             var cardConfig = cardConfigTable.Get(id);
             var card = new Card(cardConfig);
-            Context.Player.DrawDeck.Add(card);
+            Context.Player.AddCardToDrawPile(card);
         }
         Context.Player.ShuffleDrawDeck();
         InitFsm();
@@ -69,8 +69,8 @@ public class BattleController
                 return false;
 
             }
-            Context.Player.Hand.Remove(card);
-            Context.Player.DiscardDeck.Add(card);
+            Context.Player.RemoveCardFromHand(card);
+            Context.Player.AddCardToDiscardPile(card);
             EventBus<HandChangedEvent>.Publish(new HandChangedEvent()
             {
                 ChangedCards = new List<Card> { card },
@@ -155,9 +155,9 @@ public class BattleController
         }
     }
 
-    public List<Card> GetPile(int pileType)
+    public IReadOnlyList<Card> GetPile(int pileType)
     {
-        return pileType == 0 ? Context.Player.DrawDeck : Context.Player.DiscardDeck;
+        return pileType == 0 ? Context.Player.DrawPile : Context.Player.DiscardPile;
     }
 
     public void StartEnemyTurn()

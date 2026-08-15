@@ -26,6 +26,8 @@ public class BattlePresenter : IDisposable
         RefreshHand(context.Player.Hand, context.Player.Hand, ChangeType.Add);
         RefreshBlock(context.Player.Block, EntityType.Player);
         RefreshEnergy(context.Player.Energy, context.Player.MaxEnergy);
+        RefreshDrawPileCount(context.Player.DrawPileCount);
+        RefreshDiscardPileCount(context.Player.DiscardPileCount);
     }
 
 
@@ -118,12 +120,21 @@ public class BattlePresenter : IDisposable
     {
         _view.RefreshBlock(block, entityType);
     }
-    private void RefreshHand(List<Card> handCards, List<Card> changedCards, ChangeType type)
+    private void RefreshHand(IReadOnlyList<Card> handCards, IReadOnlyList<Card> changedCards, ChangeType type)
     {
         _battleController.UpdateCardUsability();
         _view.RefreshHand(handCards, changedCards, type);
     }
 
+    private void RefreshDrawPileCount(int count)
+    {
+        _view.RefreshDrawPileCount(count);
+    }
+
+    private void RefreshDiscardPileCount(int count)
+    {
+        _view.RefreshDiscardPileCount(count);
+    }
 
     private void OnDragStart(Card card, Vector2 position)
     {
