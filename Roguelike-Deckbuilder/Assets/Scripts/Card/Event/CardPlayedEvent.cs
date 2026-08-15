@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using LitFramework.EventBus;
 using UnityEngine;
 
-public class CardPlayedEvent : IEvent
+public struct CardPlayedEvent : IEvent
 {
     public Card Card;
 }

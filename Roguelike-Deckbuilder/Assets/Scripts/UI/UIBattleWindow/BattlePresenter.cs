@@ -44,6 +44,8 @@ public class BattlePresenter : IDisposable
         EventBus<TooltipShowEvent>.Subscribe(OnHoverEvent);
         EventBus<IntentEvent>.Subscribe(OnEnemyIntentChanged);
         EventBus<FloatingTextEvent>.Subscribe(OnFloatingTextEvent);
+        EventBus<DrawPileChangedEvent>.Subscribe(OnDrawPileChanged);
+        EventBus<DiscardPileChangedEvent>.Subscribe(OnDiscardPileChanged);
         _view.OnOpenPile += OpenPile;
         _view.OnEndTurn += EndTurn;
         _view.OnCardDragStartRequested += OnDragStart;
@@ -52,6 +54,8 @@ public class BattlePresenter : IDisposable
         _view.OnCardPlayRequested += OnCardPlay;
 
     }
+
+
 
     private void UnSubscribeEvents()
     {
@@ -66,8 +70,14 @@ public class BattlePresenter : IDisposable
         EventBus<TooltipShowEvent>.Unsubscribe(OnHoverEvent);
         EventBus<IntentEvent>.Unsubscribe(OnEnemyIntentChanged);
         EventBus<FloatingTextEvent>.Unsubscribe(OnFloatingTextEvent);
+        EventBus<DrawPileChangedEvent>.Unsubscribe(OnDrawPileChanged);
+        EventBus<DiscardPileChangedEvent>.Unsubscribe(OnDiscardPileChanged);
         _view.OnOpenPile -= OpenPile;
         _view.OnEndTurn -= EndTurn;
+        _view.OnCardDragStartRequested -= OnDragStart;
+        _view.OnCardDragRequested -= OnDragCard;
+        _view.OnCardDragEndRequested -= OnDragEnd;
+        _view.OnCardPlayRequested -= OnCardPlay;
     }
 
 
@@ -100,7 +110,15 @@ public class BattlePresenter : IDisposable
         RefreshEnergy(evt.CurrentEnergy, evt.MaxEnergy);
 
     }
+    private void OnDiscardPileChanged(DiscardPileChangedEvent @event)
+    {
+        RefreshDiscardPileCount(@event.CurrentCount);
+    }
 
+    private void OnDrawPileChanged(DrawPileChangedEvent @event)
+    {
+        RefreshDrawPileCount(@event.CurrentCount);
+    }
     private void RefreshAllHp()
     {
         var context = _battleController.Context;

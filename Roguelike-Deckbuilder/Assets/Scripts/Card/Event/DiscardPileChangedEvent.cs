@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using LitFramework.EventBus;
 
 
-public interface DiscardPileChangedEvent : IEvent
+public struct DiscardPileChangedEvent : IEvent
 {
-
+    public int CurrentCount;
 }

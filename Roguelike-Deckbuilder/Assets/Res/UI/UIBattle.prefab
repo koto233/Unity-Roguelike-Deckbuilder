@@ -161,8 +161,9 @@ GameObject:
   - component: {fileID: 5732272877106319135}
   - component: {fileID: 6083282857002731081}
   - component: {fileID: 4038340294525931187}
+  - component: {fileID: 1405479523733400859}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: DrawPileCount
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -184,8 +185,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -2.6346703, y: 1.873085}
-  m_SizeDelta: {x: -2.7296982, y: -3.0800018}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6083282857002731081
 CanvasRenderer:
@@ -284,6 +285,21 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &1405479523733400859
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 714340270276357534}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a59cf173a332bc6458d2f8d7e9f4adc3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  index: 9
+  target: {fileID: 4038340294525931187}
+  manualOverride: 0
 --- !u!1 &1091049958339838936
 GameObject:
   m_ObjectHideFlags: 0
@@ -418,7 +434,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a59cf173a332bc6458d2f8d7e9f4adc3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  index: 9
+  index: 10
   target: {fileID: 826898032430468879}
   manualOverride: 0
 --- !u!1 &1293073297359208325
@@ -531,7 +547,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 42.5, y: -33.7}
+  m_AnchoredPosition: {x: 68, y: -32}
   m_SizeDelta: {x: 60, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2754503693205084004
@@ -744,7 +760,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -60, y: -43.8}
+  m_AnchoredPosition: {x: -60.7, y: -37.1}
   m_SizeDelta: {x: 60, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7068616125052833208
@@ -843,8 +859,9 @@ GameObject:
   - component: {fileID: 305931137945719168}
   - component: {fileID: 1989922530324599921}
   - component: {fileID: 9030689244192135806}
+  - component: {fileID: 561095377331674796}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: DiscardPileCount
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -966,6 +983,21 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &561095377331674796
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3300750187770342182}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a59cf173a332bc6458d2f8d7e9f4adc3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  index: 11
+  target: {fileID: 9030689244192135806}
+  manualOverride: 0
 --- !u!1 &3467189570697348177
 GameObject:
   m_ObjectHideFlags: 0
@@ -2135,7 +2167,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a59cf173a332bc6458d2f8d7e9f4adc3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  index: 14
+  index: 16
   target: {fileID: 6906603534407960276}
   manualOverride: 0
 --- !u!1 &5777535094824105393
@@ -2272,7 +2304,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a59cf173a332bc6458d2f8d7e9f4adc3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  index: 12
+  index: 14
   target: {fileID: 2505679998677237572}
   manualOverride: 0
 --- !u!1 &6087709209237332739
@@ -2616,7 +2648,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a59cf173a332bc6458d2f8d7e9f4adc3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  index: 11
+  index: 13
   target: {fileID: 4978367300977101413}
   manualOverride: 0
 --- !u!1 &6910062990146296691
@@ -3349,7 +3381,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a59cf173a332bc6458d2f8d7e9f4adc3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  index: 13
+  index: 15
   target: {fileID: 8238632708659554260}
   manualOverride: 0
 --- !u!225 &2934783999710480466
@@ -3478,7 +3510,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a59cf173a332bc6458d2f8d7e9f4adc3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  index: 10
+  index: 12
   target: {fileID: 7566454551972765810}
   manualOverride: 1
 --- !u!1 &9042747640344613552

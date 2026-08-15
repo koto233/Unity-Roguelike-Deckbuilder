@@ -28,7 +28,8 @@ public class Player : CharacterBase
     }
     public void AddCardToDrawPile(Card card)
     {
-        _discardPile.Add(card);
+        _drawPile.Add(card);
+        EventBus<DrawPileChangedEvent>.Publish(new DrawPileChangedEvent() { CurrentCount = DrawPile.Count });
     }
     public void AddCardToHand(Card card)
     {
@@ -38,10 +39,12 @@ public class Player : CharacterBase
     public void AddCardToDiscardPile(Card card)
     {
         _discardPile.Add(card);
+        EventBus<DiscardPileChangedEvent>.Publish(new DiscardPileChangedEvent() { CurrentCount = DiscardPile.Count });
     }
     public void RemoveCardFromDrawPile(Card card)
     {
         _discardPile.Remove(card);
+        EventBus<DiscardPileChangedEvent>.Publish(new DiscardPileChangedEvent() { CurrentCount = DiscardPile.Count });
 
     }
     public void RemoveCardFromHand(Card card)
@@ -52,6 +55,7 @@ public class Player : CharacterBase
     public void RemoveCardFromDiscardPile(Card card)
     {
         _discardPile.Remove(card);
+        EventBus<DiscardPileChangedEvent>.Publish(new DiscardPileChangedEvent() { CurrentCount = DiscardPile.Count });
     }
     /// <summary>
     /// 抽牌，不会重置牌堆，没有则不抽
@@ -67,6 +71,7 @@ public class Player : CharacterBase
             _drawPile.RemoveAt(0);
             _hand.Add(card);
             drawnCards.Add(card);
+            EventBus<DrawPileChangedEvent>.Publish(new DrawPileChangedEvent() { CurrentCount = DrawPile.Count });
         }
         if (drawnCards.Count > 0)
         {
@@ -96,6 +101,7 @@ public class Player : CharacterBase
                 _drawPile.RemoveAt(0);
                 _hand.Add(card);
                 changedCards.Add(card);
+                EventBus<DrawPileChangedEvent>.Publish(new DrawPileChangedEvent() { CurrentCount = DrawPile.Count });
             }
         }
         EventBus<HandChangedEvent>.Publish(new HandChangedEvent() { Cards = Hand, ChangedCards = changedCards, Type = ChangeType.Add });
@@ -111,6 +117,8 @@ public class Player : CharacterBase
             _drawPile.AddRange(DiscardPile);
             ShuffleDrawDeck();
             _discardPile.Clear();
+            EventBus<DiscardPileChangedEvent>.Publish(new DiscardPileChangedEvent() { CurrentCount = DiscardPile.Count });
+            EventBus<DrawPileChangedEvent>.Publish(new DrawPileChangedEvent() { CurrentCount = DrawPile.Count });
         }
     }
     /// <summary>
@@ -120,6 +128,7 @@ public class Player : CharacterBase
     {
         _hand.Remove(card);
         _discardPile.Add(card);
+        EventBus<DiscardPileChangedEvent>.Publish(new DiscardPileChangedEvent() { CurrentCount = DiscardPile.Count });
         EventBus<HandChangedEvent>.Publish(new HandChangedEvent() { ChangedCards = new List<Card> { card }, Cards = Hand, Type = ChangeType.Remove });
     }
     /// <summary>
@@ -142,6 +151,7 @@ public class Player : CharacterBase
             _hand.RemoveAt(i);
             _discardPile.Add(card);
         }
+        EventBus<DiscardPileChangedEvent>.Publish(new DiscardPileChangedEvent() { CurrentCount = DiscardPile.Count });
         EventBus<HandChangedEvent>.Publish(new HandChangedEvent() { ChangedCards = changedCards, Cards = Hand, Type = ChangeType.Remove });
     }
     public void AddEnergy(int amount)
