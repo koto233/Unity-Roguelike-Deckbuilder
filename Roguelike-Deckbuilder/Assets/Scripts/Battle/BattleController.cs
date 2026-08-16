@@ -13,10 +13,7 @@ public class BattleController
     public BattleContext Context { get; private set; }
     public StateMachine BattleFSM { get; private set; }
     private Action _onBattleEnd;
-    private List<int> _startDeck = new List<int>()
-    {
-        1,1,1,1,1,3,3,3,3,5
-    };
+
     public BattleController(BattleContext context, Action onBattleEnd)
     {
         Context = context;
@@ -29,7 +26,7 @@ public class BattleController
         Context.CurrentTurn = 1;
         var configService = ServiceLocator.Get<IConfigService>();
         var cardConfigTable = configService.GetTable<CardConfig>();
-
+        var _startDeck = ServiceLocator.Get<IConfigService>().GetTable<PlayerInitConfig>().Get(0).InitialDeck;
         foreach (var id in _startDeck)
         {
             var cardConfig = cardConfigTable.Get(id);

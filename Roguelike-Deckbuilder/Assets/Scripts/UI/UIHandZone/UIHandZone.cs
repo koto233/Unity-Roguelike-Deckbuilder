@@ -248,7 +248,7 @@ public partial class UIHandZone : MonoBehaviour
         if (_animationCts != null)
         {
             _animationCts.Cancel();
-            _animationCts.Dispose();
+            // _animationCts.Dispose();
             _animationCts = null;
         }
     }

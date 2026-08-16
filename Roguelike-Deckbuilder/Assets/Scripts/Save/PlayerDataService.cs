@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using LitFramework;
+using LitFramework.Config;
 using LitFramework.EventBus;
 
 public class PlayerDataService
@@ -23,7 +25,7 @@ public class PlayerDataService
         {
             if (_maxHp == value) return;
             _maxHp = value;
-            EventBus<MaxHpChangedEvent>.Publish(new MaxHpChangedEvent() { OldHp = _maxHp, NewHp = value });
+            EventBus<HpChangedEvent>.Publish(new HpChangedEvent() { OldHp = _maxHp, NewHp = value });
         }
     }
     private int _currentHp;
@@ -35,6 +37,15 @@ public class PlayerDataService
     public List<string> DeckCardIds { get; set; } = new List<string>();
     public List<string> RelicIds { get; set; } = new List<string>();
 
+    public void Init()
+    {
+        var config = ServiceLocator.Get<IConfigService>().GetTable<PlayerInitConfig>().Get(0);
+        _coin = 0;
+        _maxHp = config.InitialHp;
+        _currentHp = config.InitialHp;
+        DeckCardIds.Clear();
+        RelicIds.Clear();
+    }
     public PlayerSaveData ExportState()
     {
         return new PlayerSaveData
@@ -54,5 +65,10 @@ public class PlayerDataService
         _currentHp = data.CurrentHp;
         DeckCardIds = new List<string>(data.DeckCardIds);
         RelicIds = new List<string>(data.RelicIds);
+    }
+    public void SyncHp(int currentHp, int maxHp)
+    {
+        CurrentHp = currentHp;
+        MaxHp = maxHp;
     }
 }

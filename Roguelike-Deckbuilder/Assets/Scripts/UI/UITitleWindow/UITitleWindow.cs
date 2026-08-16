@@ -7,7 +7,7 @@ using UnityEngine;
 
 public partial class UITitleWindow : UIWindow
 {
-    public event System.Action OnClickStart;
+    public event System.Action OnClickNewGame;
     public event System.Action OnClickContinue;
 
     void OnEnable()
@@ -20,12 +20,12 @@ public partial class UITitleWindow : UIWindow
     }
     private void SubscribeEvents()
     {
-        b_StartButton.onClick.AddListener(() => OnClickStart?.Invoke());
+        b_NewGameButton.onClick.AddListener(() => OnClickNewGame?.Invoke());
         b_ContinueButton.onClick.AddListener(() => OnClickContinue?.Invoke());
     }
     private void UnsubscribeEvents()
     {
-        b_StartButton.onClick.RemoveAllListeners();
+        b_NewGameButton.onClick.RemoveAllListeners();
         b_ContinueButton.onClick.RemoveAllListeners();
     }
 

@@ -21,18 +21,20 @@ public class TitlePresenter : IPresenter<UITitleWindow>
 
     private void SubscribeEvents()
     {
-        _view.OnClickStart += HandleClickStart;
+        _view.OnClickNewGame += HandleClickNewGame;
         _view.OnClickContinue += HandleClickContinue;
     }
     private void UnsubscribeEvents()
     {
-        _view.OnClickStart -= HandleClickStart;
+        _view.OnClickNewGame -= HandleClickNewGame;
         _view.OnClickContinue -= HandleClickContinue;
     }
-    private void HandleClickStart()
+
+    private void HandleClickNewGame()
     {
         ServiceLocator.Get<MapService>().GenerateMap(1);
         ServiceLocator.Get<ProcedureManager>().ChangeProcedure<ProcedureMap>();
+        ServiceLocator.Get<PlayerDataService>().Init();
     }
     private void HandleClickContinue()
     {

@@ -17,6 +17,7 @@ namespace LitFramework.FSM.Procedure
         private const string IntentConfigPath = "Assets/Config/Json/IntentConfig.json";
         private const string MapConfigPath = "Assets/Config/Json/MapConfig.json";
         private const string EncounterConfigPath = "Assets/Config/Json/EncounterConfig.json";
+        private const string PlayerInitConfigPath = "Assets/Config/Json/PlayerInitConfig.json";
         public ProcedureInitConfig(ProcedureManager procedureManager) : base(procedureManager) { }
 
         public override void OnInit()
@@ -53,6 +54,7 @@ namespace LitFramework.FSM.Procedure
             await configSvc.LoadDictTableAsync<IntentConfig>(IntentConfigPath);
             await configSvc.LoadListTableAsync<MapConfig>(MapConfigPath);
             await configSvc.LoadDictTableAsync<EncounterConfig>(EncounterConfigPath);
+            await configSvc.LoadDictTableAsync<PlayerInitConfig>(PlayerInitConfigPath);
             _procedureManager.ChangeProcedure<ProcedureTitle>();
         }
     }

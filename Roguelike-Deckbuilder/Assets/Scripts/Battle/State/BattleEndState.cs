@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using LitFramework;
 using LitFramework.FSM;
 using UnityEngine;
 
@@ -11,6 +12,8 @@ public class BattleEndState : TurnStateBase
 
     public override void OnEnter()
     {
+        var globalPlayer = ServiceLocator.Get<PlayerDataService>();
+        globalPlayer.SyncHp(Controller.Context.Player.CurrentHp, Controller.Context.Player.MaxHp);
         Controller.EndBattle();
         Debug.Log("战斗结束");
     }

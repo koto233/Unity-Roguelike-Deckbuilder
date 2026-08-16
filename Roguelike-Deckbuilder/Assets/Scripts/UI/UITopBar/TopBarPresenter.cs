@@ -32,7 +32,7 @@ public class TopBarPresenter : IPresenter<UITopBar>
         _view.OnClickMap += HandleClickMap;
         _view.OnClickPile += HandleClickPile;
         EventBus<CoinChangedEvent>.Subscribe(HandleCoinChanged);
-        EventBus<MaxHpChangedEvent>.Subscribe(HandleMaxHpChanged);
+        EventBus<HpChangedEvent>.Subscribe(HandleHpChanged);
     }
 
 
@@ -43,7 +43,7 @@ public class TopBarPresenter : IPresenter<UITopBar>
         _view.OnClickMap -= HandleClickMap;
         _view.OnClickPile -= HandleClickPile;
         EventBus<CoinChangedEvent>.Unsubscribe(HandleCoinChanged);
-        EventBus<MaxHpChangedEvent>.Unsubscribe(HandleMaxHpChanged);
+        EventBus<HpChangedEvent>.Unsubscribe(HandleHpChanged);
     }
     private async void HandleClickSetting()
     {
@@ -58,9 +58,10 @@ public class TopBarPresenter : IPresenter<UITopBar>
     {
 
     }
-    private void HandleMaxHpChanged(MaxHpChangedEvent @event)
+    private void HandleHpChanged(HpChangedEvent @event)
     {
-        _view.RefreshHp(@event.NewHp,@event.MaxHp);
+        if (@event.EntityType != EntityType.Player) return;
+        _view.RefreshHp(@event.NewHp, @event.MaxHp);
     }
 
     private void HandleCoinChanged(CoinChangedEvent @event)

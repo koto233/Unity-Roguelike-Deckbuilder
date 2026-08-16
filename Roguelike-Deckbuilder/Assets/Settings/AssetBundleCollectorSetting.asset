@@ -131,56 +131,8 @@ MonoBehaviour:
       AssetTags: 
       ActiveRuleName: EnableGroup
       Collectors:
-      - CollectPath: Assets/Config/Json/CardConfig.json
-        CollectorGUID: 6f0b5146918f8034f8d52548f61bc483
-        CollectorType: 0
-        AddressRuleName: AddressByFileName
-        PackRuleName: PackDirectory
-        FilterRuleName: CollectAll
-        AssetTags: 
-        UserData: 
-      - CollectPath: Assets/Config/Json/CardEffects.json
-        CollectorGUID: 36aacfc0dbb02f84d9e5032cecf289de
-        CollectorType: 0
-        AddressRuleName: AddressByFileName
-        PackRuleName: PackDirectory
-        FilterRuleName: CollectAll
-        AssetTags: 
-        UserData: 
-      - CollectPath: Assets/Config/Json/EnemyConfig.json
-        CollectorGUID: 6ec7b161f040101479b2248ad06c0d11
-        CollectorType: 0
-        AddressRuleName: AddressByFileName
-        PackRuleName: PackDirectory
-        FilterRuleName: CollectAll
-        AssetTags: 
-        UserData: 
-      - CollectPath: Assets/Config/Json/BuffConfig.json
-        CollectorGUID: 96c6c9f2e729e0f42aa3fc910e7f4ea2
-        CollectorType: 0
-        AddressRuleName: AddressByFileName
-        PackRuleName: PackDirectory
-        FilterRuleName: CollectAll
-        AssetTags: 
-        UserData: 
-      - CollectPath: Assets/Config/Json/IntentConfig.json
-        CollectorGUID: 59508ee74ed0c6f499dc69e2b8df44b7
-        CollectorType: 0
-        AddressRuleName: AddressByFileName
-        PackRuleName: PackDirectory
-        FilterRuleName: CollectAll
-        AssetTags: 
-        UserData: 
-      - CollectPath: Assets/Config/Json/MapConfig.json
-        CollectorGUID: b92a4bd8ae656da4abee42732786513c
-        CollectorType: 0
-        AddressRuleName: AddressByFileName
-        PackRuleName: PackDirectory
-        FilterRuleName: CollectAll
-        AssetTags: 
-        UserData: 
-      - CollectPath: Assets/Config/Json/EncounterConfig.json
-        CollectorGUID: a74e07e9fb0b8ef4db191941b383ae87
+      - CollectPath: Assets/Config/Json
+        CollectorGUID: 641213b99601aff4e861bb3f3cfded2e
         CollectorType: 0
         AddressRuleName: AddressByFileName
         PackRuleName: PackDirectory
