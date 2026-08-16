@@ -137,7 +137,7 @@ public class BattleController
     }
     public void StartPlayerTurn()
     {
-        Context.Player.DrawCardInTurnStart(5);
+        Context.Player.DrawCardInTurnStart(BattleRules.InitialHandSize);
         Context.Player.ResetEnergy();
 
     }

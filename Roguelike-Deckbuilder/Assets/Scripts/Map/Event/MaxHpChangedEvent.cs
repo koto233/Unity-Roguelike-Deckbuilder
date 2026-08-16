@@ -7,6 +7,7 @@ using LitFramework.EventBus;
 
 public struct MaxHpChangedEvent : IEvent
 {
-    public int OldValue;
-    public int NewValue;
+    public int OldHp;
+    public int NewHp;
+    public int MaxHp;
 }

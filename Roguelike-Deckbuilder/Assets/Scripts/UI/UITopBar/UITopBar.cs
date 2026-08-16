@@ -33,8 +33,8 @@ public partial class UITopBar : UIWindow
     {
         b_CoinText.SetText(Coin.ToString());
     }
-    public void RefreshHp(int hp)
+    public void RefreshHp(int currentHp, int maxHp)
     {
-        b_HpText.SetText(hp.ToString());
+        b_HpText.SetText(currentHp + "/" + maxHp);
     }
 }

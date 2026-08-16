@@ -17,7 +17,7 @@ public class TopBarPresenter : IPresenter<UITopBar>
         _view = view;
         SubscribeEvents();
         var playerDataService = ServiceLocator.Get<PlayerDataService>();
-        _view.RefreshHp(playerDataService.MaxHp);
+        _view.RefreshHp(playerDataService.CurrentHp, playerDataService.MaxHp);
         _view.RefreshCoin(playerDataService.Coin);
         _uiService = ServiceLocator.Get<UIService>();
     }
@@ -60,7 +60,7 @@ public class TopBarPresenter : IPresenter<UITopBar>
     }
     private void HandleMaxHpChanged(MaxHpChangedEvent @event)
     {
-        _view.RefreshHp(@event.NewValue);
+        _view.RefreshHp(@event.NewHp,@event.MaxHp);
     }
 
     private void HandleCoinChanged(CoinChangedEvent @event)

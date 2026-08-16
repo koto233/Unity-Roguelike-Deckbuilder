@@ -83,7 +83,7 @@ public partial class UIEnemyItem : UIBase
         if (intentConfig != null && _intentionUI != null)
         {
             _intentionUI.Show();
-            _intentionUI.Init(intentConfig);
+            _intentionUI.Init(intentConfig, Enemy.Config.Damage);
         }
         else
         {

@@ -54,9 +54,10 @@ namespace LitFramework.FSM.Procedure
             var configService = ServiceLocator.Get<IConfigService>();
             var cardIconService = ServiceLocator.Get<CardIconService>();
             await cardIconService.PreLoadCardIcons();
+            var globalPlayer = ServiceLocator.Get<PlayerDataService>();
             var battleContext = new BattleContext()
             {
-                Player = new Player(100, 3),
+                Player = new Player(globalPlayer.CurrentHp, globalPlayer.MaxHp, BattleRules.MaxEnergy),
                 Enemies = new(),
                 CurrentTurn = 0,
                 IsPlayerTurn = true,

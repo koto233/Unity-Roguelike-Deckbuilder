@@ -21,8 +21,9 @@ public class Player : CharacterBase
 
     public override int Id => -1;
 
-    public Player(int maxHp, int maxEnergy) : base(maxHp)
+    public Player(int currentHp, int maxHp, int maxEnergy) : base(maxHp)
     {
+        _currentHp = currentHp;
         _maxEnergy = maxEnergy;
         _energy = maxEnergy;
     }

@@ -15,11 +15,12 @@ public partial class UIIntentionItem : UIBase, ITooltipDataProvider
     {
         _icon = GetComponent<Image>();
     }
-    public void Init(IntentConfig intentConfig)
+    public void Init(IntentConfig intentConfig, int num)
     {
         _intentConfig = intentConfig;
         SetIcon().Forget();
-        // b_Num.SetText();
+        b_Num.SetText(num.ToString());
+        _intentConfig.Description = string.Format(_intentConfig.Description, num);
         Debug.Log("意图" + _intentConfig.Description);
     }
     private async UniTask SetIcon()

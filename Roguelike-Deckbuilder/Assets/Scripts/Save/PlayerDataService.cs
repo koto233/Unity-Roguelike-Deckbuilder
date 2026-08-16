@@ -23,7 +23,7 @@ public class PlayerDataService
         {
             if (_maxHp == value) return;
             _maxHp = value;
-            EventBus<MaxHpChangedEvent>.Publish(new MaxHpChangedEvent() { OldValue = _maxHp, NewValue = value });
+            EventBus<MaxHpChangedEvent>.Publish(new MaxHpChangedEvent() { OldHp = _maxHp, NewHp = value });
         }
     }
     private int _currentHp;
