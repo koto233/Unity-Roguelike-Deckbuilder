@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using LitFramework;
@@ -5,19 +6,17 @@ using LitFramework.FSM.Procedure;
 using LitFramework.UI.Core.Service;
 using UnityEngine;
 
-public class TitlePresenter : IPresenter<UITitleWindow>
+public class TitlePresenter : BasePresenter
 {
     private UITitleWindow _view;
-    public void Bind(UITitleWindow view)
+
+    public TitlePresenter(UITitleWindow view)
     {
         _view = view;
         SubscribeEvents();
     }
 
-    public void Unbind()
-    {
-        UnsubscribeEvents();
-    }
+
 
     private void SubscribeEvents()
     {
@@ -55,5 +54,11 @@ public class TitlePresenter : IPresenter<UITitleWindow>
             ServiceLocator.Get<ProcedureManager>().ChangeProcedure<ProcedureMap>();
         }
 
+    }
+
+
+    public override void Dispose()
+    {
+        UnsubscribeEvents();
     }
 }

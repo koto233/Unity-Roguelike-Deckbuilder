@@ -7,12 +7,11 @@ using LitFramework.EventBus;
 using LitFramework.UI.Core.Service;
 using UnityEngine;
 
-public class TopBarPresenter : IPresenter<UITopBar>
+public class TopBarPresenter : BasePresenter
 {
     private UITopBar _view;
     private UIService _uiService;
-
-    public void Bind(UITopBar view)
+    public TopBarPresenter(UITopBar view)
     {
         _view = view;
         SubscribeEvents();
@@ -22,10 +21,7 @@ public class TopBarPresenter : IPresenter<UITopBar>
         _uiService = ServiceLocator.Get<UIService>();
     }
 
-    public void Unbind()
-    {
-        UnsubscribeEvents();
-    }
+
     private void SubscribeEvents()
     {
         _view.OnClickSetting += HandleClickSetting;
@@ -47,7 +43,7 @@ public class TopBarPresenter : IPresenter<UITopBar>
     }
     private async void HandleClickSetting()
     {
-        _uiService.OpenAsync<UISetting, SettingPresenter>().Forget();
+        _uiService.OpenAsync<UISetting>().Forget();
     }
 
     private void HandleClickMap()
@@ -68,9 +64,10 @@ public class TopBarPresenter : IPresenter<UITopBar>
     {
         _view.RefreshCoin(@event.NewValue);
     }
-    public void Dispose()
+
+
+    public override void Dispose()
     {
         UnsubscribeEvents();
     }
-
 }

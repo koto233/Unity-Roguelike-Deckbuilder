@@ -19,8 +19,7 @@ namespace LitFramework.UI.Core.Window
                 : _pathPrefix + _generatedScriptPath;
         #endregion
 
-        public bool IsActive { get; private set; }
-
+        public bool IsActive => gameObject.activeSelf;
         protected virtual void Awake()
         {
             CacheBinds();
@@ -28,12 +27,10 @@ namespace LitFramework.UI.Core.Window
         }
         public void Show()
         {
-            IsActive = true;
             gameObject.SetActive(true);
         }
         public void Hide()
         {
-            IsActive = false;
             gameObject.SetActive(false);
         }
 

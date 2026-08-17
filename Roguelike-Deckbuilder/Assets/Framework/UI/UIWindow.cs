@@ -5,27 +5,22 @@ namespace LitFramework.UI.Core.Window
 {
     public abstract class UIWindow : UIBase
     {
-        public bool IsShown { get; private set; }
 
         // ===== 由 UIService 调用 =====
-        internal async UniTask OpenInternalAsync(object param)
+        internal async UniTask OpenInternalAsync()
         {
-            if (IsShown) return;
-            IsShown = true;
-            // Show();  // SetActive(true)
-            await OnOpenAsync(param);
+            if (IsActive) return;
+            await OnOpenAsync();
         }
 
         internal void CloseInternal()
         {
-            if (!IsShown) return;
-            IsShown = false;
+            if (!IsActive) return;
             OnClose();
-            // Hide();  // SetActive(false)
         }
 
         // ===== 子类重写 =====
-        protected virtual UniTask OnOpenAsync(object param) => UniTask.CompletedTask;
+        protected virtual UniTask OnOpenAsync() => UniTask.CompletedTask;
         protected virtual void OnClose() { }
     }
 

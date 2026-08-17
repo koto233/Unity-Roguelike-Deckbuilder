@@ -54,9 +54,15 @@ namespace LitFramework
             ServiceLocator.Register(new PlayerDataService());
             ServiceLocator.Register(new CardIconService());
             ServiceLocator.Register(new UIAtlasService());
-            ServiceLocator.Get<UIService>().Register<UITitleWindow>("Assets/Res/UI/UITitleWindow.prefab", UILayer.Normal);
-            ServiceLocator.Get<UIService>().Register<UITopBar>("Assets/Res/UI/UITopBar.prefab", UILayer.Overlay);
-            ServiceLocator.Get<UIService>().Register<UISetting>("Assets/Res/UI/UISetting.prefab", UILayer.Popup);
+            var uiService = ServiceLocator.Get<UIService>();
+            uiService.Register<UITitleWindow>("Assets/Res/UI/UITitleWindow.prefab", UILayer.Normal);
+            uiService.Register<UITopBar>("Assets/Res/UI/UITopBar.prefab", UILayer.Overlay);
+            uiService.Register<UISetting>("Assets/Res/UI/UISetting.prefab", UILayer.Popup);
+            uiService.Register<UIBattleEnd>("Assets/Res/UI/UIBattleEnd.prefab", UILayer.Normal);
+            uiService.Bind<UIBattleEnd>(view => new BattleEndPresenter(view));
+            uiService.Bind<UITitleWindow>(view => new TitlePresenter(view));
+            uiService.Bind<UITopBar>(view => new TopBarPresenter(view));
+            uiService.Bind<UISetting>(view => new SettingPresenter(view));
             ModelContainer.Register(new PlayerModel());
 
             var fsm = new StateMachine();

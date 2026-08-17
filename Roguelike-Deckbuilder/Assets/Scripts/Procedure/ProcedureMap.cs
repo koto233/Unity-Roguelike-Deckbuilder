@@ -100,7 +100,7 @@ namespace LitFramework.FSM.Procedure
             var uiatlasService = ServiceLocator.Get<UIAtlasService>();
             await uiatlasService.PreLoadCardIcons();
             await sceneLoader.LoadAdditiveAsync(MapSceneName);
-            var topBar = await uiService.OpenAsync<UITopBar, TopBarPresenter>();
+            await uiService.OpenAsync<UITopBar>();
             var uiMap = GameObject.FindObjectOfType<UIMap>(true);
             if (uiMap != null)
             {

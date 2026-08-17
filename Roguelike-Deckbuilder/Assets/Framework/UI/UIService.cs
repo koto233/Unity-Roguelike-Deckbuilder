@@ -1,125 +1,258 @@
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using System.Linq;
 using Cysharp.Threading.Tasks;
 using LitFramework.Asset;
 using LitFramework.UI.Core.Window;
 using UnityEngine;
+
 namespace LitFramework.UI.Core.Service
 {
     public sealed class UIService : IDisposable
     {
+        // ========== 配置 & 工厂 ==========
         private readonly Dictionary<Type, UIConfig> _configs = new();
-        private readonly Dictionary<Type, UIWindow> _opened = new();
-        private Dictionary<Type, IPresenter> _presenters = new();
-        private readonly Dictionary<UILayer, RectTransform> _layers = new();
-        private IAssetService _assetManager;
+        private readonly Dictionary<Type, Func<UIWindow, BasePresenter>> _factories = new();
 
-        private IAssetService AssetManager =>
-        _assetManager ??= ServiceLocator.Get<IAssetService>();
+        // ========== 运行时状态 ==========
+        // 用 InstanceID 做 Key，支持同类型多实例堆叠
+        private readonly Dictionary<int, WindowState> _opened = new();
+        // 单实例窗口快速查找：Type -> InstanceID
+        private readonly Dictionary<Type, int> _singleInstance = new();
+        // 返回栈（只存需要返回的窗口 InstanceID）
+        private readonly Stack<int> _backStack = new();
+        // 正在加载中（防重复点击）：Type -> 等待信号
+        private readonly Dictionary<Type, UniTaskCompletionSource> _loading = new();
+
+        private readonly Dictionary<UILayer, RectTransform> _layers = new();
+        private IAssetService _assetService;
+        private IAssetService AssetService => _assetService ??= ServiceLocator.Get<IAssetService>();
+
+        // 轻量内部结构，不用类，省 GC
+        private readonly struct WindowState
+        {
+            public readonly UIWindow View;
+            public readonly BasePresenter Presenter;
+            public readonly Action ReleaseAsset; // 资源释放回调
+            public readonly bool PushToStack;
+
+            public WindowState(UIWindow view, BasePresenter presenter, Action releaseAsset, bool pushToStack)
+            {
+                View = view;
+                Presenter = presenter;
+                ReleaseAsset = releaseAsset;
+                PushToStack = pushToStack;
+            }
+        }
+
         public UIService()
         {
             foreach (UILayer layer in Enum.GetValues(typeof(UILayer)))
             {
                 var go = new GameObject(layer.ToString());
                 var rect = go.AddComponent<RectTransform>();
-                rect.anchorMin = new Vector2(0, 0);
-                rect.anchorMax = new Vector2(1, 1);
-                rect.offsetMin = Vector2.zero; // 对应 Left, Bottom
-                rect.offsetMax = Vector2.zero; // 对应 Right, Top
+                rect.anchorMin = Vector2.zero;
+                rect.anchorMax = Vector2.one;
+                rect.offsetMin = Vector2.zero;
+                rect.offsetMax = Vector2.zero;
                 rect.pivot = new Vector2(0.5f, 0.5f);
-                var uiRoot = GameRoot.Instance.UIRoot;
-                rect.SetParent(uiRoot.transform, false);
+                rect.SetParent(GameRoot.Instance.UIRoot.transform, false);
                 _layers[layer] = rect;
             }
         }
 
-        public void Register<T>(string prefabPath, UILayer layer)
+        // ========== 注册（启动时一次） ==========
+
+        /// <summary>
+        /// 注册 UI 配置
+        /// </summary>
+        /// <param name="allowMultiple">是否允许同类型堆叠（如：同时开两个背包）</param>
+        /// <param name="pushToStack">是否加入返回栈（如：页面加入，弹窗不加入）</param>
+        public void Register<T>(string prefabPath, UILayer layer, bool allowMultiple = false, bool pushToStack = true)
             where T : UIWindow
         {
-            _configs[typeof(T)] = new UIConfig(prefabPath, layer);
+            _configs[typeof(T)] = new UIConfig(prefabPath, layer, allowMultiple, pushToStack);
         }
 
-        // /// <summary>
-        // /// UniTask版本异步打开窗口
-        // /// </summary>
-        // /// <typeparam name="T"></typeparam>
-        // /// <param name="args"></param>
-        // /// <returns></returns> 
-        // public async UniTask<T> OpenAsync<T>(object args = null) where T : UIWindow
-        // {
-        //     var type = typeof(T);
-
-        //     if (_opened.TryGetValue(type, out var existing))
-        //     {
-        //         return existing as T;
-        //     }
-
-        //     var cfg = _configs[type];
-        //     var prefab = await AssetManager.LoadAsync<GameObject>(cfg.PrefabPath);
-        //     var go = UnityEngine.Object.Instantiate(prefab, _layers[cfg.Layer]);
-        //     var window = go.GetComponent<T>();
-        //     // window.OnOpen(args);
-        //     await window.OpenInternalAsync(args);
-        //     _opened[type] = window;
-        //     return window;
-        // }
         /// <summary>
-        /// 打开 UI，并自动创建 Presenter 绑定生命周期
+        /// 绑定 Presenter 工厂（替代反射，编译期检查）
         /// </summary>
-        public async UniTask<TView> OpenAsync<TView, TPresenter>(object args = null)
-            where TView : UIWindow
-            where TPresenter : IPresenter<TView>, new() // 👈 约束 Presenter 可 new
+        public void Bind<TView>(Func<TView, BasePresenter> factory) where TView : UIWindow
+        {
+            _factories[typeof(TView)] = window => factory((TView)window);
+        }
+
+        // ========== 打开窗口 ==========
+
+        public async UniTask OpenAsync<TView>() where TView : UIWindow
         {
             var type = typeof(TView);
+            var cfg = GetConfig(type);
 
-            // ✅ 如果已经打开，直接返回（不重复创建 Presenter）
-            if (_opened.TryGetValue(type, out var existing))
+            // 1. 单实例检查：已存在则置顶返回
+            if (!cfg.AllowMultiple && _singleInstance.TryGetValue(type, out var existId))
             {
-                return existing as TView;
+                if (_opened.TryGetValue(existId, out var exist))
+                {
+                    exist.View.transform.SetAsLastSibling();
+                    return;
+                }
             }
 
-            // 1. 加载并实例化 View
-            var cfg = _configs[type];
-            var prefab = await AssetManager.LoadAsync<GameObject>(cfg.PrefabPath);
-            var go = UnityEngine.Object.Instantiate(prefab, _layers[cfg.Layer]);
-            var view = go.GetComponent<TView>();
+            // 2. 防重复点击：如果正在加载，等待完成
+            if (_loading.TryGetValue(type, out var loadingTask))
+            {
+                await loadingTask.Task;
+                return;
+            }
 
-            // 2. 创建 Presenter 并绑定 View
-            var presenter = new TPresenter();
-            presenter.Bind(view);
-            _presenters[type] = presenter; // 存储 Presenter，方便后续管理
-            // 3. 打开 View（传递参数）
-            await view.OpenInternalAsync(args);
+            var completion = new UniTaskCompletionSource();
+            _loading[type] = completion;
 
-            // 4. 存储到已打开字典
-            _opened[type] = view;
+            try
+            {
+                // 3. 加载资源
+                var prefab = await AssetService.LoadAsync<GameObject>(cfg.PrefabPath);
+                var go = UnityEngine.Object.Instantiate(prefab, _layers[cfg.Layer]);
+                var view = go.GetComponent<TView>();
+                if (view == null)
+                    throw new InvalidOperationException($"Prefab {cfg.PrefabPath} 上缺少 {type.Name} 组件");
 
-            return view;
+                // 4. 创建 Presenter（工厂模式，零反射）
+                if (!_factories.TryGetValue(type, out var factory))
+                    throw new InvalidOperationException($"{type.Name} 未绑定 Presenter 工厂。调用：uiService.Bind<{type.Name}>(view => new XxxPresenter(view))");
+
+                var presenter = factory(view);
+
+                // 5. 执行打开动画/逻辑
+                await view.OpenInternalAsync();
+
+                // 6. 记录状态
+                var instanceId = go.GetInstanceID();
+                Action releaseAction = () => AssetService.Release(cfg.PrefabPath);
+
+                var state = new WindowState(view, presenter, releaseAction, cfg.PushToStack);
+                _opened[instanceId] = state;
+
+                if (!cfg.AllowMultiple)
+                    _singleInstance[type] = instanceId;
+
+                if (cfg.PushToStack)
+                    _backStack.Push(instanceId);
+
+                completion.TrySetResult();
+            }
+            catch (Exception ex)
+            {
+                completion.TrySetException(ex);
+                throw;
+            }
+            finally
+            {
+                _loading.Remove(type);
+            }
         }
-        public void Close<T>() where T : UIWindow
-        {
-            var type = typeof(T);
-            if (_presenters.TryGetValue(type, out var presenter))
-            {
-                presenter.Unbind();
-                _presenters.Remove(type);
-            }
-            if (_opened.TryGetValue(type, out var window))
-            {
-                window.CloseInternal();
 
-                GameObject.Destroy(window.gameObject);
-                _opened.Remove(type);
+        // ========== 关闭窗口 ==========
+
+        public void Close<TView>() where TView : UIWindow
+        {
+            var type = typeof(TView);
+            if (!_singleInstance.TryGetValue(type, out var id)) return;
+            CloseCore(id);
+        }
+
+        /// <summary>
+        /// 通过 View 实例关闭（用于多实例窗口）
+        /// </summary>
+        public void Close(UIWindow view)
+        {
+            if (view == null) return;
+            CloseCore(view.gameObject.GetInstanceID());
+        }
+
+        private void CloseCore(int instanceId)
+        {
+            if (!_opened.TryGetValue(instanceId, out var state)) return;
+
+            // 从返回栈移除
+            if (state.PushToStack)
+            {
+                var temp = new Stack<int>();
+                while (_backStack.Count > 0)
+                {
+                    var id = _backStack.Pop();
+                    if (id != instanceId) temp.Push(id);
+                }
+                while (temp.Count > 0) _backStack.Push(temp.Pop());
             }
+
+            // 清理单实例映射
+            _singleInstance.Remove(state.View.GetType());
+
+            // Presenter 释放
+            if (state.Presenter is IDisposable disposable)
+                disposable.Dispose();
+
+            // View 关闭
+            state.View.CloseInternal();
+
+            // 销毁 GameObject
+            UnityEngine.Object.Destroy(state.View.gameObject);
+
+            // 释放资源引用（防止内存泄漏）
+            state.ReleaseAsset?.Invoke();
+
+            _opened.Remove(instanceId);
+        }
+
+        // ========== 返回栈（安卓返回键 / 页面返回） ==========
+
+        public bool CanGoBack => _backStack.Count > 0;
+
+        public void GoBack()
+        {
+            if (_backStack.Count == 0) return;
+            var id = _backStack.Pop();
+            CloseCore(id);
+        }
+
+        // ========== 查询 ==========
+
+        public TPresenter GetPresenter<TPresenter>() where TPresenter : BasePresenter
+        {
+            return _opened.Values
+                .Select(s => s.Presenter)
+                .OfType<TPresenter>()
+                .FirstOrDefault();
+        }
+
+        public bool IsOpen<TView>() where TView : UIWindow
+        {
+            return _singleInstance.ContainsKey(typeof(TView));
         }
 
         public void Dispose()
         {
-            foreach (var w in _opened.Values)
-                GameObject.Destroy(w.gameObject);
+            // 逆序关闭，避免父子依赖问题
+            foreach (var id in _opened.Keys.ToList())
+                CloseCore(id);
 
             _opened.Clear();
+            _singleInstance.Clear();
+            _backStack.Clear();
+            _loading.Clear();
+        }
+
+        // ========== 工具 ==========
+
+        private UIConfig GetConfig(Type type)
+        {
+            if (!_configs.TryGetValue(type, out var cfg))
+                throw new InvalidOperationException($"{type.Name} 未注册 UIConfig，先调用 Register");
+            return cfg;
         }
     }
+
+
 }
