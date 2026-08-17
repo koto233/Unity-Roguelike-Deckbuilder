@@ -1,7 +1,7 @@
 {
   "1": {
     "Id": 1,
-    "Key": "vulnerable",
+    "Key": "vulnerable_power",
     "Name": "易伤",
     "IsDebuff": 1,
     "Value": 20,
@@ -10,7 +10,7 @@
   },
   "2": {
     "Id": 2,
-    "Key": "weak",
+    "Key": "weak_power",
     "Name": "虚弱",
     "IsDebuff": 1,
     "Value": 20,
