@@ -9,7 +9,6 @@ namespace LitFramework.UI.Core.Window
         // ===== 由 UIService 调用 =====
         internal async UniTask OpenInternalAsync()
         {
-            if (IsActive) return;
             await OnOpenAsync();
         }
 

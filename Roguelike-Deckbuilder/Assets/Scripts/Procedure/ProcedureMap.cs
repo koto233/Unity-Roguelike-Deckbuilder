@@ -12,9 +12,8 @@ namespace LitFramework.FSM.Procedure
 {
     public class ProcedureMap : ProcedureBase
     {
-        private MapPresenter _mapPresenter;
         private const string MapSceneName = "Map Scene";
-
+        private UIService _uiService;
         public ProcedureMap(ProcedureManager procedureManager) : base(procedureManager)
         {
         }
@@ -28,10 +27,11 @@ namespace LitFramework.FSM.Procedure
 
         public override void OnExit()
         {
+
             UnloadMapSceneAsync().Forget();
             // ★ 取消订阅
             UnsubscribeEventHandlers();
-            _mapPresenter = null;
+            _uiService.Close<UIMap>();
         }
 
         public override void OnInit()
@@ -96,12 +96,12 @@ namespace LitFramework.FSM.Procedure
         private async UniTaskVoid InitAsync()
         {
             // var sceneLoader = ServiceLocator.Get<ISceneLoader>();
-            var uiService = ServiceLocator.Get<UIService>();
+            _uiService = ServiceLocator.Get<UIService>();
             var uiatlasService = ServiceLocator.Get<UIAtlasService>();
             await uiatlasService.PreLoadCardIcons();
             // await sceneLoader.LoadAdditiveAsync(MapSceneName);
-            await uiService.OpenAsync<UIMap>();
-            await uiService.OpenAsync<UITopBar>();
+            await _uiService.OpenAsync<UIMap>();
+            await _uiService.OpenAsync<UITopBar>();
             // var uiMap = GameObject.FindObjectOfType<UIMap>(true);
             // if (uiMap != null)
             // {
@@ -113,7 +113,7 @@ namespace LitFramework.FSM.Procedure
             // {
             //     Debug.LogError("UIMap 组件未找到");
             // }
-            uiService.Close<UITitleWindow>();
+            _uiService.Close<UITitleWindow>();
         }
 
         private async UniTaskVoid UnloadMapSceneAsync()

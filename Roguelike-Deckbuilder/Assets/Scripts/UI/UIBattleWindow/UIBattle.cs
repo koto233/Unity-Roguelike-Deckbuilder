@@ -35,12 +35,12 @@ public partial class UIBattle : UIWindow
     protected override async UniTask OnOpenAsync()
     {
         var assetService = ServiceLocator.Get<IAssetService>();
-        _enemyPrefabRef = await assetService.LoadRefAsync<GameObject>("Assets/Res/UI/UIEnemyItem.prefab");
-        _playerPrefabRef = await assetService.LoadRefAsync<GameObject>("Assets/Res/UI/UIPlayerItem.prefab");
-        _cardPrefabRef = await assetService.LoadRefAsync<GameObject>("Assets/Res/UI/UICardItem.prefab");
-        _cardDisplayPrefabRef = await assetService.LoadRefAsync<GameObject>("Assets/Res/UI/UICardDisplay.prefab");
-        _flyPrefabRef = await assetService.LoadRefAsync<GameObject>("Assets/Res/UI/CardFlyFx.prefab");
-        _floatingTextPrefabRef = await assetService.LoadRefAsync<GameObject>("Assets/Res/UI/UIFloatingText.prefab");
+        _enemyPrefabRef = await assetService.LoadRefAsync<GameObject>("Assets/Res/UI/Dynamic/UIEnemyItem.prefab");
+        _playerPrefabRef = await assetService.LoadRefAsync<GameObject>("Assets/Res/UI/Dynamic/UIPlayerItem.prefab");
+        _cardPrefabRef = await assetService.LoadRefAsync<GameObject>("Assets/Res/UI/Dynamic/UICardItem.prefab");
+        _cardDisplayPrefabRef = await assetService.LoadRefAsync<GameObject>("Assets/Res/UI/Dynamic/UICardDisplay.prefab");
+        _flyPrefabRef = await assetService.LoadRefAsync<GameObject>("Assets/Res/UI/Dynamic/CardFlyFx.prefab");
+        _floatingTextPrefabRef = await assetService.LoadRefAsync<GameObject>("Assets/Res/UI/Dynamic/UIFloatingText.prefab");
         _poolService = ServiceLocator.Get<ObjectPoolService>();
         InitObjectPools();
         InitUI();

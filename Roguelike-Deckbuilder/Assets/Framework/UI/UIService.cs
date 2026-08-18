@@ -141,9 +141,8 @@ namespace LitFramework.UI.Core.Service
                 inject?.Invoke(presenter, arg);
 
                 // 6. 统一初始化
-                presenter.Init();
                 await view.OpenInternalAsync();
-
+                presenter.Init();
                 // 7. 记录状态
                 var instanceId = go.GetInstanceID();
                 Action releaseAction = () => AssetService.Release(cfg.PrefabPath);

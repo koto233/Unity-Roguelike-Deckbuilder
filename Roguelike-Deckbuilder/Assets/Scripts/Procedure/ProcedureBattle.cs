@@ -12,7 +12,6 @@ namespace LitFramework.FSM.Procedure
     public class ProcedureBattle : ProcedureBase
     {
         public ProcedureBattle(ProcedureManager procedureManager) : base(procedureManager) { }
-        private BattlePresenter _battlePresenter;
         private BattleController _battleController;
         private const string BattleSceneName = "Battle Scene"; // 与场景文件名称一致
         public override void OnInit()
@@ -33,8 +32,6 @@ namespace LitFramework.FSM.Procedure
         public override void OnExit()
         {
             CleanupBattleAsync().Forget();
-            _battlePresenter?.Dispose();
-            _battlePresenter = null;
         }
 
 
@@ -66,11 +63,6 @@ namespace LitFramework.FSM.Procedure
         }
         private async UniTaskVoid CleanupBattleAsync()
         {
-            // 释放 Presenter
-            _battlePresenter?.Dispose();
-            _battlePresenter = null;
-            _battleController = null;
-
             // 卸载战斗场景
             var sceneLoader = ServiceLocator.Get<ISceneLoader>();
             if (sceneLoader.IsSceneLoaded(BattleSceneName))
