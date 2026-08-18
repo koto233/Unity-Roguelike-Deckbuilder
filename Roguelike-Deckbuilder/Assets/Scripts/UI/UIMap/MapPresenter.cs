@@ -3,19 +3,21 @@ using LitFramework;
 using LitFramework.EventBus;
 using UnityEngine;
 
-public class MapPresenter : IDisposable
+public class MapPresenter : BasePresenter<UIMap>
 {
     private MapService _mapService;
-    private UIMap _view;
 
-    public MapPresenter(UIMap view)
+    public MapPresenter(UIMap view) : base(view)
+    {
+
+    }
+    public override void Init()
     {
         SubscribeEvents();
         _mapService = ServiceLocator.Get<MapService>();
-        _view = view;
-        _view.OnNodeClicked += OnNodeClicked;
+        View.OnNodeClicked += OnNodeClicked;
+        CreateMapUI();
     }
-
 
     private void SubscribeEvents()
     {
@@ -29,7 +31,7 @@ public class MapPresenter : IDisposable
 
     public void CreateMapUI()
     {
-        _view.CreateMap(_mapService.CurrentMapList);
+        View.CreateMap(_mapService.CurrentMapList);
     }
 
     private void OnNodeClicked(string nodeId)
@@ -42,7 +44,7 @@ public class MapPresenter : IDisposable
         _mapService.VisitNode(nodeId);
 
         // 刷新 UI
-        _view.RefreshMap(_mapService.CurrentMap);
+        View.RefreshMap(_mapService.CurrentMap);
 
         // 根据节点类型触发业务事件
         switch (data.Type)
@@ -68,8 +70,10 @@ public class MapPresenter : IDisposable
         }
 
     }
-    public void Dispose()
+    public override void Dispose()
     {
         UnSubscribeEvents();
     }
+
+
 }

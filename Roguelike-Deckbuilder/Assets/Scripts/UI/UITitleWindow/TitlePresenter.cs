@@ -6,27 +6,27 @@ using LitFramework.FSM.Procedure;
 using LitFramework.UI.Core.Service;
 using UnityEngine;
 
-public class TitlePresenter : BasePresenter
+public class TitlePresenter : BasePresenter<UITitleWindow>
 {
-    private UITitleWindow _view;
-
-    public TitlePresenter(UITitleWindow view)
+    public TitlePresenter(UITitleWindow view) : base(view)
     {
-        _view = view;
+
+    }
+
+    public override void Init()
+    {
         SubscribeEvents();
     }
 
-
-
     private void SubscribeEvents()
     {
-        _view.OnClickNewGame += HandleClickNewGame;
-        _view.OnClickContinue += HandleClickContinue;
+        View.OnClickNewGame += HandleClickNewGame;
+        View.OnClickContinue += HandleClickContinue;
     }
     private void UnsubscribeEvents()
     {
-        _view.OnClickNewGame -= HandleClickNewGame;
-        _view.OnClickContinue -= HandleClickContinue;
+        View.OnClickNewGame -= HandleClickNewGame;
+        View.OnClickContinue -= HandleClickContinue;
     }
 
     private void HandleClickNewGame()
@@ -61,4 +61,6 @@ public class TitlePresenter : BasePresenter
     {
         UnsubscribeEvents();
     }
+
+
 }

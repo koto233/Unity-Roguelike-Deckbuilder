@@ -17,7 +17,7 @@ namespace LitFramework.FSM.Procedure
         private const string BattleSceneName = "Battle Scene"; // 与场景文件名称一致
         public override void OnInit()
         {
-
+            _battleController = ServiceLocator.Get<BattleController>();
         }
 
         public override void OnEnter()
@@ -35,7 +35,6 @@ namespace LitFramework.FSM.Procedure
             CleanupBattleAsync().Forget();
             _battlePresenter?.Dispose();
             _battlePresenter = null;
-            _battleController = null;
         }
 
 
@@ -48,45 +47,21 @@ namespace LitFramework.FSM.Procedure
         }
         private async UniTaskVoid InitBattleAsync(BattleStartParams args)
         {
-            var sceneLoader = ServiceLocator.Get<ISceneLoader>();
-            var assetService = ServiceLocator.Get<IAssetService>();
+            // var sceneLoader = ServiceLocator.Get<ISceneLoader>();
             var uiService = ServiceLocator.Get<UIService>();
-            var configService = ServiceLocator.Get<IConfigService>();
             var cardIconService = ServiceLocator.Get<CardIconService>();
             await cardIconService.PreLoadCardIcons();
-            var globalPlayer = ServiceLocator.Get<PlayerDataService>();
-            var battleContext = new BattleContext()
-            {
-                Player = new Player(globalPlayer.CurrentHp, globalPlayer.MaxHp, BattleRules.MaxEnergy),
-                Enemies = new(),
-                CurrentTurn = 0,
-                IsPlayerTurn = true,
-                Target = null,
-                GoldReward = 0
-            };
-            foreach (var enemyId in args.EnemyIds)
-            {
-                var enemyConfig = configService.GetTable<EnemyConfig>().Get(enemyId);
-                var enemyAi = EnemyAIFactory.Create(enemyConfig.AIType);
-                battleContext.Enemies.Add(new Enemy(enemyConfig, enemyAi));
-            }
-
-            // var uiBattleWindow = await uiService.OpenAsync<UIBattleWindow>(battleContext);
-            var scene = await sceneLoader.LoadAdditiveAsync(BattleSceneName);
-
-            _battleController = new BattleController(battleContext, OnBattleEnd);
-            BattleSceneRoot battleCtx = null;
-            foreach (var root in scene.GetRootGameObjects())
-            {
-                if (root.TryGetComponent(out battleCtx))
-                    break;
-            }
-            var uiBattleWindow = battleCtx.UIBattle;
-            if (uiBattleWindow != null)
-                await uiBattleWindow.InitAsync(battleContext);
-            _battlePresenter = new BattlePresenter(uiBattleWindow, _battleController);
-
-            _battleController.StartBattle();
+            // var scene = await sceneLoader.LoadAdditiveAsync(BattleSceneName);
+            // BattleSceneRoot battleCtx = null;
+            // foreach (var root in scene.GetRootGameObjects())
+            // {
+            //     if (root.TryGetComponent(out battleCtx))
+            //         break;
+            // }
+            // _battlePresenter = new BattlePresenter(battleCtx.UIBattle);
+            // _battlePresenter.Init(battleContext);
+            _battleController.StartBattle(args);
+            await uiService.OpenAsync<UIBattle, BattleContext>(_battleController.Context);
             uiService.Close<UITitleWindow>();
         }
         private async UniTaskVoid CleanupBattleAsync()

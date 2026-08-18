@@ -8,7 +8,7 @@ using LitFramework.ObjectPool;
 using LitFramework.UI.Core.Window;
 using UnityEngine;
 
-public partial class UIBattle : UIBase
+public partial class UIBattle : UIWindow
 {
     private AssetRef<GameObject> _cardPrefabRef;
     private AssetRef<GameObject> _cardDisplayPrefabRef;
@@ -32,13 +32,8 @@ public partial class UIBattle : UIBase
     public event Action OnEndTurn;
     private List<UICardDisplay> _cardDisplays = new();
 
-    public async UniTask InitAsync(BattleContext battleContext)
+    protected override async UniTask OnOpenAsync()
     {
-        if (battleContext == null)
-        {
-            Debug.LogError("参数类型错误，需要 BattleContext");
-            return;
-        }
         var assetService = ServiceLocator.Get<IAssetService>();
         _enemyPrefabRef = await assetService.LoadRefAsync<GameObject>("Assets/Res/UI/UIEnemyItem.prefab");
         _playerPrefabRef = await assetService.LoadRefAsync<GameObject>("Assets/Res/UI/UIPlayerItem.prefab");
@@ -48,8 +43,6 @@ public partial class UIBattle : UIBase
         _floatingTextPrefabRef = await assetService.LoadRefAsync<GameObject>("Assets/Res/UI/UIFloatingText.prefab");
         _poolService = ServiceLocator.Get<ObjectPoolService>();
         InitObjectPools();
-        _playerView = CreatePlayerView(battleContext.Player);
-        CreateEnemyViews(battleContext.Enemies);
         InitUI();
         SubscribeEvents();
     }
@@ -72,8 +65,10 @@ public partial class UIBattle : UIBase
         b_EndTurnBtn.onClick.AddListener(() => OnEndTurn?.Invoke());
         b_BuffTooltip.Hide();
         b_IntentTooltip.Hide();
+        CreatePlayerView();
         HideArrow();
     }
+
     private void SubscribeEvents()
     {
         b_HandZone.OnAnyCardPlay += (c) => OnCardPlayRequested?.Invoke(c);
@@ -111,14 +106,13 @@ public partial class UIBattle : UIBase
         }
     }
 
-    private UIPlayerItem CreatePlayerView(Player data)
+    public void CreatePlayerView()
     {
         var go = Instantiate(_playerPrefabRef.Asset, b_PlayerRoot);
-        var view = go.GetComponent<UIPlayerItem>();
-        return view;
+        _playerView = go.GetComponent<UIPlayerItem>();
     }
 
-    private void CreateEnemyViews(List<Enemy> enemies)
+    public void CreateEnemyViews(List<Enemy> enemies)
     {
         foreach (var enemy in enemies)
         {

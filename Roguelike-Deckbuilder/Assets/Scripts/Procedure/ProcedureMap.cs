@@ -95,23 +95,24 @@ namespace LitFramework.FSM.Procedure
         // ============ 地图初始化 ============
         private async UniTaskVoid InitAsync()
         {
-            var sceneLoader = ServiceLocator.Get<ISceneLoader>();
+            // var sceneLoader = ServiceLocator.Get<ISceneLoader>();
             var uiService = ServiceLocator.Get<UIService>();
             var uiatlasService = ServiceLocator.Get<UIAtlasService>();
             await uiatlasService.PreLoadCardIcons();
-            await sceneLoader.LoadAdditiveAsync(MapSceneName);
+            // await sceneLoader.LoadAdditiveAsync(MapSceneName);
+            await uiService.OpenAsync<UIMap>();
             await uiService.OpenAsync<UITopBar>();
-            var uiMap = GameObject.FindObjectOfType<UIMap>(true);
-            if (uiMap != null)
-            {
-                await uiMap.InitAsync();
-                _mapPresenter = new MapPresenter(uiMap);
-                _mapPresenter.CreateMapUI();
-            }
-            else
-            {
-                Debug.LogError("UIMap 组件未找到");
-            }
+            // var uiMap = GameObject.FindObjectOfType<UIMap>(true);
+            // if (uiMap != null)
+            // {
+            //     await uiMap.InitAsync();
+            //     _mapPresenter = new MapPresenter(uiMap);
+            //     _mapPresenter.CreateMapUI();
+            // }
+            // else
+            // {
+            //     Debug.LogError("UIMap 组件未找到");
+            // }
             uiService.Close<UITitleWindow>();
         }
 

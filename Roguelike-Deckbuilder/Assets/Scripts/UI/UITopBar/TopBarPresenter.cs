@@ -7,26 +7,27 @@ using LitFramework.EventBus;
 using LitFramework.UI.Core.Service;
 using UnityEngine;
 
-public class TopBarPresenter : BasePresenter
+public class TopBarPresenter : BasePresenter<UITopBar>
 {
-    private UITopBar _view;
     private UIService _uiService;
-    public TopBarPresenter(UITopBar view)
+    public TopBarPresenter(UITopBar view) : base(view)
     {
-        _view = view;
-        SubscribeEvents();
-        var playerDataService = ServiceLocator.Get<PlayerDataService>();
-        _view.RefreshHp(playerDataService.CurrentHp, playerDataService.MaxHp);
-        _view.RefreshCoin(playerDataService.Coin);
-        _uiService = ServiceLocator.Get<UIService>();
+
     }
 
-
+    public override void Init()
+    {
+        SubscribeEvents();
+        var playerDataService = ServiceLocator.Get<PlayerDataService>();
+        View.RefreshHp(playerDataService.CurrentHp, playerDataService.MaxHp);
+        View.RefreshCoin(playerDataService.Coin);
+        _uiService = ServiceLocator.Get<UIService>();
+    }
     private void SubscribeEvents()
     {
-        _view.OnClickSetting += HandleClickSetting;
-        _view.OnClickMap += HandleClickMap;
-        _view.OnClickPile += HandleClickPile;
+        View.OnClickSetting += HandleClickSetting;
+        View.OnClickMap += HandleClickMap;
+        View.OnClickPile += HandleClickPile;
         EventBus<CoinChangedEvent>.Subscribe(HandleCoinChanged);
         EventBus<HpChangedEvent>.Subscribe(HandleHpChanged);
     }
@@ -35,9 +36,9 @@ public class TopBarPresenter : BasePresenter
 
     private void UnsubscribeEvents()
     {
-        _view.OnClickSetting -= HandleClickSetting;
-        _view.OnClickMap -= HandleClickMap;
-        _view.OnClickPile -= HandleClickPile;
+        View.OnClickSetting -= HandleClickSetting;
+        View.OnClickMap -= HandleClickMap;
+        View.OnClickPile -= HandleClickPile;
         EventBus<CoinChangedEvent>.Unsubscribe(HandleCoinChanged);
         EventBus<HpChangedEvent>.Unsubscribe(HandleHpChanged);
     }
@@ -57,12 +58,12 @@ public class TopBarPresenter : BasePresenter
     private void HandleHpChanged(HpChangedEvent @event)
     {
         if (@event.EntityType != EntityType.Player) return;
-        _view.RefreshHp(@event.NewHp, @event.MaxHp);
+        View.RefreshHp(@event.NewHp, @event.MaxHp);
     }
 
     private void HandleCoinChanged(CoinChangedEvent @event)
     {
-        _view.RefreshCoin(@event.NewValue);
+        View.RefreshCoin(@event.NewValue);
     }
 
 
@@ -70,4 +71,6 @@ public class TopBarPresenter : BasePresenter
     {
         UnsubscribeEvents();
     }
+
+
 }

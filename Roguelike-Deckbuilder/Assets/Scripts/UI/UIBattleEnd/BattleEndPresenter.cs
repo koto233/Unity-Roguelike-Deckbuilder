@@ -6,22 +6,24 @@ using LitFramework.FSM.Procedure;
 using LitFramework.UI.Core.Service;
 using UnityEngine;
 
-public class BattleEndPresenter : BasePresenter
+public class BattleEndPresenter : BasePresenter<UIBattleEnd>
 {
-    private UIBattleEnd _view;
-    public BattleEndPresenter(UIBattleEnd view)
+
+    public BattleEndPresenter(UIBattleEnd view) : base(view)
     {
-        _view = view;
+
+    }
+    public override void Init()
+    {
         SubscribeEvents();
     }
-
     private void SubscribeEvents()
     {
-        _view.OnSkipClick += HandleSkipClick;
+        View.OnSkipClick += HandleSkipClick;
     }
     private void UnsubscribeEvents()
     {
-        _view.OnSkipClick -= HandleSkipClick;
+        View.OnSkipClick -= HandleSkipClick;
     }
 
     private void HandleSkipClick()
@@ -34,4 +36,6 @@ public class BattleEndPresenter : BasePresenter
     {
         UnsubscribeEvents();
     }
+
+
 }

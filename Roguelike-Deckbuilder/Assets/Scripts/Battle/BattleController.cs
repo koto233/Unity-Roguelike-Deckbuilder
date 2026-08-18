@@ -12,16 +12,9 @@ public class BattleController
 {
     public BattleContext Context { get; private set; }
     public StateMachine BattleFSM { get; private set; }
-    private Action _onBattleEnd;
-
-    public BattleController(BattleContext context, Action onBattleEnd)
+    public void StartBattle(BattleStartParams args)
     {
-        Context = context;
-        _onBattleEnd = onBattleEnd;
-    }
-
-    public void StartBattle()
-    {
+        Context = BattleContextFactory.Create(args);
         Context.IsPlayerTurn = true;
         Context.CurrentTurn = 1;
         var configService = ServiceLocator.Get<IConfigService>();
@@ -38,7 +31,11 @@ public class BattleController
         EventBus<DiedEvent>.Subscribe(OnCharacterDied);
         BattleFSM.ChangeState<PlayerTurnState>();
     }
-
+    public void EndBattle()
+    {
+        EventBus<DiedEvent>.Unsubscribe(OnCharacterDied);
+        Context = null;
+    }
     /// <summary>
     /// 初始化战斗状态机
     /// </summary> 
@@ -184,10 +181,7 @@ public class BattleController
             }
         }
     }
-    public void EndBattle()
-    {
-        _onBattleEnd?.Invoke();
-    }
+
     public void OnAllEnemiesDefeated()
     {
 

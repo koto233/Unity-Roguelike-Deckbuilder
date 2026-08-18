@@ -8,7 +8,7 @@ using LitFramework.UI.Core.Window;
 using UnityEngine;
 using UnityEngine.UI;
 
-public partial class UIMap : UIBase
+public partial class UIMap : UIWindow
 {
     private AssetRef<GameObject> _nodePrefabRef;
     private AssetRef<GameObject> _linePrefabRef;
@@ -19,11 +19,11 @@ public partial class UIMap : UIBase
     private ObjectPoolService _poolService;
     public event System.Action<string> OnNodeClicked; // 节点点击事件，参数为节点ID
 
-    public async UniTask InitAsync()
+    protected override async UniTask OnOpenAsync()
     {
         var assetService = ServiceLocator.Get<IAssetService>();
-        _nodePrefabRef = await assetService.LoadRefAsync<GameObject>("Assets/Res/UI/UIMapNode.prefab");
-        _linePrefabRef = await assetService.LoadRefAsync<GameObject>("Assets/Res/UI/UIMapLine.prefab");
+        _nodePrefabRef = await assetService.LoadRefAsync<GameObject>("Assets/Res/UI/Dynamic/UIMapNode.prefab");
+        _linePrefabRef = await assetService.LoadRefAsync<GameObject>("Assets/Res/UI/Dynamic/UIMapLine.prefab");
         b_Row.gameObject.SetActive(false);
         InitObjectPools();
     }

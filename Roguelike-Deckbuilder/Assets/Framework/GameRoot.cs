@@ -54,16 +54,20 @@ namespace LitFramework
             ServiceLocator.Register(new PlayerDataService());
             ServiceLocator.Register(new CardIconService());
             ServiceLocator.Register(new UIAtlasService());
+            ServiceLocator.Register(new BattleController());
             var uiService = ServiceLocator.Get<UIService>();
-            uiService.Register<UITitleWindow>("Assets/Res/UI/UITitleWindow.prefab", UILayer.Normal);
-            uiService.Register<UITopBar>("Assets/Res/UI/UITopBar.prefab", UILayer.Overlay);
-            uiService.Register<UISetting>("Assets/Res/UI/UISetting.prefab", UILayer.Popup);
-            uiService.Register<UIBattleEnd>("Assets/Res/UI/UIBattleEnd.prefab", UILayer.Normal);
+            uiService.Register<UITitleWindow>("Assets/Res/UI/Dynamic/UITitleWindow.prefab", UILayer.Normal);
+            uiService.Register<UITopBar>("Assets/Res/UI/Dynamic/UITopBar.prefab", UILayer.Overlay);
+            uiService.Register<UISetting>("Assets/Res/UI/Dynamic/UISetting.prefab", UILayer.Popup);
+            uiService.Register<UIBattleEnd>("Assets/Res/UI/Dynamic/UIBattleEnd.prefab", UILayer.Normal);
+            uiService.Register<UIBattle>("Assets/Res/UI/Dynamic/UIBattle.prefab", UILayer.Normal);
+            uiService.Register<UIMap>("Assets/Res/UI/Dynamic/UIMap.prefab", UILayer.Normal);
             uiService.Bind<UIBattleEnd>(view => new BattleEndPresenter(view));
             uiService.Bind<UITitleWindow>(view => new TitlePresenter(view));
             uiService.Bind<UITopBar>(view => new TopBarPresenter(view));
             uiService.Bind<UISetting>(view => new SettingPresenter(view));
-            ModelContainer.Register(new PlayerModel());
+            uiService.Bind<UIBattle>(view => new BattlePresenter(view));
+            uiService.Bind<UIMap>(view => new MapPresenter(view));
 
             var fsm = new StateMachine();
             _procedureManager = new ProcedureManager(fsm);

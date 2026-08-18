@@ -86,10 +86,23 @@ namespace LitFramework.UI.Core.Service
 
         public async UniTask OpenAsync<TView>() where TView : UIWindow
         {
+            await OpenCore<TView>(null, null);
+        }
+
+        public async UniTask OpenAsync<TView, TArg>(TArg arg) where TView : UIWindow
+        {
+            await OpenCore<TView>(arg, (p, a) =>
+            {
+                if (p is IHasData<TArg> d) d.SetData((TArg)a);
+            });
+        }
+
+        private async UniTask OpenCore<TView>(object arg, Action<BasePresenter, object> inject) where TView : UIWindow
+        {
             var type = typeof(TView);
             var cfg = GetConfig(type);
 
-            // 1. 单实例检查：已存在则置顶返回
+            // 1. 单实例检查
             if (!cfg.AllowMultiple && _singleInstance.TryGetValue(type, out var existId))
             {
                 if (_opened.TryGetValue(existId, out var exist))
@@ -99,7 +112,7 @@ namespace LitFramework.UI.Core.Service
                 }
             }
 
-            // 2. 防重复点击：如果正在加载，等待完成
+            // 2. 防重复点击
             if (_loading.TryGetValue(type, out var loadingTask))
             {
                 await loadingTask.Task;
@@ -111,23 +124,27 @@ namespace LitFramework.UI.Core.Service
 
             try
             {
-                // 3. 加载资源
+                // 3. 加载 & 实例化
                 var prefab = await AssetService.LoadAsync<GameObject>(cfg.PrefabPath);
                 var go = UnityEngine.Object.Instantiate(prefab, _layers[cfg.Layer]);
                 var view = go.GetComponent<TView>();
                 if (view == null)
                     throw new InvalidOperationException($"Prefab {cfg.PrefabPath} 上缺少 {type.Name} 组件");
 
-                // 4. 创建 Presenter（工厂模式，零反射）
+                // 4. 创建 Presenter
                 if (!_factories.TryGetValue(type, out var factory))
-                    throw new InvalidOperationException($"{type.Name} 未绑定 Presenter 工厂。调用：uiService.Bind<{type.Name}>(view => new XxxPresenter(view))");
+                    throw new InvalidOperationException($"{type.Name} 未绑定 Presenter 工厂");
 
                 var presenter = factory(view);
 
-                // 5. 执行打开动画/逻辑
+                // 5. 注入数据（有参时）
+                inject?.Invoke(presenter, arg);
+
+                // 6. 统一初始化
+                presenter.Init();
                 await view.OpenInternalAsync();
 
-                // 6. 记录状态
+                // 7. 记录状态
                 var instanceId = go.GetInstanceID();
                 Action releaseAction = () => AssetService.Release(cfg.PrefabPath);
 
@@ -136,7 +153,6 @@ namespace LitFramework.UI.Core.Service
 
                 if (!cfg.AllowMultiple)
                     _singleInstance[type] = instanceId;
-
                 if (cfg.PushToStack)
                     _backStack.Push(instanceId);
 
@@ -152,7 +168,6 @@ namespace LitFramework.UI.Core.Service
                 _loading.Remove(type);
             }
         }
-
         // ========== 关闭窗口 ==========
 
         public void Close<TView>() where TView : UIWindow

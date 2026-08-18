@@ -5,29 +5,30 @@ using LitFramework;
 using LitFramework.UI.Core.Service;
 using UnityEngine;
 
-public class SettingPresenter : BasePresenter
+public class SettingPresenter : BasePresenter<UISetting>
 {
-    private UISetting _view;
     private UIService _uiService;
-    public SettingPresenter(UISetting view)
+
+    public SettingPresenter(UISetting view) : base(view)
+    {
+
+    }
+    public override void Init()
     {
         _uiService = ServiceLocator.Get<UIService>();
-        _view = view;
         SubscribeEvents();
     }
-
-
     private void SubscribeEvents()
     {
-        _view.OnClickContinue += HandleClickContinue;
-        _view.OnClickGiveUp += HandleClickGiveUp;
-        _view.OnClickQuit += HandleClickQuit;
+        View.OnClickContinue += HandleClickContinue;
+        View.OnClickGiveUp += HandleClickGiveUp;
+        View.OnClickQuit += HandleClickQuit;
     }
     private void UnsubscribeEvents()
     {
-        _view.OnClickContinue -= HandleClickContinue;
-        _view.OnClickGiveUp -= HandleClickGiveUp;
-        _view.OnClickQuit -= HandleClickQuit;
+        View.OnClickContinue -= HandleClickContinue;
+        View.OnClickGiveUp -= HandleClickGiveUp;
+        View.OnClickQuit -= HandleClickQuit;
     }
     private void HandleClickContinue()
     {

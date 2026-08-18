@@ -10,27 +10,29 @@ using LitFramework.EventBus;
 using LitFramework.ObjectPool;
 using UnityEngine;
 
-public class BattlePresenter : IDisposable
+public class BattlePresenter : BasePresenter<UIBattle>, IHasData<BattleContext>
 {
-    private UIBattle _view;
-    private BattleController _battleController;
     private Enemy _currentTargetEnemy;
     private Card _selectedCard;
-    public BattlePresenter(UIBattle view, BattleController battleController)
+    private BattleContext _context;
+    private BattleController _controller;
+    public BattlePresenter(UIBattle view) : base(view) { }
+    public void SetData(BattleContext context)
     {
-        _view = view;
-        _battleController = battleController;
-        var context = _battleController.Context;
-        SubscribeEvents();
-        RefreshAllHp();
-        RefreshHand(context.Player.Hand, context.Player.Hand, ChangeType.Add);
-        RefreshBlock(context.Player.Block, EntityType.Player);
-        RefreshEnergy(context.Player.Energy, context.Player.MaxEnergy);
-        RefreshDrawPileCount(context.Player.DrawPileCount);
-        RefreshDiscardPileCount(context.Player.DiscardPileCount);
+        _context = context;
     }
-
-
+    public override void Init()
+    {
+        _controller = ServiceLocator.Get<BattleController>();
+        SubscribeEvents();
+        RefreshAllHp(_context);
+        RefreshHand(_context.Player.Hand, _context.Player.Hand, ChangeType.Add);
+        RefreshBlock(_context.Player.Block, EntityType.Player);
+        RefreshEnergy(_context.Player.Energy, _context.Player.MaxEnergy);
+        RefreshDrawPileCount(_context.Player.DrawPileCount);
+        RefreshDiscardPileCount(_context.Player.DiscardPileCount);
+        View.CreateEnemyViews(_context.Enemies);
+    }
     private void SubscribeEvents()
     {
         EventBus<HandChangedEvent>.Subscribe(OnHandChanged);
@@ -46,12 +48,12 @@ public class BattlePresenter : IDisposable
         EventBus<FloatingTextEvent>.Subscribe(OnFloatingTextEvent);
         EventBus<DrawPileChangedEvent>.Subscribe(OnDrawPileChanged);
         EventBus<DiscardPileChangedEvent>.Subscribe(OnDiscardPileChanged);
-        _view.OnOpenPile += OpenPile;
-        _view.OnEndTurn += EndTurn;
-        _view.OnCardDragStartRequested += OnDragStart;
-        _view.OnCardDragRequested += OnDragCard;
-        _view.OnCardDragEndRequested += OnDragEnd;
-        _view.OnCardPlayRequested += OnCardPlay;
+        View.OnOpenPile += OpenPile;
+        View.OnEndTurn += EndTurn;
+        View.OnCardDragStartRequested += OnDragStart;
+        View.OnCardDragRequested += OnDragCard;
+        View.OnCardDragEndRequested += OnDragEnd;
+        View.OnCardPlayRequested += OnCardPlay;
 
     }
 
@@ -72,18 +74,18 @@ public class BattlePresenter : IDisposable
         EventBus<FloatingTextEvent>.Unsubscribe(OnFloatingTextEvent);
         EventBus<DrawPileChangedEvent>.Unsubscribe(OnDrawPileChanged);
         EventBus<DiscardPileChangedEvent>.Unsubscribe(OnDiscardPileChanged);
-        _view.OnOpenPile -= OpenPile;
-        _view.OnEndTurn -= EndTurn;
-        _view.OnCardDragStartRequested -= OnDragStart;
-        _view.OnCardDragRequested -= OnDragCard;
-        _view.OnCardDragEndRequested -= OnDragEnd;
-        _view.OnCardPlayRequested -= OnCardPlay;
+        View.OnOpenPile -= OpenPile;
+        View.OnEndTurn -= EndTurn;
+        View.OnCardDragStartRequested -= OnDragStart;
+        View.OnCardDragRequested -= OnDragCard;
+        View.OnCardDragEndRequested -= OnDragEnd;
+        View.OnCardPlayRequested -= OnCardPlay;
     }
 
 
     private void EndTurn()
     {
-        _battleController.EndPlayerTurn();
+        _controller.EndPlayerTurn();
     }
 
 
@@ -119,9 +121,8 @@ public class BattlePresenter : IDisposable
     {
         RefreshDrawPileCount(@event.CurrentCount);
     }
-    private void RefreshAllHp()
+    private void RefreshAllHp(BattleContext context)
     {
-        var context = _battleController.Context;
         RefreshHp(context.Player.CurrentHp, context.Player.MaxHp, EntityType.Player, -1);
         foreach (var enemy in context.Enemies)
         {
@@ -131,27 +132,27 @@ public class BattlePresenter : IDisposable
     }
     private void RefreshHp(int currentHp, int maxHp, EntityType entityType, int entityId)
     {
-        _view.RefreshHp(currentHp, maxHp, entityType, entityId);
+        View.RefreshHp(currentHp, maxHp, entityType, entityId);
     }
 
     private void RefreshBlock(int block, EntityType entityType)
     {
-        _view.RefreshBlock(block, entityType);
+        View.RefreshBlock(block, entityType);
     }
     private void RefreshHand(IReadOnlyList<Card> handCards, IReadOnlyList<Card> changedCards, ChangeType type)
     {
-        _battleController.UpdateCardUsability();
-        _view.RefreshHand(handCards, changedCards, type);
+        _controller.UpdateCardUsability();
+        View.RefreshHand(handCards, changedCards, type);
     }
 
     private void RefreshDrawPileCount(int count)
     {
-        _view.RefreshDrawPileCount(count);
+        View.RefreshDrawPileCount(count);
     }
 
     private void RefreshDiscardPileCount(int count)
     {
-        _view.RefreshDiscardPileCount(count);
+        View.RefreshDiscardPileCount(count);
     }
 
     private void OnDragStart(Card card, Vector2 position)
@@ -160,13 +161,13 @@ public class BattlePresenter : IDisposable
         _selectedCard = card;
         if (card.NeedTarget)
         {
-            _view.ShowArrow(position, position, Vector2.up * 150);
+            View.ShowArrow(position, position, Vector2.up * 150);
         }
     }
     private void OnDragCard(Enemy enemy, Vector2 position)
     {
         _currentTargetEnemy = enemy;
-        _view.UpdateArrow(position);
+        View.UpdateArrow(position);
         // Debug.Log("OnDragCard:" + enemy == null);
     }
 
@@ -178,19 +179,19 @@ public class BattlePresenter : IDisposable
             Debug.LogError("拖拽的卡牌不一致");
             return;
         }
-        if (!_battleController.PlayCard(_selectedCard, _currentTargetEnemy))
+        if (!_controller.PlayCard(_selectedCard, _currentTargetEnemy))
         {
-            _view.ResetCard();
+            View.ResetCard();
         }
     }
     private void OnDragEnd(Card card)
     {
-        _view.HideArrow();
+        View.HideArrow();
     }
 
     private void RefreshEnergy(int energy, int maxEnergy)
     {
-        _view.RefreshEnergy(energy, maxEnergy);
+        View.RefreshEnergy(energy, maxEnergy);
     }
 
     /// <summary>
@@ -199,10 +200,10 @@ public class BattlePresenter : IDisposable
     /// <param name="index"></param>
     private void OpenPile(int index)
     {
-        var pile = _battleController.GetPile(index);
-        _view.ClearCardsInPileUI();
-        _view.SpawnCardInList(pile);
-        _view.OpenPilePanel();
+        var pile = _controller.GetPile(index);
+        View.ClearCardsInPileUI();
+        View.SpawnCardInList(pile);
+        View.OpenPilePanel();
     }
     private void OnBuffApplied(BuffAppliedEvent evt)
     {
@@ -224,12 +225,12 @@ public class BattlePresenter : IDisposable
     {
         if (owner is Player)
         {
-            // var playerView = _view.GetPlayerView();
+            // var playerView = View.GetPlayerView();
             // playerView.RefreshBuffs(owner.BuffManager.AllBuffs.ToList());
         }
         else if (owner is Enemy enemy)
         {
-            var enemyView = _view.GetEnemyView(enemy.Id);
+            var enemyView = View.GetEnemyView(enemy.Id);
             enemyView?.RefreshBuffs(owner.BuffManager.AllBuffs.ToList());
         }
     }
@@ -241,36 +242,37 @@ public class BattlePresenter : IDisposable
             {
                 case TooltipType.Buff:
                     {
-                        _view.ShowBuffTooltip(evt.Data, evt.Position);
+                        View.ShowBuffTooltip(evt.Data, evt.Position);
                         break;
                     }
                 case TooltipType.Intent:
                     {
-                        _view.ShowIntentToolTip(evt.Data, evt.Position);
+                        View.ShowIntentToolTip(evt.Data, evt.Position);
                         break;
                     }
             }
         }
         else
         {
-            _view.HideAllTooltips();
+            View.HideAllTooltips();
         }
 
     }
 
     private void OnEnemyIntentChanged(IntentEvent evt)
     {
-        _view.RefreshEnemyIntent(evt.Enemy, evt.IntentConfig);
+        View.RefreshEnemyIntent(evt.Enemy, evt.IntentConfig);
     }
-    public void Dispose()
+    public override void Dispose()
     {
         UnSubscribeEvents();
     }
 
     private void OnFloatingTextEvent(FloatingTextEvent evt)
     {
-        Vector3 position = _view.GetEntityPosition(evt.EntityType, evt.EntityId);
-        _view.ShowFloatingText(evt.Text, position, evt.Color, evt.IsCritical).Forget();
+        Vector3 position = View.GetEntityPosition(evt.EntityType, evt.EntityId);
+        View.ShowFloatingText(evt.Text, position, evt.Color, evt.IsCritical).Forget();
     }
+
 
 }
