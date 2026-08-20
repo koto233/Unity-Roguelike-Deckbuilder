@@ -42,6 +42,12 @@ namespace LitFramework
 
         private void Init()
         {
+            InitGameServices();
+            InitUI();
+            InitProcedure();
+        }
+        private void InitGameServices()
+        {
             ServiceLocator.Register(new ObjectPoolService());
             ServiceLocator.Register<IConfigService>(new ConfigService());
             ServiceLocator.Register(new InputService());
@@ -55,6 +61,9 @@ namespace LitFramework
             ServiceLocator.Register(new CardIconService());
             ServiceLocator.Register(new UIAtlasService());
             ServiceLocator.Register(new BattleController());
+        }
+        private void InitUI()
+        {
             var uiService = ServiceLocator.Get<UIService>();
             uiService.Register<UITitleWindow>("Assets/Res/UI/Dynamic/UITitleWindow.prefab", UILayer.Normal);
             uiService.Register<UITopBar>("Assets/Res/UI/Dynamic/UITopBar.prefab", UILayer.Overlay);
@@ -69,12 +78,13 @@ namespace LitFramework
             uiService.Bind<UIBattle>(view => new BattlePresenter(view));
             uiService.Bind<UIMap>(view => new MapPresenter(view));
 
+        }
+        private void InitProcedure()
+        {
             var fsm = new StateMachine();
             _procedureManager = new ProcedureManager(fsm);
             ServiceLocator.Register(_procedureManager);
-            // _procedureManager.RegisterProcedure(new ProcedureInitService(_procedureManager));
-            _procedureManager.RegisterProcedure(new ProcedureInitResource(_procedureManager));
-            _procedureManager.RegisterProcedure(new ProcedureInitConfig(_procedureManager));
+            _procedureManager.RegisterProcedure(new ProcedureInit(_procedureManager));
             _procedureManager.RegisterProcedure(new ProcedureTitle(_procedureManager));
             _procedureManager.RegisterProcedure(new ProcedureBattle(_procedureManager));
             _procedureManager.RegisterProcedure(new ProcedureMap(_procedureManager));
@@ -83,11 +93,9 @@ namespace LitFramework
             {
                 Debug.Log($"流程状态变化: {from?.Name} → {to?.Name}");
             };
-            _procedureManager.ChangeProcedure<ProcedureInitResource>();
+            _procedureManager.ChangeProcedure<ProcedureInit>();
             // _procedureManager.SetSharedData();
         }
-
-
     }
 
 }
