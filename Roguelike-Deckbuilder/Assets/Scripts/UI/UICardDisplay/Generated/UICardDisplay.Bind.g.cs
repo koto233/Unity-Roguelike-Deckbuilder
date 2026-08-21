@@ -23,6 +23,7 @@ using TMPro;
         private @TextMeshProUGUI b_NameText;
         private @TextMeshProUGUI b_DescText;
         private @RectTransform b_ArrowStartRoot;
+        private @TextMeshProUGUI b_PriceText;
 
         protected override void GetUI()
         {
@@ -36,5 +37,6 @@ using TMPro;
             b_NameText = GetBind<@TextMeshProUGUI>(6);
             b_DescText = GetBind<@TextMeshProUGUI>(7);
             b_ArrowStartRoot = GetBind<@RectTransform>(8);
+            b_PriceText = GetBind<@TextMeshProUGUI>(9);
         }
     }
