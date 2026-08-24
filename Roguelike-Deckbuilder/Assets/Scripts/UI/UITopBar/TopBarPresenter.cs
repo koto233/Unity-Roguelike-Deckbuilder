@@ -27,7 +27,7 @@ public class TopBarPresenter : BasePresenter<UITopBar>
     {
         View.OnClickSetting += HandleClickSetting;
         View.OnClickMap += HandleClickMap;
-        View.OnClickPile += HandleClickPile;
+        View.OnClickDeck += HandleClickDeck;
         EventBus<CoinChangedEvent>.Subscribe(HandleCoinChanged);
         EventBus<HpChangedEvent>.Subscribe(HandleHpChanged);
     }
@@ -38,7 +38,7 @@ public class TopBarPresenter : BasePresenter<UITopBar>
     {
         View.OnClickSetting -= HandleClickSetting;
         View.OnClickMap -= HandleClickMap;
-        View.OnClickPile -= HandleClickPile;
+        View.OnClickDeck -= HandleClickDeck;
         EventBus<CoinChangedEvent>.Unsubscribe(HandleCoinChanged);
         EventBus<HpChangedEvent>.Unsubscribe(HandleHpChanged);
     }
@@ -51,9 +51,9 @@ public class TopBarPresenter : BasePresenter<UITopBar>
     {
         // _uiService.OpenAsync<UIMap>().Forget();
     }
-    private void HandleClickPile()
+    private void HandleClickDeck()
     {
-
+        _uiService.OpenAsync<UIDeck>().Forget();
     }
     private void HandleHpChanged(HpChangedEvent @event)
     {

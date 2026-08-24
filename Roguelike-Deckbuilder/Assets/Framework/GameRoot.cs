@@ -71,12 +71,14 @@ namespace LitFramework
             uiService.Register<UIBattleEnd>("Assets/Res/UI/Dynamic/UIBattleEnd.prefab", UILayer.Normal);
             uiService.Register<UIBattle>("Assets/Res/UI/Dynamic/UIBattle.prefab", UILayer.Normal);
             uiService.Register<UIMap>("Assets/Res/UI/Dynamic/UIMap.prefab", UILayer.Normal);
+            uiService.Register<UIDeck>("Assets/Res/UI/Dynamic/UIDeck.prefab", UILayer.Normal);
             uiService.Bind<UIBattleEnd>(view => new BattleEndPresenter(view));
             uiService.Bind<UITitleWindow>(view => new TitlePresenter(view));
             uiService.Bind<UITopBar>(view => new TopBarPresenter(view));
             uiService.Bind<UISetting>(view => new SettingPresenter(view));
             uiService.Bind<UIBattle>(view => new BattlePresenter(view));
             uiService.Bind<UIMap>(view => new MapPresenter(view));
+            uiService.Bind<UIDeck>(view => new DeckPresenter(view));
 
         }
         private void InitProcedure()

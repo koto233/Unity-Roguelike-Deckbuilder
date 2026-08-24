@@ -7,7 +7,7 @@ public partial class UITopBar : UIWindow
 {
     public event System.Action OnClickSetting;
     public event System.Action OnClickMap;
-    public event System.Action OnClickPile;
+    public event System.Action OnClickDeck;
 
     public void Init()
     {
@@ -17,7 +17,7 @@ public partial class UITopBar : UIWindow
     {
         b_SettingBtn.onClick.AddListener(() => OnClickSetting?.Invoke());
         b_MapBtn.onClick.AddListener(() => OnClickMap?.Invoke());
-        b_PileBtn.onClick.AddListener(() => OnClickPile?.Invoke());
+        b_DeckBtn.onClick.AddListener(() => OnClickDeck?.Invoke());
     }
     void OnEnable()
     {
@@ -27,7 +27,7 @@ public partial class UITopBar : UIWindow
     {
         b_SettingBtn.onClick.RemoveAllListeners();
         b_MapBtn.onClick.RemoveAllListeners();
-        b_PileBtn.onClick.RemoveAllListeners();
+        b_DeckBtn.onClick.RemoveAllListeners();
     }
     public void RefreshCoin(int Coin)
     {

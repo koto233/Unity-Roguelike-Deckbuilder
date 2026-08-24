@@ -34,8 +34,10 @@ public class PlayerDataService
         get => _currentHp;
         set => _currentHp = value;
     }
-    public List<string> DeckCardIds { get; set; } = new List<string>();
-    public List<string> RelicIds { get; set; } = new List<string>();
+    private List<int> _deckCardIds = new();
+    private List<int> _relicIds = new();
+    public IReadOnlyList<int> DeckCardIds => _deckCardIds;
+    public IReadOnlyList<int> RelicIds => _relicIds;
 
     public void Init()
     {
@@ -43,8 +45,8 @@ public class PlayerDataService
         _coin = 0;
         _maxHp = config.InitialHp;
         _currentHp = config.InitialHp;
-        DeckCardIds.Clear();
-        RelicIds.Clear();
+        _deckCardIds.AddRange(config.InitialDeck);
+        _relicIds.Clear();
     }
     public PlayerSaveData ExportState()
     {
@@ -53,8 +55,8 @@ public class PlayerDataService
             Coin = Coin,
             MaxHp = MaxHp,
             CurrentHp = CurrentHp,
-            DeckCardIds = new List<string>(DeckCardIds),
-            RelicIds = new List<string>(RelicIds)
+            DeckCardIds = new List<int>(DeckCardIds),
+            RelicIds = new List<int>(RelicIds)
         };
     }
 
@@ -63,8 +65,8 @@ public class PlayerDataService
         _coin = data.Coin;
         _maxHp = data.MaxHp;
         _currentHp = data.CurrentHp;
-        DeckCardIds = new List<string>(data.DeckCardIds);
-        RelicIds = new List<string>(data.RelicIds);
+        _deckCardIds = new List<int>(data.DeckCardIds);
+        _relicIds = new List<int>(data.RelicIds);
     }
     public void SyncHp(int currentHp, int maxHp)
     {
