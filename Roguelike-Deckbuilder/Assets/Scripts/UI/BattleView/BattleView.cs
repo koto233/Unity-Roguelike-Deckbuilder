@@ -11,7 +11,7 @@ using UnityEngine;
 public partial class BattleView : UIWindow
 {
     private AssetRef<GameObject> _cardPrefabRef;
-    private AssetRef<GameObject> _cardDisplayPrefabRef;
+    private AssetRef<GameObject> _cardItemPrefabRef;
     private AssetRef<GameObject> _flyPrefabRef;
     private AssetRef<GameObject> _floatingTextPrefabRef;
     private AssetRef<GameObject> _enemyPrefabRef;
@@ -35,12 +35,13 @@ public partial class BattleView : UIWindow
     protected override async UniTask OnOpenAsync()
     {
         var assetService = ServiceLocator.Get<IAssetService>();
-        _enemyPrefabRef = await assetService.LoadRefAsync<GameObject>("Assets/Res/UI/Dynamic/EnemyItem.prefab");
-        _playerPrefabRef = await assetService.LoadRefAsync<GameObject>("Assets/Res/UI/Dynamic/PlayerItem.prefab");
-        _cardPrefabRef = await assetService.LoadRefAsync<GameObject>("Assets/Res/UI/Dynamic/CardItem.prefab");
-        _cardDisplayPrefabRef = await assetService.LoadRefAsync<GameObject>("Assets/Res/UI/Dynamic/HandCard.prefab");
-        _flyPrefabRef = await assetService.LoadRefAsync<GameObject>("Assets/Res/UI/Dynamic/CardFlyFx.prefab");
-        _floatingTextPrefabRef = await assetService.LoadRefAsync<GameObject>("Assets/Res/UI/Dynamic/FloatingTextItem.prefab");
+
+        _enemyPrefabRef = await assetService.LoadRefAsync<GameObject>(UIPath.EnemyItem);
+        _playerPrefabRef = await assetService.LoadRefAsync<GameObject>(UIPath.PlayerItem);
+        _cardPrefabRef = await assetService.LoadRefAsync<GameObject>(UIPath.HandCard);
+        _cardItemPrefabRef = await assetService.LoadRefAsync<GameObject>(UIPath.CardItem);
+        _flyPrefabRef = await assetService.LoadRefAsync<GameObject>(UIPath.CardFlyItem);
+        _floatingTextPrefabRef = await assetService.LoadRefAsync<GameObject>(UIPath.FloatingTextItem);
         _poolService = ServiceLocator.Get<ObjectPoolService>();
         InitObjectPools();
         InitUI();
@@ -50,7 +51,7 @@ public partial class BattleView : UIWindow
     private void InitObjectPools()
     {
         _poolService.RegisterGameObjectPool<HandCard>(_cardPrefabRef.Asset, initialPoolSize: 10);
-        _poolService.RegisterGameObjectPool<CardView>(_cardDisplayPrefabRef.Asset, initialPoolSize: 10);
+        _poolService.RegisterGameObjectPool<CardView>(_cardItemPrefabRef.Asset, initialPoolSize: 10);
         _poolService.RegisterGameObjectPool<CardFlyFx>(_flyPrefabRef.Asset, initialPoolSize: 10);
         _poolService.RegisterGameObjectPool<FloatingTextItem>(_floatingTextPrefabRef.Asset, initialPoolSize: 10);
     }
@@ -270,7 +271,7 @@ public partial class BattleView : UIWindow
         _poolService.RemovePool<CardFlyFx>();
         _poolService.RemovePool<FloatingTextItem>();
         _cardPrefabRef?.Dispose();
-        _cardDisplayPrefabRef?.Dispose();
+        _cardItemPrefabRef?.Dispose();
         _flyPrefabRef?.Dispose();
         _floatingTextPrefabRef?.Dispose();
         _enemyPrefabRef?.Dispose();

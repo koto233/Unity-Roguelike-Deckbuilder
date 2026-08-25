@@ -65,13 +65,16 @@ namespace LitFramework
         private void InitUI()
         {
             var uiService = ServiceLocator.Get<UIService>();
-            uiService.Register<MainMenuView>("Assets/Res/UI/Dynamic/MainMenuView.prefab", UILayer.Normal);
-            uiService.Register<TopBar>("Assets/Res/UI/Dynamic/TopBar.prefab", UILayer.Overlay);
-            uiService.Register<SettingPanel>("Assets/Res/UI/Dynamic/SettingPanel.prefab", UILayer.Popup);
-            uiService.Register<BattleResultPanel>("Assets/Res/UI/Dynamic/BattleResultPanel.prefab", UILayer.Normal);
-            uiService.Register<BattleView>("Assets/Res/UI/Dynamic/BattleView.prefab", UILayer.Normal);
-            uiService.Register<MapView>("Assets/Res/UI/Dynamic/MapView.prefab", UILayer.Normal);
-            uiService.Register<DeckView>("Assets/Res/UI/Dynamic/DeckView.prefab", UILayer.Normal);
+            uiService.Register<MainMenuView>(UIPath.MainMenuView, UILayer.Normal);
+            uiService.Register<TopBar>(UIPath.TopBar, UILayer.Overlay);
+            uiService.Register<SettingPanel>(UIPath.SettingPanel, UILayer.Popup);
+            uiService.Register<BattleResultPanel>(UIPath.BattleResultPanel, UILayer.Normal);
+            uiService.Register<BattleView>(UIPath.BattleView, UILayer.Normal);
+            uiService.Register<MapView>(UIPath.MapView, UILayer.Normal);
+            uiService.Register<DeckView>(UIPath.DeckView, UILayer.Normal);
+            uiService.Register<RestView>(UIPath.RestView, UILayer.Normal);
+            uiService.Register<ShopView>(UIPath.ShopView, UILayer.Normal);
+            uiService.Register<EventView>(UIPath.EventView, UILayer.Normal);
             uiService.Bind<BattleResultPanel>(view => new BattleResultPresenter(view));
             uiService.Bind<MainMenuView>(view => new MainMenuPresenter(view));
             uiService.Bind<TopBar>(view => new TopBarPresenter(view));
@@ -79,6 +82,9 @@ namespace LitFramework
             uiService.Bind<BattleView>(view => new BattlePresenter(view));
             uiService.Bind<MapView>(view => new MapPresenter(view));
             uiService.Bind<DeckView>(view => new DeckPresenter(view));
+            uiService.Bind<RestView>(view => new RestPresenter(view));
+            uiService.Bind<ShopView>(view => new ShopPresenter(view));
+            uiService.Bind<EventView>(view => new EventPresenter(view));
 
         }
         private void InitProcedure()

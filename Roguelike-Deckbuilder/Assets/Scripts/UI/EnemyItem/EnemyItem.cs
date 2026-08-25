@@ -22,7 +22,7 @@ public partial class EnemyItem : UIBase
     private async UniTask InitAsync()
     {
         var assetService = ServiceLocator.Get<IAssetService>();
-        _buffPrefabAssetRef = await assetService.LoadRefAsync<GameObject>("Assets/Res/UI/Dynamic/BuffItem.prefab");
+        _buffPrefabAssetRef = await assetService.LoadRefAsync<GameObject>(UIPath.BuffItem);
         Enemy.DetermineIntent(null);
     }
     public void UpdateHP(int currentHp, int maxHp)

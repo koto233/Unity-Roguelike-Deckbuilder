@@ -11,7 +11,7 @@ using UnityEngine;
 public partial class DeckView : UIWindow
 {
     public event System.Action OnClickBack;
-    private AssetRef<GameObject> _cardDisplayPrefab;
+    private AssetRef<GameObject> _cardItemPrefab;
     private ObjectPoolService _poolService;
     private List<CardView> _cardDisplays = new();
     void OnEnable()
@@ -21,7 +21,7 @@ public partial class DeckView : UIWindow
     protected override async UniTask OnOpenAsync()
     {
         var assetService = ServiceLocator.Get<IAssetService>();
-        _cardDisplayPrefab = await assetService.LoadRefAsync<GameObject>("Assets/Res/UI/Dynamic/CardView.prefab");
+        _cardItemPrefab = await assetService.LoadRefAsync<GameObject>(UIPath.CardItem);
         _poolService = ServiceLocator.Get<ObjectPoolService>();
 
         InitObjectPools();
@@ -65,7 +65,7 @@ public partial class DeckView : UIWindow
     }
     private void InitObjectPools()
     {
-        _poolService.RegisterGameObjectPool<CardView>(_cardDisplayPrefab.Asset, initialPoolSize: 10);
+        _poolService.RegisterGameObjectPool<CardView>(_cardItemPrefab.Asset, initialPoolSize: 10);
     }
 
 }

@@ -22,8 +22,8 @@ public partial class MapView : UIWindow
     protected override async UniTask OnOpenAsync()
     {
         var assetService = ServiceLocator.Get<IAssetService>();
-        _nodePrefabRef = await assetService.LoadRefAsync<GameObject>("Assets/Res/UI/Dynamic/MapNodeItem.prefab");
-        _linePrefabRef = await assetService.LoadRefAsync<GameObject>("Assets/Res/UI/Dynamic/MapLineItem.prefab");
+        _nodePrefabRef = await assetService.LoadRefAsync<GameObject>(UIPath.MapNodeItem);
+        _linePrefabRef = await assetService.LoadRefAsync<GameObject>(UIPath.MapLineItem);
         b_Row.gameObject.SetActive(false);
         InitObjectPools();
     }

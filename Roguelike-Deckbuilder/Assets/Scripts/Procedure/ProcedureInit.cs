@@ -29,7 +29,6 @@ namespace LitFramework.FSM.Procedure
                 // 2. 注册 AssetService
                 var asset = new YooAssetAssetService(YooAssets.GetPackage("DefaultPackage"));
                 ServiceLocator.Register<IAssetService>(asset);
-
                 // 3. 并行加载所有配置
                 await LoadConfigsParallelAsync();
 
