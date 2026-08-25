@@ -4,6 +4,6 @@ using UnityEngine;
 
 public class BattleSceneRoot : MonoBehaviour
 {
-    [SerializeField] private UIBattle _uiBattle;
-    public UIBattle UIBattle => _uiBattle;
+    [SerializeField] private BattleView _uiBattle;
+    public BattleView UIBattle => _uiBattle;
 }

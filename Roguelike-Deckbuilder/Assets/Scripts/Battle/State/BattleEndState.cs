@@ -17,8 +17,8 @@ public class BattleEndState : TurnStateBase
         var globalPlayer = ServiceLocator.Get<PlayerDataService>();
         globalPlayer.SyncHp(Controller.Context.Player.CurrentHp, Controller.Context.Player.MaxHp);
         var uiService = ServiceLocator.Get<UIService>();
-        uiService.Close<UIBattle>();
-        uiService.OpenAsync<UIBattleEnd>().Forget();
+        uiService.Close<BattleView>();
+        uiService.OpenAsync<BattleResultPanel>().Forget();
         //    Controller.EndBattle(); // 改为由UIBattleEnd上的按钮调用
         Debug.Log("战斗结束");
     }

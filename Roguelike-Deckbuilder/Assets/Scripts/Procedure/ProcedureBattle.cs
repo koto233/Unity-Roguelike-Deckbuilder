@@ -58,8 +58,8 @@ namespace LitFramework.FSM.Procedure
             // _battlePresenter = new BattlePresenter(battleCtx.UIBattle);
             // _battlePresenter.Init(battleContext);
             _battleController.StartBattle(args);
-            await uiService.OpenAsync<UIBattle, BattleContext>(_battleController.Context);
-            uiService.Close<UITitleWindow>();
+            await uiService.OpenAsync<BattleView, BattleContext>(_battleController.Context);
+            uiService.Close<MainMenuView>();
         }
         private async UniTaskVoid CleanupBattleAsync()
         {

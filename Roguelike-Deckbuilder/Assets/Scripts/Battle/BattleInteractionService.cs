@@ -5,9 +5,9 @@ using UnityEngine;
 public class BattleInteractionService
 {
     public bool IsDragging { get; private set; } = false;
-    public UICardItem DraggingCard { get; private set; } = null;
+    public HandCard DraggingCard { get; private set; } = null;
 
-    public void StartDrag(UICardItem card)
+    public void StartDrag(HandCard card)
     {
         IsDragging = true;
         DraggingCard = card;

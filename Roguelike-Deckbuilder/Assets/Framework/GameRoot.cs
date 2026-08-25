@@ -65,20 +65,20 @@ namespace LitFramework
         private void InitUI()
         {
             var uiService = ServiceLocator.Get<UIService>();
-            uiService.Register<UITitleWindow>("Assets/Res/UI/Dynamic/UITitleWindow.prefab", UILayer.Normal);
-            uiService.Register<UITopBar>("Assets/Res/UI/Dynamic/UITopBar.prefab", UILayer.Overlay);
-            uiService.Register<UISetting>("Assets/Res/UI/Dynamic/UISetting.prefab", UILayer.Popup);
-            uiService.Register<UIBattleEnd>("Assets/Res/UI/Dynamic/UIBattleEnd.prefab", UILayer.Normal);
-            uiService.Register<UIBattle>("Assets/Res/UI/Dynamic/UIBattle.prefab", UILayer.Normal);
-            uiService.Register<UIMap>("Assets/Res/UI/Dynamic/UIMap.prefab", UILayer.Normal);
-            uiService.Register<UIDeck>("Assets/Res/UI/Dynamic/UIDeck.prefab", UILayer.Normal);
-            uiService.Bind<UIBattleEnd>(view => new BattleEndPresenter(view));
-            uiService.Bind<UITitleWindow>(view => new TitlePresenter(view));
-            uiService.Bind<UITopBar>(view => new TopBarPresenter(view));
-            uiService.Bind<UISetting>(view => new SettingPresenter(view));
-            uiService.Bind<UIBattle>(view => new BattlePresenter(view));
-            uiService.Bind<UIMap>(view => new MapPresenter(view));
-            uiService.Bind<UIDeck>(view => new DeckPresenter(view));
+            uiService.Register<MainMenuView>("Assets/Res/UI/Dynamic/MainMenuView.prefab", UILayer.Normal);
+            uiService.Register<TopBar>("Assets/Res/UI/Dynamic/TopBar.prefab", UILayer.Overlay);
+            uiService.Register<SettingPanel>("Assets/Res/UI/Dynamic/SettingPanel.prefab", UILayer.Popup);
+            uiService.Register<BattleResultPanel>("Assets/Res/UI/Dynamic/BattleResultPanel.prefab", UILayer.Normal);
+            uiService.Register<BattleView>("Assets/Res/UI/Dynamic/BattleView.prefab", UILayer.Normal);
+            uiService.Register<MapView>("Assets/Res/UI/Dynamic/MapView.prefab", UILayer.Normal);
+            uiService.Register<DeckView>("Assets/Res/UI/Dynamic/DeckView.prefab", UILayer.Normal);
+            uiService.Bind<BattleResultPanel>(view => new BattleResultPresenter(view));
+            uiService.Bind<MainMenuView>(view => new MainMenuPresenter(view));
+            uiService.Bind<TopBar>(view => new TopBarPresenter(view));
+            uiService.Bind<SettingPanel>(view => new SettingPresenter(view));
+            uiService.Bind<BattleView>(view => new BattlePresenter(view));
+            uiService.Bind<MapView>(view => new MapPresenter(view));
+            uiService.Bind<DeckView>(view => new DeckPresenter(view));
 
         }
         private void InitProcedure()

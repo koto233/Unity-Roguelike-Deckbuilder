@@ -31,7 +31,7 @@ namespace LitFramework.FSM.Procedure
             UnloadMapSceneAsync().Forget();
             // ★ 取消订阅
             UnsubscribeEventHandlers();
-            _uiService.Close<UIMap>();
+            _uiService.Close<MapView>();
         }
 
         public override void OnInit()
@@ -100,8 +100,8 @@ namespace LitFramework.FSM.Procedure
             var uiatlasService = ServiceLocator.Get<UIAtlasService>();
             await uiatlasService.PreLoadCardIcons();
             // await sceneLoader.LoadAdditiveAsync(MapSceneName);
-            await _uiService.OpenAsync<UIMap>();
-            await _uiService.OpenAsync<UITopBar>();
+            await _uiService.OpenAsync<MapView>();
+            await _uiService.OpenAsync<TopBar>();
             // var uiMap = GameObject.FindObjectOfType<UIMap>(true);
             // if (uiMap != null)
             // {
@@ -113,7 +113,7 @@ namespace LitFramework.FSM.Procedure
             // {
             //     Debug.LogError("UIMap 组件未找到");
             // }
-            _uiService.Close<UITitleWindow>();
+            _uiService.Close<MainMenuView>();
         }
 
         private async UniTaskVoid UnloadMapSceneAsync()
