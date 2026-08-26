@@ -24,6 +24,7 @@ public partial class MapView : UIWindow
         var assetService = ServiceLocator.Get<IAssetService>();
         _nodePrefabRef = await assetService.LoadRefAsync<GameObject>(UIPath.MapNodeItem);
         _linePrefabRef = await assetService.LoadRefAsync<GameObject>(UIPath.MapLineItem);
+        InitObjectPools();
         b_Row.gameObject.SetActive(false);
     }
     private void InitObjectPools()

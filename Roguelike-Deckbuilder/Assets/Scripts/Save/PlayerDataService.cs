@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using LitFramework;
 using LitFramework.Config;
@@ -32,7 +33,12 @@ public class PlayerDataService
     public int CurrentHp
     {
         get => _currentHp;
-        set => _currentHp = value;
+        set
+        {
+            if (_currentHp == value) return;
+            _currentHp = Math.Min(value, MaxHp);
+            EventBus<HpChangedEvent>.Publish(new HpChangedEvent() { OldHp = _currentHp, NewHp = value });
+        }
     }
     private List<int> _deckCardIds = new();
     private List<int> _relicIds = new();

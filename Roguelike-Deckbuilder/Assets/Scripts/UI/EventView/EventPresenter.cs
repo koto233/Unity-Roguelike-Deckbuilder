@@ -22,6 +22,7 @@ public class EventPresenter : BasePresenter<EventView>
     }
     private void SubscribeEvents()
     {
+        
     }
 
 
