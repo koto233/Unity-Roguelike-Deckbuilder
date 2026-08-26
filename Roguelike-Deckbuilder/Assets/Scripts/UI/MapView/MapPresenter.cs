@@ -1,12 +1,14 @@
 using System;
+using Cysharp.Threading.Tasks;
 using LitFramework;
 using LitFramework.EventBus;
+using LitFramework.UI.Core.Service;
 using UnityEngine;
 
 public class MapPresenter : BasePresenter<MapView>
 {
     private MapService _mapService;
-
+    private UIService _uiService;
     public MapPresenter(MapView view) : base(view)
     {
 
@@ -15,6 +17,7 @@ public class MapPresenter : BasePresenter<MapView>
     {
         SubscribeEvents();
         _mapService = ServiceLocator.Get<MapService>();
+        _uiService = ServiceLocator.Get<UIService>();
         View.OnNodeClicked += OnNodeClicked;
         CreateMapUI();
     }
@@ -56,13 +59,13 @@ public class MapPresenter : BasePresenter<MapView>
                 EventBus<BattleStartEvent>.Publish(new BattleStartEvent { EnemyIds = data.EnemyIds });
                 break;
             case MapNodeType.Rest:
-                EventBus<RestStartEvent>.Publish(new RestStartEvent());
+                _uiService.OpenAsync<RestView>().Forget();
                 break;
             case MapNodeType.Shop:
-                EventBus<ShopOpenEvent>.Publish(new ShopOpenEvent());
+                _uiService.OpenAsync<ShopView>().Forget();
                 break;
             case MapNodeType.Event:
-                EventBus<EventStartEvent>.Publish(new EventStartEvent());
+                _uiService.OpenAsync<EventView>().Forget();
                 break;
             case MapNodeType.Boss:
                 EventBus<BattleStartEvent>.Publish(new BattleStartEvent { EnemyIds = data.EnemyIds });

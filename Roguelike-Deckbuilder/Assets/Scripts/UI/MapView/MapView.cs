@@ -25,7 +25,6 @@ public partial class MapView : UIWindow
         _nodePrefabRef = await assetService.LoadRefAsync<GameObject>(UIPath.MapNodeItem);
         _linePrefabRef = await assetService.LoadRefAsync<GameObject>(UIPath.MapLineItem);
         b_Row.gameObject.SetActive(false);
-        InitObjectPools();
     }
     private void InitObjectPools()
     {
@@ -178,4 +177,15 @@ public partial class MapView : UIWindow
         }
         _lines.Clear();
     }
+
+    void OnEnable()
+    {
+        InitObjectPools();
+    }
+
+    void OnDisable()
+    {
+        Clear();
+    }
+
 }

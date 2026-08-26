@@ -50,17 +50,12 @@ namespace LitFramework.FSM.Procedure
         private void SubscribeEventHandlers()
         {
             EventBus<BattleStartEvent>.Subscribe(OnBattleStart);
-            EventBus<RestStartEvent>.Subscribe(OnRestStart);
-            EventBus<ShopOpenEvent>.Subscribe(OnShopOpen);
-            EventBus<EventStartEvent>.Subscribe(OnEventStart);
+
         }
 
         private void UnsubscribeEventHandlers()
         {
             EventBus<BattleStartEvent>.Unsubscribe(OnBattleStart);
-            EventBus<RestStartEvent>.Unsubscribe(OnRestStart);
-            EventBus<ShopOpenEvent>.Unsubscribe(OnShopOpen);
-            EventBus<EventStartEvent>.Unsubscribe(OnEventStart);
         }
 
         // ============ 事件处理器 ============
@@ -71,26 +66,7 @@ namespace LitFramework.FSM.Procedure
             _procedureManager.ChangeProcedure<ProcedureBattle, BattleStartParams>(args);
         }
 
-        private void OnRestStart(RestStartEvent evt)
-        {
-            Debug.Log("进入休息点");
-            var uiService = ServiceLocator.Get<UIService>();
-            // uiService.OpenAsync<UIRestWindow>(); // 假设你有休息窗口
-        }
 
-        private void OnShopOpen(ShopOpenEvent evt)
-        {
-            Debug.Log("打开商店");
-            var uiService = ServiceLocator.Get<UIService>();
-            // uiService.OpenAsync<UIShopWindow>();
-        }
-
-        private void OnEventStart(EventStartEvent evt)
-        {
-            Debug.Log("触发随机事件");
-            var uiService = ServiceLocator.Get<UIService>();
-            // uiService.OpenAsync<UIEventWindow>();
-        }
 
         // ============ 地图初始化 ============
         private async UniTaskVoid InitAsync()

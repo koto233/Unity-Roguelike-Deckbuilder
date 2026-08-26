@@ -32,10 +32,10 @@ public partial class BattleView : UIWindow
     public event Action OnEndTurn;
     private List<CardView> _cardDisplays = new();
 
+
     protected override async UniTask OnOpenAsync()
     {
         var assetService = ServiceLocator.Get<IAssetService>();
-
         _enemyPrefabRef = await assetService.LoadRefAsync<GameObject>(UIPath.EnemyItem);
         _playerPrefabRef = await assetService.LoadRefAsync<GameObject>(UIPath.PlayerItem);
         _cardPrefabRef = await assetService.LoadRefAsync<GameObject>(UIPath.HandCard);
@@ -45,7 +45,6 @@ public partial class BattleView : UIWindow
         _poolService = ServiceLocator.Get<ObjectPoolService>();
         InitObjectPools();
         InitUI();
-        SubscribeEvents();
     }
 
     private void InitObjectPools()
@@ -69,7 +68,18 @@ public partial class BattleView : UIWindow
         CreatePlayerView();
         HideArrow();
     }
-
+    private void OnEnable()
+    {
+        SubscribeEvents();
+    }
+    private void OnDisable()
+    {
+        b_BuffTooltip.Hide();
+        b_IntentTooltip.Hide();
+        b_HandZone.CancelAnimations();
+        UnsubscribeEvents();
+        ReleaseAssets();
+    }
     private void SubscribeEvents()
     {
         b_HandZone.OnAnyCardPlay += (c) => OnCardPlayRequested?.Invoke(c);
@@ -242,14 +252,6 @@ public partial class BattleView : UIWindow
                 return enemyView.DamageTextPos;
         }
         return Vector3.zero;
-    }
-    void OnDisable()
-    {
-        b_BuffTooltip.Hide();
-        b_IntentTooltip.Hide();
-        b_HandZone.CancelAnimations();
-        UnsubscribeEvents();
-        ReleaseAssets();
     }
 
     private void UnsubscribeEvents()
