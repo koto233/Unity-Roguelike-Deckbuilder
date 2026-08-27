@@ -12,7 +12,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public partial class CardView
+public partial class CardItem
 {
     private @Image b_Icon;
     private @Image b_Frame;

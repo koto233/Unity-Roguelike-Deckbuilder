@@ -13,7 +13,7 @@ public partial class DeckView : UIWindow
     public event System.Action OnClickBack;
     private AssetRef<GameObject> _cardItemPrefab;
     private ObjectPoolService _poolService;
-    private List<CardView> _cardDisplays = new();
+    private List<CardItem> _cardDisplays = new();
     void OnEnable()
     {
         b_BackButton.onClick.AddListener(() => OnClickBack?.Invoke());
@@ -44,9 +44,9 @@ public partial class DeckView : UIWindow
         var cardConfigTable = configService.GetTable<CardConfig>();
         foreach (var id in cards)
         {
-            var cardDisplayPrefab = _poolService.GetGameObject<CardView>();
+            var cardDisplayPrefab = _poolService.GetGameObject<CardItem>();
             cardDisplayPrefab.transform.SetParent(b_Content.transform);
-            var uiCard = cardDisplayPrefab.GetComponent<CardView>();
+            var uiCard = cardDisplayPrefab.GetComponent<CardItem>();
             var cardConfig = cardConfigTable.Get(id);
             var card = new Card(cardConfig);
             uiCard.Init(card);
@@ -59,13 +59,13 @@ public partial class DeckView : UIWindow
         foreach (var item in _cardDisplays)
         {
             item.gameObject.SetActive(false);
-            _poolService.ReturnGameObject<CardView>(item.gameObject);
+            _poolService.ReturnGameObject<CardItem>(item.gameObject);
         }
         _cardDisplays.Clear();
     }
     private void InitObjectPools()
     {
-        _poolService.RegisterGameObjectPool<CardView>(_cardItemPrefab.Asset, initialPoolSize: 10);
+        _poolService.RegisterGameObjectPool<CardItem>(_cardItemPrefab.Asset, initialPoolSize: 10);
     }
 
 }

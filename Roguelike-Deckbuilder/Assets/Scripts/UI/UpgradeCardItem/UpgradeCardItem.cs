@@ -4,9 +4,20 @@ using LitFramework;
 using LitFramework.UI.Core.Window;
 using UnityEngine;
 
-public partial class CardView : UIBase
+public partial class UpgradeCardItem : UIBase
 {
-    public Card _card { get; private set; }
+    public event System.Action OnClick;
+    void OnEnable()
+    {
+        b_Click.onClick.AddListener(() =>
+        {
+            OnClick?.Invoke();
+        });
+    }
+    void OnDisable()
+    {
+        b_Click.onClick.RemoveAllListeners();
+    }
     public void Init(Card card)
     {
         RefreshUI(card);
@@ -33,5 +44,4 @@ public partial class CardView : UIBase
                 break;
         }
     }
-
 }

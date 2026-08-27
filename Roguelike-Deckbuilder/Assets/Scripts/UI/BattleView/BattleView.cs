@@ -30,7 +30,7 @@ public partial class BattleView : UIWindow
     /// </summary>
     public event Action<int> OnOpenPile;
     public event Action OnEndTurn;
-    private List<CardView> _cardDisplays = new();
+    private List<CardItem> _cardDisplays = new();
 
 
     protected override async UniTask OnOpenAsync()
@@ -50,7 +50,7 @@ public partial class BattleView : UIWindow
     private void InitObjectPools()
     {
         _poolService.RegisterGameObjectPool<HandCard>(_cardPrefabRef.Asset, initialPoolSize: 10);
-        _poolService.RegisterGameObjectPool<CardView>(_cardItemPrefabRef.Asset, initialPoolSize: 10);
+        _poolService.RegisterGameObjectPool<CardItem>(_cardItemPrefabRef.Asset, initialPoolSize: 10);
         _poolService.RegisterGameObjectPool<CardFlyFx>(_flyPrefabRef.Asset, initialPoolSize: 10);
         _poolService.RegisterGameObjectPool<FloatingTextItem>(_floatingTextPrefabRef.Asset, initialPoolSize: 10);
     }
@@ -101,7 +101,7 @@ public partial class BattleView : UIWindow
         foreach (var item in _cardDisplays)
         {
             item.gameObject.SetActive(false);
-            _poolService.ReturnGameObject<CardView>(item.gameObject);
+            _poolService.ReturnGameObject<CardItem>(item.gameObject);
         }
         _cardDisplays.Clear();
     }
@@ -109,9 +109,9 @@ public partial class BattleView : UIWindow
     {
         foreach (var data in cards)
         {
-            var cardDisplayPrefab = _poolService.GetGameObject<CardView>();
+            var cardDisplayPrefab = _poolService.GetGameObject<CardItem>();
             cardDisplayPrefab.transform.SetParent(b_PilePanel.transform);
-            var uiCard = cardDisplayPrefab.GetComponent<CardView>();
+            var uiCard = cardDisplayPrefab.GetComponent<CardItem>();
             uiCard.Init(data);
             _cardDisplays.Add(uiCard);
         }
@@ -269,7 +269,7 @@ public partial class BattleView : UIWindow
     private void ReleaseAssets()
     {
         _poolService.RemovePool<HandCard>();
-        _poolService.RemovePool<CardView>();
+        _poolService.RemovePool<CardItem>();
         _poolService.RemovePool<CardFlyFx>();
         _poolService.RemovePool<FloatingTextItem>();
         _cardPrefabRef?.Dispose();
