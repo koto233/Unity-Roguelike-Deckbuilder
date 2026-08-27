@@ -6,12 +6,13 @@ using UnityEngine;
 
 public partial class UpgradeCardItem : UIBase
 {
-    public event System.Action OnClick;
+    private Card _card;
+    public event System.Action<CardConfig> OnClick;
     void OnEnable()
     {
         b_Click.onClick.AddListener(() =>
         {
-            OnClick?.Invoke();
+            OnClick?.Invoke(_card.Config);
         });
     }
     void OnDisable()
@@ -20,6 +21,7 @@ public partial class UpgradeCardItem : UIBase
     }
     public void Init(Card card)
     {
+        _card = card;
         RefreshUI(card);
     }
     public void RefreshUI(Card card)

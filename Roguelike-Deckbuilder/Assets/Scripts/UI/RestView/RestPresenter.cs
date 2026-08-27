@@ -3,12 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using LitFramework;
+using LitFramework.Config;
 using LitFramework.UI.Core.Service;
+using UnityEngine;
 
 
 public class RestPresenter : BasePresenter<RestView>
 {
     private UIService _uiService;
+    private CardConfig _selectedConfig;
+
     public RestPresenter(RestView view) : base(view)
     {
     }
@@ -24,7 +28,6 @@ public class RestPresenter : BasePresenter<RestView>
         View.OnClickContinue += HandleClickContinue;
         View.OnClickForge += HandleClickForge;
         View.OnClickRest += HandleClickRest;
-        View.OnClickCloseForge += HandleClickCloseForge;
     }
 
 
@@ -33,7 +36,6 @@ public class RestPresenter : BasePresenter<RestView>
         View.OnClickContinue -= HandleClickContinue;
         View.OnClickForge -= HandleClickForge;
         View.OnClickRest -= HandleClickRest;
-        View.OnClickCloseForge -= HandleClickCloseForge;
     }
 
     private void HandleClickRest()
@@ -45,6 +47,7 @@ public class RestPresenter : BasePresenter<RestView>
 
     private void HandleClickForge()
     {
+        InitForge();
         View.OpenForge();
     }
 
@@ -52,7 +55,7 @@ public class RestPresenter : BasePresenter<RestView>
 
     private void HandleClickContinue()
     {
-        _uiService.Close<ShopView>();
+        _uiService.Close<RestView>();
     }
 
     public override void Dispose()
@@ -60,9 +63,52 @@ public class RestPresenter : BasePresenter<RestView>
         base.Dispose();
         UnsubscribeEvents();
     }
-    private void HandleClickCloseForge()
+
+    public void InitForge()
     {
-        View.CloseForge();
+        // 1. 从数据层取数据
+        var deckService = ServiceLocator.Get<PlayerDataService>();
+        var configService = ServiceLocator.Get<IConfigService>();
+        var table = configService.GetTable<CardConfig>();
+
+        var upgradeableCards = new List<Card>();
+        foreach (var cardId in deckService.DeckCardIds)
+        {
+            var config = table.Get(cardId);
+            if (config.UpgradeId > 0)
+                upgradeableCards.Add(new Card(config));
+        }
+
+        // 2. 让 View 显示数据
+        View.BuildUpgradeList(upgradeableCards);
+
+        // 3. 绑定 View 的事件（Presenter 掌控一切）
+        View.OnCardSelected += OnCardSelected;
+        View.OnConfirmClicked += OnConfirmUpgrade;
+
+        // 4. 初始状态
+        _selectedConfig = null;
     }
 
+    private void OnCardSelected(CardConfig config)
+    {
+        _selectedConfig = config;
+        var targetConfig = ServiceLocator.Get<ConfigService>().GetTable<CardConfig>().Get(_selectedConfig.UpgradeId);
+        View.ShowConfirm(config, targetConfig);
+    }
+
+    private void OnConfirmUpgrade()
+    {
+        if (_selectedConfig == null)
+        {
+            Debug.LogWarning("请先选择一张卡牌");
+            return;
+        }
+
+        // Presenter 唯一拥有调用 Service 的权限
+        var playerService = ServiceLocator.Get<PlayerDataService>();
+        playerService.UpgradeCard(_selectedConfig.Id, _selectedConfig.UpgradeId);
+        View.CloseForge();
+
+    }
 }

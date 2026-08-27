@@ -4,7 +4,7 @@
 //     请勿手动修改此文件，重新生成将覆盖所有改动
 //
 //     来源 UI : RestView
-//     生成时间 : 2026-08-26
+//     生成时间 : 2026-08-27
 // </自动生成>
 //------------------------------------------------------------------------------
 
@@ -18,7 +18,10 @@ using UnityEngine.UI;
         private @Button b_ContinueButton;
         private @RectTransform b_ForgePanel;
         private @RectTransform b_ForgeListRoot;
-        private @Button b_BackButton;
+        private @RectTransform b_ConfirmPanel;
+        private @RectTransform b_BeforeUpgrade;
+        private @RectTransform b_AfterUpgrade;
+        private @Button b_ConfirmButton;
 
         protected override void GetUI()
         {
@@ -28,6 +31,9 @@ using UnityEngine.UI;
             b_ContinueButton = GetBind<@Button>(2);
             b_ForgePanel = GetBind<@RectTransform>(3);
             b_ForgeListRoot = GetBind<@RectTransform>(4);
-            b_BackButton = GetBind<@Button>(5);
+            b_ConfirmPanel = GetBind<@RectTransform>(5);
+            b_BeforeUpgrade = GetBind<@RectTransform>(6);
+            b_AfterUpgrade = GetBind<@RectTransform>(7);
+            b_ConfirmButton = GetBind<@Button>(8);
         }
     }

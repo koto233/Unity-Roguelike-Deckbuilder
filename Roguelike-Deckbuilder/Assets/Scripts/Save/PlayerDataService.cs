@@ -79,4 +79,15 @@ public class PlayerDataService
         CurrentHp = currentHp;
         MaxHp = maxHp;
     }
+    public void UpgradeCard(int cardId, int targetId)
+    {
+        for (int i = 0; i < _deckCardIds.Count; i++)
+        {
+            if (_deckCardIds[i] == cardId)
+            {
+                _deckCardIds[i] = targetId;
+                break;
+            }
+        }
+    }
 }
