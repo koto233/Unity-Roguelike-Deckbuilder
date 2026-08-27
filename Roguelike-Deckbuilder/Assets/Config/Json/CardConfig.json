@@ -11,7 +11,7 @@
         "Value": 6
       }
     ],
-    "NeedTarget": "",
+    "UpgradeId": 2,
     "IconName": "strike_ironclad"
   },
   "2": {
@@ -26,7 +26,7 @@
         "Value": 9
       }
     ],
-    "NeedTarget": "",
+    "UpgradeId": 0,
     "IconName": "strike_ironclad"
   },
   "3": {
@@ -41,7 +41,7 @@
         "Value": 5
       }
     ],
-    "NeedTarget": "",
+    "UpgradeId": 4,
     "IconName": "defend_ironclad"
   },
   "4": {
@@ -56,7 +56,7 @@
         "Value": 8
       }
     ],
-    "NeedTarget": "",
+    "UpgradeId": 0,
     "IconName": "defend_ironclad"
   },
   "5": {
@@ -75,7 +75,7 @@
         "Value": 2
       }
     ],
-    "NeedTarget": "",
+    "UpgradeId": 6,
     "IconName": "bash"
   },
   "6": {
@@ -94,7 +94,7 @@
         "Value": 3
       }
     ],
-    "NeedTarget": "",
+    "UpgradeId": 0,
     "IconName": "bash"
   },
   "7": {
@@ -109,7 +109,7 @@
         "Value": 2
       }
     ],
-    "NeedTarget": "",
+    "UpgradeId": 8,
     "IconName": "test"
   },
   "8": {
@@ -124,7 +124,7 @@
         "Value": 3
       }
     ],
-    "NeedTarget": "",
+    "UpgradeId": 0,
     "IconName": "test"
   },
   "9": {
@@ -139,7 +139,7 @@
         "Value": 1
       }
     ],
-    "NeedTarget": "",
+    "UpgradeId": 10,
     "IconName": "test"
   },
   "10": {
@@ -154,22 +154,7 @@
         "Value": 2
       }
     ],
-    "NeedTarget": "",
-    "IconName": "test"
-  },
-  "11": {
-    "Id": 11,
-    "Key": 11,
-    "Name": "虚弱",
-    "Cost": 1,
-    "Type": "Skill",
-    "Effects": [
-      {
-        "EffectId": 5,
-        "Value": 1
-      }
-    ],
-    "NeedTarget": "",
+    "UpgradeId": 0,
     "IconName": "test"
   }
 }

@@ -5,7 +5,9 @@
 // 2. 表格约定：第一行是变量名称，第二行是变量类型
 
 // Generate From D:\GIT\Unity-Roguelike-Deckbuilder\Roguelike-Deckbuilder\Assets\Config\Excel\MapConfig.xlsx.xlsx
+using System;
 
+[Serializable]
 public class MapConfig : IConfig
 {
 	public int Templateld; // 模板Id
