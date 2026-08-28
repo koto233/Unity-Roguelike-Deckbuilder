@@ -67,12 +67,12 @@ public class RestPresenter : BasePresenter<RestView>
     public void InitForge()
     {
         // 1. 从数据层取数据
-        var deckService = ServiceLocator.Get<PlayerDataService>();
+        var playerService = ServiceLocator.Get<PlayerDataService>();
         var configService = ServiceLocator.Get<IConfigService>();
         var table = configService.GetTable<CardConfig>();
 
         var upgradeableCards = new List<Card>();
-        foreach (var cardId in deckService.DeckCardIds)
+        foreach (var cardId in playerService.DeckCardIds)
         {
             var config = table.Get(cardId);
             if (config.UpgradeId > 0)
@@ -80,7 +80,7 @@ public class RestPresenter : BasePresenter<RestView>
         }
 
         // 2. 让 View 显示数据
-        View.BuildUpgradeList(upgradeableCards);
+        View.CreateUpgradeList(upgradeableCards);
 
         // 3. 绑定 View 的事件（Presenter 掌控一切）
         View.OnCardSelected += OnCardSelected;

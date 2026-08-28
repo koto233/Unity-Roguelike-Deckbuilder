@@ -90,4 +90,33 @@ public class PlayerDataService
             }
         }
     }
+    public void AddCard(int cardId)
+    {
+        if (!_deckCardIds.Contains(cardId))
+            _deckCardIds.Add(cardId);
+    }
+    public void RemoveCard(int cardId)
+    {
+        if (_deckCardIds.Contains(cardId))
+            _deckCardIds.Remove(cardId);
+    }
+    public void AddRelic(int relicId)
+    {
+        if (!_relicIds.Contains(relicId))
+            _relicIds.Add(relicId);
+    }
+    public void RemoveRelic(int relicId)
+    {
+        if (_relicIds.Contains(relicId))
+            _relicIds.Remove(relicId);
+    }
+    public void AddCoin(int coin)
+    {
+        Coin += coin;
+    }
+    public void SpendCoin(int coin)
+    {
+        if (Coin >= coin)
+            Coin -= coin;
+    }
 }

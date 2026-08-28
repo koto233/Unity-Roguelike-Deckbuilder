@@ -13,7 +13,7 @@ public static class UIPath
     public static string FloatingTextItem => Base + "Item/FloatingTextItem.prefab";
     public static string RewardItem => Base + "Item/RewardItem.prefab";
     public static string ShopCardItem => Base + "Item/ShopCardItem.prefab";
-    public static string ShopPotionItem => Base + "Item/ShopPotionItem.prefab";
+    public static string ShopRelicItem => Base + "Item/ShopPotionItem.prefab";
     public static string MainMenuView => Base + "View/MainMenuView.prefab";
     public static string ShopView => Base + "View/ShopView.prefab";
     public static string BattleView => Base + "View/BattleView.prefab";

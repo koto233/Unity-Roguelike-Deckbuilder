@@ -11,7 +11,7 @@
 using UnityEngine;
 using TMPro;
 
-    public partial class ShopPotionItem
+    public partial class ShopRelicItem
     {
         private @TextMeshProUGUI b_PriceText;
 

@@ -44,7 +44,7 @@ public partial class RestView : UIWindow
     {
         _poolService = ServiceLocator.Get<ObjectPoolService>();
         _poolService.RegisterGameObjectPool<UpgradeCardItem>(_upgradeCardItemRef.Asset, initialPoolSize: 10);
-      
+
     }
     private void SubscribeEvents()
     {
@@ -75,7 +75,7 @@ public partial class RestView : UIWindow
         b_ConfirmPanel.gameObject.SetActive(false);
     }
 
-    public void BuildUpgradeList(List<Card> cards)
+    public void CreateUpgradeList(List<Card> cards)
     {
         ClearList();
         foreach (var card in cards)
