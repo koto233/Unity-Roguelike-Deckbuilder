@@ -1,19 +1,16 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using LitFramework.EventBus;
-using UnityEngine;
-
 public abstract class CharacterBase
 {
    protected int _currentHp;
    protected int _maxHp;
    protected int _block;
    protected int _strength;      // 力量（影响伤害）
-   public int CurrentHp => _currentHp;
-   public int MaxHp => _maxHp;
-   public int Block => _block;
+   // public int CurrentHp => _currentHp;
+   // public int MaxHp => _maxHp;
+   // public int Block => _block;
    public int Strength => _strength;
-   protected abstract EntityType EntityType { get; }
+   public abstract EntityType EntityType { get; }
    public abstract int Id { get; }
    private BuffManager _buffManager;
    public BuffManager BuffManager => _buffManager;
@@ -25,49 +22,106 @@ public abstract class CharacterBase
       _block = 0;
       _buffManager = new BuffManager(this);
    }
-   protected virtual void OnAfterTakeDamage(int damage) { }
-   // 受到伤害（考虑格挡和易伤）
-   public void TakeDamage(int damage)
+   public int CurrentHp
    {
-      if (damage <= 0) return;
-      _buffManager.OnBeforeTakeDamage(ref damage);
-      int remainingDamage = damage;
-      if (_block > 0)
+      get => _currentHp;
+      set
       {
-         int blockAbsorb = Mathf.Min(_block, remainingDamage);
-         _block -= blockAbsorb;
-         remainingDamage -= blockAbsorb;
-         EventBus<BlockChangedEvent>.Publish(new BlockChangedEvent { NewBlock = _block, EntityType = EntityType });
-      }
+         int clamped = Math.Clamp(value, 0, MaxHp);
+         if (_currentHp == clamped) return;
 
-      if (remainingDamage > 0)
-      {
-         int oldHp = _currentHp;
-         _currentHp = Mathf.Max(0, _currentHp - remainingDamage);
-         if (oldHp != _currentHp)
+         int old = _currentHp;
+         _currentHp = clamped;
+
+         EventBus<HpChangedEvent>.Publish(new HpChangedEvent
          {
-            EventBus<HpChangedEvent>.Publish(new HpChangedEvent { OldHp = oldHp, NewHp = _currentHp, MaxHp = _maxHp, EntityType = EntityType, EntityId = Id });
-            if (_currentHp <= 0)
-               OnDeath();
-         }
-      }
+            OldHp = old,
+            NewHp = _currentHp,
+            MaxHp = _maxHp
+         });
 
-      EventBus<FloatingTextEvent>.Publish(new FloatingTextEvent { Text = damage.ToString(), Color = Color.red, IsCritical = false, EntityType = EntityType, EntityId = Id });
+         if (_currentHp <= 0) OnDeath();
+      }
    }
 
-   // 治疗
-   public virtual void Heal(int amount)
+   public int MaxHp
    {
-      if (amount <= 0) return;
-      _buffManager.OnBeforeHeal(ref amount);
-      int oldHp = _currentHp;
-      _currentHp = Mathf.Min(_maxHp, _currentHp + amount);
-      if (oldHp != _currentHp)
+      get => _maxHp;
+      set
       {
-         EventBus<HpChangedEvent>.Publish(new HpChangedEvent { OldHp = oldHp, NewHp = _currentHp, MaxHp = _maxHp, EntityType = EntityType, EntityId = Id });
+         if (_maxHp == value) return;
+         _maxHp = value;
+         EventBus<HpChangedEvent>.Publish(new HpChangedEvent
+         {
+            OldHp = _currentHp,
+            NewHp = _currentHp,
+            MaxHp = _maxHp
+         });
+         // 如果当前血量超过新上限，需要截断
+         if (_currentHp > _maxHp) _currentHp = _maxHp;
       }
-
    }
+
+   // ===== Block：setter 自带事件 =====
+   public int Block
+   {
+      get => _block;
+      set
+      {
+         int clamped = Math.Max(0, value);
+         if (_block == clamped) return;
+         _block = clamped;
+         EventBus<BlockChangedEvent>.Publish(new BlockChangedEvent
+         {
+            NewBlock = _block,
+            EntityType = EntityType,
+            EntityId = Id
+         });
+      }
+   }
+
+
+   // public void TakeDamage(int damage)
+   // {
+   //    if (damage <= 0) return;
+   //    _buffManager.OnBeforeTakeDamage(ref damage);
+   //    int remainingDamage = damage;
+   //    if (_block > 0)
+   //    {
+   //       int blockAbsorb = Math.Min(_block, remainingDamage);
+   //       _block -= blockAbsorb;
+   //       remainingDamage -= blockAbsorb;
+   //       EventBus<BlockChangedEvent>.Publish(new BlockChangedEvent { NewBlock = _block, EntityType = EntityType });
+   //    }
+
+   //    if (remainingDamage > 0)
+   //    {
+   //       int oldHp = _currentHp;
+   //       _currentHp = Math.Max(0, _currentHp - remainingDamage);
+   //       if (oldHp != _currentHp)
+   //       {
+   //          EventBus<HpChangedEvent>.Publish(new HpChangedEvent { OldHp = oldHp, NewHp = _currentHp, MaxHp = _maxHp, EntityType = EntityType, EntityId = Id });
+   //          if (_currentHp <= 0)
+   //             OnDeath();
+   //       }
+   //    }
+
+   //    EventBus<FloatingTextEvent>.Publish(new FloatingTextEvent { Text = damage.ToString(), IsCritical = false, EntityType = EntityType, EntityId = Id });
+   // }
+
+   // // 治疗
+   // public virtual void Heal(int amount)
+   // {
+   //    if (amount <= 0) return;
+   //    _buffManager.OnBeforeHeal(ref amount);
+   //    int oldHp = _currentHp;
+   //    _currentHp = Math.Min(_maxHp, _currentHp + amount);
+   //    if (oldHp != _currentHp)
+   //    {
+   //       EventBus<HpChangedEvent>.Publish(new HpChangedEvent { OldHp = oldHp, NewHp = _currentHp, MaxHp = _maxHp, EntityType = EntityType, EntityId = Id });
+   //    }
+
+   // }
 
 
    // 回合开始时调用
@@ -145,3 +199,4 @@ public abstract class CharacterBase
 
 
 }
+public enum EntityType { Player, Enemy }

@@ -22,7 +22,8 @@ public class Enemy : CharacterBase
     // {
     //     Config = config;
     // };
-    protected override EntityType EntityType => EntityType.Enemy;
+    public override EntityType EntityType => EntityType.Enemy;
+
 
     // AI 决策：根据当前状态（回合数、血量等）计算意图
     public void DetermineIntent(BattleContext context)
@@ -38,10 +39,12 @@ public class Enemy : CharacterBase
     // 执行意图
     public void ExecuteIntent(BattleContext context)
     {
+        var executor = ServiceLocator.Get<EffectExecutor>();
+
         switch (CurrentIntent)
         {
             case IntentType.Attack:
-                context.Player.TakeDamage(Config.Damage + Strength);
+                executor.Damage(Config.Damage + Strength, context.Player);
                 break;
             case IntentType.Defend:
                 AddBlock(Config.Defend);
@@ -52,7 +55,3 @@ public class Enemy : CharacterBase
         LastIntent = CurrentIntent;
     }
 }
-// public struct IntentDisplayData
-// {
-
-// }

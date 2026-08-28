@@ -5,8 +5,9 @@ using System.Threading.Tasks;
 using LitFramework.EventBus;
 
 
-public class BlockChangedEvent : IEvent
+public struct BlockChangedEvent : IEvent
 {
     public EntityType EntityType;
+    public int EntityId;
     public int NewBlock;
 }

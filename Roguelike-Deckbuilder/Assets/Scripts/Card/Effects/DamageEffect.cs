@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using LitFramework;
 using UnityEngine;
 
 // 伤害效果
@@ -11,6 +12,8 @@ public class DamageEffect : CardEffectBase
 
     public override void Execute(Card card, BattleContext context)
     {
-        context.Target.TakeDamage(Value);
+        var executor = ServiceLocator.Get<EffectExecutor>();
+        executor.Damage(Value, context.Target);
+
     }
 }

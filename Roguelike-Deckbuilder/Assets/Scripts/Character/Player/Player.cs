@@ -17,7 +17,7 @@ public class Player : CharacterBase
     private int _maxEnergy;
     public int Energy => _energy;
     public int MaxEnergy => _maxEnergy;
-    protected override EntityType EntityType => EntityType.Player;
+    public override EntityType EntityType => EntityType.Player;
 
     public override int Id => -1;
 
