@@ -26,7 +26,7 @@ public class PlayerDataService
         {
             if (_maxHp == value) return;
             _maxHp = value;
-            EventBus<HpChangedEvent>.Publish(new HpChangedEvent() { OldHp = _maxHp, NewHp = value });
+            EventBus<HpChangedEvent>.Publish(new HpChangedEvent() { OldHp = _maxHp, NewHp = value, EntityType = EntityType.Player });
         }
     }
     private int _currentHp;
@@ -37,7 +37,7 @@ public class PlayerDataService
         {
             if (_currentHp == value) return;
             _currentHp = Math.Min(value, MaxHp);
-            EventBus<HpChangedEvent>.Publish(new HpChangedEvent() { OldHp = _currentHp, NewHp = value });
+            EventBus<HpChangedEvent>.Publish(new HpChangedEvent() { OldHp = _currentHp, NewHp = value, EntityType = EntityType.Player });
         }
     }
     private List<int> _deckCardIds = new();

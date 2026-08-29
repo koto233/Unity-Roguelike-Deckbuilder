@@ -3,7 +3,7 @@
     "Id": 1,
     "Key": "slime",
     "Name": "史莱姆",
-    "MaxHp": 20,
+    "MaxHp": 40,
     "Damage": 4,
     "Defend": 1,
     "StrongRate": 2,

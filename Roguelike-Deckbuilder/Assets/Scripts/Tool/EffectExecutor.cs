@@ -38,7 +38,9 @@ public class EffectExecutor
         // 计算伤害
         if (amount > 0)
         {
+            UnityEngine.Debug.Log($"{target.EntityType} {target.CurrentHp} take damage {amount}");
             target.CurrentHp -= amount;
+            UnityEngine.Debug.Log($"{target.EntityType} {target.CurrentHp} take damage {amount}");
         }
         EventBus<FloatingTextEvent>.Publish(new FloatingTextEvent
         {

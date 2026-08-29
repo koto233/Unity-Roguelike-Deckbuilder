@@ -70,6 +70,7 @@ public partial class BattleView : UIWindow
     }
     private void OnEnable()
     {
+        
         SubscribeEvents();
     }
     private void OnDisable()

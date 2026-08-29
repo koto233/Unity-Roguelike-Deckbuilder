@@ -25,13 +25,13 @@ public class BattlePresenter : BasePresenter<BattleView>, IHasData<BattleContext
     {
         _controller = ServiceLocator.Get<BattleController>();
         SubscribeEvents();
-        RefreshAllHp(_context);
+        View.CreateEnemyViews(_context.Enemies);
         RefreshHand(_context.Player.Hand, _context.Player.Hand, ChangeType.Add);
         RefreshBlock(_context.Player.Block, EntityType.Player);
         RefreshEnergy(_context.Player.Energy, _context.Player.MaxEnergy);
         RefreshDrawPileCount(_context.Player.DrawPileCount);
         RefreshDiscardPileCount(_context.Player.DiscardPileCount);
-        View.CreateEnemyViews(_context.Enemies);
+        RefreshAllHp(_context);
     }
     private void SubscribeEvents()
     {

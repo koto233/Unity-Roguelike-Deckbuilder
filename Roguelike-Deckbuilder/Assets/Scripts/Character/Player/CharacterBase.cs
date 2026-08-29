@@ -37,7 +37,9 @@ public abstract class CharacterBase
          {
             OldHp = old,
             NewHp = _currentHp,
-            MaxHp = _maxHp
+            MaxHp = _maxHp,
+            EntityType = EntityType,
+            EntityId = Id
          });
 
          if (_currentHp <= 0) OnDeath();
@@ -55,7 +57,9 @@ public abstract class CharacterBase
          {
             OldHp = _currentHp,
             NewHp = _currentHp,
-            MaxHp = _maxHp
+            MaxHp = _maxHp,
+            EntityType = EntityType,
+            EntityId = Id
          });
          // 如果当前血量超过新上限，需要截断
          if (_currentHp > _maxHp) _currentHp = _maxHp;
