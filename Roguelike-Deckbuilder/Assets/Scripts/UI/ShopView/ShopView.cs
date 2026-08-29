@@ -110,14 +110,14 @@ public partial class ShopView : UIWindow
     private void ClearCardList()
     {
         foreach (var item in _currentCardItems)
-            _poolService.RegisterGameObjectPool<ShopCardItem>(item.gameObject);
+            _poolService.ReturnGameObject<ShopCardItem>(item.gameObject);
         _currentCardItems.Clear();
     }
 
     private void ClearRelicList()
     {
         foreach (var item in _currentRelicItems)
-            _poolService.RegisterGameObjectPool<ShopRelicItem>(item.gameObject);
+            _poolService.ReturnGameObject<ShopRelicItem>(item.gameObject);
         _currentRelicItems.Clear();
     }
 

@@ -46,8 +46,6 @@ namespace LitFramework.FSM.Procedure
         {
             // var sceneLoader = ServiceLocator.Get<ISceneLoader>();
             var uiService = ServiceLocator.Get<UIService>();
-            var cardIconService = ServiceLocator.Get<CardIconService>();
-            await cardIconService.PreLoadCardIcons();
             // var scene = await sceneLoader.LoadAdditiveAsync(BattleSceneName);
             // BattleSceneRoot battleCtx = null;
             // foreach (var root in scene.GetRootGameObjects())

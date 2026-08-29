@@ -42,6 +42,7 @@ public partial class RestView : UIWindow
     }
     private void InitObjectPools()
     {
+
         _poolService = ServiceLocator.Get<ObjectPoolService>();
         _poolService.RegisterGameObjectPool<UpgradeCardItem>(_upgradeCardItemRef.Asset, initialPoolSize: 10);
 
@@ -51,6 +52,7 @@ public partial class RestView : UIWindow
         b_ContinueButton.onClick.AddListener(() => OnClickContinue?.Invoke());
         b_ForgeButton.onClick.AddListener(() => OnClickForge?.Invoke());
         b_RestButton.onClick.AddListener(() => OnClickRest?.Invoke());
+        b_ConfirmButton.onClick.AddListener(() => OnConfirmClicked?.Invoke());
     }
 
     private void UnsubscribeEvents()
@@ -58,6 +60,7 @@ public partial class RestView : UIWindow
         b_ContinueButton.onClick.RemoveAllListeners();
         b_ForgeButton.onClick.RemoveAllListeners();
         b_RestButton.onClick.RemoveAllListeners();
+        b_ConfirmButton.onClick.RemoveAllListeners();
     }
     public void ShowContinue()
     {
@@ -78,14 +81,16 @@ public partial class RestView : UIWindow
     public void CreateUpgradeList(List<Card> cards)
     {
         ClearList();
+        Debug.Log("CreateUpgradeList: " + _cardItems.Count);
         foreach (var card in cards)
         {
-            var item = _poolService.Get<UpgradeCardItem>();
-            item.Init(card);
+            var item = _poolService.GetGameObject<UpgradeCardItem>();
+            var upgradeCardItem = item.GetComponent<UpgradeCardItem>();
+            upgradeCardItem.Init(card);
             // 点击时发事件，不存状态
-            item.OnClick += config => OnCardSelected?.Invoke(config);
+            upgradeCardItem.OnClick += config => OnCardSelected?.Invoke(config);
             item.transform.SetParent(b_ForgeListRoot);
-            _cardItems.Add(item);
+            _cardItems.Add(upgradeCardItem);
         }
     }
 
@@ -119,7 +124,7 @@ public partial class RestView : UIWindow
             Transform child = container.GetChild(i);
             UpgradeCardItem item = child.GetComponent<UpgradeCardItem>();
             if (item != null)
-                _poolService.RegisterGameObjectPool<UpgradeCardItem>(item.gameObject);
+                _poolService.ReturnGameObject<UpgradeCardItem>(item.gameObject);
             else
                 Destroy(child.gameObject); // 保险
         }
@@ -127,24 +132,20 @@ public partial class RestView : UIWindow
 
     private void CreateUpgradeCard(CardConfig config, Transform parent)
     {
-        UpgradeCardItem item = _poolService.Get<UpgradeCardItem>();
+        var item = _poolService.GetGameObject<UpgradeCardItem>();
+        var upgradeCardItem = item.GetComponent<UpgradeCardItem>();
         item.transform.SetParent(parent, false);
-        // 重置本地变换（防止残留）
-        item.transform.localPosition = Vector3.zero;
-        item.transform.localScale = Vector3.one;
-        // 如果是 RectTransform，可以重置 anchoredPosition / sizeDelta
-        if (item.transform is RectTransform rect)
-        {
-            rect.anchoredPosition = Vector2.zero;
-            rect.sizeDelta = Vector2.zero; // 视情况而定
-        }
-        item.Init(new Card(config));
+        upgradeCardItem.Init(new Card(config));
     }
 
     private void ClearList()
     {
         foreach (var item in _cardItems)
-            _poolService.RegisterGameObjectPool<UpgradeCardItem>(item.gameObject);
+        {
+            Debug.Log("ClearList: " + item.name);
+            _poolService.ReturnGameObject<UpgradeCardItem>(item.gameObject);
+        }
+
         _cardItems.Clear();
     }
 }

@@ -19,8 +19,8 @@ public class BattleController
         Context.CurrentTurn = 1;
         var configService = ServiceLocator.Get<IConfigService>();
         var cardConfigTable = configService.GetTable<CardConfig>();
-        var _startDeck = ServiceLocator.Get<IConfigService>().GetTable<PlayerInitConfig>().Get(0).InitialDeck;
-        foreach (var id in _startDeck)
+        var deck = ServiceLocator.Get<PlayerDataService>().DeckCardIds;
+        foreach (var id in deck)
         {
             var cardConfig = cardConfigTable.Get(id);
             var card = new Card(cardConfig);

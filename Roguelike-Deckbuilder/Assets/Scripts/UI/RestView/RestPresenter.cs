@@ -28,6 +28,8 @@ public class RestPresenter : BasePresenter<RestView>
         View.OnClickContinue += HandleClickContinue;
         View.OnClickForge += HandleClickForge;
         View.OnClickRest += HandleClickRest;
+        View.OnConfirmClicked += OnConfirmUpgrade;
+        View.OnCardSelected += OnCardSelected;
     }
 
 
@@ -36,6 +38,9 @@ public class RestPresenter : BasePresenter<RestView>
         View.OnClickContinue -= HandleClickContinue;
         View.OnClickForge -= HandleClickForge;
         View.OnClickRest -= HandleClickRest;
+        View.OnConfirmClicked -= OnConfirmUpgrade;
+        View.OnCardSelected -= OnCardSelected;
+
     }
 
     private void HandleClickRest()
@@ -83,8 +88,7 @@ public class RestPresenter : BasePresenter<RestView>
         View.CreateUpgradeList(upgradeableCards);
 
         // 3. 绑定 View 的事件（Presenter 掌控一切）
-        View.OnCardSelected += OnCardSelected;
-        View.OnConfirmClicked += OnConfirmUpgrade;
+
 
         // 4. 初始状态
         _selectedConfig = null;
@@ -93,7 +97,7 @@ public class RestPresenter : BasePresenter<RestView>
     private void OnCardSelected(CardConfig config)
     {
         _selectedConfig = config;
-        var targetConfig = ServiceLocator.Get<ConfigService>().GetTable<CardConfig>().Get(_selectedConfig.UpgradeId);
+        var targetConfig = ServiceLocator.Get<IConfigService>().GetTable<CardConfig>().Get(_selectedConfig.UpgradeId);
         View.ShowConfirm(config, targetConfig);
     }
 
@@ -109,6 +113,6 @@ public class RestPresenter : BasePresenter<RestView>
         var playerService = ServiceLocator.Get<PlayerDataService>();
         playerService.UpgradeCard(_selectedConfig.Id, _selectedConfig.UpgradeId);
         View.CloseForge();
-
+        View.ShowContinue();
     }
 }
