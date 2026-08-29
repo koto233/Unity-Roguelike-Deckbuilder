@@ -48,8 +48,9 @@ namespace LitFramework
         }
         private void InitGameServices()
         {
-            ServiceLocator.Register(new ObjectPoolService());
+            ServiceLocator.Register<ILogger>(new UnityLogger());
             ServiceLocator.Register<IConfigService>(new ConfigService());
+            ServiceLocator.Register(new ObjectPoolService());
             ServiceLocator.Register(new InputService());
             ServiceLocator.Register<IAudioService>(new AudioService());
             ServiceLocator.Register(new UIService());
@@ -61,6 +62,7 @@ namespace LitFramework
             ServiceLocator.Register(new CardIconService());
             ServiceLocator.Register(new UIAtlasService());
             ServiceLocator.Register(new BattleController());
+
         }
         private void InitUI()
         {

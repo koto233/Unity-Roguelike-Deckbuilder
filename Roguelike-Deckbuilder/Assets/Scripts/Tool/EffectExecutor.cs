@@ -13,11 +13,16 @@ public class EffectExecutor
         _battleController = ServiceLocator.Get<BattleController>();
     }
 
-    public void Heal(int amount)
+    public void Heal(int amount, CharacterBase target)
+    {
+        if (target == null || amount <= 0) return;
+        target.BuffManager?.OnBeforeHeal(ref amount);
+        target.CurrentHp += amount;
+    }
+    public void HealGlobalPlayer(int amount)
     {
         _player.CurrentHp += amount;
     }
-
     public void Damage(int amount, CharacterBase target)
     {
         if (target == null || amount <= 0) return;

@@ -34,6 +34,7 @@ public class MainMenuPresenter : BasePresenter<MainMenuView>
         ServiceLocator.Get<MapService>().GenerateMap(1);
         ServiceLocator.Get<ProcedureManager>().ChangeProcedure<ProcedureMap>();
         ServiceLocator.Get<PlayerDataService>().Init();
+        ServiceLocator.Get<RelicService>().Init();
     }
     private void HandleClickContinue()
     {

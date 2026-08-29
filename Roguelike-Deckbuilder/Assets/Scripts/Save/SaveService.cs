@@ -47,6 +47,7 @@ public class SaveService
         // 恢复数据
         PlayerDataService.ImportState(saveData.PlayerData);
         MapService.ImportState(saveData.MapData);
+        ServiceLocator.Get<RelicService>().Init();
         return true;
     }
 

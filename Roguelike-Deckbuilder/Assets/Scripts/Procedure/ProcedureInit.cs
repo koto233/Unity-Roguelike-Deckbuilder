@@ -56,6 +56,7 @@ namespace LitFramework.FSM.Procedure
                 svc.LoadListTableAsync<MapConfig>(ConfigPaths.Map),
                 svc.LoadDictTableAsync<EncounterConfig>(ConfigPaths.Encounter),
                 svc.LoadDictTableAsync<PlayerInitConfig>(ConfigPaths.PlayerInit),
+                svc.LoadDictTableAsync<RelicConfig>(ConfigPaths.Relic)
             };
 
             await UniTask.WhenAll(tasks);
@@ -74,5 +75,6 @@ namespace LitFramework.FSM.Procedure
         public const string Map = "Assets/Config/Json/MapConfig.json";
         public const string Encounter = "Assets/Config/Json/EncounterConfig.json";
         public const string PlayerInit = "Assets/Config/Json/PlayerInitConfig.json";
+        public const string Relic = "Assets/Config/Json/RelicConfig.json";
     }
 }

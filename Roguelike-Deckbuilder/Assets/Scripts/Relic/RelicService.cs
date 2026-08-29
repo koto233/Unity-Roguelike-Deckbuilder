@@ -6,83 +6,98 @@ using LitFramework.EventBus;
 
 public class RelicService
 {
-    private List<Relic> _relics = new();
+    private ILogger _logger;
+    private PlayerDataService _playerData;
+    private Dictionary<int, Relic> _relics = new();
     private Dictionary<int, IRelicEffect> _activeEffects = new();
-    public IReadOnlyList<Relic> Relics => _relics;
+    public IReadOnlyDictionary<int, Relic> Relics => _relics;
 
-    // 添加遗物（从商店/事件获得）
+    public RelicService()
+    {
+        _logger = ServiceLocator.Get<ILogger>();
+        _playerData = ServiceLocator.Get<PlayerDataService>();
+    }
+
+
+    public void Init()
+    {
+        // 1. 清空运行时数据
+        ClearAllEffects();
+        _relics.Clear();
+        var table = ServiceLocator.Get<IConfigService>().GetTable<RelicConfig>();
+        // 2. 从 PlayerDataService 读取 ID 列表
+        foreach (int relicId in _playerData.RelicIds) // 需要暴露一个只读属性
+        {
+            var config = table.Get(relicId);
+            if (config == null)
+            {
+                _logger.LogWarning($"遗物配置不存在: {relicId}");
+                continue;
+            }
+
+            var relic = new Relic(config);
+            _relics.Add(config.Id, relic);
+
+            // 激活效果
+            ActivateEffect(relic);
+        }
+
+        _logger.Log($"已加载 {_relics.Count} 个遗物");
+    }
+
     public void AddRelic(int relicId)
     {
-        if (HasRelic(relicId))
+        if (_playerData.RelicIds.Contains(relicId))
         {
-            // Debug.Log($"已拥有遗物 {relicId}，无法重复获得");
+            _logger.LogWarning($"已拥有遗物 {relicId}，无法重复获得");
             return;
         }
 
-        // var config = ServiceLocator.Get<IConfigService>().GetRelicConfig(relicId);
-        // if (config == null)
-        // {
-        //     // Debug.LogError($"遗物配置 {relicId} 不存在");11
-        //     return;
-        // }
+        var config = ServiceLocator.Get<IConfigService>().GetTable<RelicConfig>().Get(relicId);
+        if (config == null)
+        {
+            _logger.LogError($"遗物配置 {relicId} 不存在");
+            return;
+        }
+        _playerData.AddRelic(relicId);
+        var relic = new Relic(config);
+        _relics.Add(config.Id, relic);
 
-        // var relic = new Relic(config);
-        // _relics.Add(relic);
-
-        // // 激活效果
-        // ActivateEffect(relic);
+        // 激活效果
+        ActivateEffect(relic);
 
         // 保存存档
-        // ServiceLocator.Get<ISaveService>().Save();
+        ServiceLocator.Get<SaveService>().SaveGame();
 
         // 广播事件（用于成就、UI刷新等）
-        // EventBus<RelicAcquiredEvent>.Publish(new RelicAcquiredEvent { RelicId = relicId });
+        EventBus<RelicChangedEvent>.Publish(new RelicChangedEvent { });
     }
 
     public void RemoveRelic(int relicId)
     {
-        var relic = _relics.FirstOrDefault(r => r.Config.Id == relicId);
-        if (relic == null) return;
+        if (!_playerData.RelicIds.Contains(relicId)) return;
+
+        if (!_relics.TryGetValue(relicId, out var relic)) return;
 
         // 禁用效果
         DeactivateEffect(relic);
 
-        _relics.Remove(relic);
-        // ServiceLocator.Get<ISaveStorage>().Save();
-        // EventBus<RelicLostEvent>.Publish(new RelicLostEvent { RelicId = relicId });
+        _relics.Remove(relicId);
+        ServiceLocator.Get<SaveService>().SaveGame();
+        EventBus<RelicChangedEvent>.Publish(new RelicChangedEvent { });
     }
 
-    public bool HasRelic(int relicId) => _relics.Any(r => r.Config.Id == relicId);
-
-    // 从存档恢复
-    public void LoadRelics(List<int> relicIds)
-    {
-        var table = ServiceLocator.Get<IConfigService>().GetTable<RelicConfig>();
-        // 清空旧效果
-        foreach (var relic in _relics)
-            DeactivateEffect(relic);
-        _relics.Clear();
-
-        foreach (var id in relicIds)
-        {
-            var config = table.Get(id);
-            if (config == null) continue;
-            var relic = new Relic(config);
-            _relics.Add(relic);
-            ActivateEffect(relic);
-        }
-    }
 
     private void ActivateEffect(Relic relic)
     {
         if (_activeEffects.ContainsKey(relic.Config.Id)) return;
 
-        // var effect = RelicEffectFactory.Create(relic.Config.Type, relic.Config.EffectParams);
-        // if (effect != null)
-        // {
-        //     effect.OnActivate(relic);
-        //     _activeEffects[relic.Config.Id] = effect;
-        // }
+        var effect = RelicEffectFactory.Create(relic.Config.Type, relic.Config.Effects);
+        if (effect != null)
+        {
+            effect.OnActivate(relic);
+            _activeEffects[relic.Config.Id] = effect;
+        }
     }
 
     private void DeactivateEffect(Relic relic)
@@ -93,13 +108,15 @@ public class RelicService
             _activeEffects.Remove(relic.Config.Id);
         }
     }
-
+    private void ClearAllEffects()
+    {
+        foreach (var kv in _activeEffects)
+            kv.Value.OnDeactivate(null);
+        _activeEffects.Clear();
+    }
     // 生命周期清理（游戏退出时）
     public void Dispose()
     {
-        foreach (var kv in _activeEffects)
-            kv.Value.OnDeactivate(_relics.First(r => r.Config.Id == kv.Key));
-        _activeEffects.Clear();
-        _relics.Clear();
+        ClearAllEffects();
     }
 }
