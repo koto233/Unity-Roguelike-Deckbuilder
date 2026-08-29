@@ -62,6 +62,8 @@ namespace LitFramework
             ServiceLocator.Register(new CardIconService());
             ServiceLocator.Register(new UIAtlasService());
             ServiceLocator.Register(new BattleController());
+            ServiceLocator.Register(new RelicService());
+            ServiceLocator.Register(new EffectExecutor());
 
         }
         private void InitUI()

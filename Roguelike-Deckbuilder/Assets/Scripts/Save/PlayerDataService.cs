@@ -44,7 +44,8 @@ public class PlayerDataService
     private List<int> _relicIds = new();
     public IReadOnlyList<int> DeckCardIds => _deckCardIds;
     public IReadOnlyList<int> RelicIds => _relicIds;
-    public PlayerDataService()
+
+    public void Reset()
     {
         var config = ServiceLocator.Get<IConfigService>().GetTable<PlayerInitConfig>().Get(0);
         _coin = 0;
@@ -52,8 +53,14 @@ public class PlayerDataService
         _currentHp = config.InitialHp;
         _deckCardIds.AddRange(config.InitialDeck);
     }
-
-
+    public void Load(PlayerSaveData data)
+    {
+        _coin = data.Coin;
+        _maxHp = data.MaxHp;
+        _currentHp = data.CurrentHp;
+        _deckCardIds = new List<int>(data.DeckCardIds);
+        _relicIds = new List<int>(data.RelicIds);
+    }
     public PlayerSaveData ExportState()
     {
         return new PlayerSaveData
@@ -66,14 +73,7 @@ public class PlayerDataService
         };
     }
 
-    public void Init(PlayerSaveData data)
-    {
-        _coin = data.Coin;
-        _maxHp = data.MaxHp;
-        _currentHp = data.CurrentHp;
-        _deckCardIds = new List<int>(data.DeckCardIds);
-        _relicIds = new List<int>(data.RelicIds);
-    }
+
     public void SyncHp(int currentHp, int maxHp)
     {
         CurrentHp = currentHp;

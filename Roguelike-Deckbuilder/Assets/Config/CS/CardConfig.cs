@@ -11,13 +11,12 @@ using System;
 public class CardConfig : IConfig
 {
     public int Id; // Id
-    public string Key; // 资源标识
+    public string Icon; // 图片
     public string Name; // 名称
     public int Cost; // 费用
     public string Type; // 类型
     public CardEffectEntry[] Effects; // 效果
     public int UpgradeId; // 强化id
-    public string IconName; // 图片
 }
 
 

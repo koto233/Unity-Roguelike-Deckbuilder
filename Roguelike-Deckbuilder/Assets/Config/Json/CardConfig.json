@@ -1,7 +1,7 @@
 {
   "1": {
     "Id": 1,
-    "Key": 1,
+    "Icon": "strike_ironclad",
     "Name": "打击",
     "Cost": 1,
     "Type": "Attack",
@@ -11,12 +11,11 @@
         "Value": 6
       }
     ],
-    "UpgradeId": 2,
-    "IconName": "strike_ironclad"
+    "UpgradeId": 2
   },
   "2": {
     "Id": 2,
-    "Key": 2,
+    "Icon": "strike_ironclad",
     "Name": "攻击+",
     "Cost": 1,
     "Type": "Attack",
@@ -26,12 +25,11 @@
         "Value": 9
       }
     ],
-    "UpgradeId": 0,
-    "IconName": "strike_ironclad"
+    "UpgradeId": 0
   },
   "3": {
     "Id": 3,
-    "Key": 3,
+    "Icon": "defend_ironclad",
     "Name": "防御",
     "Cost": 1,
     "Type": "Skill",
@@ -41,12 +39,11 @@
         "Value": 5
       }
     ],
-    "UpgradeId": 4,
-    "IconName": "defend_ironclad"
+    "UpgradeId": 4
   },
   "4": {
     "Id": 4,
-    "Key": 4,
+    "Icon": "defend_ironclad",
     "Name": "防御+",
     "Cost": 1,
     "Type": "Skill",
@@ -56,12 +53,11 @@
         "Value": 8
       }
     ],
-    "UpgradeId": 0,
-    "IconName": "defend_ironclad"
+    "UpgradeId": 0
   },
   "5": {
     "Id": 5,
-    "Key": 5,
+    "Icon": "bash",
     "Name": "痛击",
     "Cost": 2,
     "Type": "Attack",
@@ -75,12 +71,11 @@
         "Value": 2
       }
     ],
-    "UpgradeId": 6,
-    "IconName": "bash"
+    "UpgradeId": 6
   },
   "6": {
     "Id": 6,
-    "Key": 6,
+    "Icon": "bash",
     "Name": "痛击+",
     "Cost": 2,
     "Type": "Attack",
@@ -94,12 +89,11 @@
         "Value": 3
       }
     ],
-    "UpgradeId": 0,
-    "IconName": "bash"
+    "UpgradeId": 0
   },
   "7": {
     "Id": 7,
-    "Key": 7,
+    "Icon": "test",
     "Name": "战术",
     "Cost": 1,
     "Type": "Skill",
@@ -109,12 +103,11 @@
         "Value": 2
       }
     ],
-    "UpgradeId": 8,
-    "IconName": "test"
+    "UpgradeId": 8
   },
   "8": {
     "Id": 8,
-    "Key": 8,
+    "Icon": "test",
     "Name": "战术+",
     "Cost": 1,
     "Type": "Skill",
@@ -124,12 +117,11 @@
         "Value": 3
       }
     ],
-    "UpgradeId": 0,
-    "IconName": "test"
+    "UpgradeId": 0
   },
   "9": {
     "Id": 9,
-    "Key": 9,
+    "Icon": "test",
     "Name": "赋能",
     "Cost": 0,
     "Type": "Skill",
@@ -139,12 +131,11 @@
         "Value": 1
       }
     ],
-    "UpgradeId": 10,
-    "IconName": "test"
+    "UpgradeId": 10
   },
   "10": {
     "Id": 10,
-    "Key": 10,
+    "Icon": "test",
     "Name": "赋能+",
     "Cost": 0,
     "Type": "Skill",
@@ -154,7 +145,6 @@
         "Value": 2
       }
     ],
-    "UpgradeId": 0,
-    "IconName": "test"
+    "UpgradeId": 0
   }
 }

@@ -27,7 +27,7 @@ public partial class UpgradeCardItem : UIBase
     public void RefreshUI(Card card)
     {
         b_CostText.SetText(card.Config.Cost.ToString());
-        b_Icon.sprite = ServiceLocator.Get<CardIconService>().GetCardIcon(card.Config.IconName);
+        b_Icon.sprite = ServiceLocator.Get<CardIconService>().GetCardIcon(card.Config.Icon);
         b_NameText.SetText(card.Config.Name);
         b_DescText.SetText(card.Description);
         switch (card.Config.Type)

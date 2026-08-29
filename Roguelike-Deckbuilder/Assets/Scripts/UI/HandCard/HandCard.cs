@@ -64,7 +64,7 @@ public partial class HandCard
         _canUse = card.CanUse;
         b_CostText.SetText(card.Config.Cost.ToString());
         Color targetColor = _canUse ? Color.white : Color.red;
-        b_Icon.sprite = ServiceLocator.Get<CardIconService>().GetCardIcon(card.Config.IconName);
+        b_Icon.sprite = ServiceLocator.Get<CardIconService>().GetCardIcon(card.Config.Icon);
         b_CostText.color = targetColor;
         b_NameText.SetText(card.Config.Name);
         b_DescText.SetText(card.Description);

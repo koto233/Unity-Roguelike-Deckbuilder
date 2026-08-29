@@ -19,17 +19,9 @@ public class MapService
     public MapNodeData GetNode(string id) => CurrentMap?.GetValueOrDefault(id);
 
     public List<MapNodeData> GetNodesAtRow(int row) => CurrentMap?.Values.Where(n => n.Row == row).ToList();
-    public void Init(MapSaveData saveData)
-    {
-        if (saveData == null || saveData.TemplateId <= 0)
-        {
-            NewMap(1);
-            return;
-        }
-        LoadMap(saveData);
-    }
 
-    private void LoadMap(MapSaveData saveData)
+
+    public void LoadMap(MapSaveData saveData)
     {
         var configs = ServiceLocator.Get<IConfigService>().GetTable<MapConfig>().GetAll()
                    .Where(c => c.Templateld == saveData.TemplateId) // 你的模板ID逻辑
@@ -73,7 +65,7 @@ public class MapService
         RecalculateLockStates();
         RefreshInteractableStates();
     }
-    private void NewMap(int templateId)
+    public void NewMap(int templateId)
     {
         _currentSeed = Random.Range(0, int.MaxValue);
         var allConfigs = ConfigService.GetTable<MapConfig>().GetAll();
