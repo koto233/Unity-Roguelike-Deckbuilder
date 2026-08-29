@@ -1,11 +1,99 @@
 {
   "1": {
     "Id": 1,
-    "IconKey": "测试",
-    "Name": "测试",
+    "Name": "燃烧之血",
+    "Icon": "",
     "Rarity": 1,
-    "Type": "",
+    "Type": "HealOnCombatEnd",
+    "Effects": {
+      "amount": 6
+    },
+    "Description": "在战斗结束时，回复6点生命。"
+  },
+  "2": {
+    "Id": 2,
+    "Name": "黑暗之血",
+    "Icon": "",
+    "Rarity": 0.0,
+    "Type": "HealOnCombatEnd",
+    "Effects": {
+      "amount": 12
+    },
+    "Description": "在战斗结束时，回复12点生命。"
+  },
+  "3": {
+    "Id": 3,
+    "Name": "红头骨",
+    "Icon": "",
+    "Rarity": 0.0,
+    "Type": "ThresholdStrength",
+    "Effects": {
+      "threshold": 0.5,
+      "strength": 3
+    },
+    "Description": "当你的生命值低于或等于50%时，你额外获得3点力量"
+  },
+  "4": {
+    "Id": 4,
+    "Name": "纸蛙",
+    "Icon": "",
+    "Rarity": 0.0,
+    "Type": "ModifyVulnerableMultiplier",
+    "Effects": {
+      "multiplier": 1.75
+    },
+    "Description": "有易伤状态的敌人受到的伤害增加75%而非50%"
+  },
+  "5": {
+    "Id": 5,
+    "Name": "自成型黏土",
+    "Icon": "",
+    "Rarity": 0.0,
+    "Type": "BlockOnHpLossNextTurn",
+    "Effects": {
+      "block": 3
+    },
+    "Description": "每当你在战斗中失去生命，就在下一回合获得3点格挡"
+  },
+  "6": {
+    "Id": 6,
+    "Name": "卡戎之灰",
+    "Icon": "",
+    "Rarity": 0.0,
+    "Type": "DamageOnExhaust",
+    "Effects": {
+      "damage": 3
+    },
+    "Description": "每当你消耗一张牌，对所有敌人造成3点伤害"
+  },
+  "7": {
+    "Id": 7,
+    "Name": "恶魔之舌",
+    "Icon": "",
+    "Rarity": 0.0,
+    "Type": "HealOnFirstHpLoss",
     "Effects": "",
-    "Description": ""
+    "Description": "每回合第一次在回合内失去生命值时，回复等量的生命值"
+  },
+  "8": {
+    "Id": 8,
+    "Name": "损毁头盔",
+    "Icon": "",
+    "Rarity": 0.0,
+    "Type": "DoubleFirstStrength",
+    "Effects": "",
+    "Description": "你在每场战斗中第一次获得的力量值翻倍"
+  },
+  "9": {
+    "Id": 9,
+    "Name": "硫磺",
+    "Icon": "",
+    "Rarity": 0.0,
+    "Type": "StrengthOnTurnStart",
+    "Effects": {
+      "playerStrength": 2,
+      "enemyStrength": 1
+    },
+    "Description": "在你的每个回合开始时，你获得2点力量，所有敌人获得1点力量"
   }
 }

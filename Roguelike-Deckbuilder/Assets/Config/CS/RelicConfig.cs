@@ -6,16 +6,15 @@
 
 // Generate From D:\GIT\Unity-Roguelike-Deckbuilder\Roguelike-Deckbuilder\Assets\Config\Excel\RelicConfig.xlsx.xlsx
 
-using System;
-[Serializable]
+[System.Serializable]
 public class RelicConfig : IConfig
 {
 	public int Id; // Id
-	public string IconKey; // 资源标识
 	public string Name; // 名称
+	public string Icon; // 图标
 	public int Rarity; // 稀有度
 	public string Type; // 类型
-	public CardEffectEntry[] Effects; // 效果
+	public string Effects; // 效果
 	public string Description; // 描述
 }
 
