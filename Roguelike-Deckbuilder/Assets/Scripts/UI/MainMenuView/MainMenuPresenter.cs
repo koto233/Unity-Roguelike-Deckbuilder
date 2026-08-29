@@ -31,10 +31,8 @@ public class MainMenuPresenter : BasePresenter<MainMenuView>
 
     private void HandleClickNewGame()
     {
-        ServiceLocator.Get<MapService>().GenerateMap(1);
-        ServiceLocator.Get<ProcedureManager>().ChangeProcedure<ProcedureMap>();
-        ServiceLocator.Get<PlayerDataService>().Init();
-        ServiceLocator.Get<RelicService>().Init();
+        var data = new GameSaveData();
+        StartGame(data);
     }
     private void HandleClickContinue()
     {
@@ -48,16 +46,24 @@ public class MainMenuPresenter : BasePresenter<MainMenuView>
         {
             return;
         }
-
-        if (saveService.LoadGame())
+        var saveData = saveService.LoadSaveData();
+        if (saveData == null)
         {
-            // 3. 切换到地图流程
-            ServiceLocator.Get<ProcedureManager>().ChangeProcedure<ProcedureMap>();
+            Debug.Log("读档失败");
+            return;
         }
-
+        StartGame(saveData);
     }
 
-
+    private void StartGame(GameSaveData data)
+    {
+        var playerService = ServiceLocator.Get<PlayerDataService>();
+        playerService.Init(data.PlayerData);
+        ServiceLocator.Get<RelicService>().Init();
+        ServiceLocator.Get<MapService>().Init(data.MapData);
+        // 流程切换
+        ServiceLocator.Get<ProcedureManager>().ChangeProcedure<ProcedureMap>();
+    }
     public override void Dispose()
     {
         UnsubscribeEvents();

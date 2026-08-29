@@ -11,6 +11,7 @@ public class MapService
     public IReadOnlyCollection<MapNodeData> CurrentMapList => CurrentMap?.Values;
     private IConfigService _configService;
     private MapNodeData _currentNode;
+    private int _currentTemplateId;
     private int _currentSeed;
 
     private IConfigService ConfigService =>
@@ -18,7 +19,61 @@ public class MapService
     public MapNodeData GetNode(string id) => CurrentMap?.GetValueOrDefault(id);
 
     public List<MapNodeData> GetNodesAtRow(int row) => CurrentMap?.Values.Where(n => n.Row == row).ToList();
-    public void GenerateMap(int templateId)
+    public void Init(MapSaveData saveData)
+    {
+        if (saveData == null || saveData.TemplateId <= 0)
+        {
+            NewMap(1);
+            return;
+        }
+        LoadMap(saveData);
+    }
+
+    private void LoadMap(MapSaveData saveData)
+    {
+        var configs = ServiceLocator.Get<IConfigService>().GetTable<MapConfig>().GetAll()
+                   .Where(c => c.Templateld == saveData.TemplateId) // 你的模板ID逻辑
+                   .OrderBy(c => c.Row)
+                   .ToList();
+
+        CurrentMap = MapGenerator.Generate(configs, saveData.Seed);
+        _currentSeed = saveData.Seed;
+        _currentTemplateId = saveData.TemplateId;
+        // 2. 重置所有节点的访问状态
+        foreach (var node in CurrentMap.Values)
+        {
+            node.IsVisited = false;
+            node.IsLocked = node.Row > 0; // 重置锁定状态
+            node.IsStart = false;
+        }
+
+        // 3. 恢复访问状态
+        foreach (var id in saveData.VisitedNodeIds)
+        {
+            if (CurrentMap.TryGetValue(id, out var node))
+            {
+                node.IsVisited = true;
+                // 如果是起点，特殊处理
+                if (node.Row == 0) node.IsStart = true;
+            }
+        }
+
+        // 4. 设置当前节点
+        if (!string.IsNullOrEmpty(saveData.CurrentNodeId) && CurrentMap.TryGetValue(saveData.CurrentNodeId, out var curNode))
+        {
+            _currentNode = curNode;
+        }
+        else
+        {
+            // 降级：找起点
+            _currentNode = CurrentMap.Values.FirstOrDefault(n => n.IsStart);
+        }
+
+        // 5. 根据已访问节点重新计算锁定状态（关键逻辑）
+        RecalculateLockStates();
+        RefreshInteractableStates();
+    }
+    private void NewMap(int templateId)
     {
         _currentSeed = Random.Range(0, int.MaxValue);
         var allConfigs = ConfigService.GetTable<MapConfig>().GetAll();
@@ -91,58 +146,14 @@ public class MapService
     {
         return new MapSaveData
         {
+            TemplateId = _currentTemplateId,
             Seed = _currentSeed, // 需要你在 Generate 时保存这个种子
             CurrentNodeId = _currentNode?.Id,
             VisitedNodeIds = CurrentMap.Values.Where(n => n.IsVisited).Select(n => n.Id).ToList()
         };
     }
 
-    // 导入地图状态（重建结构，覆盖状态）
-    public void ImportState(MapSaveData saveData)
-    {
-        // 1. 用保存的种子重新生成地图结构
-        var configs = ServiceLocator.Get<IConfigService>().GetTable<MapConfig>().GetAll()
-            .Where(c => c.Templateld == 1) // 你的模板ID逻辑
-            .OrderBy(c => c.Row)
-            .ToList();
 
-        CurrentMap = MapGenerator.Generate(configs, saveData.Seed);
-        _currentSeed = saveData.Seed;
-
-        // 2. 重置所有节点的访问状态
-        foreach (var node in CurrentMap.Values)
-        {
-            node.IsVisited = false;
-            node.IsLocked = node.Row > 0; // 重置锁定状态
-            node.IsStart = false;
-        }
-
-        // 3. 恢复访问状态
-        foreach (var id in saveData.VisitedNodeIds)
-        {
-            if (CurrentMap.TryGetValue(id, out var node))
-            {
-                node.IsVisited = true;
-                // 如果是起点，特殊处理
-                if (node.Row == 0) node.IsStart = true;
-            }
-        }
-
-        // 4. 设置当前节点
-        if (!string.IsNullOrEmpty(saveData.CurrentNodeId) && CurrentMap.TryGetValue(saveData.CurrentNodeId, out var curNode))
-        {
-            _currentNode = curNode;
-        }
-        else
-        {
-            // 降级：找起点
-            _currentNode = CurrentMap.Values.FirstOrDefault(n => n.IsStart);
-        }
-
-        // 5. 根据已访问节点重新计算锁定状态（关键逻辑）
-        RecalculateLockStates();
-        RefreshInteractableStates();
-    }
 
     private void RecalculateLockStates()
     {

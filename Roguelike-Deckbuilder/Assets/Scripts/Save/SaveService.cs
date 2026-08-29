@@ -34,21 +34,15 @@ public class SaveService
     }
 
     // ============ 读档 ============
-    public bool LoadGame()
+    public GameSaveData LoadSaveData()
     {
-        if (!_storage.HasSave()) return false;
+        if (!_storage.HasSave()) return null;
 
         string json = _storage.Load();
-        if (string.IsNullOrEmpty(json)) return false;
+        if (string.IsNullOrEmpty(json)) return null;
 
         var saveData = JsonConvert.DeserializeObject<GameSaveData>(json);
-        if (saveData == null) return false;
-
-        // 恢复数据
-        PlayerDataService.ImportState(saveData.PlayerData);
-        MapService.ImportState(saveData.MapData);
-        ServiceLocator.Get<RelicService>().Init();
-        return true;
+        return saveData;
     }
 
     public bool HasSave() => _storage.HasSave();

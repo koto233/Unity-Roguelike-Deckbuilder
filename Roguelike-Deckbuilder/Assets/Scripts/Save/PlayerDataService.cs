@@ -6,7 +6,7 @@ using LitFramework.EventBus;
 
 public class PlayerDataService
 {
-    private int _coin;
+    private int _coin = 0;
     public int Coin
     {
         get => _coin;
@@ -44,16 +44,16 @@ public class PlayerDataService
     private List<int> _relicIds = new();
     public IReadOnlyList<int> DeckCardIds => _deckCardIds;
     public IReadOnlyList<int> RelicIds => _relicIds;
-
-    public void Init()
+    public PlayerDataService()
     {
         var config = ServiceLocator.Get<IConfigService>().GetTable<PlayerInitConfig>().Get(0);
         _coin = 0;
         _maxHp = config.InitialHp;
         _currentHp = config.InitialHp;
         _deckCardIds.AddRange(config.InitialDeck);
-        _relicIds.Clear();
     }
+
+
     public PlayerSaveData ExportState()
     {
         return new PlayerSaveData
@@ -66,7 +66,7 @@ public class PlayerDataService
         };
     }
 
-    public void ImportState(PlayerSaveData data)
+    public void Init(PlayerSaveData data)
     {
         _coin = data.Coin;
         _maxHp = data.MaxHp;
