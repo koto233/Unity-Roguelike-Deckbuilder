@@ -7,30 +7,18 @@ using UnityEngine;
 public partial class ShopCardItem : UIBase
 {
     public event System.Action<int> OnClick;
-    public void Init(Card card)
+    public void Init(CardDisplayData config)
     {
-        RefreshUI(card);
+        b_CostText.SetText(config.EnergyCost.ToString());
+        b_Icon.sprite = config.Icon;
+        b_NameText.SetText(config.Name);
+        b_DescText.SetText(config.Description);
+        b_PortraitBorder.sprite = config.PortraitBorderSprite;
+        b_Frame.sprite = config.FrameSprite;
+        b_type_text.SetText(config.Type);
+        b_PriceText.SetText(config.Price.ToString());
+        // b_PortraitBorder.sprite = ServiceLocator.Get<UIAtlasService>().GetSprite("card_portrait_border_attack_s");
+        // b_Frame.sprite = ServiceLocator.Get<UIAtlasService>().GetSprite("card_frame_attack_s");
     }
-    public void RefreshUI(Card card)
-    {
-        b_CostText.SetText(card.Config.Cost.ToString());
-        b_Icon.sprite = ServiceLocator.Get<CardIconService>().GetCardIcon(card.Config.Icon);
-        b_NameText.SetText(card.Config.Name);
-        b_DescText.SetText(card.Description);
-        switch (card.Config.Type)
-        {
-            case "Attack":
-                b_PortraitBorder.sprite = ServiceLocator.Get<UIAtlasService>().GetSprite("card_portrait_border_attack_s");
-                b_Frame.sprite = ServiceLocator.Get<UIAtlasService>().GetSprite("card_frame_attack_s");
-                b_type_text.SetText("攻击");
-                break;
-            case "Skill":
-                b_PortraitBorder.sprite = ServiceLocator.Get<UIAtlasService>().GetSprite("card_portrait_border_skill_s");
-                b_Frame.sprite = ServiceLocator.Get<UIAtlasService>().GetSprite("card_frame_skill_s");
-                b_type_text.SetText("技能");
-                break;
-            default:
-                break;
-        }
-    }
+
 }

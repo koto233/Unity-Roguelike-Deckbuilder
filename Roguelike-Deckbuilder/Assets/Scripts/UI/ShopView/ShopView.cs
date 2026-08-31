@@ -59,46 +59,37 @@ public partial class ShopView : UIWindow
         b_RemoveButton.onClick.RemoveAllListeners();
         b_ConfirmButton.onClick.RemoveAllListeners();
     }
-    public void CreateCardList()
+
+    public void CreateCardList(List<CardDisplayData> cardDataList)
     {
         ClearCardList();
 
-        // foreach (var data in shopCards)
-        // {
-        //     var item = _poolService.Get<ShopCardItem>();
-        //     item.Init(data.CardConfig);
-        //     item.transform.SetParent(b_CardsRoot, false);
-
-        //     // 点击事件转发（View 不管业务，只转发）
-        //     int id = data.CardConfig.Id;
-        //     item.OnClick += (id) => OnClickShopCard?.Invoke(id);
-
-        //     _currentCardItems.Add(item);
-        // }
-        // 生成示范
-        //   var card = _poolService.Get<ShopCardItem>();
-        // card.transform.SetParent(b_CardsRoot, false);
+        foreach (var data in cardDataList)
+        {
+            var item = _poolService.Get<ShopCardItem>();
+            item.Init(data);
+            item.transform.SetParent(b_CardsRoot, false);
+            int id = data.Id;
+            item.OnClick += (id) => OnClickShopCard?.Invoke(id);
+            _currentCardItems.Add(item);
+        }
     }
-    public void CreateRelicList()
+
+    public void CreateRelicList(List<RelicDisplayData> relicDataList)
     {
         ClearRelicList();
 
-        // foreach (var data in shopRelics)
-        // {
-        //     var item = _poolService.Get<ShopRelicItem>();
-        //     item.Init(data.RelicConfig);
-        //     item.SetPrice(data.Price);
-        //     item.transform.SetParent(b_RelicItemsRoot, false);
-
-        //     int id = data.RelicConfig.Id;
-        //     item.OnClick += () => OnClickRelic?.Invoke(id);
-
-        //     _currentRelicItems.Add(item);
-        // }
-        // 生成示范
-        // var relic = _poolService.Get<ShopRelicItem>();
-        // relic.transform.SetParent(b_RelicItemsRoot, false);
+        foreach (var data in relicDataList)
+        {
+            var item = _poolService.Get<ShopRelicItem>();
+            item.Init(data);
+            item.transform.SetParent(b_RelicsRoot, false);
+            int id = data.Id;
+            item.OnClick += (id) => OnClickRelic?.Invoke(id);
+            _currentRelicItems.Add(item);
+        }
     }
+  
     public void ShowRemovePanel()
     {
         b_RemovePanel.gameObject.SetActive(true);

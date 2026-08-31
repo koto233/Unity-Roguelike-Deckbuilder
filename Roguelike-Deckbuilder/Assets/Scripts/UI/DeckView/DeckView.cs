@@ -34,21 +34,17 @@ public partial class DeckView : UIWindow
         b_BackButton.onClick.RemoveAllListeners();
     }
 
-    public void SpawnCardInList(IReadOnlyList<int> cards)
+    public void SpawnCardInList(IReadOnlyList<CardDisplayData> cards)
     {
         if (_cardDisplays.Count > 0)
         {
             ClearCardsInPileUI();
         }
-        var configService = ServiceLocator.Get<IConfigService>();
-        var cardConfigTable = configService.GetTable<CardConfig>();
-        foreach (var id in cards)
+        foreach (var card in cards)
         {
             var cardDisplayPrefab = _poolService.GetGameObject<CardItem>();
             cardDisplayPrefab.transform.SetParent(b_Content.transform);
             var uiCard = cardDisplayPrefab.GetComponent<CardItem>();
-            var cardConfig = cardConfigTable.Get(id);
-            var card = new Card(cardConfig);
             uiCard.Init(card);
             _cardDisplays.Add(uiCard);
         }

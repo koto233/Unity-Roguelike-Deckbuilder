@@ -2,9 +2,113 @@
   "1": {
     "Id": 1,
     "ItemType": 1,
-    "ItemId": "1",
-    "Weight": 1,
+    "ItemId": 1,
+    "Weight": 50,
     "Price": 50,
+    "Condition": ""
+  },
+  "2": {
+    "Id": 2,
+    "ItemType": 1,
+    "ItemId": 3,
+    "Weight": 50,
+    "Price": 50,
+    "Condition": ""
+  },
+  "3": {
+    "Id": 3,
+    "ItemType": 1,
+    "ItemId": 5,
+    "Weight": 30,
+    "Price": 50,
+    "Condition": ""
+  },
+  "4": {
+    "Id": 4,
+    "ItemType": 1,
+    "ItemId": 7,
+    "Weight": 30,
+    "Price": 50,
+    "Condition": ""
+  },
+  "5": {
+    "Id": 5,
+    "ItemType": 1,
+    "ItemId": 9,
+    "Weight": 10,
+    "Price": 50,
+    "Condition": ""
+  },
+  "6": {
+    "Id": 6,
+    "ItemType": 2,
+    "ItemId": 1,
+    "Weight": 50,
+    "Price": 150,
+    "Condition": ""
+  },
+  "7": {
+    "Id": 7,
+    "ItemType": 2,
+    "ItemId": 2,
+    "Weight": 50,
+    "Price": 150,
+    "Condition": ""
+  },
+  "8": {
+    "Id": 8,
+    "ItemType": 2,
+    "ItemId": 3,
+    "Weight": 30,
+    "Price": 150,
+    "Condition": ""
+  },
+  "9": {
+    "Id": 9,
+    "ItemType": 2,
+    "ItemId": 4,
+    "Weight": 30,
+    "Price": 150,
+    "Condition": ""
+  },
+  "10": {
+    "Id": 10,
+    "ItemType": 2,
+    "ItemId": 5,
+    "Weight": 10,
+    "Price": 150,
+    "Condition": ""
+  },
+  "11": {
+    "Id": 11,
+    "ItemType": 2,
+    "ItemId": 6,
+    "Weight": 10,
+    "Price": 150,
+    "Condition": ""
+  },
+  "12": {
+    "Id": 12,
+    "ItemType": 2,
+    "ItemId": 7,
+    "Weight": 10,
+    "Price": 150,
+    "Condition": ""
+  },
+  "13": {
+    "Id": 13,
+    "ItemType": 2,
+    "ItemId": 8,
+    "Weight": 10,
+    "Price": 150,
+    "Condition": ""
+  },
+  "14": {
+    "Id": 14,
+    "ItemType": 2,
+    "ItemId": 9,
+    "Weight": 10,
+    "Price": 150,
     "Condition": ""
   }
 }

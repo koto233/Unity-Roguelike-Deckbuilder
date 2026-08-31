@@ -16,6 +16,10 @@ public class BattlePresenter : BasePresenter<BattleView>, IHasData<BattleContext
     private Card _selectedCard;
     private BattleContext _context;
     private BattleController _controller;
+    private IConfigService _configService;
+    private UIAtlasService _uiAtlasService;
+    private CardIconService _cardIconService;
+    private StringBuilder _description = new();
     public BattlePresenter(BattleView view) : base(view) { }
     public void SetData(BattleContext context)
     {
@@ -24,6 +28,8 @@ public class BattlePresenter : BasePresenter<BattleView>, IHasData<BattleContext
     public override void Init()
     {
         _controller = ServiceLocator.Get<BattleController>();
+        _uiAtlasService = ServiceLocator.Get<UIAtlasService>();
+        _cardIconService = ServiceLocator.Get<CardIconService>();
         SubscribeEvents();
         View.CreateEnemyViews(_context.Enemies);
         RefreshHand(_context.Player.Hand, _context.Player.Hand, ChangeType.Add);
@@ -202,8 +208,34 @@ public class BattlePresenter : BasePresenter<BattleView>, IHasData<BattleContext
     {
         var pile = _controller.GetPile(index);
         View.ClearCardsInPileUI();
-        View.SpawnCardInList(pile);
+        var displayData = new List<CardDisplayData>();
+        foreach (var card in pile)
+        {
+            displayData.Add(ToDisplayData(card.Config));
+        }
+        View.SpawnCardInList(displayData);
         View.OpenPilePanel();
+    }
+
+    private CardDisplayData ToDisplayData(CardConfig config)
+    {
+        _description.Clear();
+        foreach (var effect in config.Effects)
+        {
+            var effectConfig = _configService.GetTable<CardEffectsConfig>().Get(effect.EffectId);
+            _description.AppendLine(string.Format(effectConfig.Description, effect.Value));
+        }
+
+        return new CardDisplayData
+        {
+            Name = config.Name,
+            Description = _description.ToString(),
+            EnergyCost = config.Cost,
+            Icon = _cardIconService.GetCardIcon(config.Icon),
+            PortraitBorderSprite = _uiAtlasService.GetSprite($"card_portrait_border_{config.Type}_s"),
+            FrameSprite = _uiAtlasService.GetSprite($"card_frame_{config.Type}_s"),
+            Type = config.Type == "Attack" ? "攻击" : "技能",
+        };
     }
     private void OnBuffApplied(BuffAppliedEvent evt)
     {

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using LitFramework;
+using LitFramework.Config;
 using LitFramework.UI.Core.Service;
 using UnityEngine;
 
@@ -9,7 +10,8 @@ public class ShopPresenter : BasePresenter<ShopView>
 {
     private UIService _uiService;
     private int _selectedCardId;
-    private PlayerDataService playerService;
+    private PlayerDataService _playerService;
+    private IConfigTable<ShopConfig> _shopTable;
     public ShopPresenter(ShopView view) : base(view)
     {
     }
@@ -17,7 +19,8 @@ public class ShopPresenter : BasePresenter<ShopView>
     public override void Init()
     {
         _uiService = ServiceLocator.Get<UIService>();
-        playerService = ServiceLocator.Get<PlayerDataService>();
+        _playerService = ServiceLocator.Get<PlayerDataService>();
+        _shopTable = ServiceLocator.Get<IConfigService>().GetTable<ShopConfig>();
         SubscribeEvents();
         InitShop();
     }
@@ -44,7 +47,7 @@ public class ShopPresenter : BasePresenter<ShopView>
 
     private void HandleClickConfirm()
     {
-        playerService.RemoveCard(_selectedCardId);
+        _playerService.RemoveCard(_selectedCardId);
     }
 
     private void HandleClickRelic(int id)
@@ -53,7 +56,7 @@ public class ShopPresenter : BasePresenter<ShopView>
         // if(playerService.Coin >=)
         //  playerService.SpendCoin();
 
-        playerService.AddRelic(id);
+        _playerService.AddRelic(id);
     }
 
     private void HandleClickCard(int id)
@@ -61,7 +64,7 @@ public class ShopPresenter : BasePresenter<ShopView>
         // 查询价格
         // if(playerService.Coin >=)
         //  playerService.SpendCoin();
-        playerService.AddCard(id);
+        _playerService.AddCard(id);
     }
     private void HandleClickCardToRemove(int id)
     {
@@ -71,7 +74,7 @@ public class ShopPresenter : BasePresenter<ShopView>
 
     private void HandleClickRemove()
     {
-         // 查询价格
+        // 查询价格
         // if(playerService.Coin >=)
         //  playerService.SpendCoin();
         View.ShowRemovePanel();
@@ -83,6 +86,7 @@ public class ShopPresenter : BasePresenter<ShopView>
     }
     public void InitShop()
     {
+
         // View.CreateCardList();
         // View.CreatePotionList();
     }

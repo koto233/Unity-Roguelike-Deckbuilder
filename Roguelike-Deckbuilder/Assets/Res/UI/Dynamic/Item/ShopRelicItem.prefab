@@ -238,7 +238,7 @@ GameObject:
   - component: {fileID: 7715070095968157138}
   - component: {fileID: 6852369903149844503}
   m_Layer: 5
-  m_Name: ShopPotionItem
+  m_Name: ShopRelicItem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

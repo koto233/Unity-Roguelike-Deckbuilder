@@ -106,7 +106,7 @@ public partial class BattleView : UIWindow
         }
         _cardDisplays.Clear();
     }
-    public void SpawnCardInList(IReadOnlyList<Card> cards)
+    public void SpawnCardInList(IReadOnlyList<CardDisplayData> cards)
     {
         foreach (var data in cards)
         {

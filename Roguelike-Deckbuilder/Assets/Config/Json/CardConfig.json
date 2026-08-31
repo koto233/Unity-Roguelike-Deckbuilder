@@ -4,7 +4,7 @@
     "Icon": "strike_ironclad",
     "Name": "打击",
     "Cost": 1,
-    "Type": "Attack",
+    "Type": "attack",
     "Effects": [
       {
         "EffectId": 1,
@@ -18,7 +18,7 @@
     "Icon": "strike_ironclad",
     "Name": "攻击+",
     "Cost": 1,
-    "Type": "Attack",
+    "Type": "attack",
     "Effects": [
       {
         "EffectId": 1,
@@ -32,7 +32,7 @@
     "Icon": "defend_ironclad",
     "Name": "防御",
     "Cost": 1,
-    "Type": "Skill",
+    "Type": "skill",
     "Effects": [
       {
         "EffectId": 2,
@@ -46,7 +46,7 @@
     "Icon": "defend_ironclad",
     "Name": "防御+",
     "Cost": 1,
-    "Type": "Skill",
+    "Type": "skill",
     "Effects": [
       {
         "EffectId": 2,
@@ -60,7 +60,7 @@
     "Icon": "bash",
     "Name": "痛击",
     "Cost": 2,
-    "Type": "Attack",
+    "Type": "attack",
     "Effects": [
       {
         "EffectId": 1,
@@ -78,7 +78,7 @@
     "Icon": "bash",
     "Name": "痛击+",
     "Cost": 2,
-    "Type": "Attack",
+    "Type": "attack",
     "Effects": [
       {
         "EffectId": 1,
@@ -93,58 +93,38 @@
   },
   "7": {
     "Id": 7,
-    "Icon": "test",
-    "Name": "战术",
-    "Cost": 1,
-    "Type": "Skill",
-    "Effects": [
-      {
-        "EffectId": 3,
-        "Value": 2
-      }
-    ],
+    "Icon": "anger",
+    "Name": "愤怒",
+    "Cost": 0,
+    "Type": "attack",
+    "Effects": "",
     "UpgradeId": 8
   },
   "8": {
     "Id": 8,
-    "Icon": "test",
-    "Name": "战术+",
-    "Cost": 1,
-    "Type": "Skill",
-    "Effects": [
-      {
-        "EffectId": 3,
-        "Value": 3
-      }
-    ],
+    "Icon": "anger",
+    "Name": "愤怒+",
+    "Cost": 0,
+    "Type": "attack",
+    "Effects": "",
     "UpgradeId": 0
   },
   "9": {
     "Id": 9,
-    "Icon": "test",
-    "Name": "赋能",
-    "Cost": 0,
-    "Type": "Skill",
-    "Effects": [
-      {
-        "EffectId": 4,
-        "Value": 1
-      }
-    ],
+    "Icon": "pommel_strike",
+    "Name": "剑柄打击",
+    "Cost": 1,
+    "Type": "attack",
+    "Effects": "",
     "UpgradeId": 10
   },
   "10": {
     "Id": 10,
-    "Icon": "test",
-    "Name": "赋能+",
-    "Cost": 0,
-    "Type": "Skill",
-    "Effects": [
-      {
-        "EffectId": 4,
-        "Value": 2
-      }
-    ],
+    "Icon": "pommel_strike",
+    "Name": "剑柄打击+",
+    "Cost": 1,
+    "Type": "attack",
+    "Effects": "",
     "UpgradeId": 0
   }
 }
