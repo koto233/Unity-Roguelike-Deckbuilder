@@ -4,7 +4,7 @@ using LitFramework;
 using LitFramework.UI.Core.Window;
 using UnityEngine;
 
-public partial class ShopCardItem : UIBase
+public partial class ClickableCardItem : UIBase
 {
     private int _id;
     public event System.Action<int> OnClick;
@@ -19,7 +19,6 @@ public partial class ShopCardItem : UIBase
     {
         b_Click.onClick.RemoveAllListeners();
     }
-
     public void Init(CardDisplayData data)
     {
         _id = data.Id;
@@ -30,7 +29,5 @@ public partial class ShopCardItem : UIBase
         b_PortraitBorder.sprite = data.PortraitBorderSprite;
         b_Frame.sprite = data.FrameSprite;
         b_type_text.SetText(data.Type);
-        b_PriceText.SetText(data.Price.ToString());
     }
-
 }

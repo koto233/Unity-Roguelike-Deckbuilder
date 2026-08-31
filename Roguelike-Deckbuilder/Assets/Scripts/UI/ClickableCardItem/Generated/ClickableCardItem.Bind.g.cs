@@ -12,7 +12,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-    public partial class UpgradeCardItem
+    public partial class ClickableCardItem
     {
         private @Button b_Click;
         private @Image b_Icon;

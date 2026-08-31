@@ -976,7 +976,7 @@ GameObject:
   - component: {fileID: 784152890002736185}
   - component: {fileID: 7043825790444455279}
   m_Layer: 5
-  m_Name: UpgradeCardItem
+  m_Name: ClickableCardItem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

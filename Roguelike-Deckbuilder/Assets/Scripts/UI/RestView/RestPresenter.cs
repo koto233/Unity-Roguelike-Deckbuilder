@@ -11,7 +11,7 @@ using UnityEngine;
 public class RestPresenter : BasePresenter<RestView>
 {
     private UIService _uiService;
-    private CardConfig _selectedConfig;
+    private int _selectedId;
 
     public RestPresenter(RestView view) : base(view)
     {
@@ -91,19 +91,22 @@ public class RestPresenter : BasePresenter<RestView>
 
 
         // 4. 初始状态
-        _selectedConfig = null;
+        _selectedId = -1;
     }
 
-    private void OnCardSelected(CardConfig config)
+    private void OnCardSelected(int id)
     {
-        _selectedConfig = config;
-        var targetConfig = ServiceLocator.Get<IConfigService>().GetTable<CardConfig>().Get(_selectedConfig.UpgradeId);
-        View.ShowConfirm(config, targetConfig);
+        _selectedId = id;
+        var config = ServiceLocator.Get<IConfigService>().GetTable<CardConfig>().Get(_selectedId);
+        var targetConfig = ServiceLocator.Get<IConfigService>().GetTable<CardConfig>().Get(id);
+        var display = CardDisplayData.FromConfig(config);
+        var targetDisplay = CardDisplayData.FromConfig(targetConfig);
+        View.ShowConfirm(display, targetDisplay);
     }
 
     private void OnConfirmUpgrade()
     {
-        if (_selectedConfig == null)
+        if (_selectedId == -1)
         {
             Debug.LogWarning("请先选择一张卡牌");
             return;
@@ -111,7 +114,8 @@ public class RestPresenter : BasePresenter<RestView>
 
         // Presenter 唯一拥有调用 Service 的权限
         var playerService = ServiceLocator.Get<PlayerDataService>();
-        playerService.UpgradeCard(_selectedConfig.Id, _selectedConfig.UpgradeId);
+        var config = ServiceLocator.Get<IConfigService>().GetTable<CardConfig>().Get(_selectedId);
+        playerService.UpgradeCard(config.Id, config.UpgradeId);
         View.CloseForge();
         View.ShowContinue();
     }

@@ -17,15 +17,15 @@ public partial class RestView : UIWindow
     public event Action OnClickRest;
     private ObjectPoolService _poolService;
     private AssetRef<GameObject> _upgradeCardItemRef;
-    private List<UpgradeCardItem> _cardItems = new();
-    public event Action<CardConfig> OnCardSelected;
+    private List<ClickableCardItem> _cardItems = new();
+    public event Action<int> OnCardSelected;
     public event Action OnConfirmClicked;
 
     protected override async UniTask OnOpenAsync()
     {
         await base.OnOpenAsync();
         var assetService = ServiceLocator.Get<IAssetService>();
-        _upgradeCardItemRef = await assetService.LoadRefAsync<GameObject>(UIPath.UpgradeCardItem);
+        _upgradeCardItemRef = await assetService.LoadRefAsync<GameObject>(UIPath.ClickableCardItem);
         InitObjectPools();
     }
     private void OnEnable()
@@ -44,7 +44,7 @@ public partial class RestView : UIWindow
     {
 
         _poolService = ServiceLocator.Get<ObjectPoolService>();
-        _poolService.RegisterGameObjectPool<UpgradeCardItem>(_upgradeCardItemRef.Asset, initialPoolSize: 10);
+        _poolService.RegisterGameObjectPool<ClickableCardItem>(_upgradeCardItemRef.Asset, initialPoolSize: 10);
 
     }
     private void SubscribeEvents()
@@ -84,20 +84,21 @@ public partial class RestView : UIWindow
         Debug.Log("CreateUpgradeList: " + _cardItems.Count);
         foreach (var card in cards)
         {
-            var item = _poolService.GetGameObject<UpgradeCardItem>();
-            var upgradeCardItem = item.GetComponent<UpgradeCardItem>();
-            upgradeCardItem.Init(card);
+            var item = _poolService.GetGameObject<ClickableCardItem>();
+            var upgradeCardItem = item.GetComponent<ClickableCardItem>();
+
+            upgradeCardItem.Init(CardDisplayData.FromConfig(card.Config));
             // 点击时发事件，不存状态
-            upgradeCardItem.OnClick += config => OnCardSelected?.Invoke(config);
+            upgradeCardItem.OnClick += id => OnCardSelected?.Invoke(id);
             item.transform.SetParent(b_ForgeListRoot);
             _cardItems.Add(upgradeCardItem);
         }
     }
 
-    public void ShowConfirm(CardConfig config, CardConfig targetConfig)
+    public void ShowConfirm(CardDisplayData display, CardDisplayData targetDisplay)
     {
         // 1. 防御
-        if (config == null || targetConfig == null)
+        if (display == null || targetDisplay == null)
         {
             Debug.LogError("ShowConfirm: config or targetConfig is null");
             return;
@@ -108,8 +109,8 @@ public partial class RestView : UIWindow
         ClearContainer(b_AfterUpgrade);
 
         // 3. 创建并填充新卡
-        CreateUpgradeCard(config, b_BeforeUpgrade);
-        CreateUpgradeCard(targetConfig, b_AfterUpgrade);
+        CreateUpgradeCard(display, b_BeforeUpgrade);
+        CreateUpgradeCard(targetDisplay, b_AfterUpgrade);
 
         // 4. 显示面板
         b_ConfirmPanel.gameObject.SetActive(true);
@@ -122,20 +123,20 @@ public partial class RestView : UIWindow
         for (int i = container.childCount - 1; i >= 0; i--)
         {
             Transform child = container.GetChild(i);
-            UpgradeCardItem item = child.GetComponent<UpgradeCardItem>();
+            ClickableCardItem item = child.GetComponent<ClickableCardItem>();
             if (item != null)
-                _poolService.ReturnGameObject<UpgradeCardItem>(item.gameObject);
+                _poolService.ReturnGameObject<ClickableCardItem>(item.gameObject);
             else
                 Destroy(child.gameObject); // 保险
         }
     }
 
-    private void CreateUpgradeCard(CardConfig config, Transform parent)
+    private void CreateUpgradeCard(CardDisplayData data, Transform parent)
     {
-        var item = _poolService.GetGameObject<UpgradeCardItem>();
-        var upgradeCardItem = item.GetComponent<UpgradeCardItem>();
+        var item = _poolService.GetGameObject<ClickableCardItem>();
+        var upgradeCardItem = item.GetComponent<ClickableCardItem>();
         item.transform.SetParent(parent, false);
-        upgradeCardItem.Init(new Card(config));
+        upgradeCardItem.Init(data);
     }
 
     private void ClearList()
@@ -143,7 +144,7 @@ public partial class RestView : UIWindow
         foreach (var item in _cardItems)
         {
             Debug.Log("ClearList: " + item.name);
-            _poolService.ReturnGameObject<UpgradeCardItem>(item.gameObject);
+            _poolService.ReturnGameObject<ClickableCardItem>(item.gameObject);
         }
 
         _cardItems.Clear();

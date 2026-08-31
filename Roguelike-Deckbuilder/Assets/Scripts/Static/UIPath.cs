@@ -6,7 +6,7 @@ public static class UIPath
     public static string MapNodeItem => Base + "Item/MapNodeItem.prefab";
     public static string MapLineItem => Base + "Item/MapLineItem.prefab";
     public static string CardItem => Base + "Item/CardItem.prefab";
-    public static string UpgradeCardItem => Base + "Item/UpgradeCardItem.prefab";
+    public static string ClickableCardItem => Base + "Item/ClickableCardItem.prefab";
     public static string EnemyItem => Base + "Item/EnemyItem.prefab";
     public static string PlayerItem => Base + "Item/PlayerItem.prefab";
     public static string HandCard => Base + "Item/HandCard.prefab";
