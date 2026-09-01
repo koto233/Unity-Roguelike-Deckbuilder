@@ -21,7 +21,7 @@ public class EnemyTurnState : TurnStateBase
         // State 不知道 Controller 内部怎么判断胜负
         // State 只拿到一个结果
         TurnResult result = await Controller.ExecuteEnemyTurnAsync();
-
+        Controller.Context.CurrentTurn += 1;
         // 根据结果决定跳转
         switch (result)
         {

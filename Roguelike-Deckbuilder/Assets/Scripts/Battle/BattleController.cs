@@ -16,7 +16,7 @@ public class BattleController
     {
         Context = BattleContextFactory.Create(args);
         Context.IsPlayerTurn = true;
-        Context.CurrentTurn = 1;
+        Context.CurrentTurn = 0;
         var configService = ServiceLocator.Get<IConfigService>();
         var cardConfigTable = configService.GetTable<CardConfig>();
         var deck = ServiceLocator.Get<PlayerDataService>().DeckCardIds;
@@ -56,6 +56,7 @@ public class BattleController
                 Debug.LogError("请选择目标");
                 return false;
             }
+            Context.Attacker = Context.Player;
             Context.Target = target;
             if (!Context.Player.SpendEnergy(card.Config.Cost))
             {
@@ -98,7 +99,7 @@ public class BattleController
             if (enemy.CurrentHp <= 0) continue;
 
             // 1. 决策
-            enemy.DetermineIntent(Context);
+            enemy.DetermineAction();
 
             // 2. 发布意图事件（UI更新）
             // EventBus.Publish(new EnemyIntentDeterminedEvent(enemy));
@@ -107,7 +108,7 @@ public class BattleController
             await UniTask.Delay(300);
 
             // 4. 执行
-            enemy.ExecuteIntent(Context);
+            enemy.ExecuteIntent();
 
             // 5. 间隔
             await UniTask.Delay(500);
@@ -161,6 +162,7 @@ public class BattleController
     public void EndEnemyTurn()
     {
         BattleFSM.ChangeState<PlayerTurnState>();
+        Context.CurrentTurn += 1;
     }
 
     private void OnCharacterDied(DiedEvent evt)
@@ -181,14 +183,13 @@ public class BattleController
             }
         }
     }
-
+    public Enemy GetEnemy(int enemyId)
+    {
+        return Context.Enemies.FirstOrDefault(e => e.Id == enemyId);
+    }
     public void OnAllEnemiesDefeated()
     {
 
     }
 
-    // public void Tick(float deltaTime)
-    // {
-    //     // _battleFSM.Update();
-    // }
 }

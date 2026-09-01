@@ -13,17 +13,10 @@ public static class BuffIds
     /// </summary>
     public const int Strength = 3;
     /// <summary>
-    /// 中毒
+    /// 缩小
     /// </summary>
-    public const int Poison = 4;
-    /// <summary>
-    /// 再生
-    /// </summary>
-    public const int Regeneration = 5;
-    /// <summary>
-    /// 免疫
-    /// /// </summary>
-    public const int Immune = 6;
+    public const int Shrinker = 4;
+  
 
 }
 

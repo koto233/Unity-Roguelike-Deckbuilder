@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using LitFramework;
 using LitFramework.Config;
 using LitFramework.EventBus;
+using Newtonsoft.Json;
 using UnityEngine;
 
 public class Enemy : CharacterBase
@@ -12,46 +13,58 @@ public class Enemy : CharacterBase
         Config = config;
         AI = ai;
     }
-    public IntentType LastIntent { get; set; }
     public EnemyConfig Config { get; private set; }
-    public IntentType CurrentIntent { get; private set; }
+    public int CurrentActionId { get; private set; }
     public IEnemyAI AI { get; private set; }
     public override int Id => Config.Id;
-
-    // public EnemyData(EnemyConfig config)
-    // {
-    //     Config = config;
-    // };
     public override EntityType EntityType => EntityType.Enemy;
-
-
-    // AI 决策：根据当前状态（回合数、血量等）计算意图
-    public void DetermineIntent(BattleContext context)
+    private Dictionary<int, List<IIntent>> _actions = new();
+    public void Init()
     {
-        CurrentIntent = AI.DecideIntent(this, context);
-        // Debug.Log("意图" + CurrentIntent);
+        for (int i = 0; i < Config.Actions.Length; i++)
+        {
+            var actionId = Config.Actions[i];
+            var actionConfig = ServiceLocator.Get<IConfigService>().GetTable<ActionConfig>().Get(actionId);
+            for (int j = 0; j < actionConfig.Intents.Length; j++)
+            {
+                var intentConfig = ServiceLocator.Get<IConfigService>().GetTable<IntentConfig>().Get(actionConfig.Intents[j].IntentId);
+                var intent = IntentFactory.CreateIntent(intentConfig, actionConfig.Intents[j].Value);
+                if (!_actions.ContainsKey(actionId))
+                    _actions[actionId] = new List<IIntent>();
+                _actions[actionId].Add(intent);
+                Debug.Log($"敌人{Config.Name}的意图{intentConfig.Description}{intent == null}");
+            }
+        }
+    }
+
+    public void DetermineAction()
+    {
+        CurrentActionId = AI.DecideAction(Config.Actions);
         var configService = ServiceLocator.Get<IConfigService>();
-        var intentConfig = configService.GetTable<IntentConfig>().Get((int)CurrentIntent);
-        // Debug.Log("意图" + intentConfig.Name);
-        EventBus<IntentEvent>.Publish(new IntentEvent { Enemy = this, IntentConfig = intentConfig });
+        var actionConfig = configService.GetTable<ActionConfig>().Get(CurrentActionId);
+        var intentConfigs = new List<IntentConfig>();
+        foreach (var intent in actionConfig.Intents)
+        {
+            var intentConfig = configService.GetTable<IntentConfig>().Get(intent.IntentId);
+            intentConfigs.Add(intentConfig);
+        }
+        EventBus<IntentEvent>.Publish(new IntentEvent { Enemy = this, IntentConfigs = intentConfigs });
     }
 
     // 执行意图
-    public void ExecuteIntent(BattleContext context)
+    public void ExecuteIntent()
     {
+        Debug.Log($"执行意图：{JsonConvert.SerializeObject(_actions[CurrentActionId])}");
         var executor = ServiceLocator.Get<EffectExecutor>();
-
-        switch (CurrentIntent)
+        if (!_actions.ContainsKey(CurrentActionId))
         {
-            case IntentType.Attack:
-                // executor.Damage(Config.Damage + Strength, context.Player);
-                break;
-            case IntentType.Defend:
-                // AddBlock(Config.Defend);
-                break;
-            case IntentType.StrongAttack:
-                break;
+            Debug.LogError($"没有意图：{CurrentActionId}");
+            return;
         }
-        LastIntent = CurrentIntent;
+        var intents = _actions[CurrentActionId];
+        foreach (var intent in intents)
+        {
+            intent.Execute(executor, this);
+        }
     }
 }

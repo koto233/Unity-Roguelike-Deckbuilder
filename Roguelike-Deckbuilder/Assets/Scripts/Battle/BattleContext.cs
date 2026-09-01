@@ -8,7 +8,8 @@ public class BattleContext
     public Player Player { get; set; }            // 玩家角色
     public List<Enemy> Enemies { get; set; }     // 当前敌人列表
     public CharacterBase Target { get; set; }            // 当前选中的目标
-    public int CurrentTurn { get; set; }
+    public CharacterBase Attacker { get; set; }
+    public int CurrentTurn { get; set; } = 0;
     public bool IsPlayerTurn { get; set; }
     public int GoldReward { get; set; }            // 战斗胜利金币
     // // 可选：战斗管理器引用（用于触发额外效果、状态变更等）

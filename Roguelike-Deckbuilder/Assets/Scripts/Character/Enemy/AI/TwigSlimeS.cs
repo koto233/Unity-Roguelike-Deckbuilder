@@ -2,13 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
-// 默认（兜底）
-public class DefaultAI : IEnemyAI
+public class TwigSlimeS : IEnemyAI
 {
     public int DecideAction(int[] ActionsIds)
     {
         return ActionsIds[0];
     }
-
 }

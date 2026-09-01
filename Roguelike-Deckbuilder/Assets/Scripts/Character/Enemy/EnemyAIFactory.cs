@@ -7,9 +7,8 @@ public static class EnemyAIFactory
 {
     private static readonly Dictionary<string, Func<IEnemyAI>> _aiMap = new()
     {
-        ["Slime"] = () => new SlimeAI(),
-        ["Brute"] = () => new BruteAI(),
-        ["Default"] = () => new DefaultAI(),
+        ["shrinker_beetle"] = () => new BeetleAI(),
+        ["twig_slime_s"] = () => new TwigSlimeS(),
     };
 
     public static IEnemyAI Create(string aiType)

@@ -293,7 +293,7 @@ public class BattlePresenter : BasePresenter<BattleView>, IHasData<BattleContext
 
     private void OnEnemyIntentChanged(IntentEvent evt)
     {
-        View.RefreshEnemyIntent(evt.Enemy, evt.IntentConfig);
+        View.RefreshEnemyIntent(evt.Enemy, evt.IntentConfigs);
     }
     public override void Dispose()
     {

@@ -13,7 +13,7 @@ public class DamageEffect : CardEffectBase
     public override void Execute(Card card, BattleContext context)
     {
         var executor = ServiceLocator.Get<EffectExecutor>();
-        executor.Damage(Value, context.Target);
+        executor.Damage(Value, context.Attacker, context.Target);
 
     }
 }

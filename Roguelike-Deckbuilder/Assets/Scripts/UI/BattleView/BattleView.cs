@@ -223,11 +223,11 @@ public partial class BattleView : UIWindow
         b_IntentTooltip.Hide();
     }
 
-    public void RefreshEnemyIntent(Enemy enemy, IntentConfig intentConfig)
+    public void RefreshEnemyIntent(Enemy enemy, List<IntentConfig> intentConfigs)
     {
         if (_enemyViews.TryGetValue(enemy.Id, out var view))
         {
-            view.RefreshIntent(intentConfig);
+            view.RefreshIntent(intentConfigs);
         }
     }
 

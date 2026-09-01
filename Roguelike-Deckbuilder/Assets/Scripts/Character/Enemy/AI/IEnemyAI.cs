@@ -1,8 +1,10 @@
+using System.Collections.Generic;
+
 public interface IEnemyAI
 {
     /// <summary>
-    /// 决定本回合使用哪个意图
+    /// 决定本回合使用哪个action
     /// </summary>
-    /// <returns>IntentConfig 的 Id</returns>
-    IntentType DecideIntent(Enemy enemy, BattleContext context);
+    /// <returns></returns>
+    int DecideAction(int[] ActionsIds);
 }

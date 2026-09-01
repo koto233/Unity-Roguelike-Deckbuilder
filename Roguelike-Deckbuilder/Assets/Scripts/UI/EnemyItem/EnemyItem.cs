@@ -23,7 +23,7 @@ public partial class EnemyItem : UIBase
     {
         var assetService = ServiceLocator.Get<IAssetService>();
         _buffPrefabAssetRef = await assetService.LoadRefAsync<GameObject>(UIPath.BuffItem);
-        Enemy.DetermineIntent(null);
+        Enemy.DetermineAction();
     }
     public void UpdateHP(int currentHp, int maxHp)
     {
@@ -78,12 +78,13 @@ public partial class EnemyItem : UIBase
             }
         }
     }
-    public void RefreshIntent(IntentConfig intentConfig)
+    public void RefreshIntent(List<IntentConfig> intentConfigs)
     {
-        if (intentConfig != null && _intentionUI != null)
+
+        if (intentConfigs != null && intentConfigs.Count > 0 && _intentionUI != null)
         {
             _intentionUI.Show();
-            _intentionUI.Init(intentConfig, 5);
+            _intentionUI.Init(intentConfigs[0], 5);
         }
         else
         {

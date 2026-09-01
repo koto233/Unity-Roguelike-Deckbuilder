@@ -23,9 +23,30 @@ public class EffectExecutor
     {
         _player.CurrentHp += amount;
     }
-    public void Damage(int amount, CharacterBase target)
+    public void Damage(int amount, EntityType attackerType, EntityType targetType, int attackerId, int targetId = 0)
+    {
+        if (amount <= 0) return;
+        switch (targetType)
+        {
+            case EntityType.Player:
+                var target = _battleController.Context.Player;
+                var attacker = _battleController.GetEnemy(attackerId);
+                Damage(amount, attacker, target);
+                break;
+            case EntityType.Enemy:
+                Enemy targetEnemy = _battleController.GetEnemy(targetId);
+                var attacker2 = _battleController.Context.Player;
+                Damage(amount, attacker2, targetEnemy);
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
+    }
+
+    public void Damage(int amount, CharacterBase attacker, CharacterBase target)
     {
         if (target == null || amount <= 0) return;
+        attacker.BuffManager?.OnBeforeDealDamage(ref amount);
         // 计算buff
         target.BuffManager?.OnBeforeTakeDamage(ref amount);
         // 计算护盾
@@ -38,7 +59,6 @@ public class EffectExecutor
         // 计算伤害
         if (amount > 0)
         {
-            UnityEngine.Debug.Log($"{target.EntityType} {target.CurrentHp} take damage {amount}");
             target.CurrentHp -= amount;
             UnityEngine.Debug.Log($"{target.EntityType} {target.CurrentHp} take damage {amount}");
         }

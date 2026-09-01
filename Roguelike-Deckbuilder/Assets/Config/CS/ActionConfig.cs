@@ -6,12 +6,16 @@
 
 // Generate From D:\GIT\Unity-Roguelike-Deckbuilder\Roguelike-Deckbuilder\Assets\Config\Excel\ActionConfig.xlsx.xlsx
 
-public class ActionConfig
+public class ActionConfig : IConfig
 {
 	public int Id; // Id
 	public string Name; // 名称
-	public string Intents; // 意图
+	public IntentEntry[] Intents; // 意图
 }
 
-
+public class IntentEntry 
+{
+	public int IntentId;
+	public int Value;
+}
 // End of Auto Generated Code

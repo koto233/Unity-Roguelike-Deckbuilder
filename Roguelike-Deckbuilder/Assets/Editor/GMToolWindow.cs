@@ -29,7 +29,7 @@ public class GMToolWindow : EditorWindow
         ["DeckView"] = () => ServiceLocator.Get<UIService>().OpenAsync<DeckView>(),
         ["MapView"] = () => ServiceLocator.Get<UIService>().OpenAsync<MapView>(),
         ["RestView"] = () => ServiceLocator.Get<UIService>().OpenAsync<RestView>(),
-       
+
     };
     [MenuItem("Tools/GM Tool")]
     public static void ShowWindow()
@@ -207,21 +207,21 @@ public class GMToolWindow : EditorWindow
 
     private void DamagePlayer(int amount)
     {
-        try
-        {
-            var executor = ServiceLocator.Get<EffectExecutor>();
-            var playerService = ServiceLocator.Get<PlayerDataService>();
-            var character = playerService.GetType().GetProperty("Character")?.GetValue(playerService) as CharacterBase;
-            if (character != null)
-            {
-                executor.Damage(amount, character);
-                Debug.Log($"受到 {amount} 伤害");
-            }
-        }
-        catch (Exception e)
-        {
-            Debug.LogError($"伤害失败: {e.Message}");
-        }
+        // try
+        // {
+        //     var executor = ServiceLocator.Get<EffectExecutor>();
+        //     var playerService = ServiceLocator.Get<PlayerDataService>();
+        //     var character = playerService.GetType().GetProperty("Character")?.GetValue(playerService) as CharacterBase;
+        //     if (character != null)
+        //     {
+        //         executor.Damage(amount, character);
+        //         Debug.Log($"受到 {amount} 伤害");
+        //     }
+        // }
+        // catch (Exception e)
+        // {
+        //     Debug.LogError($"伤害失败: {e.Message}");
+        // }
     }
     #endregion
 

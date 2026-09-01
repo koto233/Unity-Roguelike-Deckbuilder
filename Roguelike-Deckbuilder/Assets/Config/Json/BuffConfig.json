@@ -4,7 +4,7 @@
     "Key": "vulnerable_power",
     "Name": "易伤",
     "IsDebuff": 1,
-    "Value": 20,
+    "Value": 50,
     "MaxStacks": 99,
     "Description": "受到伤害增加 {0}%"
   },
@@ -13,44 +13,26 @@
     "Key": "weak_power",
     "Name": "虚弱",
     "IsDebuff": 1,
-    "Value": 20,
+    "Value": 25,
     "MaxStacks": 99,
     "Description": "造成伤害减少 {0}%"
   },
   "3": {
     "Id": 3,
-    "Key": "Strength",
+    "Key": "strength_power",
     "Name": "力量",
     "IsDebuff": 0,
-    "Value": 20,
+    "Value": 0,
     "MaxStacks": 99,
-    "Description": "造成伤害 +{0}%"
+    "Description": "造成伤害 +{0}"
   },
   "4": {
     "Id": 4,
-    "Key": "Poison",
-    "Name": "中毒",
+    "Key": "shrink_power",
+    "Name": "缩小",
     "IsDebuff": 1,
-    "Value": 5,
+    "Value": 30,
     "MaxStacks": 99,
-    "Description": "每回合受到 {0} 点伤害"
-  },
-  "5": {
-    "Id": 5,
-    "Key": "Regeneration",
-    "Name": "再生",
-    "IsDebuff": 0,
-    "Value": 5,
-    "MaxStacks": 99,
-    "Description": "每回合恢复 {0} 点生命"
-  },
-  "6": {
-    "Id": 6,
-    "Key": "Immune ",
-    "Name": "免疫",
-    "IsDebuff": 0,
-    "Value": 1,
-    "MaxStacks": 99,
-    "Description": "免疫下一次 Debuff"
+    "Description": "攻击伤害减少{0}%"
   }
 }

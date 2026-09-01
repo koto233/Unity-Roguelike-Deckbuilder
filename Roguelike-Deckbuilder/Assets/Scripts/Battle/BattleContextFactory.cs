@@ -19,7 +19,9 @@ public static class BattleContextFactory
         {
             var enemyConfig = ServiceLocator.Get<IConfigService>().GetTable<EnemyConfig>().Get(enemyId);
             var enemyAi = EnemyAIFactory.Create(enemyConfig.AIType);
-            battleContext.Enemies.Add(new Enemy(enemyConfig, enemyAi));
+            var enemy = new Enemy(enemyConfig, enemyAi);
+            enemy.Init();
+            battleContext.Enemies.Add(enemy);
         }
         return battleContext;
     }
