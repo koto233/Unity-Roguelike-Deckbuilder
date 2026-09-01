@@ -48,6 +48,7 @@ public partial class ShopView : UIWindow
         _poolService = ServiceLocator.Get<ObjectPoolService>();
         _poolService.RegisterGameObjectPool<ShopCardItem>(_shopCardItemRef.Asset, initialPoolSize: 10);
         _poolService.RegisterGameObjectPool<ShopRelicItem>(_relicItemRef.Asset, initialPoolSize: 10);
+        _poolService.RegisterGameObjectPool<ClickableCardItem>(_cardItemRef.Asset, initialPoolSize: 10);
 
     }
     private void SubscribeEvents()
@@ -100,7 +101,7 @@ public partial class ShopView : UIWindow
             var item = _poolService.GetGameObject<ClickableCardItem>();
             var clickableCardItem = item.GetComponent<ClickableCardItem>();
             clickableCardItem.Init(data);
-            item.transform.SetParent(b_RelicsRoot, false);
+            item.transform.SetParent(b_DeckRoot, false);
             clickableCardItem.OnClick += (id) => OnClickCardToRemove?.Invoke(id);
             _cardItems.Add(clickableCardItem);
         }
@@ -110,8 +111,12 @@ public partial class ShopView : UIWindow
         RefreshRemovePanel(datas);
         b_RemovePanel.gameObject.SetActive(true);
     }
-    public void ShowConfirmPanel()
+    public void ShowConfirmPanel(CardDisplayData data)
     {
+        var item = _poolService.GetGameObject<ClickableCardItem>();
+        var clickableCardItem = item.GetComponent<ClickableCardItem>();
+        clickableCardItem.Init(data);
+        item.transform.SetParent(b_CardRoot, false);
         b_ConfirmPanel.gameObject.SetActive(true);
     }
     public void HideRemovePanel()
@@ -139,3 +144,4 @@ public partial class ShopView : UIWindow
         ClearRelicList();
     }
 }
+

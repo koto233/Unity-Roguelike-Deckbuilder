@@ -9,10 +9,8 @@ using LitFramework.UI.Core.Service;
 
 public class DeckPresenter : BasePresenter<DeckView>
 {
-    private IConfigService _configService;
-private UIAtlasService _uiAtlasService;
+    private UIAtlasService _uiAtlasService;
     private CardIconService _cardIconService;
-    private StringBuilder _description = new();
     public DeckPresenter(DeckView view) : base(view)
     {
     }
@@ -29,7 +27,7 @@ private UIAtlasService _uiAtlasService;
         foreach (var cardId in globalData.DeckCardIds)
         {
             var config = cardTable.Get(cardId);
-            cardDisplayDataList.Add(ToDisplayData(config));
+            cardDisplayDataList.Add(CardDisplayData.FromConfig(config));
         }
         View.SpawnCardInList(cardDisplayDataList);
     }
@@ -39,26 +37,7 @@ private UIAtlasService _uiAtlasService;
         View.OnClickBack += ClickBack;
     }
 
-    private CardDisplayData ToDisplayData(CardConfig config)
-    {
-        _description.Clear();
-        foreach (var effect in config.Effects)
-        {
-            var effectConfig = _configService.GetTable<CardEffectsConfig>().Get(effect.EffectId);
-            _description.AppendLine(string.Format(effectConfig.Description, effect.Value));
-        }
 
-        return new CardDisplayData
-        {
-            Name = config.Name,
-            Description = _description.ToString(),
-            EnergyCost = config.Cost,
-            Icon = _cardIconService.GetCardIcon(config.Icon),
-            PortraitBorderSprite = _uiAtlasService.GetSprite($"card_portrait_border_{config.Type}_s"),
-            FrameSprite = _uiAtlasService.GetSprite($"card_frame_{config.Type}_s"),
-            Type = config.Type == "attack" ? "攻击" : "技能",
-        };
-    }
 
     private void UnsubscribeEvents()
     {

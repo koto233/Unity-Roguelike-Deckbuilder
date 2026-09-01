@@ -4,7 +4,7 @@
 //     请勿手动修改此文件，重新生成将覆盖所有改动
 //
 //     来源 UI : ShopView
-//     生成时间 : 2026-08-28
+//     生成时间 : 2026-09-01
 // </自动生成>
 //------------------------------------------------------------------------------
 
@@ -20,7 +20,7 @@ using TMPro;
         private @TextMeshProUGUI b_RemovePriceText;
         private @Button b_ContinueButton;
         private @RectTransform b_RemovePanel;
-        private @RectTransform b_ForgeListRoot;
+        private @RectTransform b_DeckRoot;
         private @RectTransform b_ConfirmPanel;
         private @RectTransform b_CardRoot;
         private @Button b_ConfirmButton;
@@ -34,7 +34,7 @@ using TMPro;
             b_RemovePriceText = GetBind<@TextMeshProUGUI>(3);
             b_ContinueButton = GetBind<@Button>(4);
             b_RemovePanel = GetBind<@RectTransform>(5);
-            b_ForgeListRoot = GetBind<@RectTransform>(6);
+            b_DeckRoot = GetBind<@RectTransform>(6);
             b_ConfirmPanel = GetBind<@RectTransform>(7);
             b_CardRoot = GetBind<@RectTransform>(8);
             b_ConfirmButton = GetBind<@Button>(9);

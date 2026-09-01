@@ -88,18 +88,17 @@ public class ShopPresenter : BasePresenter<ShopView>
     /// </summary>
     private void HandleClickConfirm()
     {
-        // 查询价格
-        if (_playerService.Coin < _removeCost)
-        {
-            return;
-        }
         _playerService.SpendCoin(_removeCost);
         _playerService.RemoveCard(_selectedCardId);
         View.HideRemovePanel();
     }
     private void HandleClickRemove()
     {
-
+        // 查询价格
+        if (_playerService.Coin < _removeCost)
+        {
+            return;
+        }
         var deck = _playerService.DeckCardIds;
         var displayDatas = new List<CardDisplayData>();
         foreach (var cardId in deck)
@@ -111,8 +110,9 @@ public class ShopPresenter : BasePresenter<ShopView>
     }
     private void HandleClickCardToRemove(int id)
     {
+        var config = _configService.GetTable<CardConfig>().Get(id);
         _selectedCardId = id;
-        View.ShowConfirmPanel();
+        View.ShowConfirmPanel(CardDisplayData.FromConfig(config));
     }
 
 
