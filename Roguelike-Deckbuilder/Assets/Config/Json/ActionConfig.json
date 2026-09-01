@@ -1,0 +1,42 @@
+{
+  "0": {
+    "Id": 0,
+    "Name": "缩小",
+    "Intents": [
+      {
+        "IntentId": 0,
+        "Value": 1
+      }
+    ]
+  },
+  "1": {
+    "Id": 1,
+    "Name": "大啃",
+    "Intents": [
+      {
+        "IntentId": 1,
+        "Value": 7
+      }
+    ]
+  },
+  "2": {
+    "Id": 2,
+    "Name": "践踏",
+    "Intents": [
+      {
+        "IntentId": 1,
+        "Value": 13
+      }
+    ]
+  },
+  "3": {
+    "Id": 3,
+    "Name": "冲撞",
+    "Intents": [
+      {
+        "IntentId": 1,
+        "Value": 4
+      }
+    ]
+  }
+}

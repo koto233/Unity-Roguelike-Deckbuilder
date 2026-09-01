@@ -2,7 +2,7 @@
   "1": {
     "Id": 1,
     "Name": "燃烧之血",
-    "Icon": "",
+    "Icon": "burning_blood",
     "Rarity": 1,
     "Type": "HealOnCombatEnd",
     "Effects": "{\"amount\":6}",
@@ -11,7 +11,7 @@
   "2": {
     "Id": 2,
     "Name": "黑暗之血",
-    "Icon": "",
+    "Icon": "black_blood",
     "Rarity": 1,
     "Type": "HealOnCombatEnd",
     "Effects": "{\"amount\":12}",
@@ -20,7 +20,7 @@
   "3": {
     "Id": 3,
     "Name": "红头骨",
-    "Icon": "",
+    "Icon": "red_skull",
     "Rarity": 1,
     "Type": "ThresholdStrength",
     "Effects": "{\"threshold\":0.5,\"strength\":3}",
@@ -29,7 +29,7 @@
   "4": {
     "Id": 4,
     "Name": "纸蛙",
-    "Icon": "",
+    "Icon": "paper_phrog",
     "Rarity": 1,
     "Type": "ModifyVulnerableMultiplier",
     "Effects": "{\"multiplier\":1.75}",
@@ -38,7 +38,7 @@
   "5": {
     "Id": 5,
     "Name": "自成型黏土",
-    "Icon": "",
+    "Icon": "self_forming_clay",
     "Rarity": 1,
     "Type": "BlockOnHpLossNextTurn",
     "Effects": "{\"block\":3}",
@@ -47,7 +47,7 @@
   "6": {
     "Id": 6,
     "Name": "卡戎之灰",
-    "Icon": "",
+    "Icon": "charons_ashes",
     "Rarity": 1,
     "Type": "DamageOnExhaust",
     "Effects": "{\"damage\":3}",
@@ -56,7 +56,7 @@
   "7": {
     "Id": 7,
     "Name": "恶魔之舌",
-    "Icon": "",
+    "Icon": "demon_tongue",
     "Rarity": 1,
     "Type": "HealOnFirstHpLoss",
     "Effects": "",
@@ -65,7 +65,7 @@
   "8": {
     "Id": 8,
     "Name": "损毁头盔",
-    "Icon": "",
+    "Icon": "ruined_helmet",
     "Rarity": 1,
     "Type": "DoubleFirstStrength",
     "Effects": "",
@@ -74,7 +74,7 @@
   "9": {
     "Id": 9,
     "Name": "硫磺",
-    "Icon": "",
+    "Icon": "brimstone",
     "Rarity": 1,
     "Type": "StrengthOnTurnStart",
     "Effects": "{\"playerStrength\":2,\"enemyStrength\":1}",

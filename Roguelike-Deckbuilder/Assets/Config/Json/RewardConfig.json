@@ -1,0 +1,17 @@
+{
+  "1": {
+    "Rarity": 1,
+    "CoinMin": 10,
+    "CoinMax": 20
+  },
+  "2": {
+    "Rarity": 2,
+    "CoinMin": 35,
+    "CoinMax": 45
+  },
+  "3": {
+    "Rarity": 3,
+    "CoinMin": 100,
+    "CoinMax": 100
+  }
+}

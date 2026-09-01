@@ -44,10 +44,10 @@ public class Enemy : CharacterBase
         switch (CurrentIntent)
         {
             case IntentType.Attack:
-                executor.Damage(Config.Damage + Strength, context.Player);
+                // executor.Damage(Config.Damage + Strength, context.Player);
                 break;
             case IntentType.Defend:
-                AddBlock(Config.Defend);
+                // AddBlock(Config.Defend);
                 break;
             case IntentType.StrongAttack:
                 break;

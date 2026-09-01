@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Cysharp.Threading.Tasks;
 using LitFramework;
 using LitFramework.Config;
 using LitFramework.UI.Core.Service;
@@ -121,10 +122,10 @@ public class ShopPresenter : BasePresenter<ShopView>
         base.Dispose();
         UnsubscribeEvents();
     }
-    public void InitShop()
+    public async UniTask InitShop()
     {
         View.RefreshCards(GenerateCardDisplayData(3));
-        View.RefreshRelics(GenerateRelicDisplayData(3));
+        View.RefreshRelics(await GenerateRelicDisplayData(3));
     }
 
     private void HandleClickContinue()
@@ -166,7 +167,7 @@ public class ShopPresenter : BasePresenter<ShopView>
         }
         return Cards.Values.ToList();
     }
-    public List<RelicDisplayData> GenerateRelicDisplayData(int count = 3)
+    public async UniTask<List<RelicDisplayData>> GenerateRelicDisplayData(int count = 3)
     {
         Relics.Clear();
         var relicConfigs = _shopTable
@@ -189,7 +190,8 @@ public class ShopPresenter : BasePresenter<ShopView>
             var config = _relicTable.Get(shopConfig.ItemId);
             if (config != null)
             {
-                Relics.Add(config.Id, RelicDisplayData.FromConfig(config, shopConfig.Price));
+                var relic = await RelicDisplayData.FromConfig(config, shopConfig.Price);
+                Relics.Add(config.Id, relic);
             }
         }
         return Relics.Values.ToList();

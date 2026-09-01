@@ -21,8 +21,16 @@ namespace LitFramework.Config
                 Debug.LogError($"配置表加载失败：{jsonPath}");
                 return;
             }
-
-            var dict = JsonConvert.DeserializeObject<Dictionary<int, T>>(asset.text);
+            var dict = new Dictionary<int, T>();
+            try
+            {
+                dict = JsonConvert.DeserializeObject<Dictionary<int, T>>(asset.text);
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"配置表格式错误：{jsonPath}");
+                return;
+            }
             _tables[typeof(T)] = new DictConfigTable<T>(dict);
             Debug.Log($"配置表加载成功：{jsonPath}");
         }

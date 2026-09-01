@@ -20,28 +20,21 @@ namespace LitFramework.FSM.Procedure
 
         private async UniTask InitAsync()
         {
-            try
-            {
-                // 1. 资源更新
-                _updater = new YooAssetUpdater();
-                await _updater.StartUpdate();
+            // 1. 资源更新
+            _updater = new YooAssetUpdater();
+            await _updater.StartUpdate();
 
-                // 2. 注册 AssetService
-                var asset = new YooAssetAssetService(YooAssets.GetPackage("DefaultPackage"));
-                ServiceLocator.Register<IAssetService>(asset);
-                var cardIconService = ServiceLocator.Get<CardIconService>();
-                await cardIconService.PreLoadCardIcons();
-                // 3. 并行加载所有配置
-                await LoadConfigsParallelAsync();
+            // 2. 注册 AssetService
+            var asset = new YooAssetAssetService(YooAssets.GetPackage("DefaultPackage"));
+            ServiceLocator.Register<IAssetService>(asset);
+            var cardIconService = ServiceLocator.Get<CardIconService>();
+            await cardIconService.PreLoadCardIcons();
+            // 3. 并行加载所有配置
+            await LoadConfigsParallelAsync();
 
-                // 4. 进入标题
-                _procedureManager.ChangeProcedure<ProcedureTitle>();
-            }
-            catch (Exception ex)
-            {
-                Debug.LogError($"[Init] 失败: {ex}");
-                // 可以在这里打开错误弹窗，或重试
-            }
+            // 4. 进入标题
+            _procedureManager.ChangeProcedure<ProcedureTitle>();
+
         }
 
         private static async UniTask LoadConfigsParallelAsync()
@@ -59,7 +52,8 @@ namespace LitFramework.FSM.Procedure
                 svc.LoadDictTableAsync<EncounterConfig>(ConfigPaths.Encounter),
                 svc.LoadDictTableAsync<PlayerInitConfig>(ConfigPaths.PlayerInit),
                 svc.LoadDictTableAsync<RelicConfig>(ConfigPaths.Relic),
-                svc.LoadDictTableAsync<ShopConfig>(ConfigPaths.Shop)
+                svc.LoadDictTableAsync<ShopConfig>(ConfigPaths.Shop),
+                svc.LoadDictTableAsync<RewardConfig>(ConfigPaths.Reward)
 
             };
 
@@ -81,5 +75,6 @@ namespace LitFramework.FSM.Procedure
         public const string PlayerInit = "Assets/Config/Json/PlayerInitConfig.json";
         public const string Relic = "Assets/Config/Json/RelicConfig.json";
         public const string Shop = "Assets/Config/Json/ShopConfig.json";
+        public const string Reward = "Assets/Config/Json/RewardConfig.json";
     }
 }
