@@ -10,6 +10,7 @@ public static class BattleContextFactory
         {
             Player = new Player(globalPlayer.CurrentHp, globalPlayer.MaxHp, BattleRules.MaxEnergy),
             Enemies = new(),
+            EnemyConfigs = new(),
             CurrentTurn = 0,
             IsPlayerTurn = true,
             Target = null,
@@ -22,6 +23,7 @@ public static class BattleContextFactory
             var enemy = new Enemy(enemyConfig, enemyAi);
             enemy.Init();
             battleContext.Enemies.Add(enemy);
+            battleContext.EnemyConfigs.Add(enemyConfig);
         }
         return battleContext;
     }

@@ -7,6 +7,7 @@ public class BattleContext
     public List<CharacterBase> AllCharacters { get; set; }      // 所有战斗单位（玩家+敌人）
     public Player Player { get; set; }            // 玩家角色
     public List<Enemy> Enemies { get; set; }     // 当前敌人列表
+    public List<EnemyConfig> EnemyConfigs { get; set; } // 当前敌人配置列表
     public CharacterBase Target { get; set; }            // 当前选中的目标
     public CharacterBase Attacker { get; set; }
     public int CurrentTurn { get; set; } = 0;
