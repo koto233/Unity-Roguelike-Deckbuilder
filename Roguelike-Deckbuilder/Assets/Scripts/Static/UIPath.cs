@@ -11,6 +11,7 @@ public static class UIPath
     public static string PlayerItem => Base + "Item/PlayerItem.prefab";
     public static string HandCard => Base + "Item/HandCard.prefab";
     public static string FloatingTextItem => Base + "Item/FloatingTextItem.prefab";
+    public static string IntentionItem => Base + "Item/IntentionItem.prefab";
     public static string RewardItem => Base + "Item/RewardItem.prefab";
     public static string ShopCardItem => Base + "Item/ShopCardItem.prefab";
     public static string ShopRelicItem => Base + "Item/ShopRelicItem.prefab";

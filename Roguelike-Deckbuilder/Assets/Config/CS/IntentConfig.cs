@@ -11,11 +11,9 @@ using System;
 public class IntentConfig : IConfig
 {
 	public int Id; // Id
-	public string Key; // 资源标识
+	public string Icon; // 图标
 	public string Name; // 名称
 	public string Type; // 类型
 	public string Description; // 描述
 }
 
-
-// End of Auto Generated Code

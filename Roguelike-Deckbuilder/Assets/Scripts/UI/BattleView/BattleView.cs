@@ -70,7 +70,7 @@ public partial class BattleView : UIWindow
     }
     private void OnEnable()
     {
-        
+
         SubscribeEvents();
     }
     private void OnDisable()
@@ -151,13 +151,13 @@ public partial class BattleView : UIWindow
             b_HPText.SetText(currentHp + "/" + maxHp);
             // b_HPSlider.value = (float)currentHp / maxHp;
             b_HPSlider.DOValue((float)currentHp / maxHp, 0.5f).SetEase(Ease.Linear);
-            _playerView.UpdateHP(currentHp, maxHp);
+            _playerView.RefreshHP(currentHp, maxHp);
         }
         else
         {
             if (_enemyViews.TryGetValue(entityId, out var enemyView))
             {
-                enemyView.UpdateHP(currentHp, maxHp);
+                enemyView.RefreshHP(currentHp, maxHp);
             }
         }
 
@@ -171,14 +171,19 @@ public partial class BattleView : UIWindow
     {
         b_HandZone.RefreshHand(hand, changedCards, type);
     }
-    public void RefreshBlock(int block, EntityType entityType)
+    public void RefreshBlock(int oldBlock, int newBlock, EntityType entityType, int entityId)
     {
-        if (entityType != EntityType.Player)
+        if (entityType == EntityType.Player)
         {
-            return;
+            _playerView.RefreshBlock(oldBlock, newBlock);
         }
-        b_BlockText.SetText(block.ToString());
-        b_BlockText.transform.parent.gameObject.SetActive(block > 0);
+        else
+        {
+            if (_enemyViews.TryGetValue(entityId, out var enemyView))
+            {
+                enemyView.RefreshBlock(oldBlock, newBlock);
+            }
+        }
     }
     public void ResetCard()
     {

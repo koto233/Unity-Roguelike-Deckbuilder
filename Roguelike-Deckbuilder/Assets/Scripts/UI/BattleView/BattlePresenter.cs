@@ -33,7 +33,7 @@ public class BattlePresenter : BasePresenter<BattleView>, IHasData<BattleContext
         SubscribeEvents();
         View.CreateEnemyViews(_context.Enemies);
         RefreshHand(_context.Player.Hand, _context.Player.Hand, ChangeType.Add);
-        RefreshBlock(_context.Player.Block, EntityType.Player);
+        RefreshBlock(0, _context.Player.Block, EntityType.Player);
         RefreshEnergy(_context.Player.Energy, _context.Player.MaxEnergy);
         RefreshDrawPileCount(_context.Player.DrawPileCount);
         RefreshDiscardPileCount(_context.Player.DiscardPileCount);
@@ -102,7 +102,7 @@ public class BattlePresenter : BasePresenter<BattleView>, IHasData<BattleContext
 
     private void OnBlockChanged(BlockChangedEvent evt)
     {
-        RefreshBlock(evt.NewBlock, evt.EntityType);
+        RefreshBlock(evt.OldBlock, evt.NewBlock, evt.EntityType, evt.EntityId);
     }
 
     private void OnHandChanged(HandChangedEvent evt)
@@ -141,9 +141,9 @@ public class BattlePresenter : BasePresenter<BattleView>, IHasData<BattleContext
         View.RefreshHp(currentHp, maxHp, entityType, entityId);
     }
 
-    private void RefreshBlock(int block, EntityType entityType)
+    private void RefreshBlock(int oldBlock, int newBlock, EntityType entityType, int entityId = -1)
     {
-        View.RefreshBlock(block, entityType);
+        View.RefreshBlock(oldBlock, newBlock, entityType, entityId);
     }
     private void RefreshHand(IReadOnlyList<Card> handCards, IReadOnlyList<Card> changedCards, ChangeType type)
     {

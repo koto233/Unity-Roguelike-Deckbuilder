@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using LitFramework.UI.Core.Window;
 using UnityEngine;
 
@@ -29,9 +30,9 @@ public partial class TopBar : UIWindow
         b_MapBtn.onClick.RemoveAllListeners();
         b_DeckBtn.onClick.RemoveAllListeners();
     }
-    public void RefreshCoin(int Coin)
+    public void RefreshCoin(int oldCoin, int newCoin)
     {
-        b_CoinText.SetText(Coin.ToString());
+        NumberAnimator.Play(b_CoinText, oldCoin, newCoin, 0.5f);
     }
     public void RefreshHp(int currentHp, int maxHp)
     {

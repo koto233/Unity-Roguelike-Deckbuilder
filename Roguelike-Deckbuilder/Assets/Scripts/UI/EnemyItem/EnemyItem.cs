@@ -9,10 +9,11 @@ using UnityEngine;
 
 public partial class EnemyItem : UIBase
 {
-    private AssetRef<GameObject> _buffPrefabAssetRef;
-    [SerializeField] private IntentionItem _intentionUI;
+    private AssetRef<GameObject> _buffItemRef;
+    private AssetRef<GameObject> _intentionItemRef;
     private Dictionary<int, BuffItem> _buffSlots = new();
     public Vector3 DamageTextPos => b_DamageTextPos.transform.position;
+    private List<IntentionItem> _intentionItems = new(5);
     public Enemy Enemy { get; private set; }
 
     void Start()
@@ -22,10 +23,22 @@ public partial class EnemyItem : UIBase
     private async UniTask InitAsync()
     {
         var assetService = ServiceLocator.Get<IAssetService>();
-        _buffPrefabAssetRef = await assetService.LoadRefAsync<GameObject>(UIPath.BuffItem);
+        _buffItemRef = await assetService.LoadRefAsync<GameObject>(UIPath.BuffItem);
+        _intentionItemRef = await assetService.LoadRefAsync<GameObject>(UIPath.IntentionItem);
         Enemy.DetermineAction();
     }
-    public void UpdateHP(int currentHp, int maxHp)
+
+    public void RefreshBlock(int oldBlock, int newBlock)
+    {
+        if (newBlock <= 0)
+        {
+            b_BlockNum.transform.parent.gameObject.SetActive(false);
+            return;
+        }
+        b_BlockNum.transform.parent.gameObject.SetActive(newBlock > 0);
+        NumberAnimator.Play(b_BlockNum, oldBlock, newBlock, 0.5f);
+    }
+    public void RefreshHP(int currentHp, int maxHp)
     {
         b_HPText.SetText($"{currentHp}/{maxHp}");
         b_HPSlider.DOValue((float)currentHp / maxHp, 0.5f).SetEase(Ease.Linear);
@@ -69,7 +82,7 @@ public partial class EnemyItem : UIBase
             else
             {
                 // 新建 Slot
-                GameObject go = Instantiate(_buffPrefabAssetRef.Asset);
+                GameObject go = Instantiate(_buffItemRef.Asset);
                 go.transform.SetParent(b_BuffRoot.transform);
                 slot = go.GetComponent<BuffItem>();
                 slot.Init(buff);
@@ -80,16 +93,14 @@ public partial class EnemyItem : UIBase
     }
     public void RefreshIntent(List<IntentConfig> intentConfigs)
     {
-
-        if (intentConfigs != null && intentConfigs.Count > 0 && _intentionUI != null)
+        foreach (var config in intentConfigs)
         {
-            _intentionUI.Show();
-            _intentionUI.Init(intentConfigs[0], 5);
-        }
-        else
-        {
-            // b_IntentionIcon.gameObject.SetActive(false);
-            // _intentionUI.Hide();
+            var _intentionGo = Instantiate(_intentionItemRef.Asset);
+            _intentionGo.SetActive(true);
+            _intentionGo.transform.SetParent(b_IntentionRoot.transform);
+            var intentionUI = _intentionGo.GetComponent<IntentionItem>();
+            intentionUI.Init(config, 5);
+            _intentionItems.Add(intentionUI);
         }
     }
     // 清理（战斗结束）
@@ -101,6 +112,6 @@ public partial class EnemyItem : UIBase
     }
     void OnDestroy()
     {
-        _buffPrefabAssetRef?.Dispose();
+        _buffItemRef?.Dispose();
     }
 }

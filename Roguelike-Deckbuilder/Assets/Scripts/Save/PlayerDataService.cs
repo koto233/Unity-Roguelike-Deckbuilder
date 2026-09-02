@@ -25,11 +25,9 @@ public class PlayerDataService
         set
         {
             if (_maxHp == value) return;
-            int oldValue = _maxHp;          // 保存旧值
             _maxHp = value;                // 更新为新值
             EventBus<HpChangedEvent>.Publish(new HpChangedEvent()
             {
-                OldHp = oldValue,          // 旧值
                 NewHp = value,             // 新值
                 EntityType = EntityType.Player
             });
@@ -43,11 +41,9 @@ public class PlayerDataService
         {
             int newValue = Math.Min(value, MaxHp);
             if (_currentHp == newValue) return; // 如果实际值未变，不触发事件
-            int oldValue = _currentHp;          // 保存旧值
             _currentHp = newValue;              // 更新为实际新值
             EventBus<HpChangedEvent>.Publish(new HpChangedEvent()
             {
-                OldHp = oldValue,               // 旧值
                 NewHp = newValue,               // 实际生效的新值
                 EntityType = EntityType.Player
             });

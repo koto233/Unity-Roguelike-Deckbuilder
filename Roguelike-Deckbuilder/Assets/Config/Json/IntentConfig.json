@@ -1,10 +1,10 @@
 {
   "0": {
     "Id": 0,
-    "Icon": "shrinker",
+    "Icon": "shrink_power",
     "Name": "缩小",
     "Type": "Buff",
-    "Description": "攻击伤害减少30%"
+    "Description": "给予缩小debuff"
   },
   "1": {
     "Id": 1,

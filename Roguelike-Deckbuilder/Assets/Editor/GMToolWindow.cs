@@ -143,7 +143,7 @@ public class GMToolWindow : EditorWindow
         try
         {
             var playerService = ServiceLocator.Get<PlayerDataService>();
-            var method = typeof(PlayerDataService).GetMethod("AddGold");
+            var method = typeof(PlayerDataService).GetMethod("AddCoin");
             method?.Invoke(playerService, new object[] { amount });
             Debug.Log($"金币 +{amount}");
         }

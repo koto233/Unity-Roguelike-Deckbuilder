@@ -20,7 +20,7 @@ public class TopBarPresenter : BasePresenter<TopBar>
         SubscribeEvents();
         var playerDataService = ServiceLocator.Get<PlayerDataService>();
         View.RefreshHp(playerDataService.CurrentHp, playerDataService.MaxHp);
-        View.RefreshCoin(playerDataService.Coin);
+        View.RefreshCoin(0, playerDataService.Coin);
         _uiService = ServiceLocator.Get<UIService>();
     }
     private void SubscribeEvents()
@@ -63,7 +63,7 @@ public class TopBarPresenter : BasePresenter<TopBar>
 
     private void HandleCoinChanged(CoinChangedEvent @event)
     {
-        View.RefreshCoin(@event.NewValue);
+        View.RefreshCoin(@event.OldValue, @event.NewValue);
     }
 
 

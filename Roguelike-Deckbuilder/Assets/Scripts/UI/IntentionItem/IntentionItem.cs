@@ -11,8 +11,9 @@ public partial class IntentionItem : UIBase, ITooltipDataProvider
 {
     private IntentConfig _intentConfig;
     private Image _icon;
-    void Start()
+    protected override void Awake()
     {
+        base.Awake();
         _icon = GetComponent<Image>();
     }
     public void Init(IntentConfig intentConfig, int num)
@@ -21,11 +22,18 @@ public partial class IntentionItem : UIBase, ITooltipDataProvider
         SetIcon().Forget();
         b_Num.SetText(num.ToString());
         _intentConfig.Description = string.Format(_intentConfig.Description, num);
-        Debug.Log("意图" + _intentConfig.Description);
     }
     private async UniTask SetIcon()
     {
-        _icon.sprite = await ServiceLocator.Get<IAssetService>().LoadAsync<Sprite>($"Assets/Res/Art/Intents/intent_{_intentConfig.Key}.png");
+        if (_intentConfig.Type == "Buff")
+        {
+            _icon.sprite = await ServiceLocator.Get<IAssetService>().LoadAsync<Sprite>($"Assets/Res/Art/Powers/{_intentConfig.Icon}.png");
+        }
+        else
+        {
+            _icon.sprite = await ServiceLocator.Get<IAssetService>().LoadAsync<Sprite>($"Assets/Res/Art/Intents/intent_{_intentConfig.Icon}.png");
+
+        }
     }
     public TooltipData GetTooltipData()
     {

@@ -41,7 +41,7 @@ public class CardIconService
     /// </summary>
     public Sprite GetCardIcon(string spriteName)
     {
-        Debug.Log($"尝试获取卡图: {spriteName}");
+        // Debug.Log($"尝试获取卡图: {spriteName}");
         if (_cardIconCache.TryGetValue(spriteName, out var sprite))
             return sprite;
 

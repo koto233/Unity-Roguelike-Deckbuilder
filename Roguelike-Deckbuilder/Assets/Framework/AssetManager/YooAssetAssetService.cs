@@ -59,24 +59,24 @@ namespace LitFramework.Asset
             }
 
             // 2. 等待加载完成（如果已经加载成功，立即返回；如果加载中，等待）
-            try
+            // try
+            // {
+            var asset = await lazy.GetValueAsync();
+            // Debug.Log($"[LoadAsync] 成功获取资源: {path}, asset: {asset}"); // ⬅️
+            lock (_refCounts)
             {
-                var asset = await lazy.GetValueAsync();
-                // Debug.Log($"[LoadAsync] 成功获取资源: {path}, asset: {asset}"); // ⬅️
-                lock (_refCounts)
-                {
-                    _refCounts.TryGetValue(path, out int count);
-                    _refCounts[path] = count + 1;
-                }
+                _refCounts.TryGetValue(path, out int count);
+                _refCounts[path] = count + 1;
+            }
 
-                // 增加引用计数等
-                return asset as T;
-            }
-            catch (Exception ex)
-            {
-                // Debug.LogError($"[LoadAsync] 获取资源失败: {path}, 错误: {ex.Message}"); // ⬅️
-                throw; // 或者返回 null
-            }
+            // 增加引用计数等
+            return asset as T;
+            // }
+            // catch (Exception ex)
+            // {
+            // Debug.LogError($"[LoadAsync] 获取资源失败: {path}, 错误: {ex.Message}"); // ⬅️
+            // throw; // 或者返回 null
+            // }
 
             // 3. 增加引用计数（可选）
 

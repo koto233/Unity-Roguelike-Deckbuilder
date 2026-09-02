@@ -29,13 +29,9 @@ public abstract class CharacterBase
       {
          int clamped = Math.Clamp(value, 0, MaxHp);
          if (_currentHp == clamped) return;
-
-         int old = _currentHp;
          _currentHp = clamped;
-
          EventBus<HpChangedEvent>.Publish(new HpChangedEvent
          {
-            OldHp = old,
             NewHp = _currentHp,
             MaxHp = _maxHp,
             EntityType = EntityType,
@@ -55,7 +51,6 @@ public abstract class CharacterBase
          _maxHp = value;
          EventBus<HpChangedEvent>.Publish(new HpChangedEvent
          {
-            OldHp = _currentHp,
             NewHp = _currentHp,
             MaxHp = _maxHp,
             EntityType = EntityType,
@@ -74,9 +69,11 @@ public abstract class CharacterBase
       {
          int clamped = Math.Max(0, value);
          if (_block == clamped) return;
+         int oldBlock = _block;
          _block = clamped;
          EventBus<BlockChangedEvent>.Publish(new BlockChangedEvent
          {
+            OldBlock = oldBlock,
             NewBlock = _block,
             EntityType = EntityType,
             EntityId = Id

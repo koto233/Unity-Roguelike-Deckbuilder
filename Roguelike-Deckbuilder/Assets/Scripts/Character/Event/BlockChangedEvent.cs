@@ -9,5 +9,6 @@ public struct BlockChangedEvent : IEvent
 {
     public EntityType EntityType;
     public int EntityId;
+    public int OldBlock;
     public int NewBlock;
 }
