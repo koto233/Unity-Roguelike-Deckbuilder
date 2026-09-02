@@ -34,11 +34,17 @@ public partial class HandCard
     private Enemy _Target;
     private bool _canUse = true;
     private bool _isScaleNormalized = false;
+    private bool _isPlaying = false;
     private RectTransform _rect;
     private BattleInteractionService _battleInteraction;
 
     public void Init(Card card, Transform cardDetailTrans)
     {
+        OnPlay = null;
+        OnDragStart = null;
+        OnCardDrag = null;
+        OnDragEnd = null;
+        _isPlaying = false;
         _rect = GetComponent<RectTransform>();
         _cardDetailTrans = cardDetailTrans;
         RefreshUI(card);
@@ -150,6 +156,7 @@ public partial class HandCard
 
     public void OnEndDrag(PointerEventData eventData)
     {
+        if (_isPlaying) return;
         if (!_battleInteraction.IsDragging || _battleInteraction.DraggingCard != this)
             return;
 
@@ -160,7 +167,7 @@ public partial class HandCard
             ResetCard();
             return;
         }
-
+        _isPlaying = true;
         OnPlay?.Invoke(Card);
     }
 
@@ -194,6 +201,7 @@ public partial class HandCard
 
     public void ResetCard()
     {
+        _isPlaying = false;
         _isScaleNormalized = false;
         transform.DOLocalMove(_originalPos, 0.2f);
         transform.DOScale(1f, 0.1f);

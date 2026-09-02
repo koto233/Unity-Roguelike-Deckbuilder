@@ -8,12 +8,14 @@ public class IntentDisplayData
     public string Description;
     public int Value;
     public Sprite Icon;
+    public bool IsBuff;
     public static async UniTask<IntentDisplayData> CreateAsync(IntentConfig config, int value)
     {
         var data = new IntentDisplayData
         {
             Value = value,
-            Description = string.Format(config.Description, value)
+            Description = string.Format(config.Description, value),
+            IsBuff = config.Type == "Buff"
         };
         if (config.Type == "Buff")
         {

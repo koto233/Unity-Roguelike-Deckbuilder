@@ -19,7 +19,7 @@ public partial class IntentionItem : UIBase, ITooltipDataProvider
     public void Init(IntentDisplayData displayData)
     {
         _intentDisplayData = displayData;
-        if (displayData.Value < 0)
+        if (displayData.IsBuff)
         {
             b_Num.SetText("");
         }
