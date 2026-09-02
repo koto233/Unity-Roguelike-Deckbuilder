@@ -28,7 +28,8 @@ public class PlayerDataService
             _maxHp = value;                // 更新为新值
             EventBus<HpChangedEvent>.Publish(new HpChangedEvent()
             {
-                NewHp = value,             // 新值
+                NewHp = _currentHp,
+                MaxHp = value,
                 EntityType = EntityType.Player
             });
         }
@@ -45,6 +46,7 @@ public class PlayerDataService
             EventBus<HpChangedEvent>.Publish(new HpChangedEvent()
             {
                 NewHp = newValue,               // 实际生效的新值
+                MaxHp = MaxHp,
                 EntityType = EntityType.Player
             });
         }
@@ -53,7 +55,7 @@ public class PlayerDataService
     private List<int> _relicIds = new();
     public IReadOnlyList<int> DeckCardIds => _deckCardIds;
     public IReadOnlyList<int> RelicIds => _relicIds;
-
+    public int RemoveCount { get; private set; } = 0;
     public void Reset()
     {
         var config = ServiceLocator.Get<IConfigService>().GetTable<PlayerInitConfig>().Get(0);
@@ -106,6 +108,7 @@ public class PlayerDataService
     }
     public void RemoveCard(int cardId)
     {
+        RemoveCount++;
         if (_deckCardIds.Contains(cardId))
             _deckCardIds.Remove(cardId);
     }
@@ -128,4 +131,5 @@ public class PlayerDataService
         if (Coin >= coin)
             Coin -= coin;
     }
+
 }

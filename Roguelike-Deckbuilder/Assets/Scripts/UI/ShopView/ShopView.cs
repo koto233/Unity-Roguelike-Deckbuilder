@@ -79,7 +79,10 @@ public partial class ShopView : UIWindow
             _shopCardItems.Add(shopCardItem);
         }
     }
-
+    public void RefreshRemoveCost(int cost)
+    {
+        b_RemovePriceText.SetText(cost.ToString());
+    }
     public void RefreshRelics(List<RelicDisplayData> relicDataList)
     {
         ClearRelicList();

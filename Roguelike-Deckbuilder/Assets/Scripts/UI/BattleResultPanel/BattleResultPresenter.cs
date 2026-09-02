@@ -35,12 +35,9 @@ public class BattleResultPresenter : BasePresenter<BattleResultPanel>
         int rewardCoin = 0;
         foreach (var enemyConfig in _controller.Context.EnemyConfigs)
         {
-            var reward = rewardConfig.Get(enemyConfig.Rarity);
-            Debug.Log("Reward: " + reward.CoinMin + " - " + reward.CoinMax);
+            var reward = rewardConfig.Get(enemyConfig.Rarity); 
             rewardCoin += random.Next(reward.CoinMin, reward.CoinMax);
-            Debug.Log("Coin: " + rewardCoin);
         }
-        Debug.Log("Coin: " + rewardCoin);
         _rewards.Add(new Reward() { Type = RewardType.Coin, Value = rewardCoin });
         View.ShowReward(_rewards);
 

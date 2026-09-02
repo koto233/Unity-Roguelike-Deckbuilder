@@ -19,7 +19,7 @@ public class ShopPresenter : BasePresenter<ShopView>
     private IConfigTable<RelicConfig> _relicTable;
     public Dictionary<int, CardDisplayData> Cards = new();
     public Dictionary<int, RelicDisplayData> Relics = new();
-    private int _removeCost;
+    private int _removeCost = 75;
     public ShopPresenter(ShopView view) : base(view)
     {
     }
@@ -32,7 +32,9 @@ public class ShopPresenter : BasePresenter<ShopView>
         _shopTable = ServiceLocator.Get<IConfigService>().GetTable<ShopConfig>();
         _relicTable = ServiceLocator.Get<IConfigService>().GetTable<RelicConfig>();
         SubscribeEvents();
-        InitShop();
+        InitShop().Forget();
+        _removeCost += _playerService.RemoveCount * 25;
+        View.RefreshRemoveCost(_removeCost);
     }
     private void SubscribeEvents()
     {
@@ -95,11 +97,16 @@ public class ShopPresenter : BasePresenter<ShopView>
     }
     private void HandleClickRemove()
     {
+
+
+        View.RefreshRemoveCost(_removeCost);
+        // Debug.Log($"{_removeCost} {_playerService.Coin}");
         // 查询价格
         if (_playerService.Coin < _removeCost)
         {
             return;
         }
+
         var deck = _playerService.DeckCardIds;
         var displayDatas = new List<CardDisplayData>();
         foreach (var cardId in deck)
