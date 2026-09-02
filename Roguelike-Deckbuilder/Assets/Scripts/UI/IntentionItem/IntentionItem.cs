@@ -9,37 +9,25 @@ using UnityEngine.UI;
 
 public partial class IntentionItem : UIBase, ITooltipDataProvider
 {
-    private IntentConfig _intentConfig;
+    private IntentDisplayData _intentDisplayData;
     private Image _icon;
     protected override void Awake()
     {
         base.Awake();
         _icon = GetComponent<Image>();
     }
-    public void Init(IntentConfig intentConfig, int num)
+    public void Init(IntentDisplayData displayData)
     {
-        _intentConfig = intentConfig;
-        SetIcon().Forget();
-        b_Num.SetText(num.ToString());
-        _intentConfig.Description = string.Format(_intentConfig.Description, num);
+        _intentDisplayData = displayData;
+        b_Num.SetText(displayData.Value.ToString());
+        _icon.sprite = displayData.Icon;
     }
-    private async UniTask SetIcon()
-    {
-        if (_intentConfig.Type == "Buff")
-        {
-            _icon.sprite = await ServiceLocator.Get<IAssetService>().LoadAsync<Sprite>($"Assets/Res/Art/Powers/{_intentConfig.Icon}.png");
-        }
-        else
-        {
-            _icon.sprite = await ServiceLocator.Get<IAssetService>().LoadAsync<Sprite>($"Assets/Res/Art/Intents/intent_{_intentConfig.Icon}.png");
-
-        }
-    }
+   
     public TooltipData GetTooltipData()
     {
         return new TooltipData
         {
-            Description = _intentConfig.Description,
+            Description = _intentDisplayData.Description,
         };
     }
 }

@@ -46,9 +46,9 @@ public class EffectExecutor
     public void Damage(int amount, CharacterBase attacker, CharacterBase target)
     {
         if (target == null || amount <= 0) return;
-        attacker.BuffManager?.OnBeforeDealDamage(ref amount);
+        attacker.BuffManager.OnBeforeDealDamage(ref amount);
         // 计算buff
-        target.BuffManager?.OnBeforeTakeDamage(ref amount);
+        target.BuffManager.OnBeforeTakeDamage(ref amount);
         // 计算护盾
         int blockAbsorb = Math.Min(target.Block, amount);
         if (blockAbsorb > 0)
@@ -66,7 +66,7 @@ public class EffectExecutor
         {
             Text = amount.ToString(),
             EntityType = target.EntityType,
-            EntityId = target.Id
+            EntityId = target.ConfigId
         });
     }
 

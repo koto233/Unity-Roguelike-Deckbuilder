@@ -5,6 +5,6 @@ using LitFramework.EventBus;
 
 public struct IntentEvent : IEvent
 {
-    public Enemy Enemy;
-    public List<IntentConfig> IntentConfigs;
+    public int InstanceId;
+    public IntentEntry[] IntentEntries;
 }

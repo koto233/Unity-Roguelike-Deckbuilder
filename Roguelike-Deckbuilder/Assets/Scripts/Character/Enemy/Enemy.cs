@@ -16,7 +16,7 @@ public class Enemy : CharacterBase
     public EnemyConfig Config { get; private set; }
     public int CurrentActionId { get; private set; }
     public IEnemyAI AI { get; private set; }
-    public override int Id => Config.Id;
+    public override int ConfigId => Config.Id;
     public override EntityType EntityType => EntityType.Enemy;
     private Dictionary<int, List<IIntent>> _actions = new();
     public void Init()
@@ -42,19 +42,13 @@ public class Enemy : CharacterBase
         CurrentActionId = AI.DecideAction(Config.Actions);
         var configService = ServiceLocator.Get<IConfigService>();
         var actionConfig = configService.GetTable<ActionConfig>().Get(CurrentActionId);
-        var intentConfigs = new List<IntentConfig>();
-        foreach (var intent in actionConfig.Intents)
-        {
-            var intentConfig = configService.GetTable<IntentConfig>().Get(intent.IntentId);
-            intentConfigs.Add(intentConfig);
-        }
-        EventBus<IntentEvent>.Publish(new IntentEvent { Enemy = this, IntentConfigs = intentConfigs });
+        EventBus<IntentEvent>.Publish(new IntentEvent { InstanceId = InstanceId, IntentEntries = actionConfig.Intents });
     }
 
     // 执行意图
     public void ExecuteIntent()
     {
-        Debug.Log($"执行意图：{JsonConvert.SerializeObject(_actions[CurrentActionId])}");
+
         var executor = ServiceLocator.Get<EffectExecutor>();
         if (!_actions.ContainsKey(CurrentActionId))
         {
@@ -64,7 +58,13 @@ public class Enemy : CharacterBase
         var intents = _actions[CurrentActionId];
         foreach (var intent in intents)
         {
+            Debug.Log($"敌人{Config.Name}执行意图{intent.GetType().Name}");
             intent.Execute(executor, this);
         }
     }
+}
+public class IntentEntry 
+{
+	public int IntentId;
+	public int Value;
 }

@@ -30,6 +30,7 @@ public class BattlePresenter : BasePresenter<BattleView>, IHasData<BattleContext
         _controller = ServiceLocator.Get<BattleController>();
         _uiAtlasService = ServiceLocator.Get<UIAtlasService>();
         _cardIconService = ServiceLocator.Get<CardIconService>();
+        _configService = ServiceLocator.Get<IConfigService>();
         SubscribeEvents();
         View.CreateEnemyViews(_context.Enemies);
         RefreshHand(_context.Player.Hand, _context.Player.Hand, ChangeType.Add);
@@ -37,6 +38,7 @@ public class BattlePresenter : BasePresenter<BattleView>, IHasData<BattleContext
         RefreshEnergy(_context.Player.Energy, _context.Player.MaxEnergy);
         RefreshDrawPileCount(_context.Player.DrawPileCount);
         RefreshDiscardPileCount(_context.Player.DiscardPileCount);
+        RefreshAllEnemy();
         RefreshAllHp(_context);
     }
     private void SubscribeEvents()
@@ -132,10 +134,18 @@ public class BattlePresenter : BasePresenter<BattleView>, IHasData<BattleContext
         RefreshHp(context.Player.CurrentHp, context.Player.MaxHp, EntityType.Player, -1);
         foreach (var enemy in context.Enemies)
         {
-            RefreshHp(enemy.CurrentHp, enemy.MaxHp, EntityType.Enemy, enemy.Id);
+            RefreshHp(enemy.CurrentHp, enemy.MaxHp, EntityType.Enemy, enemy.ConfigId);
         }
-
     }
+    public void RefreshAllEnemy()
+    {
+        foreach (var enemy in _context.Enemies)
+        {
+            View.RefreshBlock(0, enemy.Block, EntityType.Enemy, enemy.ConfigId);
+            View.RefreshHp(enemy.CurrentHp, enemy.MaxHp, EntityType.Enemy, enemy.ConfigId);
+        }
+    }
+
     private void RefreshHp(int currentHp, int maxHp, EntityType entityType, int entityId)
     {
         View.RefreshHp(currentHp, maxHp, entityType, entityId);
@@ -257,12 +267,11 @@ public class BattlePresenter : BasePresenter<BattleView>, IHasData<BattleContext
     {
         if (owner is Player)
         {
-            // var playerView = View.GetPlayerView();
-            // playerView.RefreshBuffs(owner.BuffManager.AllBuffs.ToList());
+            View.PlayerView.RefreshBuffs(owner.BuffManager.AllBuffs.ToList());
         }
         else if (owner is Enemy enemy)
         {
-            var enemyView = View.GetEnemyView(enemy.Id);
+            var enemyView = View.GetEnemyView(enemy.ConfigId);
             enemyView?.RefreshBuffs(owner.BuffManager.AllBuffs.ToList());
         }
     }
@@ -293,7 +302,18 @@ public class BattlePresenter : BasePresenter<BattleView>, IHasData<BattleContext
 
     private void OnEnemyIntentChanged(IntentEvent evt)
     {
-        View.RefreshEnemyIntent(evt.Enemy, evt.IntentConfigs);
+        RefreshEnemyIntent(evt.InstanceId, evt.IntentEntries).Forget();
+    }
+    private async UniTaskVoid RefreshEnemyIntent(int instanceId, IntentEntry[] intentEntries)
+    {
+        var displayDataList = new List<IntentDisplayData>();
+        foreach (var entry in intentEntries)
+        {
+            var config = _configService.GetTable<IntentConfig>().Get(entry.IntentId);
+            var displayData = await IntentDisplayData.CreateAsync(config, entry.Value);
+            displayDataList.Add(displayData);
+        }
+        View.RefreshEnemyIntent(instanceId, displayDataList);
     }
     public override void Dispose()
     {

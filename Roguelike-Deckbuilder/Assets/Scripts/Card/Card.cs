@@ -46,7 +46,7 @@ public class Card
         foreach (var effect in config.Effects)
         {
             var effectConfig = configService.GetTable<CardEffectsConfig>().Get(effect.EffectId);
-            Debug.Log($"生成效果{JsonConvert.SerializeObject(effect)} {JsonConvert.SerializeObject(effectConfig)}");
+            // Debug.Log($"生成效果{JsonConvert.SerializeObject(effect)} {JsonConvert.SerializeObject(effectConfig)}");
             var effectInstance = CardEffectFactory.Create(effectConfig, effect.Value);
             EffectsInstance.Add(effectInstance);
             if (effectConfig.Target == "Enemy")

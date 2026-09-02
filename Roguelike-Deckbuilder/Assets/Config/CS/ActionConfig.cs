@@ -13,9 +13,5 @@ public class ActionConfig : IConfig
 	public IntentEntry[] Intents; // 意图
 }
 
-public class IntentEntry 
-{
-	public int IntentId;
-	public int Value;
-}
+
 // End of Auto Generated Code

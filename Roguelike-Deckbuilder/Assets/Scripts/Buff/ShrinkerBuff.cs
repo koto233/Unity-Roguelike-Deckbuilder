@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 
 public class ShrinkerBuff : BaseBuff
 {
@@ -21,6 +22,7 @@ public class ShrinkerBuff : BaseBuff
     {
         if (Stacks <= 0) return;
         damage = (int)Math.Floor(damage * (1f - DamageReduction));
+        Debug.Log($"ShrinkerBuff: 减少伤害，当前伤害为 {damage}");
         base.OnBeforeDealDamage(owner, ref damage);
     }
 

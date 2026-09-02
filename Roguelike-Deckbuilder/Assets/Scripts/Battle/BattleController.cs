@@ -185,7 +185,7 @@ public class BattleController
     }
     public Enemy GetEnemy(int enemyId)
     {
-        return Context.Enemies.FirstOrDefault(e => e.Id == enemyId);
+        return Context.Enemies.FirstOrDefault(e => e.ConfigId == enemyId);
     }
     public void OnAllEnemiesDefeated()
     {

@@ -19,7 +19,7 @@ public class Player : CharacterBase
     public int MaxEnergy => _maxEnergy;
     public override EntityType EntityType => EntityType.Player;
 
-    public override int Id => -1;
+    public override int ConfigId => -1;
 
     public Player(int currentHp, int maxHp, int maxEnergy) : base(maxHp)
     {

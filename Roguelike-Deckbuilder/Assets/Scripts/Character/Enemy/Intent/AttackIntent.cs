@@ -12,6 +12,6 @@ public class AttackIntent : IIntent
 
     public void Execute(EffectExecutor executor, Enemy enemy)
     {
-        executor.Damage(_value, EntityType.Enemy, EntityType.Player, enemy.Id);
+        executor.Damage(_value, EntityType.Enemy, EntityType.Player, enemy.ConfigId);
     }
 }

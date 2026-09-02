@@ -91,15 +91,23 @@ public partial class EnemyItem : UIBase
             }
         }
     }
-    public void RefreshIntent(List<IntentConfig> intentConfigs)
+    public void RefreshIntent(List<IntentDisplayData> displayDatas)
     {
-        foreach (var config in intentConfigs)
+        foreach (var item in _intentionItems)
+        {
+            if (item != null)
+            {
+                Destroy(item.gameObject);
+            }
+        }
+        _intentionItems.Clear();
+        foreach (var data in displayDatas)
         {
             var _intentionGo = Instantiate(_intentionItemRef.Asset);
             _intentionGo.SetActive(true);
             _intentionGo.transform.SetParent(b_IntentionRoot.transform);
             var intentionUI = _intentionGo.GetComponent<IntentionItem>();
-            intentionUI.Init(config, 5);
+            intentionUI.Init(data);
             _intentionItems.Add(intentionUI);
         }
     }

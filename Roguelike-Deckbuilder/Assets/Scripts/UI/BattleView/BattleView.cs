@@ -17,6 +17,7 @@ public partial class BattleView : UIWindow
     private AssetRef<GameObject> _enemyPrefabRef;
     private AssetRef<GameObject> _playerPrefabRef;
     private PlayerItem _playerView;
+    public PlayerItem PlayerView => _playerView;
     private Dictionary<int, EnemyItem> _enemyViews = new();
     private ObjectPoolService _poolService;
     public Transform DiscardPileTrans => b_DiscardPileBtn.transform;
@@ -131,7 +132,7 @@ public partial class BattleView : UIWindow
             var go = Instantiate(_enemyPrefabRef.Asset, b_EnemysRoot);
             var view = go.GetComponent<EnemyItem>();
             view.SetEnemy(enemy);
-            _enemyViews[enemy.Id] = view;
+            _enemyViews[enemy.InstanceId] = view;
         }
     }
 
@@ -228,11 +229,11 @@ public partial class BattleView : UIWindow
         b_IntentTooltip.Hide();
     }
 
-    public void RefreshEnemyIntent(Enemy enemy, List<IntentConfig> intentConfigs)
+    public void RefreshEnemyIntent(int instanceId, List<IntentDisplayData> intentDisplayDatas)
     {
-        if (_enemyViews.TryGetValue(enemy.Id, out var view))
+        if (_enemyViews.TryGetValue(instanceId, out var view))
         {
-            view.RefreshIntent(intentConfigs);
+            view.RefreshIntent(intentDisplayDatas);
         }
     }
 
