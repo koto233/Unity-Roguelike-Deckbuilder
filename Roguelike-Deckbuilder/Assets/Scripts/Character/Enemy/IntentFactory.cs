@@ -12,6 +12,8 @@ public static class IntentFactory
                 return new AttackIntent(config, value);
             case "Buff":
                 return new BuffIntent(config, value);
+            case "Debuff":
+                return new DebuffIntent(config, value);
             default:
                 Debug.LogError($"未知的意图类型: {config.Type}");
                 return null;

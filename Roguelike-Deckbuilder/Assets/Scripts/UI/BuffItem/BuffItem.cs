@@ -22,7 +22,7 @@ public partial class BuffItem : UIBase, ITooltipDataProvider
     {
         return new TooltipData
         {
-            Description = _buff.Config.Description,
+            Description = string.Format(_buff.Config.Description, _buff.Config.Value),
             Value = _buff.Stacks
         };
     }

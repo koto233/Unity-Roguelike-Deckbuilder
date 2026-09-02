@@ -15,17 +15,9 @@ public class IntentDisplayData
         {
             Value = value,
             Description = string.Format(config.Description, value),
-            IsBuff = config.Type == "Buff"
+            IsBuff = config.Type == "Buff" || config.Type == "Debuff"
         };
-        if (config.Type == "Buff")
-        {
-            data.Icon = await ServiceLocator.Get<IAssetService>().LoadAsync<Sprite>($"Assets/Res/Art/Powers/{config.Icon}.png");
-        }
-        else
-        {
-            data.Icon = await ServiceLocator.Get<IAssetService>().LoadAsync<Sprite>($"Assets/Res/Art/Intents/intent_{config.Icon}.png");
-
-        }
+        data.Icon = await ServiceLocator.Get<IAssetService>().LoadAsync<Sprite>($"Assets/Res/Art/Intents/intent_{config.Icon}.png");
         return data;
     }
 }

@@ -1,10 +1,10 @@
 {
   "0": {
     "Id": 0,
-    "Icon": "shrink_power",
-    "Name": "缩小",
-    "Type": "Buff",
-    "Description": "给予缩小debuff"
+    "Icon": "debuff",
+    "Name": "负面效果",
+    "Type": "Debuff",
+    "Description": "对玩家施加负面效果"
   },
   "1": {
     "Id": 1,
