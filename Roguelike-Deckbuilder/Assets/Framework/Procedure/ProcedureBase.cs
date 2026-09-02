@@ -5,6 +5,7 @@ using UnityEngine;
 
 public abstract class ProcedureBase : IState
 {
+    public abstract string Name { get; }
     protected ProcedureManager _procedureManager;
     public ProcedureBase(ProcedureManager procedureManager)
     {

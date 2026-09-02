@@ -9,6 +9,7 @@ namespace LitFramework.FSM.Procedure
 {
     public class ProcedureInit : ProcedureBase
     {
+         public override string Name => "Init";
         private IResourceUpdater _updater;
 
         public ProcedureInit(ProcedureManager manager) : base(manager) { }

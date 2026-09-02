@@ -6,6 +6,5 @@ using System.Threading.Tasks;
 
 public class BattleStartParams : IProcedureArgs
 {
-    public List<int> EnemyIds { get; set; }
-    public bool IsElite { get; set; }
+    public MapNodeType Type;
 }

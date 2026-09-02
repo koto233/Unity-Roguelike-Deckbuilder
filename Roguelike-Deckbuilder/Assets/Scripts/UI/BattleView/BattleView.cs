@@ -36,6 +36,7 @@ public partial class BattleView : UIWindow
 
     protected override async UniTask OnOpenAsync()
     {
+
         var assetService = ServiceLocator.Get<IAssetService>();
         _enemyPrefabRef = await assetService.LoadRefAsync<GameObject>(UIPath.EnemyItem);
         _playerPrefabRef = await assetService.LoadRefAsync<GameObject>(UIPath.PlayerItem);
@@ -46,6 +47,7 @@ public partial class BattleView : UIWindow
         _poolService = ServiceLocator.Get<ObjectPoolService>();
         InitObjectPools();
         InitUI();
+
     }
 
     private void InitObjectPools()
@@ -59,19 +61,14 @@ public partial class BattleView : UIWindow
     private void InitUI()
     {
         b_HandZone.Init(_poolService, this);
-        b_ClosePileButton.onClick.AddListener(ClosePilePanel);
-        ClosePilePanel();
-        b_DrawPileBtn.onClick.AddListener(() => OnOpenPile(0));
-        b_DiscardPileBtn.onClick.AddListener(() => OnOpenPile(1));
-        b_EndTurnBtn.onClick.AddListener(() => OnEndTurn?.Invoke());
-        b_BuffTooltip.Hide();
-        b_IntentTooltip.Hide();
         CreatePlayerView();
-        HideArrow();
     }
     private void OnEnable()
     {
-
+        b_BuffTooltip.Hide();
+        b_IntentTooltip.Hide();
+        ClosePilePanel();
+        HideArrow();
         SubscribeEvents();
     }
     private void OnDisable()
@@ -84,6 +81,10 @@ public partial class BattleView : UIWindow
     }
     private void SubscribeEvents()
     {
+        b_DrawPileBtn.onClick.AddListener(() => OnOpenPile(0));
+        b_DiscardPileBtn.onClick.AddListener(() => OnOpenPile(1));
+        b_EndTurnBtn.onClick.AddListener(() => OnEndTurn?.Invoke());
+        b_ClosePileButton.onClick.AddListener(ClosePilePanel);
         b_HandZone.OnAnyCardPlay += (c) => OnCardPlayRequested?.Invoke(c);
         b_HandZone.OnAnyCardDragStart += (c, pos) => OnCardDragStartRequested?.Invoke(c, pos);
         b_HandZone.OnAnyCardDragEnd += (c) => OnCardDragEndRequested?.Invoke(c);

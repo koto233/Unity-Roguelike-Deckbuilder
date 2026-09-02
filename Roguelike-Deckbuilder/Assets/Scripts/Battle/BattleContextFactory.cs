@@ -16,15 +16,30 @@ public static class BattleContextFactory
             Target = null,
             GoldReward = 0
         };
-        foreach (var enemyId in args.EnemyIds)
+        switch (args.Type)
         {
-            var enemyConfig = ServiceLocator.Get<IConfigService>().GetTable<EnemyConfig>().Get(enemyId);
-            var enemyAi = EnemyAIFactory.Create(enemyConfig.AIType);
-            var enemy = new Enemy(enemyConfig, enemyAi);
-            enemy.Init();
-            battleContext.Enemies.Add(enemy);
-            battleContext.EnemyConfigs.Add(enemyConfig);
+            case MapNodeType.Battle:
+                var enemyConfig = ServiceLocator.Get<IConfigService>().GetTable<EnemyConfig>().Get(1);
+                battleContext.EnemyConfigs.Add(enemyConfig);
+                battleContext.Enemies.Add(new Enemy(enemyConfig, new BeetleAI()));
+                break;
+            case MapNodeType.Elite:
+                enemyConfig = ServiceLocator.Get<IConfigService>().GetTable<EnemyConfig>().Get(1);
+                battleContext.EnemyConfigs.Add(enemyConfig);
+                battleContext.Enemies.Add(new Enemy(enemyConfig, new BeetleAI()));
+                break;
+            case MapNodeType.Boss:
+                enemyConfig = ServiceLocator.Get<IConfigService>().GetTable<EnemyConfig>().Get(1);
+                battleContext.EnemyConfigs.Add(enemyConfig);
+                battleContext.Enemies.Add(new Enemy(enemyConfig, new BeetleAI()));
+                break;
+
+
         }
+
         return battleContext;
     }
+
+
+
 }

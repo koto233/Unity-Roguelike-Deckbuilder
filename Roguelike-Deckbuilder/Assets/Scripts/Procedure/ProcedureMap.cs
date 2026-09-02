@@ -12,6 +12,7 @@ namespace LitFramework.FSM.Procedure
 {
     public class ProcedureMap : ProcedureBase
     {
+        public override string Name => "Map";
         private const string MapSceneName = "Map Scene";
         private UIService _uiService;
         public ProcedureMap(ProcedureManager procedureManager) : base(procedureManager)
@@ -61,8 +62,7 @@ namespace LitFramework.FSM.Procedure
         // ============ 事件处理器 ============
         private void OnBattleStart(BattleStartEvent evt)
         {
-
-            var args = new BattleStartParams { EnemyIds = evt.EnemyIds };
+            var args = new BattleStartParams { Type = evt.Type };
             _procedureManager.ChangeProcedure<ProcedureBattle, BattleStartParams>(args);
         }
 
@@ -77,7 +77,7 @@ namespace LitFramework.FSM.Procedure
             await uiatlasService.PreLoadCardIcons();
             // await sceneLoader.LoadAdditiveAsync(MapSceneName);
             await _uiService.OpenAsync<MapView>();
-            await _uiService.OpenAsync<TopBar>();
+         
             // var uiMap = GameObject.FindObjectOfType<UIMap>(true);
             // if (uiMap != null)
             // {

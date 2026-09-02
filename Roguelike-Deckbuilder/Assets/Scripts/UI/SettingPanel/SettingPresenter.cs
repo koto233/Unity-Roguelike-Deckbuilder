@@ -42,7 +42,8 @@ public class SettingPresenter : BasePresenter<SettingPanel>
     private void HandleClickQuit()
     {
         var saveService = ServiceLocator.Get<SaveService>();
-        saveService.SaveGame();
+        var produceName = ServiceLocator.Get<ProcedureManager>().CurrentProcedure.Name;
+        saveService.SaveGame(produceName);
         Application.Quit();
     }
 

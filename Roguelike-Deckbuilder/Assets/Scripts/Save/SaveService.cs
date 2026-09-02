@@ -30,7 +30,6 @@ public class SaveService
 
         string json = JsonConvert.SerializeObject(saveData, Formatting.Indented);
         _storage.Save(json);
-        Debug.Log("游戏已存档");
     }
 
     // ============ 读档 ============

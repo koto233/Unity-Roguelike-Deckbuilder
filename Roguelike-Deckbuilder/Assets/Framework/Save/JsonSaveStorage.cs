@@ -10,6 +10,7 @@ public class JsonSaveStorage : ISaveStorage
     public void Save(string json)
     {
         File.WriteAllText(SavePath, json);
+        Debug.Log($"存档已保存：{SavePath}");
     }
 
     public string Load()

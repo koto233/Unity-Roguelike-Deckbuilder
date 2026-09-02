@@ -11,6 +11,8 @@ namespace LitFramework.FSM.Procedure
 {
     public class ProcedureBattle : ProcedureBase
     {
+        public override string Name => "Battle";
+
         public ProcedureBattle(ProcedureManager procedureManager) : base(procedureManager) { }
         private BattleController _battleController;
         private const string BattleSceneName = "Battle Scene"; // 与场景文件名称一致

@@ -7,6 +7,7 @@ namespace LitFramework.FSM.Procedure
 {
     public class ProcedureTitle : ProcedureBase
     {
+        public override string Name => "Title";
         public ProcedureTitle(ProcedureManager procedureManager) : base(procedureManager)
         {
 

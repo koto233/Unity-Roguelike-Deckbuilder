@@ -519,7 +519,7 @@ public class GMToolWindow : EditorWindow
         GUILayout.Label("事件触发", EditorStyles.boldLabel);
         if (GUILayout.Button("触发战斗开始事件"))
         {
-            EventBus<BattleStartEvent>.Publish(new BattleStartEvent { EnemyIds = new List<int> { 1, 2 } });
+            // EventBus<BattleStartEvent>.Publish(new BattleStartEvent { EnemyIds = new List<int> { 1, 2 } });
         }
         if (GUILayout.Button("触发回合开始事件"))
         {

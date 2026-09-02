@@ -9,7 +9,10 @@ public static class MapGenerator
     public static Dictionary<string, MapNodeData> Generate(List<MapConfig> rowConfigs, int seed = 0)
     {
         if (rowConfigs == null || rowConfigs.Count == 0)
+        {
+            Debug.LogError("MapConfig table is empty.");
             return null;
+        }
         var rng = new System.Random(seed);
         var nodes = new Dictionary<string, MapNodeData>();
 
@@ -29,11 +32,10 @@ public static class MapGenerator
                 {
                     node.Type = WeightedRandom.PickType(rowCfg, rng);
                 }
-                // 如果是战斗类型，设置 EnemyId（此处示例）
-                if (node.Type == MapNodeType.Battle || node.Type == MapNodeType.Elite || node.Type == MapNodeType.Boss)
-                {
-                    node.EnemyIds = new List<int> { 1 };
-                }
+                // if (node.Type == MapNodeType.Battle || node.Type == MapNodeType.Elite || node.Type == MapNodeType.Boss)
+                // {
+                //     node.EnemyIds = new List<int> { 1 };
+                // }
                 nodes.Add(node.Id, node);
             }
         }

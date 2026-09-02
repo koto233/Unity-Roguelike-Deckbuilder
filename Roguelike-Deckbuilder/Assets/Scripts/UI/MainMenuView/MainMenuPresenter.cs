@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using LitFramework;
 using LitFramework.FSM.Procedure;
 using LitFramework.UI.Core.Service;
@@ -35,7 +36,9 @@ public class MainMenuPresenter : BasePresenter<MainMenuView>
         ServiceLocator.Get<MapService>().NewMap(1);
         ServiceLocator.Get<RelicService>().Init();
         ServiceLocator.Get<ProcedureManager>().ChangeProcedure<ProcedureMap>();
+        OpenTopBarAsync().Forget();
     }
+
     private void HandleClickContinue()
     {
         LoadGame();
@@ -57,11 +60,24 @@ public class MainMenuPresenter : BasePresenter<MainMenuView>
         ServiceLocator.Get<PlayerDataService>().Load(saveData.PlayerData);
         ServiceLocator.Get<RelicService>().Init();
         ServiceLocator.Get<MapService>().LoadMap(saveData.MapData);
-        // 流程切换
-        ServiceLocator.Get<ProcedureManager>().ChangeProcedure<ProcedureMap>();
+
+        var _procedureManager = ServiceLocator.Get<ProcedureManager>();
+        if (saveData.CurrentProcedure == "Map")
+        {
+            _procedureManager.ChangeProcedure<ProcedureMap>();
+        }
+        else if (saveData.CurrentProcedure == "Battle")
+        {
+            var args = new BattleStartParams { Type = MapNodeType.Battle };
+            _procedureManager.ChangeProcedure<ProcedureBattle, BattleStartParams>(args);
+        }
+        OpenTopBarAsync().Forget();
     }
 
-
+    private async UniTask OpenTopBarAsync()
+    {
+        await ServiceLocator.Get<UIService>().OpenAsync<TopBar>();
+    }
     public override void Dispose()
     {
         UnsubscribeEvents();

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using LitFramework;
 using LitFramework.EventBus;
@@ -53,10 +54,9 @@ public class MapPresenter : BasePresenter<MapView>
         switch (data.Type)
         {
             case MapNodeType.Battle:
-                EventBus<BattleStartEvent>.Publish(new BattleStartEvent { EnemyIds = data.EnemyIds });
-                break;
+            case MapNodeType.Boss:
             case MapNodeType.Elite:
-                EventBus<BattleStartEvent>.Publish(new BattleStartEvent { EnemyIds = data.EnemyIds });
+                EventBus<BattleStartEvent>.Publish(new BattleStartEvent { Type = data.Type });
                 break;
             case MapNodeType.Rest:
                 _uiService.OpenAsync<RestView>().Forget();
@@ -67,12 +67,11 @@ public class MapPresenter : BasePresenter<MapView>
             case MapNodeType.Event:
                 _uiService.OpenAsync<EventView>().Forget();
                 break;
-            case MapNodeType.Boss:
-                EventBus<BattleStartEvent>.Publish(new BattleStartEvent { EnemyIds = data.EnemyIds });
-                break;
         }
 
     }
+
+
     public override void Dispose()
     {
         UnSubscribeEvents();

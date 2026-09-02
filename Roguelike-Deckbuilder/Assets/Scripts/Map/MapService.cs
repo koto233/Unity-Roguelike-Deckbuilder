@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using LitFramework;
 using LitFramework.Config;
+using Newtonsoft.Json;
 using UnityEngine;
 
 public class MapService
@@ -23,11 +24,17 @@ public class MapService
 
     public void LoadMap(MapSaveData saveData)
     {
-        var configs = ServiceLocator.Get<IConfigService>().GetTable<MapConfig>().GetAll()
+        if (saveData == null)
+        {
+            Debug.LogError("LoadMap: saveData 为 null");
+            NewMap(1);
+            return;
+        }
+        Debug.Log($"载入存档：{JsonConvert.SerializeObject(saveData)}");
+        var configs = ConfigService.GetTable<MapConfig>().GetAll()
                    .Where(c => c.Templateld == saveData.TemplateId) // 你的模板ID逻辑
                    .OrderBy(c => c.Row)
                    .ToList();
-
         CurrentMap = MapGenerator.Generate(configs, saveData.Seed);
         _currentSeed = saveData.Seed;
         _currentTemplateId = saveData.TemplateId;
@@ -67,6 +74,7 @@ public class MapService
     }
     public void NewMap(int templateId)
     {
+        _currentTemplateId = templateId;
         _currentSeed = Random.Range(0, int.MaxValue);
         var allConfigs = ConfigService.GetTable<MapConfig>().GetAll();
         if (allConfigs == null) return;
