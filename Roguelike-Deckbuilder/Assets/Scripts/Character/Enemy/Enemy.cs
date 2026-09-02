@@ -16,7 +16,7 @@ public class Enemy : CharacterBase
     public EnemyConfig Config { get; private set; }
     public int CurrentActionId { get; private set; }
     public IEnemyAI AI { get; private set; }
-    public override int ConfigId => Config.Id;
+    // public override int ConfigId => Config.Id;
     public override EntityType EntityType => EntityType.Enemy;
     private Dictionary<int, List<IIntent>> _actions = new();
     public void Init()

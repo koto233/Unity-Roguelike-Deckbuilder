@@ -19,10 +19,17 @@ public partial class IntentionItem : UIBase, ITooltipDataProvider
     public void Init(IntentDisplayData displayData)
     {
         _intentDisplayData = displayData;
-        b_Num.SetText(displayData.Value.ToString());
+        if (displayData.Value < 0)
+        {
+            b_Num.SetText("");
+        }
+        else
+        {
+            b_Num.SetText(displayData.Value.ToString());
+        }
         _icon.sprite = displayData.Icon;
     }
-   
+
     public TooltipData GetTooltipData()
     {
         return new TooltipData

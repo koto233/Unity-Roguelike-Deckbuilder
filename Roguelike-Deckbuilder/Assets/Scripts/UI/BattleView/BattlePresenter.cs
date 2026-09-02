@@ -134,15 +134,15 @@ public class BattlePresenter : BasePresenter<BattleView>, IHasData<BattleContext
         RefreshHp(context.Player.CurrentHp, context.Player.MaxHp, EntityType.Player, -1);
         foreach (var enemy in context.Enemies)
         {
-            RefreshHp(enemy.CurrentHp, enemy.MaxHp, EntityType.Enemy, enemy.ConfigId);
+            RefreshHp(enemy.CurrentHp, enemy.MaxHp, EntityType.Enemy, enemy.InstanceId);
         }
     }
     public void RefreshAllEnemy()
     {
         foreach (var enemy in _context.Enemies)
         {
-            View.RefreshBlock(0, enemy.Block, EntityType.Enemy, enemy.ConfigId);
-            View.RefreshHp(enemy.CurrentHp, enemy.MaxHp, EntityType.Enemy, enemy.ConfigId);
+            View.RefreshBlock(0, enemy.Block, EntityType.Enemy, enemy.InstanceId);
+            View.RefreshHp(enemy.CurrentHp, enemy.MaxHp, EntityType.Enemy, enemy.InstanceId);
         }
     }
 
@@ -271,7 +271,7 @@ public class BattlePresenter : BasePresenter<BattleView>, IHasData<BattleContext
         }
         else if (owner is Enemy enemy)
         {
-            var enemyView = View.GetEnemyView(enemy.ConfigId);
+            var enemyView = View.GetEnemyView(enemy.InstanceId);
             enemyView?.RefreshBuffs(owner.BuffManager.AllBuffs.ToList());
         }
     }

@@ -7,7 +7,8 @@ public class BeetleAI : IEnemyAI
     public int DecideAction(int[] ActionsIds)
     {
         var context = ServiceLocator.Get<BattleController>().Context;
-        if (context.CurrentTurn == 0)
+        Debug.Log($"BeetleAI.DecideAction{context.CurrentTurn}");
+        if (context.CurrentTurn <= 1)
         {
             return ActionsIds[0];
         }

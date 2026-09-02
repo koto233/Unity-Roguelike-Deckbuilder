@@ -91,19 +91,18 @@ public class BattleController
             return false;
         }
     }
-
+    public void EnemiesDetermineAction()
+    {
+        foreach (var enemy in Context.Enemies)
+        {
+            enemy.DetermineAction();
+        }
+    }
     public async UniTask<TurnResult> ExecuteEnemyTurnAsync()
     {
         foreach (var enemy in Context.Enemies)
         {
             if (enemy.CurrentHp <= 0) continue;
-
-            // 1. 决策
-            enemy.DetermineAction();
-
-            // 2. 发布意图事件（UI更新）
-            // EventBus.Publish(new EnemyIntentDeterminedEvent(enemy));
-
             // 3. 视觉延迟
             await UniTask.Delay(300);
 
@@ -134,7 +133,7 @@ public class BattleController
     {
         Context.Player.DrawCardInTurnStart(BattleRules.InitialHandSize);
         Context.Player.ResetEnergy();
-
+        EnemiesDetermineAction();
     }
     public void EndPlayerTurn()
     {
@@ -162,7 +161,6 @@ public class BattleController
     public void EndEnemyTurn()
     {
         BattleFSM.ChangeState<PlayerTurnState>();
-        Context.CurrentTurn += 1;
     }
 
     private void OnCharacterDied(DiedEvent evt)
@@ -185,7 +183,7 @@ public class BattleController
     }
     public Enemy GetEnemy(int enemyId)
     {
-        return Context.Enemies.FirstOrDefault(e => e.ConfigId == enemyId);
+        return Context.Enemies.FirstOrDefault(e => e.InstanceId == enemyId);
     }
     public void OnAllEnemiesDefeated()
     {

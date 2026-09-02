@@ -13,7 +13,7 @@ public abstract class CharacterBase
    public abstract EntityType EntityType { get; }
    private static int _nextId = 1;
    public int InstanceId { get; private set; }
-   public abstract int ConfigId { get; }
+   // public abstract int ConfigId { get; }
    private BuffManager _buffManager;
    public BuffManager BuffManager => _buffManager;
    protected CharacterBase(int maxHp)
@@ -38,7 +38,7 @@ public abstract class CharacterBase
             NewHp = _currentHp,
             MaxHp = _maxHp,
             EntityType = EntityType,
-            EntityId = ConfigId
+            EntityId = InstanceId
          });
 
          if (_currentHp <= 0) OnDeath();
@@ -57,7 +57,7 @@ public abstract class CharacterBase
             NewHp = _currentHp,
             MaxHp = _maxHp,
             EntityType = EntityType,
-            EntityId = ConfigId
+            EntityId = InstanceId
          });
          // 如果当前血量超过新上限，需要截断
          if (_currentHp > _maxHp) _currentHp = _maxHp;
@@ -79,7 +79,7 @@ public abstract class CharacterBase
             OldBlock = oldBlock,
             NewBlock = _block,
             EntityType = EntityType,
-            EntityId = ConfigId
+            EntityId = InstanceId
          });
       }
    }

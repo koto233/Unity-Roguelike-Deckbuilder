@@ -66,7 +66,7 @@ public class EffectExecutor
         {
             Text = amount.ToString(),
             EntityType = target.EntityType,
-            EntityId = target.ConfigId
+            EntityId = target.InstanceId
         });
     }
 
