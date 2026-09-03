@@ -143,7 +143,7 @@ public partial class RestView : UIWindow
     {
         foreach (var item in _cardItems)
         {
-            Debug.Log("ClearList: " + item.name);
+            item.ClearEvents();
             _poolService.ReturnGameObject<ClickableCardItem>(item.gameObject);
         }
 

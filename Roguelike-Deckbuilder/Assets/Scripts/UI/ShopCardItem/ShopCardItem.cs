@@ -32,5 +32,8 @@ public partial class ShopCardItem : UIBase
         b_type_text.SetText(data.Type);
         b_PriceText.SetText(data.Price.ToString());
     }
-
+    public void ClearEvents()
+    {
+        OnClick = null;
+    }
 }

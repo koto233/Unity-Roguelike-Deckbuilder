@@ -41,6 +41,7 @@ public partial class ShopView : UIWindow
     private void OnDisable()
     {
         UnsubscribeEvents();
+        ClearAllItems();
     }
 
     private void InitObjectPools()
@@ -130,14 +131,20 @@ public partial class ShopView : UIWindow
     private void ClearCardList()
     {
         foreach (var item in _shopCardItems)
+        {
+            item.ClearEvents();
             _poolService.ReturnGameObject<ShopCardItem>(item.gameObject);
+        }
         _shopCardItems.Clear();
     }
 
     private void ClearRelicList()
     {
         foreach (var item in _cardItems)
+        {
+            item.ClearEvents();
             _poolService.ReturnGameObject<ShopRelicItem>(item.gameObject);
+        }
         _cardItems.Clear();
     }
 

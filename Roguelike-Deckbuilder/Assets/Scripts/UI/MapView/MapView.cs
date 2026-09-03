@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
@@ -99,14 +100,17 @@ public partial class MapView : UIWindow
         var uiMapNode = nodeGO.GetComponent<MapNodeItem>();
         // 2. 一行初始化：数据 + 点击回调
         uiMapNode.Initialize(data);
-        uiMapNode.OnNodeClicked += OnNodeClicked;
+        uiMapNode.OnNodeClicked += HandleNodeClicked; 
         nodeGO.name = $"Node_{data.Id}";
         _nodes.Add(uiMapNode);
         _nodeDict[data.Id] = uiMapNode;
         return uiMapNode;
     }
 
-
+    private void HandleNodeClicked(string nodeId)
+    {
+        OnNodeClicked?.Invoke(nodeId);
+    }
 
     private void DrawAllLines(IReadOnlyCollection<MapNodeData> nodes)
     {

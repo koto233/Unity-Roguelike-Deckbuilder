@@ -36,6 +36,9 @@ public partial class ShopRelicItem : UIBase
         _icon.sprite = data.Icon;
 
     }
-
+    public void ClearEvents()
+    {
+        OnClick = null;
+    }
 
 }

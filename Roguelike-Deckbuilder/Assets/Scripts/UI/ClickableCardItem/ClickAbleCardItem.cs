@@ -17,6 +17,7 @@ public partial class ClickableCardItem : UIBase
     void OnDisable()
     {
         b_Click.onClick.RemoveAllListeners();
+        ClearEvents();
     }
     public void Init(CardDisplayData data)
     {
@@ -28,5 +29,9 @@ public partial class ClickableCardItem : UIBase
         b_PortraitBorder.sprite = data.PortraitBorderSprite;
         b_Frame.sprite = data.FrameSprite;
         b_type_text.SetText(data.Type);
+    }
+    public void ClearEvents()
+    {
+        OnClick = null;
     }
 }
