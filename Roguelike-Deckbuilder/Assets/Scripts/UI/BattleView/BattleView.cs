@@ -36,7 +36,10 @@ public partial class BattleView : UIWindow
 
     protected override async UniTask OnOpenAsync()
     {
-
+        b_BuffTooltip.Hide();
+        b_IntentTooltip.Hide();
+        ClosePilePanel();
+        HideArrow();
         var assetService = ServiceLocator.Get<IAssetService>();
         _enemyPrefabRef = await assetService.LoadRefAsync<GameObject>(UIPath.EnemyItem);
         _playerPrefabRef = await assetService.LoadRefAsync<GameObject>(UIPath.PlayerItem);
@@ -65,10 +68,6 @@ public partial class BattleView : UIWindow
     }
     private void OnEnable()
     {
-        b_BuffTooltip.Hide();
-        b_IntentTooltip.Hide();
-        ClosePilePanel();
-        HideArrow();
         SubscribeEvents();
     }
     private void OnDisable()
@@ -238,13 +237,13 @@ public partial class BattleView : UIWindow
         }
     }
 
-    public async UniTask ShowFloatingText(string text, Vector3 position, Color color, bool isCritical)
+    public async UniTask ShowFloatingText(string text, Vector3 position, bool isCritical)
     {
         var item = _poolService.GetGameObject<FloatingTextItem>();
         item.transform.SetParent(transform);
         item.transform.position = position;
         var uiFloatingText = item.GetComponent<FloatingTextItem>();
-        await uiFloatingText.PlayAsync(text, position, color, isCritical);
+        await uiFloatingText.PlayAsync(text, position, isCritical);
         if (item != null)
             _poolService.ReturnGameObject<FloatingTextItem>(item);
     }

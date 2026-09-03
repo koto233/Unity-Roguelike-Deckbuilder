@@ -323,7 +323,7 @@ public class BattlePresenter : BasePresenter<BattleView>, IHasData<BattleContext
     private void OnFloatingTextEvent(FloatingTextEvent evt)
     {
         Vector3 position = View.GetEntityPosition(evt.EntityType, evt.EntityId);
-        View.ShowFloatingText(evt.Text, position, evt.Color, evt.IsCritical).Forget();
+        View.ShowFloatingText(evt.Text, position, evt.IsCritical).Forget();
     }
 
 

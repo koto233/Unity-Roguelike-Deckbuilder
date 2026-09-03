@@ -1,15 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using LitFramework.UI.Core.Window;
+using Newtonsoft.Json;
 using UnityEngine;
 
 public partial class Tooltip : UIBase
 {
     public void Show(TooltipData data, Vector2 position)
     {
-        // _name.text = buff.Config.DisplayName;
-        // _stacks.text = $"层数: {buff.Stacks}";
-        // _duration.text = buff.Duration > 0 ? $"持续: {buff.Duration}回合" : "无限";
+        // Debug.Log($"ShowTooltip: {JsonConvert.SerializeObject(data)} at {position}");
         string desc = string.Format(data.Description, data.Value);
         b_DescText.SetText(desc);
         transform.position = position;

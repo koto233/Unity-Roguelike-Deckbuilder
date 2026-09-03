@@ -29,5 +29,8 @@ public partial class MainMenuView : UIWindow
         b_ContinueButton.onClick.RemoveAllListeners();
     }
 
-
+    public void ShowContinue(bool show)
+    {
+        b_ContinueButton.gameObject.SetActive(show);
+    }
 }

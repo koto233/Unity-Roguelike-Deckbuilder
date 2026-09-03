@@ -9,6 +9,7 @@ using UnityEngine;
 
 public class MainMenuPresenter : BasePresenter<MainMenuView>
 {
+    private SaveService _saveService;
     public MainMenuPresenter(MainMenuView view) : base(view)
     {
 
@@ -16,6 +17,8 @@ public class MainMenuPresenter : BasePresenter<MainMenuView>
 
     public override void Init()
     {
+        _saveService = ServiceLocator.Get<SaveService>();
+        View.ShowContinue(_saveService.HasSave());
         SubscribeEvents();
     }
 
@@ -46,12 +49,12 @@ public class MainMenuPresenter : BasePresenter<MainMenuView>
 
     public void LoadGame()
     {
-        var saveService = ServiceLocator.Get<SaveService>();
-        if (!saveService.HasSave())
+
+        if (!_saveService.HasSave())
         {
             return;
         }
-        var saveData = saveService.LoadSaveData();
+        var saveData = _saveService.LoadSaveData();
         if (saveData == null)
         {
             Debug.Log("读档失败");

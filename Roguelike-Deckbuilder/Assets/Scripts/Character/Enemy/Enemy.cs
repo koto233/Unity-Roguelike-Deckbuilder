@@ -12,6 +12,7 @@ public class Enemy : CharacterBase
     {
         Config = config;
         AI = ai;
+        Init();
     }
     public EnemyConfig Config { get; private set; }
     public int CurrentActionId { get; private set; }

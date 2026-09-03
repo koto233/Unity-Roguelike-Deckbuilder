@@ -149,13 +149,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _generatedScriptPath: UI/Generated
-  _fontSizeRatio: 0.05
-  _minFontSize: 24
-  _maxFontSize: 72
   _criticalFontSizeMultiplier: 1.5
-  _floatDistanceRatio: 0.0019
-  _minFloatDistance: 0
-  _maxFloatDistance: 200
+  _fontSize: 70
+  _distance: 30
 --- !u!225 &8388940029246791511
 CanvasGroup:
   m_ObjectHideFlags: 0

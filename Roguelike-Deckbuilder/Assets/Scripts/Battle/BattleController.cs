@@ -26,6 +26,7 @@ public class BattleController
             var card = new Card(cardConfig);
             Context.Player.AddCardToDrawPile(card);
         }
+        
         Context.Player.ShuffleDrawDeck();
         InitFsm();
         EventBus<DiedEvent>.Subscribe(OnCharacterDied);
