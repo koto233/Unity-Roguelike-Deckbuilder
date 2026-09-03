@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using LitFramework;
+using LitFramework.EventBus;
 using LitFramework.FSM;
 using LitFramework.UI.Core.Service;
 using UnityEngine;
@@ -20,6 +21,7 @@ public class BattleEndState : TurnStateBase
         uiService.Close<BattleView>();
         uiService.OpenAsync<BattleResultPanel>().Forget();
         //    Controller.EndBattle(); // 改为由UIBattleEnd上的按钮调用
+       EventBus<BattleEndEvent>.Publish(new BattleEndEvent());
         Debug.Log("战斗结束");
     }
 

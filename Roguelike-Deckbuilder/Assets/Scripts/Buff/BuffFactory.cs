@@ -4,6 +4,7 @@ public static class BuffFactory
 {
     public static IBuff Create(int id, BuffConfig config, int stacks)
     {
+        Debug.Log($"创建Buff: {id}");
         return id switch
         {
             BuffIds.Vulnerable => new VulnerableBuff(config, stacks),

@@ -1,6 +1,7 @@
 using LitFramework;
 using LitFramework.EventBus;
 using Newtonsoft.Json;
+using UnityEngine;
 
 /// <summary>
 /// 战斗结束恢复生命
@@ -29,6 +30,7 @@ public class HealOnCombatEndEffect : IRelicEffect
 
     private void OnCombatEnd(BattleEndEvent evt)
     {
+        Debug.Log($"OnCombatEnd{_healAmount}");
         _executor.HealGlobalPlayer(_healAmount);
     }
 

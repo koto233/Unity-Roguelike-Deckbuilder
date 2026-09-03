@@ -2,11 +2,12 @@ using LitFramework;
 using LitFramework.UI.Core.Window;
 using UnityEngine.UI;
 
-public partial class ShopRelicItem : UIBase
+public partial class ShopRelicItem : UIBase, ITooltipDataProvider
 {
     private int _id;
     private Image _icon;
     private Button _buyButton;
+    private RelicDisplayData _data;
     public event System.Action<int> OnClick;
 
     protected override void Awake()
@@ -31,6 +32,7 @@ public partial class ShopRelicItem : UIBase
 
     public void Init(RelicDisplayData data)
     {
+        _data = data;
         _id = data.Id;
         b_PriceText.SetText(data.Price.ToString());
         _icon.sprite = data.Icon;
@@ -40,5 +42,11 @@ public partial class ShopRelicItem : UIBase
     {
         OnClick = null;
     }
-
+    public TooltipData GetTooltipData()
+    {
+        return new TooltipData
+        {
+            Description = _data.Description,
+        };
+    }
 }

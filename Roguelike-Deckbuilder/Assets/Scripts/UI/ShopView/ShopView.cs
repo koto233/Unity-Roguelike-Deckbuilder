@@ -19,10 +19,11 @@ public partial class ShopView : UIWindow
     public event Action<int> OnClickCardToRemove;
     public event Action OnClickConfirm;
     private ObjectPoolService _poolService;
-
+    [SerializeField] private Tooltip _tooltip;
     private List<ShopCardItem> _shopCardItems = new();
     private List<ShopRelicItem> _relicItems = new();
     private List<ClickableCardItem> _cardItems = new();
+
 
     protected override async UniTask OnOpenAsync()
     {
@@ -32,6 +33,7 @@ public partial class ShopView : UIWindow
         _relicItemRef = await assetService.LoadRefAsync<GameObject>(UIPath.ShopRelicItem);
         InitObjectPools();
         await base.OnOpenAsync();
+        _tooltip.Hide();
     }
     private void OnEnable()
     {
@@ -79,6 +81,10 @@ public partial class ShopView : UIWindow
             shopCardItem.OnClick += (id) => OnClickShopCard?.Invoke(id);
             _shopCardItems.Add(shopCardItem);
         }
+    }
+    public void ShowToolTip(TooltipData data, Vector2 position)
+    {
+        _tooltip.Show(data, position);
     }
     public void RefreshRemoveCost(int cost)
     {
@@ -140,7 +146,7 @@ public partial class ShopView : UIWindow
 
     private void ClearRelicList()
     {
-        foreach (var item in _cardItems)
+        foreach (var item in _relicItems)
         {
             item.ClearEvents();
             _poolService.ReturnGameObject<ShopRelicItem>(item.gameObject);

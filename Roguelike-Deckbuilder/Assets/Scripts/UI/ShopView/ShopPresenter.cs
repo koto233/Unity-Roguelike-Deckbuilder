@@ -6,6 +6,7 @@ using System.Text;
 using Cysharp.Threading.Tasks;
 using LitFramework;
 using LitFramework.Config;
+using LitFramework.EventBus;
 using LitFramework.UI.Core.Service;
 using UnityEngine;
 
@@ -44,7 +45,9 @@ public class ShopPresenter : BasePresenter<ShopView>
         View.OnClickRelic += HandleClickRelic;
         View.OnClickCardToRemove += HandleClickCardToRemove;
         View.OnClickConfirm += HandleClickConfirm;
+        EventBus<TooltipShowEvent>.Subscribe(OnHoverEvent);
     }
+
 
 
     private void UnsubscribeEvents()
@@ -55,6 +58,7 @@ public class ShopPresenter : BasePresenter<ShopView>
         View.OnClickRelic -= HandleClickRelic;
         View.OnClickCardToRemove -= HandleClickCardToRemove;
         View.OnClickConfirm -= HandleClickConfirm;
+        EventBus<TooltipShowEvent>.Unsubscribe(OnHoverEvent);
     }
 
 
@@ -66,13 +70,16 @@ public class ShopPresenter : BasePresenter<ShopView>
             if (_playerService.Coin >= relic.Price)
             {
                 _playerService.SpendCoin(relic.Price);
-                _playerService.AddRelic(id);
+                ServiceLocator.Get<RelicService>().AddRelic(id);
                 Relics.Remove(id);
                 View.RefreshRelics(Relics.Values.ToList());
             }
         }
     }
-
+    private void OnHoverEvent(TooltipShowEvent @event)
+    {
+        View.ShowToolTip(@event.Data, @event.Position);
+    }
     private void HandleClickCard(int id)
     {
         if (Cards.TryGetValue(id, out var card))

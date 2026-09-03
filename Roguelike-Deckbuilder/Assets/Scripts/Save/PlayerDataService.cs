@@ -116,11 +116,13 @@ public class PlayerDataService
     {
         if (!_relicIds.Contains(relicId))
             _relicIds.Add(relicId);
+        EventBus<RelicChangedEvent>.Publish(new RelicChangedEvent { RelicIds = _relicIds });
     }
     public void RemoveRelic(int relicId)
     {
         if (_relicIds.Contains(relicId))
             _relicIds.Remove(relicId);
+        EventBus<RelicChangedEvent>.Publish(new RelicChangedEvent { RelicIds = _relicIds });
     }
     public void AddCoin(int coin)
     {

@@ -10,6 +10,7 @@ public class RelicDisplayData
     public int Id;
     public Sprite Icon;
     public int Price;
+    public string Description;
     public static async UniTask<RelicDisplayData> FromConfig(RelicConfig config, int price = 0)
     {
         var assetService = ServiceLocator.Get<IAssetService>();
@@ -18,7 +19,8 @@ public class RelicDisplayData
         {
             Id = config.Id,
             Icon = asset.Asset,
-            Price = price
+            Price = price,
+            Description = config.Description
         };
     }
 }

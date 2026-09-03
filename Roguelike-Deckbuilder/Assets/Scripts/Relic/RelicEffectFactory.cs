@@ -6,7 +6,7 @@ public static class RelicEffectFactory
 {
     private static readonly Dictionary<string, Func<string, IRelicEffect>> _creators = new()
     {
-        ["HealOnCombatEndEffect"] = p => new HealOnCombatEndEffect(p),
+        ["HealOnCombatEnd"] = p => new HealOnCombatEndEffect(p),
     
     };
 

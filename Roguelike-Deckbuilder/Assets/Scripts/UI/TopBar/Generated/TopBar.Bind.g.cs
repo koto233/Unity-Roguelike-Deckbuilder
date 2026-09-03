@@ -3,8 +3,8 @@
 //     本文件由 UIAutoBindGenerator 自动生成
 //     请勿手动修改此文件，重新生成将覆盖所有改动
 //
-//     来源 UI : UITopBar
-//     生成时间 : 2026-08-24
+//     来源 UI : TopBar
+//     生成时间 : 2026-09-03
 // </自动生成>
 //------------------------------------------------------------------------------
 
@@ -20,6 +20,7 @@ using TMPro;
         private @Button b_SettingBtn;
         private @TextMeshProUGUI b_HpText;
         private @TextMeshProUGUI b_CoinText;
+        private @RectTransform b_RelicRoot;
 
         protected override void GetUI()
         {
@@ -30,5 +31,6 @@ using TMPro;
             b_SettingBtn = GetBind<@Button>(3);
             b_HpText = GetBind<@TextMeshProUGUI>(4);
             b_CoinText = GetBind<@TextMeshProUGUI>(5);
+            b_RelicRoot = GetBind<@RectTransform>(6);
         }
     }

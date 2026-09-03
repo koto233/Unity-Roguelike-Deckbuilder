@@ -70,7 +70,7 @@ public class RelicService
         ServiceLocator.Get<SaveService>().SaveGame();
 
         // 广播事件（用于成就、UI刷新等）
-        EventBus<RelicChangedEvent>.Publish(new RelicChangedEvent { });
+     
     }
 
     public void RemoveRelic(int relicId)
@@ -84,7 +84,6 @@ public class RelicService
 
         _relics.Remove(relicId);
         ServiceLocator.Get<SaveService>().SaveGame();
-        EventBus<RelicChangedEvent>.Publish(new RelicChangedEvent { });
     }
 
 
