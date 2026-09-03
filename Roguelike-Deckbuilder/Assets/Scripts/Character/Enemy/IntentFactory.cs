@@ -14,6 +14,8 @@ public static class IntentFactory
                 return new BuffIntent(config, value);
             case "Debuff":
                 return new DebuffIntent(config, value);
+            case "StatusCard":
+                return new StatusCardIntent(config, value);
             default:
                 Debug.LogError($"未知的意图类型: {config.Type}");
                 return null;

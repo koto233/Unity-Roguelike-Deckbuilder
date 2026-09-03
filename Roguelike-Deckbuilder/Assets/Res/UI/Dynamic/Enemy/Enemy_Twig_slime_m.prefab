@@ -180,7 +180,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: addb1f25fc88bd249af291119df4f93d, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 0d71c23d10b8436419a76d5ab0be5f06, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -723,7 +723,7 @@ GameObject:
   - component: {fileID: 3542720935875677831}
   - component: {fileID: 1969887874726746954}
   m_Layer: 6
-  m_Name: EnemyItem
+  m_Name: Enemy_Twig_slime_m
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

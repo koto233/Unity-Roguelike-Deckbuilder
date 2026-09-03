@@ -11,14 +11,12 @@ using System;
 public class EnemyConfig : IConfig
 {
 	public int Id; // Id
-	public string Icon; // 图标
+	public string Key; // Key
 	public string Name; // 名称
 	public int Rarity; // 稀有度
 	public int MaxHp; // 血量
 	public int[] Actions; // 行为
-	public string AIType; // AI类型
 }
 
 
 // End of Auto Generated Code
-

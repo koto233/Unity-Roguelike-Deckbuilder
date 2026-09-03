@@ -1,7 +1,7 @@
 {
   "1": {
     "Id": 1,
-    "Icon": "shrinker_beetle",
+    "Key": "Shrinker_beetle",
     "Name": "缩小甲虫",
     "Rarity": 1,
     "MaxHp": 40,
@@ -9,18 +9,51 @@
       0,
       1,
       2
-    ],
-    "AIType": "shrinker_beetle"
+    ]
   },
   "2": {
     "Id": 2,
-    "Icon": "twig_slime_s",
-    "Name": "树枝史莱姆",
+    "Key": "Twig_slime_s",
+    "Name": "树枝史莱姆(小)",
     "Rarity": 1,
     "MaxHp": 11,
     "Actions": [
       3
-    ],
-    "AIType": "twig_slime_s"
+    ]
+  },
+  "3": {
+    "Id": 3,
+    "Key": "Twig_slime_m",
+    "Name": "树枝史莱姆（中）",
+    "Rarity": 1,
+    "MaxHp": 26,
+    "Actions": [
+      4,
+      5
+    ]
+  },
+  "4": {
+    "Id": 4,
+    "Key": "Byrdonis",
+    "Name": "多尼斯异鸟",
+    "Rarity": 2,
+    "MaxHp": 80,
+    "Actions": [
+      6,
+      7
+    ]
+  },
+  "5": {
+    "Id": 5,
+    "Key": "Vantom",
+    "Name": "墨影幻灵",
+    "Rarity": 3,
+    "MaxHp": 180,
+    "Actions": [
+      8,
+      9,
+      10,
+      11
+    ]
   }
 }

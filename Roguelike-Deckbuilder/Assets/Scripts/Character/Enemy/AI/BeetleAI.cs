@@ -1,9 +1,16 @@
-// 史莱姆：只会攻击
+
 using LitFramework;
 using UnityEngine;
-
+/// <summary>
+/// 缩小甲虫
+/// </summary>
 public class BeetleAI : IEnemyAI
 {
+    /// <summary>
+    /// 第一回合固定，后续随机
+    /// </summary>
+    /// <param name="ActionsIds"></param>
+    /// <returns></returns>
     public int DecideAction(int[] ActionsIds)
     {
         var context = ServiceLocator.Get<BattleController>().Context;

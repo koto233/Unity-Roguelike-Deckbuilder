@@ -13,7 +13,7 @@ public class BuffIntent : IIntent
     }
     public void Execute(EffectExecutor executor, Enemy enemy)
     {
-        var config = ServiceLocator.Get<IConfigService>().GetTable<BuffConfig>().Get(BuffIds.Shrinker);
+        var config = ServiceLocator.Get<IConfigService>().GetTable<BuffConfig>().Get(_buffId);
         var buff = BuffFactory.Create(_buffId, config, 1);
         enemy.BuffManager.ApplyBuff(buff);
     }

@@ -11,6 +11,20 @@
     "Icon": "attack",
     "Name": "攻击",
     "Type": "Attack",
-    "Description": "造成 {0} 点伤害"
+    "Description": "对玩家造成{0}点伤害"
+  },
+  "2": {
+    "Id": 2,
+    "Icon": "status_card",
+    "Name": "策略(状态)",
+    "Type": "StatusCard",
+    "Description": "往玩家弃牌堆添加状态牌。"
+  },
+  "3": {
+    "Id": 3,
+    "Icon": "buff",
+    "Name": "强化",
+    "Type": "Buff",
+    "Description": "对自己添加正面效果"
   }
 }

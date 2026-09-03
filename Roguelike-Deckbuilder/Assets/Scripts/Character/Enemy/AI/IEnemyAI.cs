@@ -6,5 +6,5 @@ public interface IEnemyAI
     /// 决定本回合使用哪个action
     /// </summary>
     /// <returns></returns>
-    int DecideAction(int[] ActionsIds);
+     int DecideAction(int[] ActionsIds);
 }
