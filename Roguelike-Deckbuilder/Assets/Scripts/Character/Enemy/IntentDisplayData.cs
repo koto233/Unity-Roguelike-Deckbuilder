@@ -15,7 +15,7 @@ public class IntentDisplayData
         {
             Value = value,
             Description = string.Format(config.Description, value),
-            IsBuff = config.Type == "Buff" || config.Type == "Debuff"
+            IsBuff = config.Type == "Buff" || config.Type == "Debuff" || config.Type == "StatusCard"
         };
         data.Icon = await ServiceLocator.Get<IAssetService>().LoadAsync<Sprite>($"Assets/Res/Art/Intents/intent_{config.Icon}.png");
         return data;

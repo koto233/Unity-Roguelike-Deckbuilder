@@ -28,5 +28,11 @@
     "Type": "Vulnerable",
     "Target": "Enemy",
     "Description": "给敌人添加{0}层易伤"
+  },
+  "6": {
+    "Id": 6,
+    "Type": "DamageSelf",
+    "Target": "Self",
+    "Description": "失去{0}点生命"
   }
 }

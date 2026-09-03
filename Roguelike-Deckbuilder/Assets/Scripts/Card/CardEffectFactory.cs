@@ -15,6 +15,7 @@ public static class CardEffectFactory
             case "GainEnergy": return new GainEnergyEffect(config, stacks);
             case "Block": return new GainBlockEffect(config, stacks);
             case "Vulnerable": return new ApplyBuffEffect(config, BuffIds.Vulnerable, stacks);
+            case "DamageSelf": return new DamageSelfEffect(config, stacks);
             default: return null;
         }
     }

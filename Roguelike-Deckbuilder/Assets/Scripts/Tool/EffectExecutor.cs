@@ -1,5 +1,6 @@
 using System;
 using LitFramework;
+using LitFramework.Config;
 using LitFramework.EventBus;
 
 public class EffectExecutor
@@ -74,6 +75,10 @@ public class EffectExecutor
     {
         _battleController.Context.Player.DrawCards(count);
     }
-
+    public void AddStatusCardToDiscardPile(int cardId)
+    {
+        var config = ServiceLocator.Get<IConfigService>().GetTable<CardConfig>().Get(cardId);
+        _battleController.Context.Player.AddCardToDiscardPile(new Card(config));
+    }
 
 }

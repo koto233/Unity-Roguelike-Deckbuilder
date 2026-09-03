@@ -32,7 +32,7 @@ public class BattlePresenter : BasePresenter<BattleView>, IHasData<BattleContext
         _cardIconService = ServiceLocator.Get<CardIconService>();
         _configService = ServiceLocator.Get<IConfigService>();
         SubscribeEvents();
-        View.CreateEnemyViews(_context.Enemies);
+        CreateEnemy().Forget();
         RefreshHand(_context.Player.Hand, _context.Player.Hand, ChangeType.Add);
         RefreshBlock(0, _context.Player.Block, EntityType.Player);
         RefreshEnergy(_context.Player.Energy, _context.Player.MaxEnergy);
@@ -90,6 +90,11 @@ public class BattlePresenter : BasePresenter<BattleView>, IHasData<BattleContext
         View.OnCardPlayRequested -= OnCardPlay;
     }
 
+    public async UniTask CreateEnemy()
+    {
+
+        await View.CreateEnemyViews(_context.Enemies);
+    }
 
     private void EndTurn()
     {
@@ -319,7 +324,7 @@ public class BattlePresenter : BasePresenter<BattleView>, IHasData<BattleContext
     {
 
         UnSubscribeEvents();
-          base.Dispose();
+        base.Dispose();
     }
 
     private void OnFloatingTextEvent(FloatingTextEvent evt)

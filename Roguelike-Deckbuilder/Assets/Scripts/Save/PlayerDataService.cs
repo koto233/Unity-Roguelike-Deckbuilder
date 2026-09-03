@@ -59,7 +59,7 @@ public class PlayerDataService
     public void Reset()
     {
         var config = ServiceLocator.Get<IConfigService>().GetTable<PlayerInitConfig>().Get(0);
-        _coin = 0;
+        _coin = 50;
         _maxHp = config.InitialHp;
         _currentHp = config.InitialHp;
         _deckCardIds.AddRange(config.InitialDeck);

@@ -93,38 +93,146 @@
   },
   "7": {
     "Id": 7,
-    "Icon": "anger",
-    "Name": "愤怒",
-    "Cost": 0,
-    "Type": "attack",
-    "Effects": "",
-    "UpgradeId": 8
-  },
-  "8": {
-    "Id": 8,
-    "Icon": "anger",
-    "Name": "愤怒+",
-    "Cost": 0,
-    "Type": "attack",
-    "Effects": "",
-    "UpgradeId": 0
-  },
-  "9": {
-    "Id": 9,
     "Icon": "pommel_strike",
     "Name": "剑柄打击",
     "Cost": 1,
     "Type": "attack",
-    "Effects": "",
-    "UpgradeId": 10
+    "Effects": [
+      {
+        "EffectId": 1,
+        "Value": 9
+      },
+      {
+        "EffectId": 3,
+        "Value": 1
+      }
+    ],
+    "UpgradeId": 8
   },
-  "10": {
-    "Id": 10,
+  "8": {
+    "Id": 8,
     "Icon": "pommel_strike",
     "Name": "剑柄打击+",
     "Cost": 1,
     "Type": "attack",
-    "Effects": "",
+    "Effects": [
+      {
+        "EffectId": 1,
+        "Value": 10
+      },
+      {
+        "EffectId": 3,
+        "Value": 2
+      }
+    ],
+    "UpgradeId": 0
+  },
+  "9": {
+    "Id": 9,
+    "Icon": "shrug_it_off",
+    "Name": "耸肩无视",
+    "Cost": 1,
+    "Type": "skill",
+    "Effects": [
+      {
+        "EffectId": 2,
+        "Value": 8
+      },
+      {
+        "EffectId": 3,
+        "Value": 1
+      }
+    ],
+    "UpgradeId": 10
+  },
+  "10": {
+    "Id": 10,
+    "Icon": "shrug_it_off",
+    "Name": "耸肩无视",
+    "Cost": 1,
+    "Type": "skill",
+    "Effects": [
+      {
+        "EffectId": 2,
+        "Value": 11
+      },
+      {
+        "EffectId": 3,
+        "Value": 1
+      }
+    ],
+    "UpgradeId": 0
+  },
+  "11": {
+    "Id": 11,
+    "Icon": "blood_wall",
+    "Name": "血墙",
+    "Cost": 2,
+    "Type": "skill",
+    "Effects": [
+      {
+        "EffectId": 6,
+        "Value": 2
+      },
+      {
+        "EffectId": 2,
+        "Value": 16
+      }
+    ],
+    "UpgradeId": 12
+  },
+  "12": {
+    "Id": 12,
+    "Icon": "blood_wall",
+    "Name": "血墙",
+    "Cost": 2,
+    "Type": "skill",
+    "Effects": [
+      {
+        "EffectId": 6,
+        "Value": 2
+      },
+      {
+        "EffectId": 2,
+        "Value": 20
+      }
+    ],
+    "UpgradeId": 0
+  },
+  "13": {
+    "Id": 13,
+    "Icon": "iron_wave",
+    "Name": "铁斩波",
+    "Cost": 1,
+    "Type": "attack",
+    "Effects": [
+      {
+        "EffectId": 2,
+        "Value": 5
+      },
+      {
+        "EffectId": 1,
+        "Value": 5
+      }
+    ],
+    "UpgradeId": 14
+  },
+  "14": {
+    "Id": 14,
+    "Icon": "iron_wave",
+    "Name": "铁斩波",
+    "Cost": 1,
+    "Type": "attack",
+    "Effects": [
+      {
+        "EffectId": 2,
+        "Value": 7
+      },
+      {
+        "EffectId": 1,
+        "Value": 7
+      }
+    ],
     "UpgradeId": 0
   }
 }

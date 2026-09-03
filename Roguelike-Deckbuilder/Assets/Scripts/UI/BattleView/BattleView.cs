@@ -32,7 +32,7 @@ public partial class BattleView : UIWindow
     public event Action<int> OnOpenPile;
     public event Action OnEndTurn;
     private List<CardItem> _cardDisplays = new();
-
+    private IAssetService _assetService;
 
     protected override async UniTask OnOpenAsync()
     {
@@ -40,13 +40,12 @@ public partial class BattleView : UIWindow
         b_IntentTooltip.Hide();
         ClosePilePanel();
         HideArrow();
-        var assetService = ServiceLocator.Get<IAssetService>();
-        _enemyPrefabRef = await assetService.LoadRefAsync<GameObject>(UIPath.EnemyItem);
-        _playerPrefabRef = await assetService.LoadRefAsync<GameObject>(UIPath.PlayerItem);
-        _cardPrefabRef = await assetService.LoadRefAsync<GameObject>(UIPath.HandCard);
-        _cardItemPrefabRef = await assetService.LoadRefAsync<GameObject>(UIPath.CardItem);
-        _flyPrefabRef = await assetService.LoadRefAsync<GameObject>(UIPath.CardFlyItem);
-        _floatingTextPrefabRef = await assetService.LoadRefAsync<GameObject>(UIPath.FloatingTextItem);
+        _assetService = ServiceLocator.Get<IAssetService>();
+        _playerPrefabRef = await _assetService.LoadRefAsync<GameObject>(UIPath.PlayerItem);
+        _cardPrefabRef = await _assetService.LoadRefAsync<GameObject>(UIPath.HandCard);
+        _cardItemPrefabRef = await _assetService.LoadRefAsync<GameObject>(UIPath.CardItem);
+        _flyPrefabRef = await _assetService.LoadRefAsync<GameObject>(UIPath.CardFlyItem);
+        _floatingTextPrefabRef = await _assetService.LoadRefAsync<GameObject>(UIPath.FloatingTextItem);
         _poolService = ServiceLocator.Get<ObjectPoolService>();
         InitObjectPools();
         InitUI();
@@ -125,8 +124,12 @@ public partial class BattleView : UIWindow
         _playerView = go.GetComponent<PlayerItem>();
     }
 
-    public void CreateEnemyViews(List<Enemy> enemies)
+    public async UniTask CreateEnemyViews(List<Enemy> enemies)
     {
+        if (_enemyPrefabRef == null)
+        {
+            _enemyPrefabRef = await _assetService.LoadRefAsync<GameObject>($"{UIPath.EnemyItem}{enemies[0].Config.Key}.prefab");
+        }
         foreach (var enemy in enemies)
         {
             var go = Instantiate(_enemyPrefabRef.Asset, b_EnemysRoot);
