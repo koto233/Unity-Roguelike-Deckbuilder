@@ -7,7 +7,7 @@ public static class UIPath
     public static string MapLineItem => Base + "Item/MapLineItem.prefab";
     public static string CardItem => Base + "Item/CardItem.prefab";
     public static string ClickableCardItem => Base + "Item/ClickableCardItem.prefab";
-    public static string EnemyItem => Base +  "Enemy/Enemy_";
+    public static string EnemyItem => Base + "Enemy/Enemy_";
     public static string PlayerItem => Base + "Item/PlayerItem.prefab";
     public static string HandCard => Base + "Item/HandCard.prefab";
     public static string FloatingTextItem => Base + "Item/FloatingTextItem.prefab";
@@ -25,6 +25,7 @@ public static class UIPath
     public static string TopBar => Base + "View/TopBar.prefab";
     public static string SettingPanel => Base + "View/SettingPanel.prefab";
     public static string RestView => Base + "View/RestView.prefab";
+    public static string GameOverView => Base + "View/GameOverView.prefab";
 
 
 }

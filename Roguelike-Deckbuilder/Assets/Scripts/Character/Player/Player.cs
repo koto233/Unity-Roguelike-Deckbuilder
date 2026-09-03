@@ -1,6 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
+using LitFramework;
 using LitFramework.EventBus;
+using LitFramework.UI.Core.Service;
 using UnityEngine;
 
 public class Player : CharacterBase
@@ -189,5 +192,10 @@ public class Player : CharacterBase
             list[i] = list[j];
             list[j] = temp;
         }
+    }
+    protected override void OnDeath()
+    {
+        ServiceLocator.Get<UIService>().OpenAsync<GameOverView>().Forget();
+        base.OnDeath();
     }
 }

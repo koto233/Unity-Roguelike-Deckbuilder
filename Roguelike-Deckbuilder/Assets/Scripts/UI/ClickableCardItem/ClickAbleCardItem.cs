@@ -17,7 +17,6 @@ public partial class ClickableCardItem : UIBase
     void OnDisable()
     {
         b_Click.onClick.RemoveAllListeners();
-        ClearEvents();
     }
     public void Init(CardDisplayData data)
     {

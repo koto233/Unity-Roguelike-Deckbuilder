@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using LitFramework;
 using LitFramework.FSM;
+using LitFramework.UI.Core.Service;
 using UnityEngine;
 
 public class EnemyTurnState : TurnStateBase
@@ -27,9 +29,9 @@ public class EnemyTurnState : TurnStateBase
             case TurnResult.PlayerWin:
                 StateMachine.ChangeState<BattleEndState>();
                 break;
-            case TurnResult.PlayerLose:
-                StateMachine.ChangeState<BattleEndState>();
-                break;
+            // case TurnResult.PlayerLose:
+            //     ServiceLocator.Get<UIService>().OpenAsync<GameOverView>().Forget();
+                // break;
             case TurnResult.Continue:
                 StateMachine.ChangeState<PlayerTurnState>();
                 break;

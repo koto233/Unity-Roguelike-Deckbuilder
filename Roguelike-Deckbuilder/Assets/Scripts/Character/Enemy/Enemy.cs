@@ -1,8 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using LitFramework;
 using LitFramework.Config;
 using LitFramework.EventBus;
+using LitFramework.UI.Core.Service;
 using Newtonsoft.Json;
 using UnityEngine;
 
@@ -62,10 +64,19 @@ public class Enemy : CharacterBase
             Debug.Log($"敌人{Config.Name}执行意图{intent.GetType().Name}");
             intent.Execute(executor, this);
         }
+
+    }
+    protected override void OnDeath()
+    {
+        if (Config.Rarity == 3)
+        {
+            ServiceLocator.Get<UIService>().OpenAsync<GameOverView>().Forget();
+        }
+        base.OnDeath();
     }
 }
-public class IntentEntry 
+public class IntentEntry
 {
-	public int IntentId;
-	public int Value;
+    public int IntentId;
+    public int Value;
 }
