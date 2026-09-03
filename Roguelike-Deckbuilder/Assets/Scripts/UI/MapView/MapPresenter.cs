@@ -8,36 +8,41 @@ using UnityEngine;
 
 public class MapPresenter : BasePresenter<MapView>
 {
+
     private MapService _mapService;
     private UIService _uiService;
     public MapPresenter(MapView view) : base(view)
     {
-
+        Debug.Log($"[MapPresenter] 构造，View 是否为 null: {view == null}");
     }
     public override void Init()
     {
+        Debug.Log($"[MapPresenter] 构造，View 是否为 null: {View == null}");
         SubscribeEvents();
         _mapService = ServiceLocator.Get<MapService>();
         _uiService = ServiceLocator.Get<UIService>();
-        View.OnNodeClicked += OnNodeClicked;
         CreateMapUI();
+
     }
 
     private void SubscribeEvents()
     {
-
+        View.OnNodeClicked += OnNodeClicked;
     }
 
     private void UnSubscribeEvents()
     {
-
+        View.OnNodeClicked -= OnNodeClicked;
     }
 
     public void CreateMapUI()
     {
         View.CreateMap(_mapService.CurrentMapList);
     }
-
+    ~MapPresenter()
+    {
+        Debug.Log($"[MapPresenter] 析构，实例ID: {GetHashCode()}");
+    }
     private void OnNodeClicked(string nodeId)
     {
         var data = _mapService.GetNode(nodeId);
@@ -46,10 +51,9 @@ public class MapPresenter : BasePresenter<MapView>
 
         // 访问节点（会解锁相邻节点）
         _mapService.VisitNode(nodeId);
-
+        Debug.Log($"[MapPresenter] View 是否为 null: {View == null}");
         // 刷新 UI
         View.RefreshMap(_mapService.CurrentMap);
-
         // 根据节点类型触发业务事件
         switch (data.Type)
         {
@@ -74,7 +78,9 @@ public class MapPresenter : BasePresenter<MapView>
 
     public override void Dispose()
     {
+        Debug.Log($"MapPresenter Dispose {this.GetHashCode()}");
         UnSubscribeEvents();
+        base.Dispose();
     }
 
 

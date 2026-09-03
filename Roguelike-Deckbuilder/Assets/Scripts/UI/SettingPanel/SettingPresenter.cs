@@ -51,5 +51,6 @@ public class SettingPresenter : BasePresenter<SettingPanel>
     public override void Dispose()
     {
         UnsubscribeEvents();
+        base.Dispose();
     }
 }

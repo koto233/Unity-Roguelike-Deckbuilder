@@ -88,4 +88,10 @@ public partial class MapNodeItem : UIBase
             _ => "未知"
         };
     }
+    public void Clear()
+    {
+        _iconRef?.Dispose();
+        _iconRef = null;
+        OnNodeClicked = null;
+    }
 }

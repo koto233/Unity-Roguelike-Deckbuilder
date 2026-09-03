@@ -8,11 +8,15 @@ public abstract class BasePresenter : IDisposable
 }
 public abstract class BasePresenter<TView> : BasePresenter where TView : UIBase
 {
-    protected TView View { get; }
+    protected TView View { get; private set; }
 
     protected BasePresenter(TView view)
     {
         View = view;
     }
-
+    public override void Dispose()
+    {
+        View = null;  // 断开引用
+        base.Dispose();
+    }
 }

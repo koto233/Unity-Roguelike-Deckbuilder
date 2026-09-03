@@ -84,6 +84,7 @@ public class MainMenuPresenter : BasePresenter<MainMenuView>
     public override void Dispose()
     {
         UnsubscribeEvents();
+        base.Dispose();
     }
 
 

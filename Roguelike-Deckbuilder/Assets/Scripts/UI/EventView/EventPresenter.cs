@@ -22,7 +22,7 @@ public class EventPresenter : BasePresenter<EventView>
     }
     private void SubscribeEvents()
     {
-        
+
     }
 
 
@@ -33,8 +33,9 @@ public class EventPresenter : BasePresenter<EventView>
     }
     public override void Dispose()
     {
-        base.Dispose();
+
         UnsubscribeEvents();
+        base.Dispose();
     }
 
 

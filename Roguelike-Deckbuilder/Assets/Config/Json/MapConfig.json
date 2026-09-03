@@ -5,7 +5,7 @@
     "ColumnPositions": [
       0
     ],
-    "BattleWeight": 100,
+    "BattleWeight": 0,
     "EliteWeight": 0,
     "RestWeight": 0,
     "ShopWeight": 0,
@@ -18,11 +18,11 @@
       0,
       2
     ],
-    "BattleWeight": 60,
-    "EliteWeight": 10,
-    "RestWeight": 15,
+    "BattleWeight": 100,
+    "EliteWeight": 0,
+    "RestWeight": 10,
     "ShopWeight": 10,
-    "EventWeight": 5
+    "EventWeight": 0
   },
   {
     "Templateld": 1,
@@ -32,11 +32,11 @@
       1,
       3
     ],
-    "BattleWeight": 50,
-    "EliteWeight": 20,
-    "RestWeight": 15,
+    "BattleWeight": 60,
+    "EliteWeight": 40,
+    "RestWeight": 10,
     "ShopWeight": 10,
-    "EventWeight": 5
+    "EventWeight": 0
   },
   {
     "Templateld": 1,
@@ -45,15 +45,70 @@
       1,
       3
     ],
-    "BattleWeight": 40,
+    "BattleWeight": 50,
     "EliteWeight": 30,
-    "RestWeight": 15,
+    "RestWeight": 10,
     "ShopWeight": 10,
-    "EventWeight": 5
+    "EventWeight": 0
   },
   {
     "Templateld": 1,
     "Row": 4,
+    "ColumnPositions": [
+      0,
+      1,
+      3
+    ],
+    "BattleWeight": 40,
+    "EliteWeight": 50,
+    "RestWeight": 15,
+    "ShopWeight": 15,
+    "EventWeight": 0
+  },
+  {
+    "Templateld": 1,
+    "Row": 5,
+    "ColumnPositions": [
+      0,
+      1,
+      3
+    ],
+    "BattleWeight": 40,
+    "EliteWeight": 60,
+    "RestWeight": 20,
+    "ShopWeight": 20,
+    "EventWeight": 0
+  },
+  {
+    "Templateld": 1,
+    "Row": 6,
+    "ColumnPositions": [
+      0,
+      1,
+      3
+    ],
+    "BattleWeight": 30,
+    "EliteWeight": 60,
+    "RestWeight": 10,
+    "ShopWeight": 10,
+    "EventWeight": 0
+  },
+  {
+    "Templateld": 1,
+    "Row": 7,
+    "ColumnPositions": [
+      1,
+      3
+    ],
+    "BattleWeight": 0,
+    "EliteWeight": 0,
+    "RestWeight": 100,
+    "ShopWeight": 10,
+    "EventWeight": 0
+  },
+  {
+    "Templateld": 1,
+    "Row": 8,
     "ColumnPositions": [
       0
     ],

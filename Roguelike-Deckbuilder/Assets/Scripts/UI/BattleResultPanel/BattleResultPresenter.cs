@@ -35,7 +35,7 @@ public class BattleResultPresenter : BasePresenter<BattleResultPanel>
         int rewardCoin = 0;
         foreach (var enemyConfig in _controller.Context.EnemyConfigs)
         {
-            var reward = rewardConfig.Get(enemyConfig.Rarity); 
+            var reward = rewardConfig.Get(enemyConfig.Rarity);
             rewardCoin += random.Next(reward.CoinMin, reward.CoinMax);
         }
         _rewards.Add(new Reward() { Type = RewardType.Coin, Value = rewardCoin });
@@ -68,7 +68,9 @@ public class BattleResultPresenter : BasePresenter<BattleResultPanel>
 
     public override void Dispose()
     {
+
         UnsubscribeEvents();
+        base.Dispose();
     }
 
 

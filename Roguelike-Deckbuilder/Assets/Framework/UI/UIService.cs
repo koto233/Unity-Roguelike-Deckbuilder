@@ -14,26 +14,22 @@ namespace LitFramework.UI.Core.Service
         private readonly Dictionary<Type, UIConfig> _configs = new();
         private readonly Dictionary<Type, Func<UIWindow, BasePresenter>> _factories = new();
 
-        // ========== 运行时状态 ==========
-        // 用 InstanceID 做 Key，支持同类型多实例堆叠
-        private readonly Dictionary<int, WindowState> _opened = new();
-        // 单实例窗口快速查找：Type -> InstanceID
-        private readonly Dictionary<Type, int> _singleInstance = new();
-        // 返回栈（只存需要返回的窗口 InstanceID）
-        private readonly Stack<int> _backStack = new();
-        // 正在加载中（防重复点击）：Type -> 等待信号
+        // ========== 运行时状态（每个类型只存在一个实例） ==========
+        private readonly Dictionary<Type, WindowState> _opened = new();
+        // 返回栈（存类型，按打开顺序入栈，关闭时移除）
+        private readonly Stack<Type> _backStack = new();
+        // 加载防重：Type -> 等待信号
         private readonly Dictionary<Type, UniTaskCompletionSource> _loading = new();
 
         private readonly Dictionary<UILayer, RectTransform> _layers = new();
         private IAssetService _assetService;
         private IAssetService AssetService => _assetService ??= ServiceLocator.Get<IAssetService>();
 
-        // 轻量内部结构，不用类，省 GC
         private readonly struct WindowState
         {
             public readonly UIWindow View;
             public readonly BasePresenter Presenter;
-            public readonly Action ReleaseAsset; // 资源释放回调
+            public readonly Action ReleaseAsset;
             public readonly bool PushToStack;
 
             public WindowState(UIWindow view, BasePresenter presenter, Action releaseAsset, bool pushToStack)
@@ -61,21 +57,19 @@ namespace LitFramework.UI.Core.Service
             }
         }
 
-        // ========== 注册（启动时一次） ==========
+        // ========== 注册 ==========
 
         /// <summary>
-        /// 注册 UI 配置
+        /// 注册 UI 配置。单例模式下不再需要 allowMultiple 参数。
         /// </summary>
-        /// <param name="allowMultiple">是否允许同类型堆叠（如：同时开两个背包）</param>
-        /// <param name="pushToStack">是否加入返回栈（如：页面加入，弹窗不加入）</param>
-        public void Register<T>(string prefabPath, UILayer layer, bool allowMultiple = false, bool pushToStack = true)
-            where T : UIWindow
+        /// <param name="pushToStack">是否加入返回栈（如页面加入，弹窗不加入）</param>
+        public void Register<T>(string prefabPath, UILayer layer, bool pushToStack = true) where T : UIWindow
         {
-            _configs[typeof(T)] = new UIConfig(prefabPath, layer, allowMultiple, pushToStack);
+            _configs[typeof(T)] = new UIConfig(prefabPath, layer, false, pushToStack);
         }
 
         /// <summary>
-        /// 绑定 Presenter 工厂（替代反射，编译期检查）
+        /// 绑定 Presenter 工厂
         /// </summary>
         public void Bind<TView>(Func<TView, BasePresenter> factory) where TView : UIWindow
         {
@@ -102,31 +96,37 @@ namespace LitFramework.UI.Core.Service
             var type = typeof(TView);
             var cfg = GetConfig(type);
 
-            // 1. 单实例检查
-            if (!cfg.AllowMultiple && _singleInstance.TryGetValue(type, out var existId))
+            // 1. 已打开：置顶并更新数据（若有参数）
+            if (_opened.TryGetValue(type, out var exist))
             {
-                if (_opened.TryGetValue(existId, out var exist))
-                {
-                    exist.View.transform.SetAsLastSibling();
-                    return;
-                }
+                Debug.Log($"[UIService] 窗口已存在，直接返回。Presenter: {exist.Presenter?.GetHashCode()}, View: {exist.View}");
+                exist.View.transform.SetAsLastSibling();
+                inject?.Invoke(exist.Presenter, arg);
+                return;
             }
 
-            // 2. 防重复点击
+            // 2. 正在加载：等待同一个加载任务完成
             if (_loading.TryGetValue(type, out var loadingTask))
             {
                 await loadingTask.Task;
+                // 加载完成后再次尝试获取，如果已打开则更新数据
+                if (_opened.TryGetValue(type, out var openedAfterLoad))
+                {
+                    openedAfterLoad.View.transform.SetAsLastSibling();
+                    inject?.Invoke(openedAfterLoad.Presenter, arg);
+                }
                 return;
             }
 
             var completion = new UniTaskCompletionSource();
             _loading[type] = completion;
 
+            GameObject go = null;
             try
             {
                 // 3. 加载 & 实例化
                 var prefab = await AssetService.LoadAsync<GameObject>(cfg.PrefabPath);
-                var go = UnityEngine.Object.Instantiate(prefab, _layers[cfg.Layer]);
+                go = UnityEngine.Object.Instantiate(prefab, _layers[cfg.Layer]);
                 var view = go.GetComponent<TView>();
                 if (view == null)
                     throw new InvalidOperationException($"Prefab {cfg.PrefabPath} 上缺少 {type.Name} 组件");
@@ -137,28 +137,31 @@ namespace LitFramework.UI.Core.Service
 
                 var presenter = factory(view);
 
-                // 5. 注入数据（有参时）
+                // 5. 注入数据（在 Init 前完成，确保 Presenter 初始化时能使用数据）
                 inject?.Invoke(presenter, arg);
 
-                // 6. 统一初始化
+                // 6. 生命周期顺序：Presenter 先 Init，View 再 Open
+                //    这样 View 显示时 Presenter 已就绪，避免 UI 事件空引用
+
+
+                // 7. View 打开（播放动画等）
                 await view.OpenInternalAsync();
                 presenter.Init();
-                // 7. 记录状态
-                var instanceId = go.GetInstanceID();
+                // 8. 注册状态
                 Action releaseAction = () => AssetService.Release(cfg.PrefabPath);
-
                 var state = new WindowState(view, presenter, releaseAction, cfg.PushToStack);
-                _opened[instanceId] = state;
+                _opened[type] = state;
 
-                if (!cfg.AllowMultiple)
-                    _singleInstance[type] = instanceId;
                 if (cfg.PushToStack)
-                    _backStack.Push(instanceId);
+                    _backStack.Push(type);
 
                 completion.TrySetResult();
             }
             catch (Exception ex)
             {
+                // 清理半成品
+                if (go != null)
+                    UnityEngine.Object.Destroy(go);
                 completion.TrySetException(ex);
                 throw;
             }
@@ -167,68 +170,69 @@ namespace LitFramework.UI.Core.Service
                 _loading.Remove(type);
             }
         }
+
         // ========== 关闭窗口 ==========
 
         public void Close<TView>() where TView : UIWindow
         {
-            var type = typeof(TView);
-            if (!_singleInstance.TryGetValue(type, out var id)) return;
-            CloseCore(id);
+            CloseCore(typeof(TView));
         }
 
-        /// <summary>
-        /// 通过 View 实例关闭（用于多实例窗口）
-        /// </summary>
         public void Close(UIWindow view)
         {
             if (view == null) return;
-            CloseCore(view.gameObject.GetInstanceID());
+            var type = view.GetType();
+            if (_opened.TryGetValue(type, out var state) && state.View == view)
+                CloseCore(type);
         }
 
-        private void CloseCore(int instanceId)
+        private void CloseCore(Type type)
         {
-            if (!_opened.TryGetValue(instanceId, out var state)) return;
+            if (!_opened.TryGetValue(type, out var state)) return;
 
-            // 从返回栈移除
-            if (state.PushToStack)
+            try
             {
-                var temp = new Stack<int>();
-                while (_backStack.Count > 0)
+                // 1. 从返回栈移除
+                if (state.PushToStack)
                 {
-                    var id = _backStack.Pop();
-                    if (id != instanceId) temp.Push(id);
+                    var temp = new Stack<Type>();
+                    while (_backStack.Count > 0)
+                    {
+                        var t = _backStack.Pop();
+                        if (t != type) temp.Push(t);
+                    }
+                    while (temp.Count > 0) _backStack.Push(temp.Pop());
                 }
-                while (temp.Count > 0) _backStack.Push(temp.Pop());
+
+                // 2. 关闭 View（可能触发事件，此时 Presenter 仍可用）
+                state.View.CloseInternal();
+
+                // 3. 释放 Presenter（内部应处理 View 可能为 null 的情况）
+                if (state.Presenter is IDisposable disposable)
+                    disposable.Dispose();
+
+                // 4. 销毁 GameObject
+                if (state.View != null && state.View.gameObject != null)
+                    UnityEngine.Object.Destroy(state.View.gameObject);
+
+                // 5. 释放资源引用
+                state.ReleaseAsset?.Invoke();
             }
-
-            // 清理单实例映射
-            _singleInstance.Remove(state.View.GetType());
-
-            // Presenter 释放
-            if (state.Presenter is IDisposable disposable)
-                disposable.Dispose();
-
-            // View 关闭
-            state.View.CloseInternal();
-
-            // 销毁 GameObject
-            UnityEngine.Object.Destroy(state.View.gameObject);
-
-            // 释放资源引用（防止内存泄漏）
-            state.ReleaseAsset?.Invoke();
-
-            _opened.Remove(instanceId);
+            finally
+            {
+                // 无论如何都要移除状态，防止残留
+                _opened.Remove(type);
+            }
         }
-
-        // ========== 返回栈（安卓返回键 / 页面返回） ==========
+        // ========== 返回栈 ==========
 
         public bool CanGoBack => _backStack.Count > 0;
 
         public void GoBack()
         {
             if (_backStack.Count == 0) return;
-            var id = _backStack.Pop();
-            CloseCore(id);
+            var type = _backStack.Pop();
+            CloseCore(type);
         }
 
         // ========== 查询 ==========
@@ -243,17 +247,17 @@ namespace LitFramework.UI.Core.Service
 
         public bool IsOpen<TView>() where TView : UIWindow
         {
-            return _singleInstance.ContainsKey(typeof(TView));
+            return _opened.ContainsKey(typeof(TView));
         }
 
         public void Dispose()
         {
-            // 逆序关闭，避免父子依赖问题
-            foreach (var id in _opened.Keys.ToList())
-                CloseCore(id);
+            // 逆序关闭，避免依赖问题
+            var types = _opened.Keys.ToList();
+            for (int i = types.Count - 1; i >= 0; i--)
+                CloseCore(types[i]);
 
             _opened.Clear();
-            _singleInstance.Clear();
             _backStack.Clear();
             _loading.Clear();
         }
@@ -267,6 +271,4 @@ namespace LitFramework.UI.Core.Service
             return cfg;
         }
     }
-
-
 }

@@ -126,8 +126,8 @@ public class ShopPresenter : BasePresenter<ShopView>
 
     public override void Dispose()
     {
-        base.Dispose();
         UnsubscribeEvents();
+        base.Dispose();
     }
     public async UniTask InitShop()
     {

@@ -32,6 +32,7 @@ public partial class MapView : UIWindow
         _poolService = ServiceLocator.Get<ObjectPoolService>();
         _poolService.RegisterGameObjectPool<MapNodeItem>(_nodePrefabRef.Asset, initialPoolSize: 10);
         _poolService.RegisterGameObjectPool<UIMapLine>(_linePrefabRef.Asset, initialPoolSize: 10);
+        Debug.Log("创建对象池成功");
     }
     // 外部调用：传入最新的节点数据，完全刷新地图
     public void CreateMap(IReadOnlyCollection<MapNodeData> nodes)
@@ -161,6 +162,7 @@ public partial class MapView : UIWindow
         _rows.Clear();
         foreach (var node in _nodes)
         {
+            node.Clear();
             _poolService.ReturnGameObject<MapNodeItem>(node.gameObject);
         }
         _nodes.Clear();

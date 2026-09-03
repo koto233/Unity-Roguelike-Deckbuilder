@@ -12,6 +12,7 @@ public class MapService
     public IReadOnlyCollection<MapNodeData> CurrentMapList => CurrentMap?.Values;
     private IConfigService _configService;
     private MapNodeData _currentNode;
+    public MapNodeData CurrentNode => _currentNode;
     private int _currentTemplateId;
     private int _currentSeed;
 

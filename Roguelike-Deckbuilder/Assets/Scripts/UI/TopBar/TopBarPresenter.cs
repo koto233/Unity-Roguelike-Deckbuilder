@@ -70,6 +70,7 @@ public class TopBarPresenter : BasePresenter<TopBar>
     public override void Dispose()
     {
         UnsubscribeEvents();
+        base.Dispose();
     }
 
 

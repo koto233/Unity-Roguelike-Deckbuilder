@@ -65,8 +65,8 @@ public class RestPresenter : BasePresenter<RestView>
 
     public override void Dispose()
     {
-        base.Dispose();
         UnsubscribeEvents();
+        base.Dispose();
     }
 
     public void InitForge()

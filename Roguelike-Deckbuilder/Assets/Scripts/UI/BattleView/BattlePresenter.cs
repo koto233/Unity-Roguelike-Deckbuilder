@@ -317,7 +317,9 @@ public class BattlePresenter : BasePresenter<BattleView>, IHasData<BattleContext
     }
     public override void Dispose()
     {
+
         UnSubscribeEvents();
+          base.Dispose();
     }
 
     private void OnFloatingTextEvent(FloatingTextEvent evt)

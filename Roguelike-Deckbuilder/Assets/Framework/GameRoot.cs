@@ -89,6 +89,7 @@ namespace LitFramework
             uiService.Bind<RestView>(view => new RestPresenter(view));
             uiService.Bind<ShopView>(view => new ShopPresenter(view));
             uiService.Bind<EventView>(view => new EventPresenter(view));
+            
 
         }
         private void InitProcedure()
