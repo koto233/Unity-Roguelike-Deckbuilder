@@ -32,14 +32,9 @@ public class BattlePresenter : BasePresenter<BattleView>, IHasData<BattleContext
         _cardIconService = ServiceLocator.Get<CardIconService>();
         _configService = ServiceLocator.Get<IConfigService>();
         SubscribeEvents();
-        CreateEnemy().Forget();
-        RefreshHand(_context.Player.Hand, _context.Player.Hand, ChangeType.Add);
-        RefreshBlock(0, _context.Player.Block, EntityType.Player);
-        RefreshEnergy(_context.Player.Energy, _context.Player.MaxEnergy);
-        RefreshDrawPileCount(_context.Player.DrawPileCount);
-        RefreshDiscardPileCount(_context.Player.DiscardPileCount);
-        RefreshAllEnemy();
-        RefreshAllHp(_context);
+        InitPlayer().Forget();
+        InitEnemies().Forget();
+
     }
     private void SubscribeEvents()
     {
@@ -89,11 +84,20 @@ public class BattlePresenter : BasePresenter<BattleView>, IHasData<BattleContext
         View.OnCardDragEndRequested -= OnDragEnd;
         View.OnCardPlayRequested -= OnCardPlay;
     }
-
-    public async UniTask CreateEnemy()
+    public async UniTask InitPlayer()
     {
-
+        await View.CreatePlayerView();
+        RefreshHp(_context.Player.CurrentHp, _context.Player.MaxHp, EntityType.Player, -1);
+        RefreshHand(_context.Player.Hand, _context.Player.Hand, ChangeType.Add);
+        RefreshBlock(0, _context.Player.Block, EntityType.Player);
+        RefreshEnergy(_context.Player.Energy, _context.Player.MaxEnergy);
+        RefreshDrawPileCount(_context.Player.DrawPileCount);
+        RefreshDiscardPileCount(_context.Player.DiscardPileCount);
+    }
+    public async UniTask InitEnemies()
+    {
         await View.CreateEnemyViews(_context.Enemies);
+        RefreshAllEnemy();
     }
 
     private void EndTurn()
@@ -134,14 +138,10 @@ public class BattlePresenter : BasePresenter<BattleView>, IHasData<BattleContext
     {
         RefreshDrawPileCount(@event.CurrentCount);
     }
-    private void RefreshAllHp(BattleContext context)
-    {
-        RefreshHp(context.Player.CurrentHp, context.Player.MaxHp, EntityType.Player, -1);
-        foreach (var enemy in context.Enemies)
-        {
-            RefreshHp(enemy.CurrentHp, enemy.MaxHp, EntityType.Enemy, enemy.InstanceId);
-        }
-    }
+    // private void RefreshAllHp(BattleContext context)
+    // {
+    //     RefreshHp(context.Player.CurrentHp, context.Player.MaxHp, EntityType.Player, -1);
+    // }
     public void RefreshAllEnemy()
     {
         foreach (var enemy in _context.Enemies)

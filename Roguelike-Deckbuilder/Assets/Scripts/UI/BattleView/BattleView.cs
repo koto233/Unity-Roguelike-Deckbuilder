@@ -41,7 +41,6 @@ public partial class BattleView : UIWindow
         ClosePilePanel();
         HideArrow();
         _assetService = ServiceLocator.Get<IAssetService>();
-        _playerPrefabRef = await _assetService.LoadRefAsync<GameObject>(UIPath.PlayerItem);
         _cardPrefabRef = await _assetService.LoadRefAsync<GameObject>(UIPath.HandCard);
         _cardItemPrefabRef = await _assetService.LoadRefAsync<GameObject>(UIPath.CardItem);
         _flyPrefabRef = await _assetService.LoadRefAsync<GameObject>(UIPath.CardFlyItem);
@@ -63,7 +62,6 @@ public partial class BattleView : UIWindow
     private void InitUI()
     {
         b_HandZone.Init(_poolService, this);
-        CreatePlayerView();
     }
     private void OnEnable()
     {
@@ -118,8 +116,9 @@ public partial class BattleView : UIWindow
         }
     }
 
-    public void CreatePlayerView()
+    public async UniTask CreatePlayerView()
     {
+        _playerPrefabRef = await _assetService.LoadRefAsync<GameObject>(UIPath.PlayerItem);
         var go = Instantiate(_playerPrefabRef.Asset, b_PlayerRoot);
         _playerView = go.GetComponent<PlayerItem>();
     }
