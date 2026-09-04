@@ -10,6 +10,7 @@ public static class BuffFactory
             BuffIds.Vulnerable => new VulnerableBuff(config, stacks),
             BuffIds.Shrinker => new ShrinkerBuff(config, stacks),
             BuffIds.Strength => new StrengthBuff(config, stacks),
+            BuffIds.Weak => new WeakBuff(config, stacks),
             _ => throw new System.NotImplementedException(),
         };
     }

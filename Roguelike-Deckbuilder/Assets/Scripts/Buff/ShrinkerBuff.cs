@@ -3,7 +3,6 @@ using UnityEngine;
 
 public class ShrinkerBuff : BaseBuff
 {
-    private const float DamageReduction = 0.3f;
 
     // private EnemyView _enemyView;
     // private Vector3 _originalScale;
@@ -21,6 +20,7 @@ public class ShrinkerBuff : BaseBuff
     public override void OnBeforeDealDamage(CharacterBase owner, ref int damage)
     {
         if (Stacks <= 0) return;
+        float DamageReduction = Config.Value / 100f;
         damage = (int)Math.Floor(damage * (1f - DamageReduction));
         Debug.Log($"ShrinkerBuff: 减少伤害，当前伤害为 {damage}");
         base.OnBeforeDealDamage(owner, ref damage);
