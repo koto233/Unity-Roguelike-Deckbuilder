@@ -71,6 +71,11 @@ public class TopBarPresenter : BasePresenter<TopBar>
     }
     private void OnHoverEvent(TooltipShowEvent @event)
     {
+        if (!@event.IsHovering || @event.Type != TooltipType.Relic)
+        {
+            View.HideToolTip();
+            return;
+        }
         View.ShowToolTip(@event.Data, @event.Position);
     }
     private void HandleClickMap()

@@ -282,25 +282,23 @@ public class BattlePresenter : BasePresenter<BattleView>, IHasData<BattleContext
     }
     private void OnHoverEvent(TooltipShowEvent evt)
     {
-        if (evt.IsHovering)
-        {
-            switch (evt.Type)
-            {
-                case TooltipType.Buff:
-                    {
-                        View.ShowBuffTooltip(evt.Data, evt.Position);
-                        break;
-                    }
-                case TooltipType.Intent:
-                    {
-                        View.ShowIntentToolTip(evt.Data, evt.Position);
-                        break;
-                    }
-            }
-        }
-        else
+        if (!evt.IsHovering)
         {
             View.HideAllTooltips();
+            return;
+        }
+        switch (evt.Type)
+        {
+            case TooltipType.Buff:
+                {
+                    View.ShowBuffTooltip(evt.Data, evt.Position);
+                    break;
+                }
+            case TooltipType.Intent:
+                {
+                    View.ShowIntentToolTip(evt.Data, evt.Position);
+                    break;
+                }
         }
 
     }

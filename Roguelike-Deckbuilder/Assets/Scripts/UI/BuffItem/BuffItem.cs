@@ -29,7 +29,6 @@ public partial class BuffItem : UIBase, ITooltipDataProvider
 
     public void Init(IBuff buff)
     {
-        // 加载图标
         _buff = buff;
         SetIcon().Forget();
     }

@@ -78,6 +78,11 @@ public class ShopPresenter : BasePresenter<ShopView>
     }
     private void OnHoverEvent(TooltipShowEvent @event)
     {
+        if (!@event.IsHovering)
+        {
+            View.HideToolTip();
+            return;
+        }
         View.ShowToolTip(@event.Data, @event.Position);
     }
     private void HandleClickCard(int id)

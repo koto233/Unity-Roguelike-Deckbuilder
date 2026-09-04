@@ -73,4 +73,8 @@ public partial class TopBar : UIWindow
     {
         _tooltip.Show(data, position);
     }
+    public void HideToolTip()
+    {
+        _tooltip.Hide();
+    }
 }

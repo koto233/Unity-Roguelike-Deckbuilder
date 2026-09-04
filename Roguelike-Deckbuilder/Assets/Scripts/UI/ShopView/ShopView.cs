@@ -86,6 +86,10 @@ public partial class ShopView : UIWindow
     {
         _tooltip.Show(data, position);
     }
+    public void HideToolTip()
+    {
+        _tooltip.Hide();
+    }
     public void RefreshRemoveCost(int cost)
     {
         b_RemovePriceText.SetText(cost.ToString());
