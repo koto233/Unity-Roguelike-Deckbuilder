@@ -38,7 +38,7 @@ namespace LitFramework.UI.Core.Window
         #region 自动绑定方法
         void CacheBinds()
         {
-            _binds = UIAutoBindGenerator.CollectBinds(this)
+            _binds = UIBindCollector.CollectBinds(this)
             .OrderBy(b => b.Index)
             .ToArray();
         }

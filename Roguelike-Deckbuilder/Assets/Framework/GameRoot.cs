@@ -18,7 +18,7 @@ namespace LitFramework
         [SerializeField] private Canvas _uiRoot;
         private ProcedureManager _procedureManager;
         public Canvas UIRoot => _uiRoot;
-
+        public YooAsset.EPlayMode PlayMode = YooAsset.EPlayMode.EditorSimulateMode;
         void Awake()
         {
             if (Instance != null && Instance != this)
@@ -90,7 +90,7 @@ namespace LitFramework
             uiService.Bind<ShopView>(view => new ShopPresenter(view));
             uiService.Bind<EventView>(view => new EventPresenter(view));
             uiService.Bind<GameOverView>(view => new GameOverPresenter(view));
-        
+
         }
         private void InitProcedure()
         {

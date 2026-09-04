@@ -9,7 +9,7 @@ namespace LitFramework.FSM.Procedure
 {
     public class ProcedureInit : ProcedureBase
     {
-         public override string Name => "Init";
+        public override string Name => "Init";
         private IResourceUpdater _updater;
 
         public ProcedureInit(ProcedureManager manager) : base(manager) { }
@@ -22,7 +22,9 @@ namespace LitFramework.FSM.Procedure
         private async UniTask InitAsync()
         {
             // 1. 资源更新
-            _updater = new YooAssetUpdater();
+
+            _updater = new YooAssetUpdater(playMode: GameRoot.Instance.PlayMode);
+
             await _updater.StartUpdate();
 
             // 2. 注册 AssetService

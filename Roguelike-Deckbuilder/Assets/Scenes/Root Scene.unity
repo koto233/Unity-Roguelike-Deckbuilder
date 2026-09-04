@@ -152,6 +152,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _uiRoot: {fileID: 1410825166}
+  PlayMode: 2
 --- !u!4 &488201820
 Transform:
   m_ObjectHideFlags: 0
