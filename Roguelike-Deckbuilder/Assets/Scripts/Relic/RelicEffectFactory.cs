@@ -7,7 +7,7 @@ public static class RelicEffectFactory
     private static readonly Dictionary<string, Func<string, IRelicEffect>> _creators = new()
     {
         ["HealOnCombatEnd"] = p => new HealOnCombatEndEffect(p),
-    
+        ["ThresholdStrength"] = p => new ThresholdStrength(p),
     };
 
     public static IRelicEffect Create(string effectType, string paramsJson)

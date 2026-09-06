@@ -5,15 +5,9 @@ public abstract class CharacterBase
    protected int _currentHp;
    protected int _maxHp;
    protected int _block;
-   protected int _strength;      // 力量（影响伤害）
-   // public int CurrentHp => _currentHp;
-   // public int MaxHp => _maxHp;
-   // public int Block => _block;
-   public int Strength => _strength;
    public abstract EntityType EntityType { get; }
    private static int _nextId = 1;
    public int InstanceId { get; private set; }
-   // public abstract int ConfigId { get; }
    private BuffManager _buffManager;
    public BuffManager BuffManager => _buffManager;
    protected CharacterBase(int maxHp)
@@ -21,7 +15,6 @@ public abstract class CharacterBase
       InstanceId = _nextId++;
       _maxHp = maxHp;
       _currentHp = maxHp;
-      _strength = 0;
       _block = 0;
       _buffManager = new BuffManager(this);
    }
@@ -185,22 +178,6 @@ public abstract class CharacterBase
       _block += amount;
       EventBus<BlockChangedEvent>.Publish(new BlockChangedEvent { EntityType = EntityType, NewBlock = _block });
    }
-
-   // 增加力量（临时/永久由调用者决定，战斗中通常临时）
-   public void AddStrength(int delta)
-   {
-      if (delta == 0) return;
-      _strength += delta;
-      // EventBus<StrengthChangedEvent>.Publish(new StrengthChangedEvent { Character = this, NewStrength = _strength });
-   }
-
-   // 施加易伤
-   public void ApplyVulnerable(int turns = 1)
-   {
-      // EventBus<BuffAppliedEvent>.Publish(new BuffAppliedEvent { Character = this, BuffType = "Vulnerable", Stacks = _vulnerable });
-   }
-
-
 
 }
 public enum EntityType { Player, Enemy }

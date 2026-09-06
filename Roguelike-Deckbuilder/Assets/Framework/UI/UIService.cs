@@ -140,10 +140,6 @@ namespace LitFramework.UI.Core.Service
                 // 5. 注入数据（在 Init 前完成，确保 Presenter 初始化时能使用数据）
                 inject?.Invoke(presenter, arg);
 
-                // 6. 生命周期顺序：Presenter 先 Init，View 再 Open
-                //    这样 View 显示时 Presenter 已就绪，避免 UI 事件空引用
-
-
                 // 7. View 打开（播放动画等）
                 await view.OpenInternalAsync();
                 presenter.Init();
