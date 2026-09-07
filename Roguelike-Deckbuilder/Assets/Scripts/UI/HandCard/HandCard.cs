@@ -37,7 +37,7 @@ public partial class HandCard
     private bool _isPlaying = false;
     private RectTransform _rect;
     private BattleInteractionService _battleInteraction;
-
+    private NotificationService _noticeService;
     public void Init(Card card, Transform cardDetailTrans)
     {
         OnPlay = null;
@@ -49,6 +49,7 @@ public partial class HandCard
         _cardDetailTrans = cardDetailTrans;
         RefreshUI(card);
         _battleInteraction = ServiceLocator.Get<BattleInteractionService>();
+         _noticeService = ServiceLocator.Get<NotificationService>();
     }
 
     public void OnLayoutComplete()
@@ -108,7 +109,11 @@ public partial class HandCard
         if (!_battleInteraction.CanInteract())
             return;
         if (!_canUse)
+        {
+            _noticeService.ShowToast("能量不足！").Forget();
             return;
+        }
+
         _battleInteraction.StartDrag(this);
         RectTransformUtility.ScreenPointToLocalPointInRectangle(
             _rect.parent as RectTransform,

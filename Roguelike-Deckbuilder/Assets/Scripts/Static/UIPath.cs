@@ -27,6 +27,8 @@ public static class UIPath
     public static string SettingPanel => Base + "View/SettingPanel.prefab";
     public static string RestView => Base + "View/RestView.prefab";
     public static string GameOverView => Base + "View/GameOverView.prefab";
+    public static string ToastView => Base + "View/ToastView.prefab";
+    public static string ConfirmDialogView => Base + "View/ConfirmDialogView.prefab";
 
 
 }

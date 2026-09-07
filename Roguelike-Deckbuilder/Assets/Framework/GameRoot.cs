@@ -64,6 +64,7 @@ namespace LitFramework
             ServiceLocator.Register(new BattleController());
             ServiceLocator.Register(new RelicService());
             ServiceLocator.Register(new EffectExecutor());
+            ServiceLocator.Register(new NotificationService());
 
         }
         private void InitUI()
@@ -79,6 +80,9 @@ namespace LitFramework
             uiService.Register<RestView>(UIPath.RestView, UILayer.Normal);
             uiService.Register<ShopView>(UIPath.ShopView, UILayer.Normal);
             uiService.Register<EventView>(UIPath.EventView, UILayer.Normal);
+            uiService.Register<GameOverView>(UIPath.GameOverView, UILayer.Normal);
+            uiService.Register<ToastView>(UIPath.ToastView, UILayer.Popup);
+            uiService.Register<ConfirmDialogView>(UIPath.ConfirmDialogView, UILayer.Popup);
             uiService.Bind<BattleResultPanel>(view => new BattleResultPresenter(view));
             uiService.Bind<MainMenuView>(view => new MainMenuPresenter(view));
             uiService.Bind<TopBar>(view => new TopBarPresenter(view));
@@ -90,6 +94,8 @@ namespace LitFramework
             uiService.Bind<ShopView>(view => new ShopPresenter(view));
             uiService.Bind<EventView>(view => new EventPresenter(view));
             uiService.Bind<GameOverView>(view => new GameOverPresenter(view));
+            uiService.Bind<ToastView>(view => new ToastPresenter(view));
+            uiService.Bind<ConfirmDialogView>(view => new ConfirmDialogPresenter(view));
 
         }
         private void InitProcedure()

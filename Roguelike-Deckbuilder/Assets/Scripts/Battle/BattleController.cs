@@ -10,6 +10,7 @@ using UnityEngine;
 
 public class BattleController
 {
+    private NotificationService _noticeService;
     public BattleContext Context { get; private set; }
     public StateMachine BattleFSM { get; private set; }
     public void StartBattle(BattleStartParams args)
@@ -17,6 +18,7 @@ public class BattleController
         Context = BattleContextFactory.Create(args);
         Context.IsPlayerTurn = true;
         Context.CurrentTurn = 0;
+        _noticeService = ServiceLocator.Get<NotificationService>();
         var configService = ServiceLocator.Get<IConfigService>();
         var cardConfigTable = configService.GetTable<CardConfig>();
         var deck = ServiceLocator.Get<PlayerDataService>().DeckCardIds;
@@ -26,7 +28,7 @@ public class BattleController
             var card = new Card(cardConfig);
             Context.Player.AddCardToDrawPile(card);
         }
-        
+
         Context.Player.ShuffleDrawDeck();
         InitFsm();
         EventBus<DiedEvent>.Subscribe(OnCharacterDied);
@@ -62,8 +64,8 @@ public class BattleController
             if (!Context.Player.SpendEnergy(card.Config.Cost))
             {
                 Debug.LogError("能量不足");
+                _noticeService.ShowToast("能量不足").Forget();
                 return false;
-
             }
             Context.Player.RemoveCardFromHand(card);
             Context.Player.AddCardToDiscardPile(card);

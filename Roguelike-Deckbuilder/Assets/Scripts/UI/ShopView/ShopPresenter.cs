@@ -18,6 +18,7 @@ public class ShopPresenter : BasePresenter<ShopView>
     private PlayerDataService _playerService;
     private IConfigTable<ShopConfig> _shopTable;
     private IConfigTable<RelicConfig> _relicTable;
+    private NotificationService _noticeService;
     public Dictionary<int, CardDisplayData> Cards = new();
     public Dictionary<int, RelicDisplayData> Relics = new();
     private int _removeCost = 75;
@@ -32,6 +33,7 @@ public class ShopPresenter : BasePresenter<ShopView>
         _configService = ServiceLocator.Get<IConfigService>();
         _shopTable = ServiceLocator.Get<IConfigService>().GetTable<ShopConfig>();
         _relicTable = ServiceLocator.Get<IConfigService>().GetTable<RelicConfig>();
+        _noticeService = ServiceLocator.Get<NotificationService>();
         SubscribeEvents();
         InitShop().Forget();
         _removeCost += _playerService.RemoveCount * 25;
@@ -74,6 +76,10 @@ public class ShopPresenter : BasePresenter<ShopView>
                 Relics.Remove(id);
                 View.RefreshRelics(Relics.Values.ToList());
             }
+            else
+            {
+                _noticeService.ShowToast("金币不足").Forget();
+            }
         }
     }
     private void OnHoverEvent(TooltipShowEvent @event)
@@ -96,6 +102,10 @@ public class ShopPresenter : BasePresenter<ShopView>
                 Cards.Remove(id);
                 View.RefreshCards(Cards.Values.ToList());
             }
+            else
+            {
+                _noticeService.ShowToast("金币不足").Forget();
+            }
         }
     }
     /// <summary>
@@ -116,6 +126,7 @@ public class ShopPresenter : BasePresenter<ShopView>
         // 查询价格
         if (_playerService.Coin < _removeCost)
         {
+            _noticeService.ShowToast("金币不足").Forget();
             return;
         }
 
