@@ -26,5 +26,19 @@
     "Name": "强化",
     "Type": "Buff",
     "Description": "对自己添加正面效果"
+  },
+  "4": {
+    "Id": 4,
+    "Icon": "attack",
+    "Name": "攻击X2",
+    "Type": "AttackX2",
+    "Description": "对玩家造成{0}X2点伤害"
+  },
+  "5": {
+    "Id": 5,
+    "Icon": "attack",
+    "Name": "攻击X3",
+    "Type": "AttackX3",
+    "Description": "对玩家造成{0}X3点伤害"
   }
 }

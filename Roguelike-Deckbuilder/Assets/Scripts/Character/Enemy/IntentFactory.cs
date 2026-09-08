@@ -16,6 +16,10 @@ public static class IntentFactory
                 return new DebuffIntent(config, value);
             case "StatusCard":
                 return new StatusCardIntent(config, value);
+            case "AttackX2":
+                return new AttackX2Intent(config, value);
+            case "AttackX3":
+                return new AttackX3Intent(config, value);
             default:
                 Debug.LogError($"未知的意图类型: {config.Type}");
                 return null;

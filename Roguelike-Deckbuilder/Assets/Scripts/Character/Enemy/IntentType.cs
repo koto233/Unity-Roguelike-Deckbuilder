@@ -10,6 +10,5 @@ public enum IntentType
     MultiAttack, // 多次攻击
     Debuff,      // 施加减益
     Buff,        // 自身增益
-
     Unknown      // 未知/特殊
 }

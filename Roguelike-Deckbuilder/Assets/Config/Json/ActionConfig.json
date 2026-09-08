@@ -74,8 +74,8 @@
     "Name": "啄击",
     "Intents": [
       {
-        "IntentId": 1,
-        "Value": 9
+        "IntentId": 5,
+        "Value": 3
       }
     ]
   },
@@ -94,8 +94,8 @@
     "Name": "墨水长枪",
     "Intents": [
       {
-        "IntentId": 1,
-        "Value": 12
+        "IntentId": 4,
+        "Value": 6
       }
     ]
   },
