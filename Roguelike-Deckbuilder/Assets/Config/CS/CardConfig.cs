@@ -15,6 +15,7 @@ public class CardConfig : IConfig
     public string Name; // 名称
     public int Cost; // 费用
     public string Type; // 类型
+    public CardTrait Traits;  // 特性标志
     public CardEffectEntry[] Effects; // 效果
     public int UpgradeId; // 强化id
 }
@@ -29,3 +30,8 @@ public class CardEffectEntry
     public int Value;
 }
 
+public static class CardConfigExtensions
+{
+    public static bool HasTrait(this CardConfig config, CardTrait trait)
+        => (config.Traits & trait) != 0;
+}

@@ -14,6 +14,7 @@ public class Player : CharacterBase
     public IReadOnlyList<Card> DrawPile => _drawPile;
     public IReadOnlyList<Card> Hand => _hand;
     public IReadOnlyList<Card> DiscardPile => _discardPile;
+    
     public int DrawPileCount => DrawPile.Count;
     public int DiscardPileCount => DiscardPile.Count;
     private int _energy;

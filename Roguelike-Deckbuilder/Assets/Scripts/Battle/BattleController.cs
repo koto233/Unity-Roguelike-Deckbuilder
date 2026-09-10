@@ -68,7 +68,11 @@ public class BattleController
                 return false;
             }
             Context.Player.RemoveCardFromHand(card);
-            Context.Player.AddCardToDiscardPile(card);
+            if (!card.Config.HasTrait(CardTrait.Exhaust))
+            {
+                Context.Player.AddCardToDiscardPile(card);
+            }
+
             EventBus<HandChangedEvent>.Publish(new HandChangedEvent()
             {
                 ChangedCards = new List<Card> { card },
@@ -93,6 +97,28 @@ public class BattleController
         {
             return false;
         }
+    }
+    /// <summary>
+    /// 回合结束：手牌弃置（虚无特性特殊处理）
+    /// </summary>
+    public void DiscardHand()
+    {
+        foreach (var card in Context.Player.Hand.ToList())
+        {
+            Context.Player.RemoveCardFromHand(card);
+
+            if (card.Config.HasTrait(CardTrait.Retain))
+            {
+                // 保留：留在手牌，跳过
+                // Context.Player.Hand.Add(card);
+            }
+            else
+            {
+                Context.Player.AddCardToDiscardPile(card);
+                // EventBus<CardDiscardedEvent>.Publish(new CardDiscardedEvent { Card = card });
+            }
+        }
+      
     }
     public void EnemiesDetermineAction()
     {
@@ -140,7 +166,8 @@ public class BattleController
     }
     public void EndPlayerTurn()
     {
-        Context.Player.DiscardAllHand();
+        DiscardHand();
+        // Context.Player.DiscardAllHand();
         BattleFSM.ChangeState<EnemyTurnState>();
     }
 
