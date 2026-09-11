@@ -14,7 +14,7 @@ public class Player : CharacterBase
     public IReadOnlyList<Card> DrawPile => _drawPile;
     public IReadOnlyList<Card> Hand => _hand;
     public IReadOnlyList<Card> DiscardPile => _discardPile;
-    
+
     public int DrawPileCount => DrawPile.Count;
     public int DiscardPileCount => DiscardPile.Count;
     private int _energy;
@@ -147,14 +147,17 @@ public class Player : CharacterBase
     /// <summary>
     /// 弃掉所有手牌
     /// </summary>
-    public void DiscardAllHand()
+    public void DiscardHandOnEnd()
     {
         var changedCards = new List<Card>(Hand);
         for (int i = Hand.Count - 1; i >= 0; i--)
         {
             var card = Hand[i];
-            _hand.RemoveAt(i);
-            _discardPile.Add(card);
+            if (!card.Config.HasTrait(CardTrait.Retain))
+            {
+                _hand.RemoveAt(i);
+                _discardPile.Add(card);
+            }
         }
         EventBus<DiscardPileChangedEvent>.Publish(new DiscardPileChangedEvent() { CurrentCount = DiscardPile.Count });
         EventBus<HandChangedEvent>.Publish(new HandChangedEvent() { ChangedCards = changedCards, Cards = Hand, Type = ChangeType.Remove });

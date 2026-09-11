@@ -5,6 +5,7 @@
     "Name": "打击",
     "Cost": 1,
     "Type": "attack",
+    "CardTrait": "None",
     "Effects": [
       {
         "EffectId": 1,
@@ -19,6 +20,7 @@
     "Name": "攻击+",
     "Cost": 1,
     "Type": "attack",
+    "CardTrait": "None",
     "Effects": [
       {
         "EffectId": 1,
@@ -33,6 +35,7 @@
     "Name": "防御",
     "Cost": 1,
     "Type": "skill",
+    "CardTrait": "None",
     "Effects": [
       {
         "EffectId": 2,
@@ -47,6 +50,7 @@
     "Name": "防御+",
     "Cost": 1,
     "Type": "skill",
+    "CardTrait": "None",
     "Effects": [
       {
         "EffectId": 2,
@@ -61,6 +65,7 @@
     "Name": "痛击",
     "Cost": 2,
     "Type": "attack",
+    "CardTrait": "None",
     "Effects": [
       {
         "EffectId": 1,
@@ -79,6 +84,7 @@
     "Name": "痛击+",
     "Cost": 2,
     "Type": "attack",
+    "CardTrait": "None",
     "Effects": [
       {
         "EffectId": 1,
@@ -97,6 +103,7 @@
     "Name": "剑柄打击",
     "Cost": 1,
     "Type": "attack",
+    "CardTrait": "None",
     "Effects": [
       {
         "EffectId": 1,
@@ -115,6 +122,7 @@
     "Name": "剑柄打击+",
     "Cost": 1,
     "Type": "attack",
+    "CardTrait": "None",
     "Effects": [
       {
         "EffectId": 1,
@@ -133,6 +141,7 @@
     "Name": "耸肩无视",
     "Cost": 1,
     "Type": "skill",
+    "CardTrait": "None",
     "Effects": [
       {
         "EffectId": 2,
@@ -151,6 +160,7 @@
     "Name": "耸肩无视",
     "Cost": 1,
     "Type": "skill",
+    "CardTrait": "None",
     "Effects": [
       {
         "EffectId": 2,
@@ -169,6 +179,7 @@
     "Name": "血墙",
     "Cost": 2,
     "Type": "skill",
+    "CardTrait": "None",
     "Effects": [
       {
         "EffectId": 6,
@@ -187,6 +198,7 @@
     "Name": "血墙",
     "Cost": 2,
     "Type": "skill",
+    "CardTrait": "None",
     "Effects": [
       {
         "EffectId": 6,
@@ -205,6 +217,7 @@
     "Name": "铁斩波",
     "Cost": 1,
     "Type": "attack",
+    "CardTrait": "None",
     "Effects": [
       {
         "EffectId": 2,
@@ -223,6 +236,7 @@
     "Name": "铁斩波",
     "Cost": 1,
     "Type": "attack",
+    "CardTrait": "None",
     "Effects": [
       {
         "EffectId": 2,
@@ -231,6 +245,21 @@
       {
         "EffectId": 1,
         "Value": 7
+      }
+    ],
+    "UpgradeId": 0
+  },
+  "15": {
+    "Id": 15,
+    "Icon": "slimed",
+    "Name": "黏液",
+    "Cost": 1,
+    "Type": "status",
+    "CardTrait": "Exhaust",
+    "Effects": [
+      {
+        "EffectId": 3,
+        "Value": 1
       }
     ],
     "UpgradeId": 0

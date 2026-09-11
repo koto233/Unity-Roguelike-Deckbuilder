@@ -6,6 +6,8 @@
 
 // Generate From D:\GIT\Unity-Roguelike-Deckbuilder\Roguelike-Deckbuilder\Assets\Config\Excel\CardConfig.xlsx.xlsx
 using System;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 [Serializable]
 public class CardConfig : IConfig
@@ -15,6 +17,7 @@ public class CardConfig : IConfig
     public string Name; // 名称
     public int Cost; // 费用
     public string Type; // 类型
+    [JsonConverter(typeof(StringEnumConverter))]
     public CardTrait Traits;  // 特性标志
     public CardEffectEntry[] Effects; // 效果
     public int UpgradeId; // 强化id
