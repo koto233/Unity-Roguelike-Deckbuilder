@@ -106,7 +106,8 @@ public partial class HandZone : MonoBehaviour
         go.transform.SetParent(_handContainer);
 
         var uiCard = go.GetComponent<HandCard>();
-        uiCard.Init(card, _cardDetailTrans);
+        var cardDisplay = CardDisplayData.FromConfig(card.Config);
+        uiCard.Init(card, cardDisplay, _cardDetailTrans);
         uiCard.OnPlay += (c) => OnAnyCardPlay?.Invoke(c);
         uiCard.OnDragStart += (c, pos) => OnAnyCardDragStart?.Invoke(c, pos);
         uiCard.OnDragEnd += (c) => OnAnyCardDragEnd?.Invoke(c);

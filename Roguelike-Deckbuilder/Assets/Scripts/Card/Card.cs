@@ -29,7 +29,6 @@ public class Card
     /// 是否需要目标
     /// </summary> 
     public bool NeedTarget { get; set; }
-    public string Description { get; private set; }
     public bool CanUse { get; set; }
     /// <summary>
     /// 效果实例
@@ -42,7 +41,6 @@ public class Card
         Config = config;
         CurrentCost = config.Cost;
         var configService = ServiceLocator.Get<IConfigService>();
-        StringBuilder sb = new StringBuilder();
         foreach (var effect in config.Effects)
         {
             var effectConfig = configService.GetTable<CardEffectsConfig>().Get(effect.EffectId);
@@ -53,8 +51,6 @@ public class Card
             {
                 NeedTarget = true;
             }
-            sb.AppendLine(string.Format(effectConfig.Description, effect.Value));
         }
-        Description = sb.ToString();
     }
 }

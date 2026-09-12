@@ -33,9 +33,28 @@ public class CardDisplayData
                     sb.AppendLine(string.Format(effectConfig.Description, effect.Value));
             }
         }
-
-        string typeText = config.Type == "Attack" ? "攻击" : "技能";
-
+        switch (config.Traits)
+        {
+            case CardTrait.Exhaust:
+                sb.AppendLine("[消耗]");
+                break;
+        }
+        string typeText;
+        switch (config.Type)
+        {
+            case "attack":
+                typeText = "攻击";
+                break;
+            case "skill":
+                typeText = "技能";
+                break;
+            case "power":
+                typeText = "状态";
+                break;
+            default:
+                typeText = "";
+                break;
+        }
         return new CardDisplayData
         {
             Id = config.Id,

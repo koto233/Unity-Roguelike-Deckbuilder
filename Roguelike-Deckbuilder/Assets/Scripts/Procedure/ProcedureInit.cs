@@ -2,6 +2,7 @@ using System;
 using Cysharp.Threading.Tasks;
 using LitFramework.Asset;
 using LitFramework.Config;
+using Newtonsoft.Json;
 using UnityEngine;
 using YooAsset;
 
@@ -62,6 +63,11 @@ namespace LitFramework.FSM.Procedure
             };
 
             await UniTask.WhenAll(tasks);
+            // var table = svc.GetTable<CardConfig>();
+            // foreach (var item in table.GetAll())
+            // {
+            //     Debug.Log($"[Init] 加载配置：{JsonConvert.SerializeObject(item)} ");
+            // }
             Debug.Log("[Init] 所有配置加载完成");
         }
     }

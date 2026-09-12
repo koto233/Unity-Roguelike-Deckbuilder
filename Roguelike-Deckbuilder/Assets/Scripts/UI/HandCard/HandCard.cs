@@ -38,7 +38,7 @@ public partial class HandCard
     private RectTransform _rect;
     private BattleInteractionService _battleInteraction;
     private NotificationService _noticeService;
-    public void Init(Card card, Transform cardDetailTrans)
+    public void Init(Card card, CardDisplayData cardDisplay, Transform cardDetailTrans)
     {
         OnPlay = null;
         OnDragStart = null;
@@ -47,9 +47,9 @@ public partial class HandCard
         _isPlaying = false;
         _rect = GetComponent<RectTransform>();
         _cardDetailTrans = cardDetailTrans;
-        RefreshUI(card);
+        RefreshUI(card, cardDisplay);
         _battleInteraction = ServiceLocator.Get<BattleInteractionService>();
-         _noticeService = ServiceLocator.Get<NotificationService>();
+        _noticeService = ServiceLocator.Get<NotificationService>();
     }
 
     public void OnLayoutComplete()
@@ -65,31 +65,19 @@ public partial class HandCard
         _maxDragY = _originalPos.y + cardHeight / 2f;
     }
 
-    public void RefreshUI(Card card)
+    public void RefreshUI(Card card, CardDisplayData cardDisplay)
     {
         Card = card;
         _canUse = card.CanUse;
-        b_CostText.SetText(card.Config.Cost.ToString());
         Color targetColor = _canUse ? Color.white : Color.red;
-        b_Icon.sprite = ServiceLocator.Get<CardIconService>().GetCardIcon(card.Config.Icon);
         b_CostText.color = targetColor;
-        b_NameText.SetText(card.Config.Name);
-        b_DescText.SetText(card.Description);
-        switch (card.Config.Type)
-        {
-            case "Attack":
-                b_PortraitBorder.sprite = ServiceLocator.Get<UIAtlasService>().GetSprite("card_portrait_border_attack_s");
-                b_Frame.sprite = ServiceLocator.Get<UIAtlasService>().GetSprite("card_frame_attack_s");
-                b_type_text.SetText("攻击");
-                break;
-            case "Skill":
-                b_PortraitBorder.sprite = ServiceLocator.Get<UIAtlasService>().GetSprite("card_portrait_border_skill_s");
-                b_Frame.sprite = ServiceLocator.Get<UIAtlasService>().GetSprite("card_frame_skill_s");
-                b_type_text.SetText("技能");
-                break;
-            default:
-                break;
-        }
+        b_CostText.SetText(cardDisplay.EnergyCost.ToString());
+        b_Icon.sprite = cardDisplay.Icon;
+        b_NameText.SetText(cardDisplay.Name);
+        b_DescText.SetText(cardDisplay.Description);
+        b_PortraitBorder.sprite = cardDisplay.PortraitBorderSprite;
+        b_Frame.sprite = cardDisplay.FrameSprite;
+        b_type_text.SetText(cardDisplay.Type);
     }
 
 

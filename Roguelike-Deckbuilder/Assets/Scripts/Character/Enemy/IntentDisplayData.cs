@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class IntentDisplayData
 {
+    public string DamageText;
     public string Description;
     public int Value;
     public Sprite Icon;
@@ -13,11 +14,24 @@ public class IntentDisplayData
     {
         var data = new IntentDisplayData
         {
+
             Value = value,
             Description = string.Format(config.Description, value),
             IsBuff = config.Type == "Buff" || config.Type == "Debuff" || config.Type == "StatusCard"
         };
         data.Icon = await ServiceLocator.Get<IAssetService>().LoadAsync<Sprite>($"Assets/Res/Art/Intents/intent_{config.Icon}.png");
+        switch (config.Type)
+        {
+            case "Attack":
+                data.DamageText = $"{value}";
+                break;
+            case "AttackX2":
+                data.DamageText = $"2X{value}";
+                break;
+            case "AttackX3":
+                data.DamageText = $"3X{value}";
+                break;
+        }
         return data;
     }
 }

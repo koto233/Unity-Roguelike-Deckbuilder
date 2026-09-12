@@ -25,7 +25,7 @@ public partial class IntentionItem : UIBase, ITooltipDataProvider
         }
         else
         {
-            b_Num.SetText(displayData.Value.ToString());
+            b_Num.SetText(displayData.DamageText);
         }
         _icon.sprite = displayData.Icon;
     }

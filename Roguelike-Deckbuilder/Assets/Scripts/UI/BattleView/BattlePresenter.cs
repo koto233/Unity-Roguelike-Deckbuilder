@@ -226,32 +226,13 @@ public class BattlePresenter : BasePresenter<BattleView>, IHasData<BattleContext
         var displayData = new List<CardDisplayData>();
         foreach (var card in pile)
         {
-            displayData.Add(ToDisplayData(card.Config));
+            displayData.Add(CardDisplayData.FromConfig(card.Config));
         }
         View.SpawnCardInList(displayData);
         View.OpenPilePanel();
     }
 
-    private CardDisplayData ToDisplayData(CardConfig config)
-    {
-        _description.Clear();
-        foreach (var effect in config.Effects)
-        {
-            var effectConfig = _configService.GetTable<CardEffectsConfig>().Get(effect.EffectId);
-            _description.AppendLine(string.Format(effectConfig.Description, effect.Value));
-        }
 
-        return new CardDisplayData
-        {
-            Name = config.Name,
-            Description = _description.ToString(),
-            EnergyCost = config.Cost,
-            Icon = _cardIconService.GetCardIcon(config.Icon),
-            PortraitBorderSprite = _uiAtlasService.GetSprite($"card_portrait_border_{config.Type}_s"),
-            FrameSprite = _uiAtlasService.GetSprite($"card_frame_{config.Type}_s"),
-            Type = config.Type == "Attack" ? "攻击" : "技能",
-        };
-    }
     private void OnBuffApplied(BuffAppliedEvent evt)
     {
         RefreshOwnerBuffs(evt.Owner);
