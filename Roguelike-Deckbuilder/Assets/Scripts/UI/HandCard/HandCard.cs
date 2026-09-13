@@ -31,6 +31,8 @@ public partial class HandCard
     public event Action<Card, Vector2> OnDragStart;
     public event Action<Enemy, Vector2> OnCardDrag;
     public event Action<Card> OnDragEnd;
+    public event Action OnUp;
+    public event Action<Card> OnDown;
     private Enemy _Target;
     private bool _canUse = true;
     private bool _isScaleNormalized = false;
@@ -215,6 +217,7 @@ public partial class HandCard
             0.1f
         );
         transform.rotation = Quaternion.Euler(0, 0, 0);
+        OnDown.Invoke(Card);
     }
 
     public void OnPointerUp(PointerEventData eventData)
@@ -224,10 +227,12 @@ public partial class HandCard
         _cardDetailTrans.gameObject.SetActive(false);
         transform.SetSiblingIndex(_originalSiblingIndex);
         _dragStartOffset = Vector2.zero;
+        OnUp.Invoke();
         if (_battleInteraction.IsDragging)
         {
             return;
         }
         ResetCard();
+
     }
 }

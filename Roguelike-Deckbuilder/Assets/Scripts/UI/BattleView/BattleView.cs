@@ -26,6 +26,8 @@ public partial class BattleView : UIWindow
     public event Action<Card, Vector2> OnCardDragStartRequested;
     public event Action<Card> OnCardDragEndRequested;
     public event Action<Enemy, Vector2> OnCardDragRequested;
+    public event Action<Card> OnCardDown;
+    public event Action OnCardUp;
     /// <summary>
     /// 打开卡组，0是抽牌堆，1是弃牌堆
     /// </summary>
@@ -85,6 +87,8 @@ public partial class BattleView : UIWindow
         b_HandZone.OnAnyCardDragStart += (c, pos) => OnCardDragStartRequested?.Invoke(c, pos);
         b_HandZone.OnAnyCardDragEnd += (c) => OnCardDragEndRequested?.Invoke(c);
         b_HandZone.OnAnyCardDrag += (c, e) => OnCardDragRequested?.Invoke(c, e);
+        b_HandZone.OnAnyCardDown += (c) => OnCardDown?.Invoke(c);
+        b_HandZone.OnAnyCardUp += () => OnCardUp?.Invoke();
     }
     public void OpenPilePanel()
     {
@@ -200,7 +204,10 @@ public partial class BattleView : UIWindow
     {
         b_DiscardPileCount.SetText(count.ToString());
     }
-
+    public void ShowCardDesc(string desc)
+    {
+        b_Desc.SetText(desc);
+    }
 
     // ===== View 层交互反馈 =====
     public void ShowArrow(Vector2 start, Vector2 end, Vector2 controlOffset)

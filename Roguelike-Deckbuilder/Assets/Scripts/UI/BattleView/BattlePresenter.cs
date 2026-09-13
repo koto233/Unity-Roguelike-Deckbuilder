@@ -57,6 +57,8 @@ public class BattlePresenter : BasePresenter<BattleView>, IHasData<BattleContext
         View.OnCardDragRequested += OnDragCard;
         View.OnCardDragEndRequested += OnDragEnd;
         View.OnCardPlayRequested += OnCardPlay;
+        View.OnCardDown += OnCardDown;
+        View.OnCardUp += OnCardUp;
 
     }
 
@@ -83,6 +85,9 @@ public class BattlePresenter : BasePresenter<BattleView>, IHasData<BattleContext
         View.OnCardDragRequested -= OnDragCard;
         View.OnCardDragEndRequested -= OnDragEnd;
         View.OnCardPlayRequested -= OnCardPlay;
+        View.OnCardDown -= OnCardDown;
+        View.OnCardUp -= OnCardUp;
+
     }
     public async UniTask InitPlayer()
     {
@@ -187,6 +192,7 @@ public class BattlePresenter : BasePresenter<BattleView>, IHasData<BattleContext
     }
     private void OnDragCard(Enemy enemy, Vector2 position)
     {
+
         _currentTargetEnemy = enemy;
         View.UpdateArrow(position);
         // Debug.Log("OnDragCard:" + enemy == null);
@@ -214,7 +220,23 @@ public class BattlePresenter : BasePresenter<BattleView>, IHasData<BattleContext
     {
         View.RefreshEnergy(energy, maxEnergy);
     }
+    private void OnCardUp()
+    {
 
+    }
+
+    private void OnCardDown(Card card)
+    {
+        switch (card.Config.Traits)
+        {
+            case CardTrait.Exhaust:
+                View.ShowCardDesc("消耗：回合结束不会丢弃");
+                break;
+            default:
+                View.ShowCardDesc("");
+                break;
+        }
+    }
     /// <summary>
     /// 打开牌组 0 : 抽牌组 1 : 弃牌组 
     /// </summary>

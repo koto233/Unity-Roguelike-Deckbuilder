@@ -25,6 +25,8 @@ public partial class HandZone : MonoBehaviour
     public event Action<Card, Vector2> OnAnyCardDragStart;
     public event Action<Card> OnAnyCardDragEnd;
     public event Action<Enemy, Vector2> OnAnyCardDrag;
+    public event Action<Card> OnAnyCardDown;
+    public event Action OnAnyCardUp;
     public void Init(ObjectPoolService poolService, BattleView battleWindow)
     {
         _poolService = poolService;
@@ -112,6 +114,8 @@ public partial class HandZone : MonoBehaviour
         uiCard.OnDragStart += (c, pos) => OnAnyCardDragStart?.Invoke(c, pos);
         uiCard.OnDragEnd += (c) => OnAnyCardDragEnd?.Invoke(c);
         uiCard.OnCardDrag += (c, enemy) => OnAnyCardDrag?.Invoke(c, enemy);
+        uiCard.OnUp += () => {  OnAnyCardUp?.Invoke(); };
+        uiCard.OnDown += (card) => { OnAnyCardDown?.Invoke(card); };
         return uiCard;
     }
 
