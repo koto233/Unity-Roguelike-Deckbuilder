@@ -126,10 +126,14 @@ public class PlayerDataService
     }
     public void AddCoin(int coin)
     {
+        if (coin < 0)
+            return;
         Coin += coin;
     }
     public void SpendCoin(int coin)
     {
+        if(coin < 0)
+            return;
         if (Coin >= coin)
             Coin -= coin;
     }

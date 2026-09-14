@@ -6,6 +6,7 @@ using LitFramework;
 using LitFramework.Config;
 using LitFramework.EventBus;
 using LitFramework.FSM;
+using LitFramework.UI.Core.Service;
 using UnityEngine;
 
 public class BattleController
@@ -98,7 +99,7 @@ public class BattleController
             return false;
         }
     }
-   
+
     public void EnemiesDetermineAction()
     {
         foreach (var enemy in Context.Enemies)
@@ -176,7 +177,7 @@ public class BattleController
         if (evt.EntityType == EntityType.Player)
         {
             EventBus<DiedEvent>.Unsubscribe(OnCharacterDied);
-            BattleFSM.ChangeState<BattleEndState>();
+            ServiceLocator.Get<UIService>().OpenAsync<GameOverView>().Forget();
             return;
         }
         if (evt.EntityType == EntityType.Enemy)

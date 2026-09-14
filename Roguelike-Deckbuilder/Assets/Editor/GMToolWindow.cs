@@ -10,6 +10,7 @@ using LitFramework.UI.Core.Service;
 using LitFramework.FSM.Procedure;
 using LitFramework.EventBus;
 using Cysharp.Threading.Tasks;
+using LitFramework.Config;
 
 /// <summary>
 /// GM 工具窗口 - 仅开发环境使用
@@ -18,8 +19,8 @@ public class GMToolWindow : EditorWindow
 {
     private Vector2 _scrollPos;
     private string _uiName = "ShopView";
-    private string _addCardId = "101";
-    private string _addRelicId = "201";
+    private string _addCardId = "1";
+    private string _addRelicId = "1";
     private string _nodeId = "0_0";
     private int _goldAmount = 100;
     private int _hpAmount = 10;
@@ -53,7 +54,7 @@ public class GMToolWindow : EditorWindow
         DrawRelicSection();
         DrawMapSection();
         DrawBattleSection();
-        DrawSaveSection();
+        // DrawSaveSection();
         DrawEventSection();
 
         EditorGUILayout.EndScrollView();
@@ -113,17 +114,17 @@ public class GMToolWindow : EditorWindow
         _goldAmount = EditorGUILayout.IntField("金币", _goldAmount);
         if (GUILayout.Button("增加金币", GUILayout.Width(80)))
         {
-            ModifyGold(_goldAmount);
+            AddCoin(_goldAmount);
         }
-        if (GUILayout.Button("设置金币为 0", GUILayout.Width(100)))
+        if (GUILayout.Button("金币清零", GUILayout.Width(80)))
         {
-            SetGold(0);
+            ClearCoin();
         }
         EditorGUILayout.EndHorizontal();
 
         EditorGUILayout.BeginHorizontal();
         _hpAmount = EditorGUILayout.IntField("HP", _hpAmount);
-        if (GUILayout.Button("恢复 HP", GUILayout.Width(80)))
+        if (GUILayout.Button("增加 HP", GUILayout.Width(80)))
         {
             HealPlayer(_hpAmount);
         }
@@ -131,20 +132,17 @@ public class GMToolWindow : EditorWindow
         {
             FullHeal();
         }
-        if (GUILayout.Button("受到伤害", GUILayout.Width(80)))
-        {
-            DamagePlayer(_hpAmount);
-        }
+
         EditorGUILayout.EndHorizontal();
     }
 
-    private void ModifyGold(int amount)
+    private void AddCoin(int amount)
     {
         try
         {
             var playerService = ServiceLocator.Get<PlayerDataService>();
-            var method = typeof(PlayerDataService).GetMethod("AddCoin");
-            method?.Invoke(playerService, new object[] { amount });
+            playerService.Coin += amount;
+
             Debug.Log($"金币 +{amount}");
         }
         catch (Exception e)
@@ -152,34 +150,27 @@ public class GMToolWindow : EditorWindow
             Debug.LogError($"修改金币失败: {e.Message}");
         }
     }
-
-    private void SetGold(int amount)
+    private void ClearCoin()
     {
         try
         {
             var playerService = ServiceLocator.Get<PlayerDataService>();
-            var field = typeof(PlayerDataService).GetField("_coin", BindingFlags.NonPublic | BindingFlags.Instance);
-            field?.SetValue(playerService, amount);
-            Debug.Log($"金币设置为 {amount}");
+            playerService.Coin = 0;
+            Debug.Log($"金币 清零");
         }
         catch (Exception e)
         {
-            Debug.LogError($"设置金币失败: {e.Message}");
+            Debug.LogError($"修改金币失败: {e.Message}");
         }
     }
+
 
     private void HealPlayer(int amount)
     {
         try
         {
-            var executor = ServiceLocator.Get<EffectExecutor>();
             var playerService = ServiceLocator.Get<PlayerDataService>();
-            var character = playerService.GetType().GetProperty("Character")?.GetValue(playerService) as CharacterBase;
-            if (character != null)
-            {
-                executor.Heal(amount, character);
-                Debug.Log($"治疗 {amount} HP");
-            }
+            playerService.CurrentHp += amount;
         }
         catch (Exception e)
         {
@@ -192,10 +183,9 @@ public class GMToolWindow : EditorWindow
         try
         {
             var playerService = ServiceLocator.Get<PlayerDataService>();
-            var character = playerService.GetType().GetProperty("Character")?.GetValue(playerService) as CharacterBase;
-            if (character != null)
+            if (playerService != null)
             {
-                character.CurrentHp = character.MaxHp;
+                playerService.CurrentHp = playerService.MaxHp;
                 Debug.Log("满血恢复");
             }
         }
@@ -205,30 +195,13 @@ public class GMToolWindow : EditorWindow
         }
     }
 
-    private void DamagePlayer(int amount)
-    {
-        // try
-        // {
-        //     var executor = ServiceLocator.Get<EffectExecutor>();
-        //     var playerService = ServiceLocator.Get<PlayerDataService>();
-        //     var character = playerService.GetType().GetProperty("Character")?.GetValue(playerService) as CharacterBase;
-        //     if (character != null)
-        //     {
-        //         executor.Damage(amount, character);
-        //         Debug.Log($"受到 {amount} 伤害");
-        //     }
-        // }
-        // catch (Exception e)
-        // {
-        //     Debug.LogError($"伤害失败: {e.Message}");
-        // }
-    }
+
     #endregion
 
     #region 牌库修改
     private void DrawDeckSection()
     {
-        GUILayout.Label("牌库操作", EditorStyles.boldLabel);
+        GUILayout.Label("全局牌库操作", EditorStyles.boldLabel);
         EditorGUILayout.BeginHorizontal();
         _addCardId = EditorGUILayout.TextField("卡牌 ID", _addCardId);
         if (GUILayout.Button("添加卡牌", GUILayout.Width(80)))
@@ -240,6 +213,14 @@ public class GMToolWindow : EditorWindow
             RemoveLastCard();
         }
         EditorGUILayout.EndHorizontal();
+        GUILayout.Label("局内牌库操作", EditorStyles.boldLabel);
+        EditorGUILayout.BeginHorizontal();
+        _addCardId = EditorGUILayout.TextField("卡牌 ID", _addCardId);
+        if (GUILayout.Button("添加卡牌至手牌", GUILayout.Width(150)))
+        {
+            AddCardToHand(int.Parse(_addCardId));
+        }
+        EditorGUILayout.EndHorizontal();
     }
 
     private void AddCard(int cardId)
@@ -247,8 +228,8 @@ public class GMToolWindow : EditorWindow
         try
         {
             var playerService = ServiceLocator.Get<PlayerDataService>();
-            var method = typeof(PlayerDataService).GetMethod("AddCard");
-            method?.Invoke(playerService, new object[] { cardId });
+            playerService.AddCard(cardId);
+
             Debug.Log($"添加卡牌 ID: {cardId}");
         }
         catch (Exception e)
@@ -256,19 +237,33 @@ public class GMToolWindow : EditorWindow
             Debug.LogError($"添加卡牌失败: {e.Message}");
         }
     }
-
+    private void AddCardToHand(int cardId)
+    {
+        try
+        {
+            var battleController = ServiceLocator.Get<BattleController>();
+            var cardConfig = ServiceLocator.Get<IConfigService>().GetTable<CardConfig>().Get(cardId);
+            var card = new Card(cardConfig);
+            battleController.Context.Player.AddCardToHand(card);
+            Debug.Log($"添加卡牌 ID: {cardId}");
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"添加卡牌失败: {e.Message}");
+        }
+    }
     private void RemoveLastCard()
     {
         try
         {
             var playerService = ServiceLocator.Get<PlayerDataService>();
-            var deck = playerService.GetType().GetMethod("GetDeck")?.Invoke(playerService, null) as IReadOnlyList<Card>;
+
+            var deck = playerService.DeckCardIds;
             if (deck != null && deck.Count > 0)
             {
                 var last = deck.Last();
-                var method = typeof(PlayerDataService).GetMethod("RemoveCard");
-                method?.Invoke(playerService, new object[] { last.Config.Id });
-                Debug.Log($"移除卡牌 ID: {last.Config.Id}");
+                playerService.RemoveCard(last);
+                Debug.Log($"移除卡牌 ID: {last}");
             }
         }
         catch (Exception e)
@@ -300,8 +295,7 @@ public class GMToolWindow : EditorWindow
         try
         {
             var relicService = ServiceLocator.Get<RelicService>();
-            var method = typeof(RelicService).GetMethod("AddRelic");
-            method?.Invoke(relicService, new object[] { relicId });
+            relicService.AddRelic(relicId);
             Debug.Log($"添加遗物 ID: {relicId}");
         }
         catch (Exception e)
@@ -315,12 +309,7 @@ public class GMToolWindow : EditorWindow
         try
         {
             var relicService = ServiceLocator.Get<RelicService>();
-            var relics = relicService.Relics;
-            foreach (var relic in relics.ToList())
-            {
-                var method = typeof(RelicService).GetMethod("RemoveRelic");
-                method?.Invoke(relicService, new object[] { relic.Value.Config.Id });
-            }
+            relicService.RemoveAllRelics();
             Debug.Log("已清除所有遗物");
         }
         catch (Exception e)
@@ -352,8 +341,7 @@ public class GMToolWindow : EditorWindow
         try
         {
             var mapService = ServiceLocator.Get<MapService>();
-            var method = typeof(MapService).GetMethod("VisitNode");
-            method?.Invoke(mapService, new object[] { nodeId });
+            mapService.VisitNode(nodeId);
             Debug.Log($"跳转到节点: {nodeId}");
         }
         catch (Exception e)
@@ -367,11 +355,7 @@ public class GMToolWindow : EditorWindow
         try
         {
             var mapService = ServiceLocator.Get<MapService>();
-            var method = typeof(MapService).GetMethod("ResetMap");
-            method?.Invoke(mapService, null);
-            // 重新生成地图
-            var genMethod = typeof(MapService).GetMethod("GenerateMap");
-            genMethod?.Invoke(mapService, new object[] { 1 });
+            mapService.NewMap(1);
             Debug.Log("地图已重置");
         }
         catch (Exception e)
@@ -393,29 +377,24 @@ public class GMToolWindow : EditorWindow
         {
             EndBattle(false);
         }
-        if (GUILayout.Button("跳过回合"))
-        {
-            SkipTurn();
-        }
+
     }
 
     private void EndBattle(bool victory)
     {
         try
         {
-            var procedureManager = ServiceLocator.Get<ProcedureManager>();
-            // 查找当前战斗流程
-            var current = procedureManager.GetType().GetField("_currentProcedure", BindingFlags.NonPublic | BindingFlags.Instance)?.GetValue(procedureManager);
-            if (current != null && current.GetType().Name == "ProcedureBattle")
+            var battleController = ServiceLocator.Get<BattleController>();
+            if (victory)
             {
-                var battleController = current.GetType().GetField("_battleController", BindingFlags.NonPublic | BindingFlags.Instance)?.GetValue(current);
-                if (battleController != null)
-                {
-                    var method = battleController.GetType().GetMethod("ForceEndBattle");
-                    method?.Invoke(battleController, new object[] { victory });
-                    Debug.Log($"强制结束战斗，结果: {(victory ? "胜利" : "失败")}");
-                }
+                battleController.BattleFSM.ChangeState<BattleEndState>();
             }
+            else
+            {
+                ServiceLocator.Get<UIService>().OpenAsync<GameOverView>().Forget();
+            }
+
+
         }
         catch (Exception e)
         {
@@ -423,28 +402,7 @@ public class GMToolWindow : EditorWindow
         }
     }
 
-    private void SkipTurn()
-    {
-        try
-        {
-            var procedureManager = ServiceLocator.Get<ProcedureManager>();
-            var current = procedureManager.GetType().GetField("_currentProcedure", BindingFlags.NonPublic | BindingFlags.Instance)?.GetValue(procedureManager);
-            if (current != null && current.GetType().Name == "ProcedureBattle")
-            {
-                var battleController = current.GetType().GetField("_battleController", BindingFlags.NonPublic | BindingFlags.Instance)?.GetValue(current);
-                if (battleController != null)
-                {
-                    var method = battleController.GetType().GetMethod("SkipTurn");
-                    method?.Invoke(battleController, null);
-                    Debug.Log("跳过回合");
-                }
-            }
-        }
-        catch (Exception e)
-        {
-            Debug.LogError($"跳过回合失败: {e.Message}");
-        }
-    }
+
     #endregion
 
     #region 存档操作
@@ -516,20 +474,20 @@ public class GMToolWindow : EditorWindow
     #region 事件触发
     private void DrawEventSection()
     {
-        GUILayout.Label("事件触发", EditorStyles.boldLabel);
-        if (GUILayout.Button("触发战斗开始事件"))
-        {
-            // EventBus<BattleStartEvent>.Publish(new BattleStartEvent { EnemyIds = new List<int> { 1, 2 } });
-        }
-        if (GUILayout.Button("触发回合开始事件"))
-        {
-            // EventBus<TurnStartEvent>.Publish(new TurnStartEvent());
-        }
-        if (GUILayout.Button("触发商店打开事件"))
-        {
-            // 假设有 OpenShopEvent
-            // EventBus<OpenShopEvent>.Publish(new OpenShopEvent());
-        }
+        // GUILayout.Label("事件触发", EditorStyles.boldLabel);
+        // if (GUILayout.Button("触发战斗开始事件"))
+        // {
+        //     EventBus<BattleStartEvent>.Publish(new BattleStartEvent { });
+        // }
+        // if (GUILayout.Button("触发回合开始事件"))
+        // {
+        //     EventBus<TurnStartEvent>.Publish(new TurnStartEvent());
+        // }
+        // if (GUILayout.Button("触发商店打开事件"))
+        // {
+        //     // 假设有 OpenShopEvent
+        //     EventBus<OpenShopEvent>.Publish(new OpenShopEvent());
+        // }
     }
     #endregion
 }

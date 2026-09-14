@@ -70,7 +70,7 @@ public class RelicService
         ServiceLocator.Get<SaveService>().SaveGame();
 
         // 广播事件（用于成就、UI刷新等）
-     
+
     }
 
     public void RemoveRelic(int relicId)
@@ -85,7 +85,13 @@ public class RelicService
         _relics.Remove(relicId);
         ServiceLocator.Get<SaveService>().SaveGame();
     }
-
+    public void RemoveAllRelics()
+    {
+        foreach (var relic in _relics.Values)
+            DeactivateEffect(relic);
+        _relics.Clear();
+        _activeEffects.Clear();
+    }
 
     private void ActivateEffect(Relic relic)
     {

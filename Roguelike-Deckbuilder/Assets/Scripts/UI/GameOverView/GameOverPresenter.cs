@@ -41,6 +41,7 @@ public class GameOverPresenter : BasePresenter<GameOverView>
 
     private void HandleRestart()
     {
+        ServiceLocator.Get<UIService>().Close(View);
         ServiceLocator.Get<PlayerDataService>().Reset();
         ServiceLocator.Get<MapService>().NewMap(1);
         ServiceLocator.Get<RelicService>().Init();

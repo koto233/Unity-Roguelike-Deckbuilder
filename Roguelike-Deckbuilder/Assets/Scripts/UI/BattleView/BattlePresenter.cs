@@ -230,7 +230,10 @@ public class BattlePresenter : BasePresenter<BattleView>, IHasData<BattleContext
         switch (card.Config.Traits)
         {
             case CardTrait.Exhaust:
-                View.ShowCardDesc("消耗：回合结束不会丢弃");
+                View.ShowCardDesc("消耗：使用后不会进入弃牌堆");
+                break;
+            case CardTrait.Retain:
+                View.ShowCardDesc("保留：回合结束后保留在手牌中");
                 break;
             default:
                 View.ShowCardDesc("");
