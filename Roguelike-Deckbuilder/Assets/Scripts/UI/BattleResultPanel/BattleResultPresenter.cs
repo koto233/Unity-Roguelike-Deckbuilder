@@ -21,27 +21,12 @@ public class BattleResultPresenter : BasePresenter<BattleResultPanel>
     {
         SubscribeEvents();
         _controller = ServiceLocator.Get<BattleController>();
-        CalculateRewards();
+        // CalculateRewards();
+        _rewards.Add(new Reward() { Type = RewardType.Coin, Value = _controller.Context.GoldReward });
+        View.ShowReward(_rewards);
         ServiceLocator.Get<PlayerDataService>().AddCoin(_rewards[0].Value);
     }
-    /// <summary>
-    /// 根据敌人稀有度计算奖励
-    /// </summary> 
-    private void CalculateRewards()
-    {
-        System.Random random = new System.Random();
-        _configService = ServiceLocator.Get<IConfigService>();
-        var rewardConfig = _configService.GetTable<RewardConfig>();
-        int rewardCoin = 0;
-        foreach (var enemyConfig in _controller.Context.EnemyConfigs)
-        {
-            var reward = rewardConfig.Get(enemyConfig.Rarity);
-            rewardCoin += random.Next(reward.CoinMin, reward.CoinMax);
-        }
-        _rewards.Add(new Reward() { Type = RewardType.Coin, Value = rewardCoin });
-        View.ShowReward(_rewards);
-
-    }
+   
 
 
     private void SubscribeEvents()

@@ -6,5 +6,5 @@ using System.Threading.Tasks;
 
 public class BattleStartParams : IProcedureArgs
 {
-    public MapNodeType Type;
+    public List<int> EnemyKeys; 
 }

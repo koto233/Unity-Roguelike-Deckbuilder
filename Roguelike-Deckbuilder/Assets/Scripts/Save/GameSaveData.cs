@@ -12,6 +12,7 @@ public class GameSaveData
 
     // 玩家数据（牌组、金币、血量等）
     public PlayerSaveData PlayerData = new();
+    public List<int> EnemyIds = new();
 
     // 流程状态（当前在地图还是战斗中）
     public string CurrentProcedure = "Map";

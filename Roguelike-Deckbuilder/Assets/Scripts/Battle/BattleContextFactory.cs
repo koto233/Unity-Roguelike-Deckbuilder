@@ -1,7 +1,8 @@
+using System.Collections.Generic;
 using System.Linq;
 using LitFramework;
 using LitFramework.Config;
-using UnityEngine;
+
 
 public static class BattleContextFactory
 {
@@ -14,45 +15,27 @@ public static class BattleContextFactory
         {
             Player = new Player(globalPlayer.CurrentHp, globalPlayer.MaxHp, BattleRules.MaxEnergy),
             Enemies = new(),
-            EnemyConfigs = new(),
             CurrentTurn = 0,
             IsPlayerTurn = true,
             Target = null,
             GoldReward = 0
         };
 
-        // 1. 根据节点类型确定稀有度
-        int rarity = args.Type switch
+        var enemyTable = configService.GetTable<EnemyConfig>();
+        var enemiesRarity = new List<int>();
+        foreach (var key in args.EnemyKeys)
         {
-            MapNodeType.Battle => 1,
-            MapNodeType.Elite => 2,
-            MapNodeType.Boss => 3,
-            _ => 1
-        };
-
-        // 2. 从配置表筛选对应稀有度的敌人
-        var allEnemies = configService.GetTable<EnemyConfig>().GetAll();
-        var candidates = allEnemies.Where(e => e.Rarity == rarity).ToList();
-
-        if (candidates.Count == 0)
-        {
-            Debug.LogError($"未找到稀有度 {rarity} 的敌人配置，使用默认敌人");
-            candidates = allEnemies.Where(e => e.Rarity == 1).ToList();
+            var config = enemyTable.Get(key);
+            if (config == null)
+            {
+                // Debug.LogError($"敌人配置不存在: {key}");
+                continue;
+            }
+            var ai = CreateAI(config.Key);
+            enemiesRarity.Add(config.Rarity);
+            battleContext.Enemies.Add(new Enemy(config, ai));
         }
-
-        // 3. 随机选取一个
-        var selectedConfig = candidates[UnityEngine.Random.Range(0, candidates.Count)];
-
-        // 4. 创建敌人实例（AI 根据配置决定）
-        var ai = CreateAI(selectedConfig.Key);
-        var enemy = new Enemy(selectedConfig, ai);
-
-        battleContext.EnemyConfigs.Add(selectedConfig);
-        battleContext.Enemies.Add(enemy);
-
-        // 5. 计算金币奖励（可选）
-        battleContext.GoldReward = CalculateGoldReward(rarity);
-
+        battleContext.GoldReward = CalculateGoldReward(enemiesRarity);
         return battleContext;
     }
 
@@ -69,14 +52,16 @@ public static class BattleContextFactory
         };
     }
 
-    private static int CalculateGoldReward(int rarity)
+    private static int CalculateGoldReward(List<int> raritys)
     {
-        return rarity switch
+        System.Random random = new System.Random();
+        var rewardConfig = ServiceLocator.Get<IConfigService>().GetTable<RewardConfig>();
+        int rewardCoin = 0;
+        foreach (var rarity in raritys)
         {
-            1 => UnityEngine.Random.Range(10, 20),
-            2 => UnityEngine.Random.Range(35, 45),
-            3 => 100,
-            _ => 15
-        };
+            var reward = rewardConfig.Get(rarity);
+            rewardCoin += random.Next(reward.CoinMin, reward.CoinMax);
+        }
+        return rewardCoin;
     }
 }

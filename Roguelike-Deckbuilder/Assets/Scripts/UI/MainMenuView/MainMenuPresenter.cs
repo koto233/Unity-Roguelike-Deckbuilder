@@ -71,7 +71,7 @@ public class MainMenuPresenter : BasePresenter<MainMenuView>
         }
         else if (saveData.CurrentProcedure == "Battle")
         {
-            var args = new BattleStartParams { Type = MapNodeType.Battle };
+            var args = new BattleStartParams { EnemyKeys = saveData.EnemyIds };
             _procedureManager.ChangeProcedure<ProcedureBattle, BattleStartParams>(args);
         }
         OpenTopBarAsync().Forget();

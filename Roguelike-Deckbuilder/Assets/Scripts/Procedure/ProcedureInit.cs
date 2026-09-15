@@ -31,8 +31,8 @@ namespace LitFramework.FSM.Procedure
             // 2. 注册 AssetService
             var asset = new YooAssetAssetService(YooAssets.GetPackage("DefaultPackage"));
             ServiceLocator.Register<IAssetService>(asset);
-            var cardIconService = ServiceLocator.Get<CardIconService>();
-            await cardIconService.PreLoadCardIcons();
+            await ServiceLocator.Get<CardIconService>().PreLoadCardIcons();
+            await  ServiceLocator.Get<UIAtlasService>().PreLoadCardIcons();
             // 3. 并行加载所有配置
             await LoadConfigsParallelAsync();
 

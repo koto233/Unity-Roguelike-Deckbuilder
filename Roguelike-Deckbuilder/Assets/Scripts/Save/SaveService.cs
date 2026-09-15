@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using LitFramework;
 using LitFramework.FSM.Procedure;
 using Newtonsoft.Json;
@@ -19,13 +20,15 @@ public class SaveService
     // ============ 存档 ============
     public void SaveGame(string currentProcedure = "Map")
     {
+        var _battleController = ServiceLocator.Get<BattleController>();
         var saveData = new GameSaveData
         {
             Version = 1,
             Timestamp = DateTime.Now.Ticks,
             CurrentProcedure = currentProcedure,
             MapData = MapService.ExportSaveData(),
-            PlayerData = PlayerDataService.ExportState()
+            PlayerData = PlayerDataService.ExportState(),
+            EnemyIds = _battleController.Context.Enemies.Select(x => x.Config.Id).ToList()
         };
 
         string json = JsonConvert.SerializeObject(saveData, Formatting.Indented);

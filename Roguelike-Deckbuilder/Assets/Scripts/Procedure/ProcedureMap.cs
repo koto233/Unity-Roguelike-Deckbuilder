@@ -62,7 +62,27 @@ namespace LitFramework.FSM.Procedure
         // ============ 事件处理器 ============
         private void OnBattleStart(BattleStartEvent evt)
         {
-            var args = new BattleStartParams { Type = evt.Type };
+            int rarity = evt.Type switch
+            {
+                MapNodeType.Battle => 1,
+                MapNodeType.Elite => 2,
+                MapNodeType.Boss => 3,
+                _ => 1
+            };
+            // 2. 从配置表筛选对应稀有度的敌人
+            var allEnemies = ServiceLocator.Get<IConfigService>().GetTable<EnemyConfig>().GetAll();
+            var candidates = allEnemies.Where(e => e.Rarity == rarity).ToList();
+
+            if (candidates.Count == 0)
+            {
+                Debug.LogError($"未找到稀有度 {rarity} 的敌人配置，使用默认敌人");
+                candidates = allEnemies.Where(e => e.Rarity == 1).ToList();
+            }
+
+            // 3. 随机选取一个
+            var selectedConfig = candidates[UnityEngine.Random.Range(0, candidates.Count)];
+
+            var args = new BattleStartParams { EnemyKeys = new List<int> { selectedConfig.Id } };
             _procedureManager.ChangeProcedure<ProcedureBattle, BattleStartParams>(args);
         }
 
@@ -73,11 +93,8 @@ namespace LitFramework.FSM.Procedure
         {
             // var sceneLoader = ServiceLocator.Get<ISceneLoader>();
             _uiService = ServiceLocator.Get<UIService>();
-            var uiatlasService = ServiceLocator.Get<UIAtlasService>();
-            await uiatlasService.PreLoadCardIcons();
             // await sceneLoader.LoadAdditiveAsync(MapSceneName);
             await _uiService.OpenAsync<MapView>();
-         
             // var uiMap = GameObject.FindObjectOfType<UIMap>(true);
             // if (uiMap != null)
             // {
