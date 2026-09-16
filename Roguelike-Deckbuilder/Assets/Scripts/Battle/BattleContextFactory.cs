@@ -31,7 +31,7 @@ public static class BattleContextFactory
                 // Debug.LogError($"敌人配置不存在: {key}");
                 continue;
             }
-            var ai = CreateAI(config.Key);
+            var ai = EnemyAIFactory.Create(config.Key);
             enemiesRarity.Add(config.Rarity);
             battleContext.Enemies.Add(new Enemy(config, ai));
         }
@@ -39,18 +39,7 @@ public static class BattleContextFactory
         return battleContext;
     }
 
-    private static IEnemyAI CreateAI(string aiType)
-    {
-        return aiType switch
-        {
-            "Shrinker_beetle" => new BeetleAI(),
-            "Twig_slime_s" => new TwigSlimeSAI(),
-            "Twig_slime_m" => new TwigSlimeMAI(),
-            "Byrdonis" => new ByrdonisAI(),
-            "Vantom" => new VantomAI(),
-            _ => new DefaultAI()
-        };
-    }
+
 
     private static int CalculateGoldReward(List<int> raritys)
     {

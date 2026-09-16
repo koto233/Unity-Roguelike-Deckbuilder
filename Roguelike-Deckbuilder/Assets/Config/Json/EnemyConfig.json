@@ -55,5 +55,17 @@
       10,
       11
     ]
+  },
+  "6": {
+    "Id": 6,
+    "Key": "BygoneEffigy",
+    "Name": "旧日雕像",
+    "Rarity": 2,
+    "MaxHp": 127,
+    "Actions": [
+      12,
+      13,
+      14
+    ]
   }
 }

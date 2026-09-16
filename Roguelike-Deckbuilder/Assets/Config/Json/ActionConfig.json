@@ -122,5 +122,35 @@
         "Value": 3
       }
     ]
+  },
+  "12": {
+    "Id": 12,
+    "Name": "沉睡",
+    "Intents": [
+      {
+        "IntentId": 6,
+        "Value": 0
+      }
+    ]
+  },
+  "13": {
+    "Id": 13,
+    "Name": "唤醒",
+    "Intents": [
+      {
+        "IntentId": 6,
+        "Value": 0
+      }
+    ]
+  },
+  "14": {
+    "Id": 14,
+    "Name": "斩击",
+    "Intents": [
+      {
+        "IntentId": 3,
+        "Value": 3
+      }
+    ]
   }
 }

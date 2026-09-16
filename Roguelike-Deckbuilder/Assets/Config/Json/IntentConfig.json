@@ -40,5 +40,12 @@
     "Name": "攻击X3",
     "Type": "AttackX3",
     "Description": "对玩家造成{0}X3点伤害"
+  },
+  "6": {
+    "Id": 6,
+    "Icon": "sleep",
+    "Name": "沉睡",
+    "Type": "Sleep",
+    "Description": "敌人这回合什么都不做。"
   }
 }
