@@ -8,6 +8,7 @@ public static class RelicEffectFactory
     {
         ["HealOnCombatEnd"] = p => new HealOnCombatEndEffect(p),
         ["ThresholdStrength"] = p => new ThresholdStrength(p),
+        ["StrengthOnTurnStart"] = p => new StrengthOnTurnStart(p),
     };
 
     public static IRelicEffect Create(string effectType, string paramsJson)
