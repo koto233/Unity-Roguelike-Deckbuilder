@@ -32,7 +32,7 @@
     "Icon": "paper_phrog",
     "Rarity": 1,
     "Type": "ModifyVulnerableMultiplier",
-    "Effects": "{\"multiplier\":1.75}",
+    "Effects": "{\"multiplier\":0.25}",
     "Description": "有易伤状态的敌人受到的伤害增加75%而非50%"
   },
   "5": {

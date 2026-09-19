@@ -10,6 +10,7 @@ public abstract class CharacterBase
    public int InstanceId { get; private set; }
    private BuffManager _buffManager;
    public BuffManager BuffManager => _buffManager;
+   public float ExtraVulnerableBonus { get; set; } = 0;
    protected CharacterBase(int maxHp)
    {
       InstanceId = _nextId++;
