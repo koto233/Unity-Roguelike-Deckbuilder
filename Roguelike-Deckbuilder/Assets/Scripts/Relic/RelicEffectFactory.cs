@@ -10,6 +10,7 @@ public static class RelicEffectFactory
         ["ThresholdStrength"] = p => new ThresholdStrength(p),
         ["StrengthOnTurnStart"] = p => new StrengthOnTurnStart(p),
         ["ModifyVulnerableMultiplier"] = p => new ModifyVulnerableMultiplier(p),
+        ["BlockOnHpLossNextTurn"] = p => new BlockOnHpLossNextTurn(p),
 
     };
 

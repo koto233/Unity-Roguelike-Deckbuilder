@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using LitFramework.EventBus;
 public abstract class CharacterBase
 {
@@ -11,6 +12,33 @@ public abstract class CharacterBase
    private BuffManager _buffManager;
    public BuffManager BuffManager => _buffManager;
    public float ExtraVulnerableBonus { get; set; } = 0;
+   private readonly Dictionary<EffectTiming, List<Action<CharacterBase>>> _pendingEffects = new();
+
+   public void QueueEffect(EffectTiming timing, Action<CharacterBase> effect)
+   {
+      if (!_pendingEffects.TryGetValue(timing, out var list))
+      {
+         list = new List<Action<CharacterBase>>();
+         _pendingEffects[timing] = list;
+      }
+      list.Add(effect);
+   }
+
+   public void ExecutePendingEffects(EffectTiming timing)
+   {
+      if (!_pendingEffects.TryGetValue(timing, out var list)) return;
+
+      foreach (var effect in list)
+         effect(this);
+
+      list.Clear();
+   }
+
+   public void ClearAllPendingEffects()
+   {
+      foreach (var list in _pendingEffects.Values)
+         list.Clear();
+   }
    protected CharacterBase(int maxHp)
    {
       InstanceId = _nextId++;
@@ -24,11 +52,13 @@ public abstract class CharacterBase
       get => _currentHp;
       set
       {
+         int oldHp = _currentHp;
          int clamped = Math.Clamp(value, 0, MaxHp);
          if (_currentHp == clamped) return;
          _currentHp = clamped;
          EventBus<HpChangedEvent>.Publish(new HpChangedEvent
          {
+            OldHp = oldHp,
             NewHp = _currentHp,
             MaxHp = _maxHp,
             EntityType = EntityType,
@@ -48,6 +78,7 @@ public abstract class CharacterBase
          _maxHp = value;
          EventBus<HpChangedEvent>.Publish(new HpChangedEvent
          {
+            OldHp = _currentHp,
             NewHp = _currentHp,
             MaxHp = _maxHp,
             EntityType = EntityType,
@@ -125,6 +156,8 @@ public abstract class CharacterBase
    // 回合开始时调用
    public virtual void OnTurnStart()
    {
+      ClearBlock();
+      ExecutePendingEffects(EffectTiming.NextTurnStart);  // 兑现
       _buffManager.OnTurnStart();
    }
 
@@ -176,9 +209,16 @@ public abstract class CharacterBase
    public void AddBlock(int amount)
    {
       if (amount <= 0) return;
-      _block += amount;
-      EventBus<BlockChangedEvent>.Publish(new BlockChangedEvent { EntityType = EntityType, NewBlock = _block });
+      Block += amount;
    }
-
+   public void ClearBlock()
+   {
+      Block = 0;
+   }
 }
 public enum EntityType { Player, Enemy }
+public enum EffectTiming
+{
+   NextTurnStart,
+   NextTurnEnd,
+}

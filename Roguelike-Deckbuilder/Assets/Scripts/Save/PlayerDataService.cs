@@ -28,6 +28,7 @@ public class PlayerDataService
             _maxHp = value;                // 更新为新值
             EventBus<HpChangedEvent>.Publish(new HpChangedEvent()
             {
+                OldHp = _currentHp,
                 NewHp = _currentHp,
                 MaxHp = value,
                 EntityType = EntityType.Player
@@ -40,11 +41,13 @@ public class PlayerDataService
         get => _currentHp;
         set
         {
+            int oldValue = _currentHp;
             int newValue = Math.Min(value, MaxHp);
             if (_currentHp == newValue) return; // 如果实际值未变，不触发事件
             _currentHp = newValue;              // 更新为实际新值
             EventBus<HpChangedEvent>.Publish(new HpChangedEvent()
             {
+                OldHp = oldValue,
                 NewHp = newValue,               // 实际生效的新值
                 MaxHp = MaxHp,
                 EntityType = EntityType.Player

@@ -202,4 +202,11 @@ public class Player : CharacterBase
         ServiceLocator.Get<UIService>().OpenAsync<GameOverView>().Forget();
         base.OnDeath();
     }
+
+    public override void OnTurnEnd()
+    {
+        DiscardHandOnEnd();
+        ClearBlock();
+        base.OnTurnEnd();
+    }
 }

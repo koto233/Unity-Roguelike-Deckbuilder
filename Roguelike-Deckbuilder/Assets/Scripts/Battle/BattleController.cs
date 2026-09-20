@@ -146,7 +146,7 @@ public class BattleController
     }
     public void EndPlayerTurn()
     {
-        Context.Player.DiscardHandOnEnd();
+        Context.Player.OnTurnEnd();
         BattleFSM.ChangeState<EnemyTurnState>();
     }
 
@@ -169,6 +169,10 @@ public class BattleController
     }
     public void EndEnemyTurn()
     {
+        foreach (var enemy in Context.Enemies)
+        {
+            enemy.OnTurnEnd();
+        }
         BattleFSM.ChangeState<PlayerTurnState>();
     }
 
