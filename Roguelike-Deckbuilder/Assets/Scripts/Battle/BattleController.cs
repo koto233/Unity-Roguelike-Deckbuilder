@@ -73,7 +73,7 @@ public class BattleController
             {
                 Context.Player.AddCardToDiscardPile(card);
             }
-
+            EventBus<CardEvent>.Publish(new CardEvent() { Trait = card.Config.Traits });
             EventBus<HandChangedEvent>.Publish(new HandChangedEvent()
             {
                 ChangedCards = new List<Card> { card },

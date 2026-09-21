@@ -70,7 +70,13 @@ public class EffectExecutor
             EntityId = target.InstanceId
         });
     }
-
+    public void DamageAllEnemies(int amount)
+    {
+        foreach (var enemy in _battleController.Context.Enemies)
+        {
+            Damage(amount, _battleController.Context.Player, enemy);
+        }
+    }
     public void DrawCards(int count)
     {
         _battleController.Context.Player.DrawCards(count);
