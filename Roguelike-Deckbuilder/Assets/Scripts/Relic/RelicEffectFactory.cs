@@ -12,6 +12,7 @@ public static class RelicEffectFactory
         ["ModifyVulnerableMultiplier"] = p => new ModifyVulnerableMultiplier(p),
         ["BlockOnHpLossNextTurn"] = p => new BlockOnHpLossNextTurn(p),
         ["DamageOnExhaust"] = p => new DamageOnExhaust(p),
+        ["HealOnFirstHpLoss"] = p => new HealOnFirstHpLoss(p),
     };
 
     public static IRelicEffect Create(string effectType, string paramsJson)

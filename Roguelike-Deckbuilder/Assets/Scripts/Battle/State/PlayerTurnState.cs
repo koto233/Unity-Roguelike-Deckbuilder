@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using LitFramework.EventBus;
 using LitFramework.FSM;
 using UnityEngine;
 
@@ -21,6 +22,7 @@ public class PlayerTurnState : TurnStateBase
         Controller.Context.CurrentTurn++;
         // TODO: 玩家回合开始 抽卡，恢复能量 解锁 UI 交互
         Controller.StartPlayerTurn();
+        EventBus<TurnStartEvent>.Publish(new TurnStartEvent());
     }
 
     public override void OnExit()

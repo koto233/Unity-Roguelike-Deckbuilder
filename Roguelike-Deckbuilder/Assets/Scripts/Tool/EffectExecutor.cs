@@ -20,6 +20,22 @@ public class EffectExecutor
         target.BuffManager?.OnBeforeHeal(ref amount);
         target.CurrentHp += amount;
     }
+    public void Heal(int amount, EntityType type, int targetId = 0)
+    {
+        switch (type)
+        {
+            case EntityType.Player:
+                var target = _battleController.Context.Player;
+                Heal(amount, target);
+                break;
+            case EntityType.Enemy:
+                Enemy targetEnemy = _battleController.GetEnemy(targetId);
+                Heal(amount, targetEnemy);
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
+    }
     public void HealGlobalPlayer(int amount)
     {
         _player.CurrentHp += amount;
