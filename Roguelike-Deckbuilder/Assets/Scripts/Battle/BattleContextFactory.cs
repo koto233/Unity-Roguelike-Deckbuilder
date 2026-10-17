@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using LitFramework;
 using LitFramework.Config;
+using UnityEngine;
 
 
 public static class BattleContextFactory
@@ -28,7 +29,7 @@ public static class BattleContextFactory
             var config = enemyTable.Get(key);
             if (config == null)
             {
-                // Debug.LogError($"敌人配置不存在: {key}");
+                Debug.LogError($"敌人配置不存在: {key}");
                 continue;
             }
             var ai = EnemyAIFactory.Create(config.Key);

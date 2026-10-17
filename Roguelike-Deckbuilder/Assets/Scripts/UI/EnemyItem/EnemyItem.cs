@@ -16,11 +16,11 @@ public partial class EnemyItem : UIBase
     private List<IntentionItem> _intentionItems = new(5);
     public Enemy Enemy { get; private set; }
 
-    void Start()
-    {
-        InitAsync().Forget();
-    }
-    private async UniTask InitAsync()
+    // void Start()
+    // {
+    //     InitAsync().Forget();
+    // }
+    public async UniTask InitAsync()
     {
         var assetService = ServiceLocator.Get<IAssetService>();
         _buffItemRef = await assetService.LoadRefAsync<GameObject>(UIPath.BuffItem);

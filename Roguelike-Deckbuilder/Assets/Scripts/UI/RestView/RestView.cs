@@ -134,6 +134,7 @@ public partial class RestView : UIWindow
     private void CreateUpgradeCard(CardDisplayData data, Transform parent)
     {
         var item = _poolService.GetGameObject<ClickableCardItem>();
+        item.transform.position = Vector3.zero;
         var upgradeCardItem = item.GetComponent<ClickableCardItem>();
         item.transform.SetParent(parent, false);
         upgradeCardItem.Init(data);

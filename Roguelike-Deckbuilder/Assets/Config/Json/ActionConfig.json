@@ -138,8 +138,8 @@
     "Name": "唤醒",
     "Intents": [
       {
-        "IntentId": 6,
-        "Value": 0
+        "IntentId": 3,
+        "Value": 3
       }
     ]
   },
@@ -148,8 +148,8 @@
     "Name": "斩击",
     "Intents": [
       {
-        "IntentId": 3,
-        "Value": 3
+        "IntentId": 5,
+        "Value": 13
       }
     ]
   }

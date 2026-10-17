@@ -139,6 +139,7 @@ public partial class BattleView : UIWindow
             var view = go.GetComponent<EnemyItem>();
             view.SetEnemy(enemy);
             _enemyViews[enemy.InstanceId] = view;
+            await view.InitAsync();
         }
     }
 

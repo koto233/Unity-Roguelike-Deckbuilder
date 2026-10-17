@@ -124,7 +124,7 @@ public class BattleController
 
         if (Context.Player.CurrentHp <= 0)
         {
-            BattleFSM.ChangeState<BattleEndState>();
+            ServiceLocator.Get<UIService>().OpenAsync<GameOverView>().Forget();
             return TurnResult.PlayerLose;
         }
 
@@ -146,6 +146,11 @@ public class BattleController
     }
     public void EndPlayerTurn()
     {
+        if(BattleFSM.CurrentState is not PlayerTurnState)
+        {
+            Debug.LogError("当前状态不是玩家回合，无法结束玩家回合");
+            return;
+        }
         Context.Player.OnTurnEnd();
         BattleFSM.ChangeState<EnemyTurnState>();
     }

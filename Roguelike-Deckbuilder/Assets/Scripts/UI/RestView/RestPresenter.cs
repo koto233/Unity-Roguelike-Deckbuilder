@@ -98,7 +98,7 @@ public class RestPresenter : BasePresenter<RestView>
     {
         _selectedId = id;
         var config = ServiceLocator.Get<IConfigService>().GetTable<CardConfig>().Get(_selectedId);
-        var targetConfig = ServiceLocator.Get<IConfigService>().GetTable<CardConfig>().Get(id);
+        var targetConfig = ServiceLocator.Get<IConfigService>().GetTable<CardConfig>().Get(config.UpgradeId);
         var display = CardDisplayData.FromConfig(config);
         var targetDisplay = CardDisplayData.FromConfig(targetConfig);
         View.ShowConfirm(display, targetDisplay);

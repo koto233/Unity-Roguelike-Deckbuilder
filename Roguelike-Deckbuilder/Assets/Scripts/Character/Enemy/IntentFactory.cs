@@ -20,6 +20,8 @@ public static class IntentFactory
                 return new AttackX2Intent(config, value);
             case "AttackX3":
                 return new AttackX3Intent(config, value);
+            case "Sleep":
+                return new SleepIntent(config, value);
             default:
                 Debug.LogError($"未知的意图类型: {config.Type}");
                 return null;
