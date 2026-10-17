@@ -12,11 +12,12 @@ public class ConfirmDialogPresenter : BasePresenter<ConfirmDialogView>, IHasData
 
     public ConfirmDialogPresenter(ConfirmDialogView view) : base(view) { }
 
-    public override void Init()
+    protected override UniTask OnInitAsync()
     {
         _uiService = ServiceLocator.Get<UIService>();
         SubscribeEvents();
         View.SetData(_data.Title, _data.Content, _data.ConfirmText, _data.CancelText);
+        return UniTask.CompletedTask;
     }
 
     private void SubscribeEvents()

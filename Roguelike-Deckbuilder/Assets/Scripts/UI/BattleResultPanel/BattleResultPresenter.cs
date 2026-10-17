@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using LitFramework;
 using LitFramework.Config;
 using LitFramework.FSM.Procedure;
@@ -17,7 +18,7 @@ public class BattleResultPresenter : BasePresenter<BattleResultPanel>
 
     }
 
-    public override void Init()
+    protected override UniTask OnInitAsync()
     {
         SubscribeEvents();
         _controller = ServiceLocator.Get<BattleController>();
@@ -25,6 +26,7 @@ public class BattleResultPresenter : BasePresenter<BattleResultPanel>
         _rewards.Add(new Reward() { Type = RewardType.Coin, Value = _controller.Context.GoldReward });
         View.ShowReward(_rewards);
         ServiceLocator.Get<PlayerDataService>().AddCoin(_rewards[0].Value);
+        return UniTask.CompletedTask;
     }
    
 

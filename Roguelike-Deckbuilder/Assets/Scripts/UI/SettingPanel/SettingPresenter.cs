@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using LitFramework;
 using LitFramework.UI.Core.Service;
 using UnityEngine;
@@ -13,10 +14,11 @@ public class SettingPresenter : BasePresenter<SettingPanel>
     {
 
     }
-    public override void Init()
+    protected override UniTask OnInitAsync()
     {
         _uiService = ServiceLocator.Get<UIService>();
         SubscribeEvents();
+        return UniTask.CompletedTask;
     }
     private void SubscribeEvents()
     {

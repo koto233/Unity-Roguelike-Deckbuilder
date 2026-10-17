@@ -13,11 +13,11 @@ public partial class PlayerItem : UIBase
     private Dictionary<int, BuffItem> _buffSlots = new();
     public Vector3 DamageTextPos => b_DamageTextPos.transform.position;
 
-    void Start()
-    {
-        InitAsync().Forget();
-    }
-    private async UniTask InitAsync()
+    /// <summary>
+    /// 加载该玩家 UI 依赖的资源。由 BattleView.CreatePlayerView 在实例化后 await，
+    /// 确保战斗流程开始时玩家的 Buff 图标等资源已经就绪。
+    /// </summary>
+    public async UniTask InitAsync()
     {
         var assetService = ServiceLocator.Get<IAssetService>();
         _buffItemRef = await assetService.LoadRefAsync<GameObject>(UIPath.BuffItem);

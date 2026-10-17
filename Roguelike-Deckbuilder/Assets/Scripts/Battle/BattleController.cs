@@ -14,10 +14,14 @@ public class BattleController
     private NotificationService _noticeService;
     public BattleContext Context { get; private set; }
     public StateMachine BattleFSM { get; private set; }
-    public void StartBattle(BattleStartParams args)
+    /// <summary>
+    /// 创建战斗数据（Context、牌库、事件订阅）。
+    /// 此时不启动状态机，因为 UI 还没创建，提前决定敌人意图会丢失 IntentEvent。
+    /// </summary>
+    public void CreateBattle(BattleStartParams args)
     {
         Context = BattleContextFactory.Create(args);
-        Context.IsPlayerTurn = true;
+        Context.IsPlayerTurn = false;
         Context.CurrentTurn = 0;
         _noticeService = ServiceLocator.Get<NotificationService>();
         var configService = ServiceLocator.Get<IConfigService>();
@@ -31,8 +35,17 @@ public class BattleController
         }
 
         Context.Player.ShuffleDrawDeck();
-        InitFsm();
         EventBus<DiedEvent>.Subscribe(OnCharacterDied);
+    }
+
+    /// <summary>
+    /// UI（BattleView、EnemyItem 及其资源）全部就绪后调用，启动状态机进入第一个玩家回合。
+    /// 此时 StartPlayerTurn 中的 EnemiesDetermineAction 才能把意图正确推送到界面。
+    /// </summary>
+    public void BeginBattle()
+    {
+        Context.IsPlayerTurn = true;
+        InitFsm();
         BattleFSM.ChangeState<PlayerTurnState>();
     }
     public void EndBattle()
@@ -40,6 +53,7 @@ public class BattleController
         EventBus<DiedEvent>.Unsubscribe(OnCharacterDied);
         Context = null;
     }
+
     /// <summary>
     /// 初始化战斗状态机
     /// </summary> 
@@ -146,7 +160,12 @@ public class BattleController
     }
     public void EndPlayerTurn()
     {
-        if(BattleFSM.CurrentState is not PlayerTurnState)
+        // UI 加载期间状态机还没启动，忽略结束回合请求
+        if (BattleFSM == null)
+        {
+            return;
+        }
+        if (BattleFSM.CurrentState is not PlayerTurnState)
         {
             Debug.LogError("当前状态不是玩家回合，无法结束玩家回合");
             return;

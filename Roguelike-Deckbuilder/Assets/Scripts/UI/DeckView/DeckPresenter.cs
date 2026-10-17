@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using LitFramework;
 using LitFramework.Config;
 using LitFramework.UI.Core.Service;
@@ -15,9 +16,8 @@ public class DeckPresenter : BasePresenter<DeckView>
     {
     }
 
-    public override void Init()
+    protected override UniTask OnInitAsync()
     {
-
         SubscribeEvents();
         var globalData = ServiceLocator.Get<PlayerDataService>();
         var cardTable = ServiceLocator.Get<IConfigService>().GetTable<CardConfig>();
@@ -30,6 +30,8 @@ public class DeckPresenter : BasePresenter<DeckView>
             cardDisplayDataList.Add(CardDisplayData.FromConfig(config));
         }
         View.SpawnCardInList(cardDisplayDataList);
+        return UniTask.CompletedTask;
+       
     }
 
     private void SubscribeEvents()

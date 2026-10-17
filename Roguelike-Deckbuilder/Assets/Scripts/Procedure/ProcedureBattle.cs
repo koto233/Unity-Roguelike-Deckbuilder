@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
@@ -46,20 +47,24 @@ namespace LitFramework.FSM.Procedure
         }
         private async UniTaskVoid InitBattleAsync(BattleStartParams args)
         {
-            // var sceneLoader = ServiceLocator.Get<ISceneLoader>();
             var uiService = ServiceLocator.Get<UIService>();
-            // var scene = await sceneLoader.LoadAdditiveAsync(BattleSceneName);
-            // BattleSceneRoot battleCtx = null;
-            // foreach (var root in scene.GetRootGameObjects())
-            // {
-            //     if (root.TryGetComponent(out battleCtx))
-            //         break;
-            // }
-            // _battlePresenter = new BattlePresenter(battleCtx.UIBattle);
-            // _battlePresenter.Init(battleContext);
-            _battleController.StartBattle(args);
-            await uiService.OpenAsync<BattleView, BattleContext>(_battleController.Context);
-            uiService.Close<MainMenuView>();
+            try
+            {
+                // 1. 只创建战斗数据，不启动状态机
+                _battleController.CreateBattle(args);
+
+                // 2. 打开战斗界面。OpenAsync 内部会 await BattlePresenter.Init()，
+                //    返回时玩家/敌人/意图图标等子视图资源已经全部就绪
+                await uiService.OpenAsync<BattleView, BattleContext>(_battleController.Context);
+                uiService.Close<MainMenuView>();
+
+                // 3. UI 就绪后再启动状态机，第一次玩家回合才能正确显示敌人意图
+                _battleController.BeginBattle();
+            }
+            catch (Exception ex)
+            {
+                Debug.LogException(ex);
+            }
         }
         private async UniTaskVoid CleanupBattleAsync()
         {

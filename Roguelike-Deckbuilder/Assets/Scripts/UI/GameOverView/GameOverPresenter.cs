@@ -13,9 +13,10 @@ public class GameOverPresenter : BasePresenter<GameOverView>
     {
     }
 
-    public override void Init()
+    protected override UniTask OnInitAsync()
     {
         SubscribeEvents();
+        return UniTask.CompletedTask;
     }
 
 

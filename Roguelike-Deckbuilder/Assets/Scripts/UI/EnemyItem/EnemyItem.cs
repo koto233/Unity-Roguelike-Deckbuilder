@@ -20,12 +20,17 @@ public partial class EnemyItem : UIBase
     // {
     //     InitAsync().Forget();
     // }
+    /// <summary>
+    /// 只负责加载该敌人 UI 依赖的资源，不做任何战斗逻辑。
+    /// 敌人意图统一由 BattleController.StartPlayerTurn -> EnemiesDetermineAction 决定；
+    /// UIService.OpenAsync 会 await BattlePresenter.Init()（内部等待所有 EnemyItem.InitAsync），
+    /// 所以战斗流程启动第一个回合时这些资源一定已经就绪。
+    /// </summary>
     public async UniTask InitAsync()
     {
         var assetService = ServiceLocator.Get<IAssetService>();
         _buffItemRef = await assetService.LoadRefAsync<GameObject>(UIPath.BuffItem);
         _intentionItemRef = await assetService.LoadRefAsync<GameObject>(UIPath.IntentionItem);
-        Enemy.DetermineAction();
     }
 
     public void RefreshBlock(int oldBlock, int newBlock)

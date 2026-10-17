@@ -122,6 +122,7 @@ namespace LitFramework.UI.Core.Service
             _loading[type] = completion;
 
             GameObject go = null;
+            BasePresenter presenter = null;
             try
             {
                 // 3. 加载 & 实例化
@@ -135,15 +136,16 @@ namespace LitFramework.UI.Core.Service
                 if (!_factories.TryGetValue(type, out var factory))
                     throw new InvalidOperationException($"{type.Name} 未绑定 Presenter 工厂");
 
-                var presenter = factory(view);
+                presenter = factory(view);
 
                 // 5. 注入数据（在 Init 前完成，确保 Presenter 初始化时能使用数据）
                 inject?.Invoke(presenter, arg);
 
-                // 7. View 打开（播放动画等）
+                // 6. View 打开（播放动画等），再等待 Presenter 异步初始化完成
+                //    这样 OpenAsync 返回时，窗口及其子视图/资源一定已经可用
                 await view.OpenInternalAsync();
-                presenter.Init();
-                // 8. 注册状态
+                await presenter.InitInternalAsync();
+                // 7. 注册状态
                 Action releaseAction = () => AssetService.Release(cfg.PrefabPath);
                 var state = new WindowState(view, presenter, releaseAction, cfg.PushToStack);
                 _opened[type] = state;
@@ -156,6 +158,7 @@ namespace LitFramework.UI.Core.Service
             catch (Exception ex)
             {
                 // 清理半成品
+                presenter?.Dispose();
                 if (go != null)
                     UnityEngine.Object.Destroy(go);
                 completion.TrySetException(ex);

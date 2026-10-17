@@ -17,7 +17,7 @@ public class TopBarPresenter : BasePresenter<TopBar>
 
     }
 
-    public override void Init()
+    protected override UniTask OnInitAsync()
     {
         SubscribeEvents();
         var playerDataService = ServiceLocator.Get<PlayerDataService>();
@@ -25,6 +25,7 @@ public class TopBarPresenter : BasePresenter<TopBar>
         View.RefreshCoin(0, playerDataService.Coin);
         _uiService = ServiceLocator.Get<UIService>();
         RefreshRelics(playerDataService.RelicIds.ToList()).Forget();
+        return UniTask.CompletedTask;
     }
     private void SubscribeEvents()
     {

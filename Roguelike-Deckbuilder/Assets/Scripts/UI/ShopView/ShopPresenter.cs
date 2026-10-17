@@ -26,7 +26,7 @@ public class ShopPresenter : BasePresenter<ShopView>
     {
     }
 
-    public override void Init()
+    protected override UniTask OnInitAsync()
     {
         _uiService = ServiceLocator.Get<UIService>();
         _playerService = ServiceLocator.Get<PlayerDataService>();
@@ -38,6 +38,7 @@ public class ShopPresenter : BasePresenter<ShopView>
         InitShop().Forget();
         _removeCost += _playerService.RemoveCount * 25;
         View.RefreshRemoveCost(_removeCost);
+        return UniTask.CompletedTask;
     }
     private void SubscribeEvents()
     {

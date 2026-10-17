@@ -50,7 +50,6 @@ public partial class BattleView : UIWindow
         _poolService = ServiceLocator.Get<ObjectPoolService>();
         InitObjectPools();
         InitUI();
-
     }
 
     private void InitObjectPools()
@@ -125,6 +124,7 @@ public partial class BattleView : UIWindow
         _playerPrefabRef = await _assetService.LoadRefAsync<GameObject>(UIPath.PlayerItem);
         var go = Instantiate(_playerPrefabRef.Asset, b_PlayerRoot);
         _playerView = go.GetComponent<PlayerItem>();
+        await _playerView.InitAsync();
     }
 
     public async UniTask CreateEnemyViews(List<Enemy> enemies)

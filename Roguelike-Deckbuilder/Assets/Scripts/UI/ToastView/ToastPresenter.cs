@@ -9,12 +9,14 @@ public class ToastPresenter : BasePresenter<ToastView>, IHasData<ToastData>
     private ToastData _data;
     public ToastPresenter(ToastView view) : base(view) { }
 
-    public override void Init()
+    protected override UniTask OnInitAsync()
     {
         _uiService = ServiceLocator.Get<UIService>();
         // 设置初始位置为屏幕中心（假定锚点在中心）
         View.ResetState();
+        // 显示动画不阻塞窗口打开，动画结束后自动关闭
         Show().Forget();
+        return UniTask.CompletedTask;
     }
 
     /// <summary>

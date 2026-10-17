@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using LitFramework;
 using LitFramework.Config;
 using LitFramework.UI.Core.Service;
@@ -17,11 +18,12 @@ public class RestPresenter : BasePresenter<RestView>
     {
     }
 
-    public override void Init()
+    protected override UniTask OnInitAsync()
     {
         _uiService = ServiceLocator.Get<UIService>();
         SubscribeEvents();
         View.CloseForge();
+        return UniTask.CompletedTask;
     }
     private void SubscribeEvents()
     {

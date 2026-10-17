@@ -25,16 +25,15 @@ public class BattlePresenter : BasePresenter<BattleView>, IHasData<BattleContext
     {
         _context = context;
     }
-    public override void Init()
+    protected override async UniTask OnInitAsync()
     {
         _controller = ServiceLocator.Get<BattleController>();
         _uiAtlasService = ServiceLocator.Get<UIAtlasService>();
         _cardIconService = ServiceLocator.Get<CardIconService>();
         _configService = ServiceLocator.Get<IConfigService>();
         SubscribeEvents();
-        InitPlayer().Forget();
-        InitEnemies().Forget();
-
+        await InitPlayer();
+        await InitEnemies();
     }
     private void SubscribeEvents()
     {

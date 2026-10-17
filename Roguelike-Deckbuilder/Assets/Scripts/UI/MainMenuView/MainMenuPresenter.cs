@@ -15,11 +15,12 @@ public class MainMenuPresenter : BasePresenter<MainMenuView>
 
     }
 
-    public override void Init()
+    protected override UniTask OnInitAsync()
     {
         _saveService = ServiceLocator.Get<SaveService>();
         View.ShowContinue(_saveService.HasSave());
         SubscribeEvents();
+        return UniTask.CompletedTask;
     }
 
     private void SubscribeEvents()

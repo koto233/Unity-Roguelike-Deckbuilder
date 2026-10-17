@@ -15,14 +15,14 @@ public class MapPresenter : BasePresenter<MapView>
     {
         Debug.Log($"[MapPresenter] 构造，View 是否为 null: {view == null}");
     }
-    public override void Init()
+    protected override UniTask OnInitAsync()
     {
         Debug.Log($"[MapPresenter] 构造，View 是否为 null: {View == null}");
         SubscribeEvents();
         _mapService = ServiceLocator.Get<MapService>();
         _uiService = ServiceLocator.Get<UIService>();
         CreateMapUI();
-
+        return UniTask.CompletedTask;
     }
 
     private void SubscribeEvents()
