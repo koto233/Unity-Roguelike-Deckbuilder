@@ -206,7 +206,8 @@ public class Player : CharacterBase
     public override void OnTurnEnd()
     {
         DiscardHandOnEnd();
-        ClearBlock();
+        // 格挡在“自己下一个回合开始”时清理，而不是回合结束时清理，
+        // 否则玩家刚获得的格挡会在敌人攻击前消失。
         base.OnTurnEnd();
     }
 }

@@ -45,6 +45,8 @@ public class BattleController
     public void BeginBattle()
     {
         Context.IsPlayerTurn = true;
+        // Context 和战斗 UI 都已就绪，此时通知遗物等系统应用战斗级修正
+        EventBus<BattleStartedEvent>.Publish(new BattleStartedEvent { Context = Context });
         InitFsm();
         BattleFSM.ChangeState<PlayerTurnState>();
     }
@@ -123,7 +125,13 @@ public class BattleController
     }
     public async UniTask<TurnResult> ExecuteEnemyTurnAsync()
     {
-        foreach (var enemy in Context.Enemies)
+        // 敌人回合开始：清格挡、结算回合开始效果
+        foreach (var enemy in Context.Enemies.ToList())
+        {
+            enemy.OnTurnStart();
+        }
+
+        foreach (var enemy in Context.Enemies.ToList())
         {
             if (enemy.CurrentHp <= 0) continue;
             // 3. 视觉延迟
@@ -154,6 +162,8 @@ public class BattleController
     }
     public void StartPlayerTurn()
     {
+        // 玩家回合开始：清格挡、结算待执行效果和 Buff 回合开始逻辑
+        Context.Player.OnTurnStart();
         Context.Player.DrawCardInTurnStart(BattleRules.InitialHandSize);
         Context.Player.ResetEnergy();
         EnemiesDetermineAction();

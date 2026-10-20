@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using LitFramework;
 using LitFramework.Config;
 using LitFramework.EventBus;
@@ -88,8 +89,10 @@ public class EffectExecutor
     }
     public void DamageAllEnemies(int amount)
     {
-        foreach (var enemy in _battleController.Context.Enemies)
+        // 用快照遍历：伤害可能击杀敌人并从 Context.Enemies 中移除
+        foreach (var enemy in _battleController.Context.Enemies.ToList())
         {
+            if (enemy.CurrentHp <= 0) continue;
             Damage(amount, _battleController.Context.Player, enemy);
         }
     }
