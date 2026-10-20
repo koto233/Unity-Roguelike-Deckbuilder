@@ -295,8 +295,8 @@ public class GMToolWindow : EditorWindow
         try
         {
             var relicService = ServiceLocator.Get<RelicService>();
-            relicService.AddRelic(relicId);
-            Debug.Log($"添加遗物 ID: {relicId}");
+            bool added = relicService.AddRelic(relicId);
+            Debug.Log(added ? $"添加遗物 ID: {relicId}" : $"添加遗物失败或已拥有 ID: {relicId}");
         }
         catch (Exception e)
         {

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using LitFramework;
 using LitFramework.FSM.Procedure;
@@ -21,6 +22,7 @@ public class SaveService
     public void SaveGame(string currentProcedure = "Map")
     {
         var _battleController = ServiceLocator.Get<BattleController>();
+        var context = _battleController.Context;
         var saveData = new GameSaveData
         {
             Version = 1,
@@ -28,7 +30,7 @@ public class SaveService
             CurrentProcedure = currentProcedure,
             MapData = MapService.ExportSaveData(),
             PlayerData = PlayerDataService.ExportState(),
-            EnemyIds = _battleController.Context.Enemies.Select(x => x.Config.Id).ToList()
+            EnemyIds = context?.Enemies.Select(x => x.Config.Id).ToList() ?? new List<int>()
         };
 
         string json = JsonConvert.SerializeObject(saveData, Formatting.Indented);

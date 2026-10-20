@@ -68,20 +68,31 @@ public class ShopPresenter : BasePresenter<ShopView>
 
     private void HandleClickRelic(int id)
     {
-        if (Relics.TryGetValue(id, out var relic))
+        if (!Relics.TryGetValue(id, out var relic)) return;
+
+        var relicService = ServiceLocator.Get<RelicService>();
+        if (!relicService.CanAddRelic(id))
         {
-            if (_playerService.Coin >= relic.Price)
-            {
-                _playerService.SpendCoin(relic.Price);
-                ServiceLocator.Get<RelicService>().AddRelic(id);
-                Relics.Remove(id);
-                View.RefreshRelics(Relics.Values.ToList());
-            }
-            else
-            {
-                _noticeService.ShowToast("金币不足").Forget();
-            }
+            _noticeService.ShowToast("已拥有该遗物").Forget();
+            return;
         }
+        if (_playerService.Coin < relic.Price)
+        {
+            _noticeService.ShowToast("金币不足").Forget();
+            return;
+        }
+
+        _playerService.SpendCoin(relic.Price);
+        if (!relicService.AddRelic(id))
+        {
+            // 添加失败则退款，避免扣了钱拿不到遗物
+            _playerService.AddCoin(relic.Price);
+            _noticeService.ShowToast("获得遗物失败").Forget();
+            return;
+        }
+
+        Relics.Remove(id);
+        View.RefreshRelics(Relics.Values.ToList());
     }
     private void OnHoverEvent(TooltipShowEvent @event)
     {
@@ -201,20 +212,13 @@ public class ShopPresenter : BasePresenter<ShopView>
     public async UniTask<List<RelicDisplayData>> GenerateRelicDisplayData(int count = 3)
     {
         Relics.Clear();
+        var ownedRelicIds = _playerService.RelicIds;
         var relicConfigs = _shopTable
             .GetAll()
-            .Where(p => p.ItemType == 2)
+            .Where(p => p.ItemType == 2 && !ownedRelicIds.Contains(p.ItemId))
             .ToList();
 
-        // var availableRelics = poolConfigs
-        //     .Where(p => p.ItemType == 2)
-        //     .Where(p => !_relicService.HasRelic(p.ItemId))
-        //     .ToList();
-
         var selectedRelics = WeightedRandomPicker.Pick(relicConfigs, count, p => p.Weight);
-
-        var relicTable = _configService.GetTable<RelicConfig>();
-        // var relicTable = _configService.GetTable<RelicConfig>();
 
         foreach (var shopConfig in selectedRelics)
         {
