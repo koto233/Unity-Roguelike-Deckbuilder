@@ -1,11 +1,14 @@
-public static class RelicEffectType
+/// <summary>
+/// 遗物效果类型。配置表 RelicEffectsConfig.Type 使用这里的名称。
+/// </summary>
+public enum RelicEffectType
 {
-    public const string HealOnCombatEnd = "HealOnCombatEnd";
-    public const string ThresholdStrength = "ThresholdStrength";
-    public const string ModifyVulnerableMultiplier = "ModifyVulnerableMultiplier";
-    public const string BlockOnHpLossNextTurn = "BlockOnHpLossNextTurn";
-    public const string DamageOnExhaust = "DamageOnExhaust";
-    public const string HealOnFirstHpLoss = "HealOnFirstHpLoss";
-    public const string DoubleFirstStrength = "DoubleFirstStrength";
-    public const string StrengthOnTurnStart = "StrengthOnTurnStart";
+    HealOnCombatEnd,
+    ThresholdStrength,
+    ModifyVulnerableMultiplier,
+    BlockOnHpLossNextTurn,
+    DamageOnExhaust,
+    HealOnFirstHpLoss,
+    DoubleFirstStrength,
+    StrengthOnTurnStart,
 }

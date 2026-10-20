@@ -65,7 +65,14 @@ public class PlayerDataService
         _coin = 50;
         _maxHp = config.InitialHp;
         _currentHp = config.InitialHp;
+        _deckCardIds.Clear();
+        bool hadRelics = _relicIds.Count > 0;
+        _relicIds.Clear();
+        RemoveCount = 0;
         _deckCardIds.AddRange(config.InitialDeck);
+
+        // 如果当前界面还开着，需要清空遗物显示
+        if (hadRelics) PublishRelicChanged();
     }
     public void Load(PlayerSaveData data)
     {
@@ -119,13 +126,27 @@ public class PlayerDataService
     {
         if (!_relicIds.Contains(relicId))
             _relicIds.Add(relicId);
-        EventBus<RelicChangedEvent>.Publish(new RelicChangedEvent { RelicIds = _relicIds });
+        PublishRelicChanged();
     }
     public void RemoveRelic(int relicId)
     {
         if (_relicIds.Contains(relicId))
             _relicIds.Remove(relicId);
-        EventBus<RelicChangedEvent>.Publish(new RelicChangedEvent { RelicIds = _relicIds });
+        PublishRelicChanged();
+    }
+    public void ClearRelics()
+    {
+        if (_relicIds.Count == 0) return;
+        _relicIds.Clear();
+        PublishRelicChanged();
+    }
+    private void PublishRelicChanged()
+    {
+        // 传副本，避免订阅者拿到内部 List 后修改数据
+        EventBus<RelicChangedEvent>.Publish(new RelicChangedEvent
+        {
+            RelicIds = new List<int>(_relicIds)
+        });
     }
     public void AddCoin(int coin)
     {

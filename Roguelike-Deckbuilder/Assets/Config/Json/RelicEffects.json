@@ -1,0 +1,110 @@
+{
+  "1": {
+    "Id": 1,
+    "RelicId": 1,
+    "Order": 0,
+    "Type": "HealOnCombatEnd",
+    "Amount": 6,
+    "Threshold": 0.0,
+    "Strength": 0,
+    "Multiplier": 0.0,
+    "PlayerStrength": 0,
+    "EnemyStrength": 0
+  },
+  "2": {
+    "Id": 2,
+    "RelicId": 2,
+    "Order": 0,
+    "Type": "HealOnCombatEnd",
+    "Amount": 12,
+    "Threshold": 0.0,
+    "Strength": 0,
+    "Multiplier": 0.0,
+    "PlayerStrength": 0,
+    "EnemyStrength": 0
+  },
+  "3": {
+    "Id": 3,
+    "RelicId": 3,
+    "Order": 0,
+    "Type": "ThresholdStrength",
+    "Amount": 0,
+    "Threshold": 0.5,
+    "Strength": 3,
+    "Multiplier": 0.0,
+    "PlayerStrength": 0,
+    "EnemyStrength": 0
+  },
+  "4": {
+    "Id": 4,
+    "RelicId": 4,
+    "Order": 0,
+    "Type": "ModifyVulnerableMultiplier",
+    "Amount": 0,
+    "Threshold": 0.0,
+    "Strength": 0,
+    "Multiplier": 0.25,
+    "PlayerStrength": 0,
+    "EnemyStrength": 0
+  },
+  "5": {
+    "Id": 5,
+    "RelicId": 5,
+    "Order": 0,
+    "Type": "BlockOnHpLossNextTurn",
+    "Amount": 3,
+    "Threshold": 0.0,
+    "Strength": 0,
+    "Multiplier": 0.0,
+    "PlayerStrength": 0,
+    "EnemyStrength": 0
+  },
+  "6": {
+    "Id": 6,
+    "RelicId": 6,
+    "Order": 0,
+    "Type": "DamageOnExhaust",
+    "Amount": 3,
+    "Threshold": 0.0,
+    "Strength": 0,
+    "Multiplier": 0.0,
+    "PlayerStrength": 0,
+    "EnemyStrength": 0
+  },
+  "7": {
+    "Id": 7,
+    "RelicId": 7,
+    "Order": 0,
+    "Type": "HealOnFirstHpLoss",
+    "Amount": 0,
+    "Threshold": 0.0,
+    "Strength": 0,
+    "Multiplier": 0.0,
+    "PlayerStrength": 0,
+    "EnemyStrength": 0
+  },
+  "8": {
+    "Id": 8,
+    "RelicId": 8,
+    "Order": 0,
+    "Type": "DoubleFirstStrength",
+    "Amount": 0,
+    "Threshold": 0.0,
+    "Strength": 0,
+    "Multiplier": 0.0,
+    "PlayerStrength": 0,
+    "EnemyStrength": 0
+  },
+  "9": {
+    "Id": 9,
+    "RelicId": 9,
+    "Order": 0,
+    "Type": "StrengthOnTurnStart",
+    "Amount": 0,
+    "Threshold": 0.0,
+    "Strength": 0,
+    "Multiplier": 0.0,
+    "PlayerStrength": 2,
+    "EnemyStrength": 1
+  }
+}

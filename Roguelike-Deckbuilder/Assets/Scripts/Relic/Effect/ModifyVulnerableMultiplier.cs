@@ -1,50 +1,50 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using LitFramework;
 using LitFramework.EventBus;
-using Newtonsoft.Json;
-using UnityEngine;
 
+/// <summary>
+/// 纸蛙：有易伤状态的敌人受到的伤害增加 X（在易伤基础倍率上追加）。
+/// 在战斗真正开始时应用到本场战斗的所有敌人。
+/// </summary>
 public class ModifyVulnerableMultiplier : IRelicEffect
 {
-    private BattleController _battleController;
-    public BattleController Controller
+    private readonly BattleController _controller;
+    private readonly float _multiplier;
+
+    public ModifyVulnerableMultiplier(RelicEffectsConfig config)
     {
-        get
-        {
-            if (_battleController == null)
-            {
-                ServiceLocator.Get<BattleController>();
-            }
-            return _battleController;
-        }
+        _controller = ServiceLocator.Get<BattleController>();
+        _multiplier = config.Multiplier;
     }
-    private Param _param;
-    public ModifyVulnerableMultiplier(string paramsJson)
-    {
-        _param = JsonConvert.DeserializeObject<Param>(paramsJson);
-    }
+
     public void OnActivate(Relic relic)
     {
-        EventBus<BattleStartEvent>.Subscribe(OnCombatEnd);
+        EventBus<BattleStartedEvent>.Subscribe(OnBattleStarted);
     }
-
-
 
     public void OnDeactivate(Relic relic)
     {
-        EventBus<BattleStartEvent>.Unsubscribe(OnCombatEnd);
+        EventBus<BattleStartedEvent>.Unsubscribe(OnBattleStarted);
+        ClearBonus();
     }
-    private void OnCombatEnd(BattleStartEvent @event)
+
+    private void OnBattleStarted(BattleStartedEvent evt)
     {
-        foreach (var enemy in Controller.Context.Enemies)
+        if (evt.Context == null) return;
+
+        foreach (var enemy in evt.Context.Enemies)
         {
-            enemy.ExtraVulnerableBonus = _param.multiplier;
+            enemy.ExtraVulnerableBonus = _multiplier;
         }
     }
 
+    private void ClearBonus()
+    {
+        var context = _controller.Context;
+        if (context == null) return;
 
-    [System.Serializable]
-    private class Param { public float multiplier; }
+        foreach (var enemy in context.Enemies)
+        {
+            enemy.ExtraVulnerableBonus = 0;
+        }
+    }
 }

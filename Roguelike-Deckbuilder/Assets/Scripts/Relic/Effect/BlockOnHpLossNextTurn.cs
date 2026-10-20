@@ -1,18 +1,20 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using LitFramework;
 using LitFramework.EventBus;
-using Newtonsoft.Json;
-using UnityEngine;
 
+/// <summary>
+/// 自成型黏土：每当你在战斗中失去生命，就在下一回合获得 X 点格挡。
+/// </summary>
 public class BlockOnHpLossNextTurn : IRelicEffect
 {
-    private Param _param;
-    public BlockOnHpLossNextTurn(string paramsJson)
+    private readonly int _block;
+    private readonly BattleController _controller;
+
+    public BlockOnHpLossNextTurn(RelicEffectsConfig config)
     {
-        _param = JsonConvert.DeserializeObject<Param>(paramsJson);
+        _block = config.Amount;
+        _controller = ServiceLocator.Get<BattleController>();
     }
+
     public void OnActivate(Relic relic)
     {
         EventBus<HpChangedEvent>.Subscribe(HandleHpChanged);
@@ -23,14 +25,15 @@ public class BlockOnHpLossNextTurn : IRelicEffect
         EventBus<HpChangedEvent>.Unsubscribe(HandleHpChanged);
     }
 
-    private void HandleHpChanged(HpChangedEvent @evt)
+    private void HandleHpChanged(HpChangedEvent evt)
     {
-        if (evt.EntityType == EntityType.Player && evt.NewHp < evt.OldHp)
-        {
-            ServiceLocator.Get<BattleController>().Context.Player.QueueEffect(EffectTiming.NextTurnStart, p => p.AddBlock(_param.block));
-        }
-    }
+        if (_block <= 0) return;
 
-    [System.Serializable]
-    private class Param { public int block; }
+        var player = _controller.Context?.Player;
+        if (player == null) return;
+        if (evt.EntityId != player.InstanceId) return;
+        if (evt.NewHp >= evt.OldHp) return;
+
+        player.QueueEffect(EffectTiming.NextTurnStart, p => p.AddBlock(_block));
+    }
 }

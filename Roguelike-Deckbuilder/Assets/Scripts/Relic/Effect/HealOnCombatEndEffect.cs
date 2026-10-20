@@ -1,6 +1,5 @@
 using LitFramework;
 using LitFramework.EventBus;
-using Newtonsoft.Json;
 using UnityEngine;
 
 /// <summary>
@@ -11,10 +10,9 @@ public class HealOnCombatEndEffect : IRelicEffect
     private int _healAmount;
     private EffectExecutor _executor;
 
-    public HealOnCombatEndEffect(string paramsJson)
+    public HealOnCombatEndEffect(RelicEffectsConfig config)
     {
-        var param = JsonConvert.DeserializeObject<Param>(paramsJson);
-        _healAmount = param.amount;
+        _healAmount = config.Amount;
         _executor = ServiceLocator.Get<EffectExecutor>();
     }
 
@@ -33,7 +31,4 @@ public class HealOnCombatEndEffect : IRelicEffect
         Debug.Log($"OnCombatEnd{_healAmount}");
         _executor.HealGlobalPlayer(_healAmount);
     }
-
-    [System.Serializable]
-    private class Param { public int amount; }
 }

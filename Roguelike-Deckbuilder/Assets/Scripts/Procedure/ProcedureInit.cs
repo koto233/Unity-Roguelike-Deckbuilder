@@ -56,6 +56,7 @@ namespace LitFramework.FSM.Procedure
                 svc.LoadDictTableAsync<EncounterConfig>(ConfigPaths.Encounter),
                 svc.LoadDictTableAsync<PlayerInitConfig>(ConfigPaths.PlayerInit),
                 svc.LoadDictTableAsync<RelicConfig>(ConfigPaths.Relic),
+                svc.LoadDictTableAsync<RelicEffectsConfig>(ConfigPaths.RelicEffects),
                 svc.LoadDictTableAsync<ShopConfig>(ConfigPaths.Shop),
                 svc.LoadDictTableAsync<RewardConfig>(ConfigPaths.Reward),
                  svc.LoadDictTableAsync<ActionConfig>(ConfigPaths.ActionConfig)
@@ -84,6 +85,7 @@ namespace LitFramework.FSM.Procedure
         public const string Encounter = "Assets/Config/Json/EncounterConfig.json";
         public const string PlayerInit = "Assets/Config/Json/PlayerInitConfig.json";
         public const string Relic = "Assets/Config/Json/RelicConfig.json";
+        public const string RelicEffects = "Assets/Config/Json/RelicEffects.json";
         public const string Shop = "Assets/Config/Json/ShopConfig.json";
         public const string Reward = "Assets/Config/Json/RewardConfig.json";
         public const string ActionConfig = "Assets/Config/Json/ActionConfig.json";

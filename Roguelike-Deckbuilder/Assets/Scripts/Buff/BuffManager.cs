@@ -20,6 +20,15 @@ public class BuffManager
     // ==================== 施加 Buff ====================
     public void ApplyBuff(IBuff buff)
     {
+        // 损毁头盔：每场战斗第一次获得力量时层数翻倍
+        if (buff.Stacks > 0
+            && buff.Config.Id == BuffIds.Strength
+            && _owner.DoubleNextStrengthGain)
+        {
+            buff.Stacks *= 2;
+            _owner.DoubleNextStrengthGain = false;
+        }
+
         var existing = _buffs.FirstOrDefault(b => b.Config.Id == buff.Config.Id);
 
         if (existing != null)
@@ -105,6 +114,19 @@ public class BuffManager
     {
         var buff = _buffs.FirstOrDefault(b => b.Config.Id == id);
         if (buff != null) RemoveBuff(buff);
+    }
+
+    /// <summary>
+    /// 减少指定 Buff 的层数（用于按来源精确移除临时加成，例如红头骨的条件力量）。
+    /// </summary>
+    public void RemoveStacks(int id, int stacks)
+    {
+        if (stacks <= 0) return;
+
+        var buff = _buffs.FirstOrDefault(b => b.Config.Id == id);
+        if (buff == null) return;
+
+        SetStacks(buff, buff.Stacks - stacks);
     }
 
     // ==================== 回合开始 ====================

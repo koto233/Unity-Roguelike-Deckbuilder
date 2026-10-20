@@ -1,22 +1,18 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using LitFramework;
 using LitFramework.EventBus;
-using Newtonsoft.Json;
 
 /// <summary>
-/// 每当你消耗一张牌，对所有敌人造成伤害
+/// 卡戎之灰：每当你消耗一张牌，对所有敌人造成伤害。
 /// </summary>
 public class DamageOnExhaust : IRelicEffect
 {
-    private Param _param;
+    private readonly int _damage;
 
-    public DamageOnExhaust(string paramsJson)
+    public DamageOnExhaust(RelicEffectsConfig config)
     {
-        _param = JsonConvert.DeserializeObject<Param>(paramsJson);
+        _damage = config.Amount;
     }
+
     public void OnActivate(Relic relic)
     {
         EventBus<CardEvent>.Subscribe(OnCardUse);
@@ -29,11 +25,9 @@ public class DamageOnExhaust : IRelicEffect
 
     private void OnCardUse(CardEvent @event)
     {
-        if (@event.Trait == CardTrait.Exhaust)
+        if ((@event.Trait & CardTrait.Exhaust) != 0)
         {
-            ServiceLocator.Get<EffectExecutor>().DamageAllEnemies(_param.damage);
+            ServiceLocator.Get<EffectExecutor>().DamageAllEnemies(_damage);
         }
     }
-    [System.Serializable]
-    private class Param { public int damage; }
 }

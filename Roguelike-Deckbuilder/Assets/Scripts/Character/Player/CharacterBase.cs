@@ -12,6 +12,11 @@ public abstract class CharacterBase
    private BuffManager _buffManager;
    public BuffManager BuffManager => _buffManager;
    public float ExtraVulnerableBonus { get; set; } = 0;
+   /// <summary>
+   /// 下一次获得力量时是否翻倍（损毁头盔）。
+   /// 在战斗开始时由遗物设置为 true，BuffManager 应用力量后消费掉。
+   /// </summary>
+   public bool DoubleNextStrengthGain { get; set; }
    private readonly Dictionary<EffectTiming, List<Action<CharacterBase>>> _pendingEffects = new();
 
    public void QueueEffect(EffectTiming timing, Action<CharacterBase> effect)

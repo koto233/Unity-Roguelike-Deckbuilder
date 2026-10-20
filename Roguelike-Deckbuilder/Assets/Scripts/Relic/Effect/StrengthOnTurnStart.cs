@@ -1,45 +1,52 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using LitFramework;
 using LitFramework.Config;
 using LitFramework.EventBus;
-using Newtonsoft.Json;
 
-
+/// <summary>
+/// 硫磺：在你的每个回合开始时，你获得 X 点力量，所有敌人获得 Y 点力量。
+/// </summary>
 public class StrengthOnTurnStart : IRelicEffect
 {
-    private Param _param;
-    public StrengthOnTurnStart(string paramsJson)
+    private readonly int _playerStrength;
+    private readonly int _enemyStrength;
+
+    public StrengthOnTurnStart(RelicEffectsConfig config)
     {
-        var _param = JsonConvert.DeserializeObject<Param>(paramsJson);
-    }
-    public void OnActivate(Relic relic)
-    {
-        EventBus<BattleStartEvent>.Subscribe(OnCombatEnd);
+        _playerStrength = config.PlayerStrength;
+        _enemyStrength = config.EnemyStrength;
     }
 
+    public void OnActivate(Relic relic)
+    {
+        EventBus<TurnStartEvent>.Subscribe(OnTurnStart);
+    }
 
     public void OnDeactivate(Relic relic)
     {
-        EventBus<BattleStartEvent>.Subscribe(OnCombatEnd);
+        EventBus<TurnStartEvent>.Unsubscribe(OnTurnStart);
     }
 
-    private void OnCombatEnd(BattleStartEvent @event)
+    private void OnTurnStart(TurnStartEvent evt)
     {
-        var controller = ServiceLocator.Get<BattleController>();
-        var config = ServiceLocator.Get<IConfigService>().GetTable<BuffConfig>().Get(BuffIds.Strength);
-        var buff = BuffFactory.Create(BuffIds.Strength, config, _param.playerStrength);
-        controller.Context.Player.BuffManager.ApplyBuff(buff);
-        foreach (var enemy in controller.Context.Enemies)
+        var context = ServiceLocator.Get<BattleController>().Context;
+        if (context?.Player == null) return;
+
+        var buffConfig = ServiceLocator.Get<IConfigService>().GetTable<BuffConfig>().Get(BuffIds.Strength);
+        if (buffConfig == null) return;
+
+        if (_playerStrength > 0)
         {
-            enemy.BuffManager.ApplyBuff(buff);
+            context.Player.BuffManager.ApplyBuff(
+                BuffFactory.Create(BuffIds.Strength, buffConfig, _playerStrength));
         }
 
+        if (_enemyStrength > 0)
+        {
+            foreach (var enemy in context.Enemies)
+            {
+                enemy.BuffManager.ApplyBuff(
+                    BuffFactory.Create(BuffIds.Strength, buffConfig, _enemyStrength));
+            }
+        }
     }
-
-    [System.Serializable]
-    private class Param { public int playerStrength; public int enemyStrength; }
-
 }
